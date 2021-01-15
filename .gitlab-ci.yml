@@ -1,0 +1,29 @@
+stages:
+- build
+
+firebase_inspection:
+  stage: build
+  only:
+    - dev
+  tags:
+    - mac
+  script:
+    - git remote set-url --push origin git@gitlab.com:madbrains/inspection/inspection-android.git
+    - git remote get-url --push origin
+    - bundle install
+    - bundle exec fastlane firebase_inspection
+  environment:
+    name: ci
+
+manual_firebase_inspection:
+  stage: build
+  when: manual
+  tags:
+    - mac
+  script:
+    - git remote set-url --push origin git@gitlab.com:madbrains/inspection/inspection-android.git
+    - git remote get-url --push origin
+    - bundle install
+    - bundle exec fastlane firebase_inspection
+  environment:
+    name: ci

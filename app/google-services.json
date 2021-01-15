@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "714037425430",
+    "project_id": "inspection-ae2f5",
+    "storage_bucket": "inspection-ae2f5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:714037425430:android:cf4d7312d242c58aff0c37",
+        "android_client_info": {
+          "package_name": "ru.madbrains.inspection"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "714037425430-e8fnuf7efep4jn9mt9aeeg7hangct14b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCY5HvYfNA8oJcC_-b26tlfIuXUHH-SlFc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "714037425430-e8fnuf7efep4jn9mt9aeeg7hangct14b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
