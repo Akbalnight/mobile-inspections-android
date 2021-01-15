@@ -22,4 +22,16 @@
     <string name="fragment_routes_route_list">Список</string>
     <string name="fragment_routes_route_calendar">Календарь</string>
 
+    <!-- DefectListFragment -->
+    <string name="fragment_defect_list_title">Реестр дефектов</string>
+
+    <!-- GroupListFragment -->
+    <string name="fragment_group_list_title">Группа</string>
+
+    <!-- SyncFragment -->
+    <string name="fragment_sync_title">Синхронизация</string>
+
+    <!-- SettingsFragment -->
+    <string name="fragment_settings_title">Настройки</string>
+
 </resources>

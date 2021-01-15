@@ -83,8 +83,8 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
     implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.okHttpVersion"
     implementation "com.squareup.retrofit2:converter-moshi:$rootProject.retrofitVersion"
-    kapt("com.squareup.moshi:moshi-kotlin-codegen:$rootProject.moshi_version")
     implementation 'org.conscrypt:conscrypt-android:2.2.1'
+    kapt("com.squareup.moshi:moshi-kotlin-codegen:$rootProject.moshi_version")
 
     // Room
     implementation "androidx.room:room-runtime:$rootProject.roomVersion"
