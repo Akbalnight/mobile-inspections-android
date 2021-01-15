@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#205E7A</color>
+    <color name="colorPrimaryDark">#00344E</color>
+    <color name="colorAccent">#FFBF1F</color>
+
+    <color name="textMain">#000000</color>
+    <color name="elementsBlue">#205E7A</color>
+    <color name="elementLight">#548BA9</color>
+    <color name="elementDark">#00344E</color>
+    <color name="accidentYellow">#FFBF1F</color>
+    <color name="accidentDark">#C78F00</color>
+    <color name="accidentLight">#FFF15A</color>
+    <color name="textWhite">#FFFFFF</color>
+    <color name="elementWhite">#FFFFFF</color>
+    <color name="black50">#80000000</color>
+    <color name="white70">#B3FFFFFF</color>
+    <color name="alarm">#B92D00</color>
+    <color name="greyLight">#DCDCDC</color>
+    <color name="black">#000000</color>
+
+</resources>

@@ -1,0 +1,32 @@
+<resources>
+
+    <style name="AppTheme" parent="Base.Theme.MaterialComponents.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.Launcher" parent="AppTheme.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">@drawable/launch_screen</item>
+    </style>
+
+    <style name="inspection_button_default" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@drawable/button_default_text_color</item>
+        <item name="android:backgroundTint">@drawable/button_default_background_color</item>
+        <item name="rippleColor">@color/elementDark</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+
+    <style name="inspection_button_text" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@drawable/button_text_text_color</item>
+        <item name="rippleColor">@color/elementLight</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+
+</resources>

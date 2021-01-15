@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Управление мобильным персоналом - Энергетика</string>
+
+    <!-- MainActivity -->
+    <string name="activity_main_menu_routes">Реестр обходов</string>
+    <string name="activity_main_menu_defects">Реестр дефектов</string>
+    <string name="activity_main_menu_marks">Регистрация меток</string>
+    <string name="activity_main_menu_sync">Синхронизация</string>
+    <string name="activity_main_menu_settings">Настройки</string>
+    <string name="activity_main_menu_logout">Выход</string>
+
+    <!-- AuthorizationFragment -->
+    <string name="fragment_auth_title">Вход</string>
+    <string name="fragment_auth_auth">Авторизация</string>
+    <string name="fragment_auth_server_settings">Настройки сервера</string>
+
+    <!-- WebViewFragment -->
+    <string name="fragment_web_view_title_auth">Авторизация</string>
+
+    <!-- RoutesFragment -->
+    <string name="fragment_routes_title">Реестр обходов</string>
+    <string name="fragment_routes_route_list">Список</string>
+    <string name="fragment_routes_route_calendar">Календарь</string>
+
+</resources>
