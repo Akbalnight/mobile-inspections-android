@@ -14,6 +14,15 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    signingConfigs {
+        debug {
+            storeFile file('inspection_debug.ks')
+            storePassword 'SJryYpf6r6'
+            keyAlias 'key0'
+            keyPassword 'SJryYpf6r6'
+        }
+    }
+    
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
