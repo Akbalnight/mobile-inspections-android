@@ -21,8 +21,14 @@ android {
             keyAlias 'key0'
             keyPassword 'SJryYpf6r6'
         }
+        release {
+            storeFile file('inspection_release.ks')
+            storePassword 'Y5eAd8HZps'
+            keyAlias 'key0'
+            keyPassword 'Y5eAd8HZps'
+        }
     }
-    
+
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
@@ -41,6 +47,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            signingConfig signingConfigs.debug
         }
     }
 }
