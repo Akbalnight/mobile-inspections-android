@@ -25,6 +25,7 @@
         android:background="@color/greyLight" />
 
     <LinearLayout
+        android:id="@+id/llRouteList"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="?attr/selectableItemBackground"
@@ -51,6 +52,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/llDefectList"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="?attr/selectableItemBackground"
@@ -77,6 +79,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/llMarks"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="?attr/selectableItemBackground"
@@ -103,6 +106,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/llSync"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="?attr/selectableItemBackground"
@@ -129,6 +133,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/llSettings"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="?attr/selectableItemBackground"

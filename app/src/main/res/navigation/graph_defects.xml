@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/graph_defects"
+    app:startDestination="@id/defectListFragment">
+
+    <fragment
+        android:id="@+id/defectListFragment"
+        android:name="ru.madbrains.inspection.ui.main.defects.defectlist.DefectListFragment"
+        android:label="DefectListFragment"
+        tools:layout="@layout/fragment_defect_list" />
+
+</navigation>

@@ -17,17 +17,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:navGraph="@navigation/graph_main" />
+        app:navGraph="@navigation/graph_routes" />
 
     <com.google.android.material.navigation.NavigationView
-        android:id="@+id/nav_view"
+        android:id="@+id/navView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true">
 
         <include
-            layout="@layout/main_navigation_menu"
+            layout="@layout/menu_navigation_main"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
