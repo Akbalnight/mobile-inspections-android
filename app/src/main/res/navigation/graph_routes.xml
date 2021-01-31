@@ -9,7 +9,18 @@
         android:id="@+id/routesFragment"
         android:name="ru.madbrains.inspection.ui.main.routes.RoutesFragment"
         android:label="RoutesFragment"
-        tools:layout="@layout/fragment_routes" />
+        tools:layout="@layout/fragment_routes">
+        <action
+            android:id="@+id/action_routesFragment_to_routeFiltersFragment"
+            app:destination="@id/routeFiltersFragment" />
+        <action
+            android:id="@+id/action_routesFragment_to_dateRouteListFragment"
+            app:destination="@id/dateRouteListFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
 
     <include app:graph="@navigation/graph_defects" />
 
@@ -18,5 +29,16 @@
     <include app:graph="@navigation/grapg_sync" />
 
     <include app:graph="@navigation/grapg_settings" />
+
+    <dialog
+        android:id="@+id/routeFiltersFragment"
+        android:name="ru.madbrains.inspection.ui.main.routes.routefilters.RouteFiltersFragment"
+        android:label="RouteFiltersFragment"
+        tools:layout="@layout/fragment_route_filters" />
+    <fragment
+        android:id="@+id/dateRouteListFragment"
+        android:name="ru.madbrains.inspection.ui.main.routes.dateroutelist.DateRouteListFragment"
+        android:label="DateRouteListFragment"
+        tools:layout="@layout/fragment_route_list_date" />
 
 </navigation>

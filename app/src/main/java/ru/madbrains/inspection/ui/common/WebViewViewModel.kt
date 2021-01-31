@@ -31,6 +31,8 @@ class WebViewViewModel(
                     token = it.accessToken
                     refreshToken = it.refreshToken
                     username = it.username
+                    userId = it.userId
+                    codeChallenge = it.codeChallenge
                 }
                 _navigateToMain.value = Event(Unit)
             }, {

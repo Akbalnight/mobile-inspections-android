@@ -12,15 +12,17 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import ru.madbrains.data.BuildConfig
 import ru.madbrains.data.network.ApiData
+import ru.madbrains.data.network.OAuthData
 import ru.madbrains.data.network.api.AuthApi
 import ru.madbrains.data.network.api.InspectionApi
-import ru.madbrains.data.network.OAuthData
 import ru.madbrains.data.network.interceptors.AuthInterceptor
 import ru.madbrains.data.network.interceptors.SessionInterceptor
 import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.data.prefs.SharedPreferenceStorage
 import ru.madbrains.data.repository.AuthRepositoryImpl
+import ru.madbrains.data.repository.RoutesRepositoryImpl
 import ru.madbrains.domain.repository.AuthRepository
+import ru.madbrains.domain.repository.RoutesRepository
 import java.util.concurrent.TimeUnit
 
 val dataModule = module {
@@ -29,6 +31,7 @@ val dataModule = module {
     single { getInspectionApi(get(), get()) }
     single { getAuthApi(get()) }
     single { getAuthRepository(get()) }
+    single { getRoutesRepository(get()) }
 }
 
 private fun getPreferenceStorage(context: Context): PreferenceStorage {
@@ -93,4 +96,8 @@ private fun getAuthOkHttpClient(): OkHttpClient {
 
 private fun getAuthRepository(api: AuthApi): AuthRepository {
     return AuthRepositoryImpl(api)
+}
+
+private fun getRoutesRepository(api: InspectionApi): RoutesRepository {
+    return RoutesRepositoryImpl(api)
 }

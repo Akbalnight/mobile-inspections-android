@@ -13,6 +13,8 @@ interface PreferenceStorage {
     var refreshToken: String?
     var codeVerifier: String?
     var username: String?
+    var userId: String?
+    var codeChallenge: String?
     fun clearData()
 }
 
@@ -29,6 +31,8 @@ class SharedPreferenceStorage(
         const val PREF_REFRESH_TOKEN = "pref_refresh_token"
         const val PREF_CODE_VERIFIER = "pref_code_verifier"
         const val PREF_USERNAME = "pref_username"
+        const val PREF_USER_ID = "pref_user_id"
+        const val PREF_CODE_CHALLENGE = "pref_code_challenge"
     }
 
     private val prefs = context.applicationContext.getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
@@ -37,6 +41,8 @@ class SharedPreferenceStorage(
     override var refreshToken by StringPreference(prefs, PREF_REFRESH_TOKEN, "")
     override var codeVerifier by StringPreference(prefs, PREF_CODE_VERIFIER, "")
     override var username by StringPreference(prefs, PREF_USERNAME, "")
+    override var userId by StringPreference(prefs, PREF_USER_ID, "")
+    override var codeChallenge by StringPreference(prefs, PREF_CODE_CHALLENGE, "")
 
     override fun clearData() {
         prefs.edit { clear() }

@@ -1,6 +1,7 @@
 package ru.madbrains.inspection
 
 import android.app.Application
+import com.jakewharton.threetenabp.AndroidThreeTen
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import ru.madbrains.data.di.dataModule
@@ -14,6 +15,7 @@ class App : Application() {
         super.onCreate()
         initKoin()
         initTimber()
+        AndroidThreeTen.init(this)
     }
 
     private fun initKoin() {

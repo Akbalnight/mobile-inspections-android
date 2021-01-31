@@ -10,6 +10,8 @@ android {
     buildToolsVersion rootProject.buildToolsVersion
 
     compileOptions {
+        coreLibraryDesugaringEnabled true
+
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -38,7 +40,7 @@ android {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
-        versionName "1.0.0"
+        versionName "1.0.0-alpha02"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -64,6 +66,7 @@ dependencies {
 
     // Utils
     implementation "androidx.core:core-ktx:$rootProject.coreKtxVersion"
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.1'
 
     // Ui
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayoutVersion"
@@ -130,4 +133,6 @@ dependencies {
     // CameraX
     implementation "androidx.camera:camera-core:$rootProject.cameraxVersion"
     implementation "androidx.camera:camera-camera2:$rootProject.cameraxVersion"
+
+    implementation 'com.github.kizitonwose:CalendarView:0.3.4'
 }

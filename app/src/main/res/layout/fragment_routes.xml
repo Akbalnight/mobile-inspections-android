@@ -27,6 +27,8 @@
                 android:layout_height="?android:attr/actionBarSize"
                 android:background="@color/elementsBlue"
                 app:tabGravity="fill"
+                app:tabMaxWidth="0dp"
+                app:tabMode="fixed"
                 app:tabIndicatorColor="@color/accidentYellow"
                 app:tabSelectedTextColor="@color/textWhite"
                 app:tabTextColor="@color/white70" />
@@ -50,5 +52,14 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <ru.madbrains.inspection.ui.view.ProgressView
+        android:id="@+id/progressView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
