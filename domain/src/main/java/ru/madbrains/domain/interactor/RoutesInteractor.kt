@@ -2,6 +2,7 @@ package ru.madbrains.domain.interactor
 
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
+import ru.madbrains.domain.model.PlanTechOperationsModel
 import ru.madbrains.domain.model.RouteModel
 import ru.madbrains.domain.repository.RoutesRepository
 
@@ -10,6 +11,11 @@ class RoutesInteractor(
 ) {
     fun getRoutes(): Single<List<RouteModel>> {
         return routesRepository.getRoutes()
+            .subscribeOn(Schedulers.io())
+    }
+
+    fun getPlanTechOperations(): Single<List<PlanTechOperationsModel>> {
+        return routesRepository.getPlanTechOperations()
             .subscribeOn(Schedulers.io())
     }
 }
