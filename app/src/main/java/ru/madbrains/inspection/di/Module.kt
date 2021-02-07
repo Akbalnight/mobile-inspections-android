@@ -11,6 +11,7 @@ import ru.madbrains.inspection.ui.main.routes.dateroutelist.DateRouteListViewMod
 import ru.madbrains.inspection.ui.main.routes.routecalendar.RouteCalendarViewModel
 import ru.madbrains.inspection.ui.main.routes.routelist.RouteListViewModel
 import ru.madbrains.inspection.ui.main.routes.routefilters.RouteFiltersViewModel
+import ru.madbrains.inspection.ui.main.routes.techoperations.TechOperationsCardViewModel
 
 val appModule = module {
     viewModel { LauncherViewModel(get()) }
@@ -22,4 +23,5 @@ val appModule = module {
     viewModel { RouteListViewModel() }
     viewModel { RouteCalendarViewModel() }
     viewModel { DateRouteListViewModel() }
+    viewModel { TechOperationsCardViewModel(get()) }
 }
