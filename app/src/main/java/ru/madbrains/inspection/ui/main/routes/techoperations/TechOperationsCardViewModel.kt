@@ -6,10 +6,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
 import ru.madbrains.domain.interactor.RoutesInteractor
 import ru.madbrains.domain.model.PlanTechOperationsModel
-import ru.madbrains.domain.model.RouteModel
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.model.DiffItem
-import ru.madbrains.inspection.ui.delegates.RouteUiModel
 import ru.madbrains.inspection.ui.delegates.TechOperationUiModel
 
 class TechOperationsCardViewModel(private val routesInteractor: RoutesInteractor) :
