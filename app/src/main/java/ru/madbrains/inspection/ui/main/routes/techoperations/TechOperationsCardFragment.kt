@@ -12,6 +12,8 @@ import ru.madbrains.inspection.R
 
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.extensions.strings
+import ru.madbrains.inspection.ui.adapters.RouteAdapter
+import ru.madbrains.inspection.ui.adapters.TechOperationAdapter
 import ru.madbrains.inspection.ui.main.routes.RoutesAdapter
 import ru.madbrains.inspection.ui.main.routes.RoutesViewModel
 
@@ -21,21 +23,25 @@ class TechOperationsCardFragment : BaseFragment(R.layout.fragment_tech_operation
     private val techOperationsCardViewModel: TechOperationsCardViewModel by viewModel()
     private val routesViewModel: RoutesViewModel by sharedViewModel()
 
-    private lateinit var techOperationsAdapter: TechOperationsAdapter
+    private val techOperationsAdapter by lazy {
+        TechOperationAdapter()
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         setupToolbar()
 
-        techOperationsCardViewModel.getCard()
+        rvTechOperations.adapter = techOperationsAdapter
+
+        techOperationsCardViewModel.getCard("7d8160e7-836d-45fc-8295-e9a9fa7c3a7f") //todo
 
         techOperationsCardViewModel.techOperations.observe(viewLifecycleOwner, Observer {
             techOperationsAdapter.items = it
         })
-      /*  rvRoutes.adapter = routesAdapter
 
-        btnGetData.setOnClickListener {
+/*
+       // btnGetData.setOnClickListener {
             routesViewModel.getRoutes()
         }
 

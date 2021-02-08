@@ -16,7 +16,7 @@ interface InspectionApi {
     // endregion
 
     // region tech operations
-    @POST("/api/dynamicdq/data/flat/mobileDetours")
+    @POST("/api/dynamicdq/data/flat/mobileDetoursPlanTechOperations")
     fun getPlanTechOperations(@Body request: GetPlanTechOperationsReq): Single<List<GetPlanTechOperationsResp>>
     // endregion
 }

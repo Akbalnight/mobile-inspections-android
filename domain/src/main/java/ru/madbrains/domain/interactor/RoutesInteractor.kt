@@ -14,8 +14,8 @@ class RoutesInteractor(
             .subscribeOn(Schedulers.io())
     }
 
-    fun getPlanTechOperations(): Single<List<PlanTechOperationsModel>> {
-        return routesRepository.getPlanTechOperations()
+    fun getPlanTechOperations(dataId: String): Single<List<PlanTechOperationsModel>> {
+        return routesRepository.getPlanTechOperations(dataId)
             .subscribeOn(Schedulers.io())
     }
 }

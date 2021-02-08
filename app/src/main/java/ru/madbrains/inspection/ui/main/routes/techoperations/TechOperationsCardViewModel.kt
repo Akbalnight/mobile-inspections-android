@@ -9,6 +9,8 @@ import ru.madbrains.domain.model.PlanTechOperationsModel
 import ru.madbrains.domain.model.RouteModel
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.model.DiffItem
+import ru.madbrains.inspection.ui.delegates.RouteUiModel
+import ru.madbrains.inspection.ui.delegates.TechOperationUiModel
 
 class TechOperationsCardViewModel(private val routesInteractor: RoutesInteractor) :
     BaseViewModel() {
@@ -21,21 +23,32 @@ class TechOperationsCardViewModel(private val routesInteractor: RoutesInteractor
 
     private val operationsModels = mutableListOf<PlanTechOperationsModel>()
 
-    fun routeClick() {
 
-    }
-
-    fun getCard() {
-        routesInteractor.getPlanTechOperations()
+    fun getCard(dataId: String) {
+        routesInteractor.getPlanTechOperations(dataId)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { _progressVisibility.postValue(true) }
             .doAfterTerminate { _progressVisibility.postValue(false) }
             .subscribe({ operations ->
                 operationsModels.addAll(operations)
-              //  updateData()
+                updateData()
             }, {
                 it.printStackTrace()
             })
             .addTo(disposables)
+    }
+
+    private fun updateData() {
+        val operations = mutableListOf<DiffItem>().apply {
+            operationsModels.map { operation ->
+                add(
+                    TechOperationUiModel(
+                        id = operation.id,
+                        name = operation.name.orEmpty()
+                    )
+                )
+            }
+        }
+        _techOperations.value = operations
     }
 }

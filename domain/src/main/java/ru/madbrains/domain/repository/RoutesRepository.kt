@@ -7,5 +7,5 @@ import ru.madbrains.domain.model.RouteModel
 interface RoutesRepository {
     fun getRoutes(): Single<List<RouteModel>>
 
-    fun getPlanTechOperations(): Single<List<PlanTechOperationsModel>>
+    fun getPlanTechOperations(dataId: String): Single<List<PlanTechOperationsModel>>
 }

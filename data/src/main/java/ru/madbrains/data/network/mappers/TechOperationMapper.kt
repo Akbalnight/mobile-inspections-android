@@ -11,7 +11,8 @@ fun mapGetPlanTechOperationsResp(resp: GetPlanTechOperationsResp): PlanTechOpera
             name = name,
             needInputData = needInputData,
             labelInputData = labelInputData,
-            techMapName = techMapName
+            techMapName = techMapName,
+            position = position
         )
     }
 }
