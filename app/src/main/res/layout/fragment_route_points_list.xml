@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/llPlanStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="16dp"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvPlanStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Плановое время начала:"
+            android:textColor="@color/textMain" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvPlanStartValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="..."
+            android:textColor="@color/elementLight" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llPlanEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="12dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvPlanEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Плановое время окончания:"
+            android:textColor="@color/textMain" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvPlanEndValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="..."
+            android:textColor="@color/elementLight" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llFactStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="16dp"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llPlanStart">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvFactStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Начало обхода:"
+            android:textColor="@color/textMain" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvFactStartValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="..."
+            android:textColor="@color/elementLight" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="12dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/llPlanEnd"
+        app:layout_constraintTop_toBottomOf="@id/llPlanEnd">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvFactEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Окончание обхода:"
+            android:textColor="@color/textMain" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvFactEndValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="..."
+            android:textColor="@color/elementLight" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/viewDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/greyLight"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llFactStart" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvRoutePoints"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewDivider"
+        tools:itemCount="5"
+        tools:listitem="@layout/item_route_point" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

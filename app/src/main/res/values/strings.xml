@@ -34,6 +34,10 @@
     <!-- SettingsFragment -->
     <string name="fragment_settings_title">Настройки</string>
 
+    <!-- RoutePointsFragment -->
+    <string name="fragment_route_points_list">Список</string>
+    <string name="fragment_route_points_map">Карта</string>
+
     <string-array name="months">
         <item>Январь</item>
         <item>Февраль</item>

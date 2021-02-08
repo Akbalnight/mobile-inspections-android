@@ -21,7 +21,7 @@ class RoutesViewModel(
     private val _routes = MutableLiveData<List<DiffItem>>()
     val routes: LiveData<List<DiffItem>> = _routes
 
-    private val routeModels = mutableListOf<RouteModel>()
+    val routeModels = mutableListOf<RouteModel>()
 
     fun getRoutes() {
         routesInteractor.getRoutes()

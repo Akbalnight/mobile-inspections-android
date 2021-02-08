@@ -1,7 +1,9 @@
 package ru.madbrains.data.network.mappers
 
+import ru.madbrains.data.network.response.GetRoutePointResp
 import ru.madbrains.data.network.response.GetRouteResp
 import ru.madbrains.domain.model.RouteModel
+import ru.madbrains.domain.model.RoutePointModel
 import ru.madbrains.domain.model.RouteStatus
 
 fun mapGetRoutesResp(resp: GetRouteResp): RouteModel {
@@ -31,6 +33,21 @@ fun mapGetRoutesResp(resp: GetRouteResp): RouteModel {
             possibleDeviationDateStart = possibleDeviationDateStart,
             possibleDeviationDateFinish = possibleDeviationDateFinish,
             isDefectExist = isDefectExist
+        )
+    }
+}
+
+fun mapGetRoutePointsResp(resp: GetRoutePointResp): RoutePointModel {
+    return with(resp) {
+        RoutePointModel(
+            id = id,
+            rowNumber = rowNumber,
+            controlPointId = controlPointId,
+            controlPointName = controlPointName,
+            techMapName = techMapName,
+            detoursId = detoursId,
+            position = position,
+            duration = duration
         )
     }
 }

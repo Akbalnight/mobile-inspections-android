@@ -20,6 +20,13 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_routesFragment_to_routePointsFragment"
+            app:destination="@id/routePointsFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
 
     <include app:graph="@navigation/graph_defects" />
@@ -39,6 +46,19 @@
         android:id="@+id/dateRouteListFragment"
         android:name="ru.madbrains.inspection.ui.main.routes.dateroutelist.DateRouteListFragment"
         android:label="DateRouteListFragment"
-        tools:layout="@layout/fragment_route_list_date" />
+        tools:layout="@layout/fragment_route_list_date">
+        <action
+            android:id="@+id/action_dateRouteListFragment_to_routePointsFragment"
+            app:destination="@id/routePointsFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/routePointsFragment"
+        android:name="ru.madbrains.inspection.ui.main.routes.points.RoutePointsFragment"
+        android:label="RoutePointsFragment"
+        tools:layout="@layout/fragment_route_points" />
 
 </navigation>

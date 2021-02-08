@@ -1,5 +1,7 @@
 package ru.madbrains.domain.model
 
+import java.io.Serializable
+
 data class RouteModel(
     val id: String,
     val code: Int?,
@@ -23,4 +25,4 @@ data class RouteModel(
     val possibleDeviationDateStart: Int?,
     val possibleDeviationDateFinish: Int?,
     val isDefectExist: Int?
-)
+) : Serializable
