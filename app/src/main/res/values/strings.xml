@@ -23,6 +23,7 @@
     <string name="fragment_routes_route_calendar">Календарь</string>
 
     <!-- Technical Operations -->
+    <string name="fragment_tech_operations_add_defect">Добавить дефект</string>
     <string name="fragment_tech_operations_defect">Дефекты</string>
     <string name="fragment_tech_operations_device">Оборудование</string>
 

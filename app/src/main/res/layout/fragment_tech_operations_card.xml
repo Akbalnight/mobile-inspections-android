@@ -52,6 +52,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
+            <Button
+                android:id="@+id/btnAddDefect"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/elementDark"
+                android:drawableTop="@drawable/ic_bottom_sheet_add_defect"
+                android:insetTop="36dp"
+                android:insetBottom="32dp"
+                android:paddingLeft="64dp"
+                android:text="@string/fragment_tech_operations_add_defect" />
 
             <Button
                 android:id="@+id/btnDefect"
@@ -62,7 +73,6 @@
                 android:drawableTop="@drawable/ic_bottom_sheet_defect"
                 android:insetTop="36dp"
                 android:insetBottom="32dp"
-                android:paddingLeft="64dp"
                 android:text="@string/fragment_tech_operations_defect" />
 
             <Button
@@ -71,7 +81,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@color/elementDark"
-                android:drawableTop="@drawable/ic_bottom_sheet_defect"
+                android:drawableTop="@drawable/ic_bottom_sheet_device"
                 android:insetTop="36dp"
                 android:insetBottom="32dp"
                 android:paddingRight="64dp"
