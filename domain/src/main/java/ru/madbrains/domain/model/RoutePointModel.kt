@@ -1,5 +1,7 @@
 package ru.madbrains.domain.model
 
+import java.io.Serializable
+
 data class RoutePointModel(
     val id: String,
     val rowNumber: String,
@@ -9,4 +11,4 @@ data class RoutePointModel(
     val detoursId: String?,
     val position: Int?,
     val duration: Int?
-)
+) : Serializable

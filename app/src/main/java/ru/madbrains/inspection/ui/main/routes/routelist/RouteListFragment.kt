@@ -31,8 +31,6 @@ class RouteListFragment : BaseFragment(R.layout.fragment_route_list) {
                     routeModel.id == it.id
                 }
                 routeListViewModel.routeClick(route)
-
-            //    findNavController().navigate(R.id.action_routesFragment_to_techOperationsCardFragment) //todo delete
             }
         )
     }

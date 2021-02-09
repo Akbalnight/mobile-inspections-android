@@ -27,13 +27,6 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
-        <action
-            android:id="@+id/action_routesFragment_to_techOperationsCardFragment"
-            app:destination="@id/techOperationsCardFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
 
     <include app:graph="@navigation/graph_defects" />
@@ -66,14 +59,19 @@
         android:id="@+id/routePointsFragment"
         android:name="ru.madbrains.inspection.ui.main.routes.points.RoutePointsFragment"
         android:label="RoutePointsFragment"
-        tools:layout="@layout/fragment_route_points" />
+        tools:layout="@layout/fragment_route_points" >
+        <action
+            android:id="@+id/action_routePointsFragment_to_techOperationsFragment"
+            app:destination="@id/techOperationsFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
 
     <fragment
-        android:id="@+id/techOperationsCardFragment"
-        android:name="ru.madbrains.inspection.ui.main.routes.techoperations.TechOperationsCardFragment"
+        android:id="@+id/techOperationsFragment"
+        android:name="ru.madbrains.inspection.ui.main.routes.techoperations.TechOperationsFragment"
         android:label="TechOperationsCardFragment"
-        tools:layout="@layout/fragment_tech_operations" >
-
-
-    </fragment>
+        tools:layout="@layout/fragment_tech_operations" />
 </navigation>
