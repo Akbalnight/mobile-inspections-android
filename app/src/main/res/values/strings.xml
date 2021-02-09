@@ -26,6 +26,7 @@
     <string name="fragment_tech_operations_add_defect">Добавить дефект</string>
     <string name="fragment_tech_operations_defect">Дефекты</string>
     <string name="fragment_tech_operations_device">Оборудование</string>
+    <string name="fragment_tech_operations_app_bar">Контрольная точка №</string>
 
     <!-- DefectListFragment -->
     <string name="fragment_defect_list_title">Реестр дефектов</string>

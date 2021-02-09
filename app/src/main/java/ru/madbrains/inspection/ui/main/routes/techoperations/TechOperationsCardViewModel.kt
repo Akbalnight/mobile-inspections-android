@@ -16,6 +16,9 @@ class TechOperationsCardViewModel(private val routesInteractor: RoutesInteractor
     private val _progressVisibility = MutableLiveData<Boolean>()
     val progressVisibility: LiveData<Boolean> = _progressVisibility
 
+    private val _titleTechOperations = MutableLiveData<String>()
+    val titleTechOperations: LiveData<String> = _titleTechOperations
+
     private val _techOperations = MutableLiveData<List<DiffItem>>()
     val techOperations: LiveData<List<DiffItem>> = _techOperations
 
@@ -38,11 +41,19 @@ class TechOperationsCardViewModel(private val routesInteractor: RoutesInteractor
 
     private fun updateData() {
         val operations = mutableListOf<DiffItem>().apply {
+            operationsModels.first()?.let {
+                it.techMapName?.let {name->
+                    _titleTechOperations.value = name
+                }
+            }
             operationsModels.map { operation ->
                 add(
                     TechOperationUiModel(
                         id = operation.id,
-                        name = operation.name.orEmpty()
+                        name = operation.name.orEmpty(),
+                        labelInputData = operation.labelInputData.orEmpty(),
+                        needInputData = operation.needInputData,
+                        position = operation.position
                     )
                 )
             }

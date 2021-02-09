@@ -6,7 +6,6 @@ import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.techOperationDelegate
 
 class TechOperationAdapter(
-   // onRouteClick: (RouteUiModel) -> Unit
 ) : AsyncListDifferDelegationAdapter<DiffItem>(BaseDiffCallback()) {
 
     init {

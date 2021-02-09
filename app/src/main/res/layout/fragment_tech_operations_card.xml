@@ -30,11 +30,12 @@
             android:id="@+id/tvTitleTechOperations"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingStart="8dp"
+            android:paddingStart="16dp"
             android:paddingTop="16dp"
-            android:paddingEnd="8dp"
-            android:paddingBottom="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="8dp"
             android:textColor="@color/textMain"
+            android:textSize="24sp"
             app:layout_constraintBottom_toTopOf="@+id/rvTechOperations"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +45,7 @@
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="0dp"
-            android:layout_height="60dp"
+            android:layout_height="65dp"
             android:background="@color/elementDark"
             android:orientation="horizontal"
             android:paddingLeft="16dp"
@@ -52,7 +53,8 @@
             android:gravity="center_vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            android:baselineAligned="false">
 
             <LinearLayout
                 android:id="@+id/layoutBottomButtonAddDefect"
@@ -61,7 +63,8 @@
                 android:background="@android:color/transparent"
                 android:clickable="true"
                 android:layout_weight="1"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:focusable="true">
 
                 <ImageView
                     android:id="@+id/imgBottomButtonAddDefect"
@@ -69,7 +72,8 @@
                     android:layout_height="24dp"
                     android:paddingBottom="4dp"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/ic_bottom_sheet_add_defect" />
+                    android:src="@drawable/ic_bottom_sheet_add_defect"
+                    android:contentDescription="TODO" />
 
                 <TextView
                     android:id="@+id/tvBottomButtonAddDefect"
@@ -89,7 +93,8 @@
                 android:background="@android:color/transparent"
                 android:clickable="true"
                 android:layout_weight="1"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:focusable="true">
 
                 <ImageView
                     android:id="@+id/imgBottomButtonDefect"
@@ -97,7 +102,8 @@
                     android:layout_height="24dp"
                     android:paddingBottom="4dp"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/ic_bottom_sheet_defect" />
+                    android:src="@drawable/ic_bottom_sheet_defect"
+                    android:contentDescription="TODO" />
 
                 <TextView
                     android:id="@+id/tvBottomButtonDefect"
@@ -117,7 +123,8 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:clickable="true"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:focusable="true">
 
                 <ImageView
                     android:id="@+id/imgBottomButtonDevice"
@@ -125,7 +132,8 @@
                     android:layout_height="24dp"
                     android:paddingBottom="4dp"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/ic_bottom_sheet_device" />
+                    android:src="@drawable/ic_bottom_sheet_device"
+                    android:contentDescription="TODO" />
 
                 <TextView
                     android:id="@+id/tvBottomButtonDevice"
@@ -144,6 +152,9 @@
             android:id="@+id/rvTechOperations"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:paddingBottom="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout"
             app:layout_constraintEnd_toEndOf="parent"

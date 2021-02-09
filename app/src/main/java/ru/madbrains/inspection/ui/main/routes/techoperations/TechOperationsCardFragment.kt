@@ -5,6 +5,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_route_list.*
 import kotlinx.android.synthetic.main.fragment_tech_operations_card.*
+import kotlinx.android.synthetic.main.item_tech_operations_input_data.*
 import kotlinx.android.synthetic.main.toolbar_with_menu.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -36,25 +37,21 @@ class TechOperationsCardFragment : BaseFragment(R.layout.fragment_tech_operation
 
         techOperationsCardViewModel.getCard("7d8160e7-836d-45fc-8295-e9a9fa7c3a7f") //todo
 
+        techOperationsCardViewModel.titleTechOperations.observe(viewLifecycleOwner, Observer {
+                tvTitleTechOperations.text = it
+        })
         techOperationsCardViewModel.techOperations.observe(viewLifecycleOwner, Observer {
             techOperationsAdapter.items = it
         })
 
-/*
-       // btnGetData.setOnClickListener {
-            routesViewModel.getRoutes()
-        }
-
-        routesViewModel.routes.observe(viewLifecycleOwner, Observer {
-            routesAdapter.items = it
-            ivGetData.isVisible = false
-            btnGetData.isVisible = false
-        })*/
     }
 
     private fun setupToolbar() {
+
         toolbarLayout.apply {
-            tvTitle.text = strings[R.string.fragment_sync_title]
+            val numberControlPoint = 5;
+            val appBarTitle = strings[R.string.fragment_tech_operations_app_bar]
+            tvTitle.text = appBarTitle + numberControlPoint.toString()
         }
     }
 }

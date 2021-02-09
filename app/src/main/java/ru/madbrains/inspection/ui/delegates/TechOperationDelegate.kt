@@ -1,12 +1,9 @@
 package ru.madbrains.inspection.ui.delegates
 
-import android.opengl.Visibility
 import android.view.View
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
-import kotlinx.android.synthetic.main.item_route.view.*
 import kotlinx.android.synthetic.main.item_route.view.tvName
 import kotlinx.android.synthetic.main.item_tech_operations_input_data.view.*
-import ru.madbrains.domain.model.RouteStatus
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.model.DiffItem
 
@@ -15,16 +12,33 @@ fun techOperationDelegate() =
 
         bind {
             itemView.apply {
-                tvName.text = item.name
-             //   labelInputData.visibility = View.GONE
-             //   inputData.visibility = View.GONE
+                var name: String = item.name
+                item.position?.let {
+                    name = "$it. $name"
+                }
+                tvName.text = name
+                item.needInputData?.let {
+                    if (it) {
+                        item.labelInputData?.let { label ->
+                            tvInputData.visibility = View.VISIBLE
+                            tvInputData.text = label
+                            etInputData.visibility = View.VISIBLE
+                        }
+                    } else {
+                        tvInputData.visibility = View.GONE
+                        etInputData.visibility = View.GONE
+                    }
+                }
             }
         }
     }
 
 data class TechOperationUiModel(
     val id: String,
-    val name: String
+    val name: String,
+    val needInputData: Boolean?,
+    val labelInputData: String?,
+    val position: Int?
 ) : DiffItem {
 
     override fun areItemsTheSame(newItem: DiffItem): Boolean =
