@@ -1,18 +1,23 @@
 package ru.madbrains.inspection.ui.main.routes.routelist
 
 import android.os.Bundle
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_route_list.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.madbrains.domain.model.RouteModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
+import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.ui.adapters.RouteAdapter
 import ru.madbrains.inspection.ui.main.routes.RoutesViewModel
+import ru.madbrains.inspection.ui.main.routes.points.RoutePointsFragment
 
 class RouteListFragment : BaseFragment(R.layout.fragment_route_list) {
 
@@ -22,8 +27,12 @@ class RouteListFragment : BaseFragment(R.layout.fragment_route_list) {
     private val routesAdapter by lazy {
         RouteAdapter(
             onRouteClick = {
-                routeListViewModel.routeClick()
-                findNavController().navigate(R.id.action_routesFragment_to_techOperationsCardFragment) //todo delete
+                val route = routesViewModel.routeModels.find { routeModel ->
+                    routeModel.id == it.id
+                }
+                routeListViewModel.routeClick(route)
+
+            //    findNavController().navigate(R.id.action_routesFragment_to_techOperationsCardFragment) //todo delete
             }
         )
     }
@@ -42,5 +51,15 @@ class RouteListFragment : BaseFragment(R.layout.fragment_route_list) {
             ivGetData.isVisible = false
             btnGetData.isVisible = false
         })
+        routeListViewModel.navigateToRoutePoints.observe(viewLifecycleOwner, EventObserver {
+            openRoutePointsFragment(it)
+        })
+    }
+
+    private fun openRoutePointsFragment(route: RouteModel) {
+        val args = bundleOf(
+            RoutePointsFragment.KEY_ROUTE to route
+        )
+        findNavController().navigate(R.id.action_routesFragment_to_routePointsFragment, args)
     }
 }

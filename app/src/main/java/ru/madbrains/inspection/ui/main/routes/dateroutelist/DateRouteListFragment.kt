@@ -1,17 +1,21 @@
 package ru.madbrains.inspection.ui.main.routes.dateroutelist
 
 import android.os.Bundle
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_route_list_date.*
 import kotlinx.android.synthetic.main.toolbar_with_back.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.madbrains.domain.model.RouteModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
+import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.ui.adapters.RouteAdapter
 import ru.madbrains.inspection.ui.delegates.RouteUiModel
 import ru.madbrains.inspection.ui.main.routes.RoutesViewModel
+import ru.madbrains.inspection.ui.main.routes.points.RoutePointsFragment
 
 class DateRouteListFragment : BaseFragment(R.layout.fragment_route_list_date) {
 
@@ -27,7 +31,10 @@ class DateRouteListFragment : BaseFragment(R.layout.fragment_route_list_date) {
     private val routesAdapter by lazy {
         RouteAdapter(
             onRouteClick = {
-                dateRouteListViewModel.routeClick()
+                val route = routesViewModel.routeModels.find { routeModel ->
+                    routeModel.id == it.id
+                }
+                dateRouteListViewModel.routeClick(route)
             }
         )
     }
@@ -47,6 +54,9 @@ class DateRouteListFragment : BaseFragment(R.layout.fragment_route_list_date) {
                 route.date.split("T").firstOrNull() == date
             }
         })
+        dateRouteListViewModel.navigateToRoutePoints.observe(viewLifecycleOwner, EventObserver {
+            openRoutePointsFragment(it)
+        })
     }
 
     private fun setupToolbar() {
@@ -54,5 +64,12 @@ class DateRouteListFragment : BaseFragment(R.layout.fragment_route_list_date) {
         toolbarLayout.btnBack.setOnClickListener {
             findNavController().popBackStack()
         }
+    }
+
+    private fun openRoutePointsFragment(route: RouteModel) {
+        val args = bundleOf(
+            RoutePointsFragment.KEY_ROUTE to route
+        )
+        findNavController().navigate(R.id.action_dateRouteListFragment_to_routePointsFragment, args)
     }
 }
