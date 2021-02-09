@@ -38,6 +38,7 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
         techOperationsCardViewModel.progressVisibility.observe(viewLifecycleOwner, Observer {
             progressView.changeVisibility(it)
         })
+
         requireNotNull(arguments).run {
             (getSerializable(TechOperationsFragment.KEY_POINT) as? RoutePointModel)?.let {
                 setupToolbar(it.position)
@@ -45,10 +46,7 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
             }
         }
 
-
         rvTechOperations.adapter = techOperationsAdapter
-
-       // techOperationsCardViewModel.getCard("7d8160e7-836d-45fc-8295-e9a9fa7c3a7f") //todo
 
         techOperationsCardViewModel.titleTechOperations.observe(viewLifecycleOwner, Observer {
             tvTitleTechOperations.text = it
