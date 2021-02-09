@@ -30,14 +30,14 @@ class TechOperationsViewModel(private val routesInteractor: RoutesInteractor) :
 
     fun setPoint(routePoint: RoutePointModel) {
         routePointModel = routePoint
-        getCard(routePoint.id)
+        getOperations(routePoint.id)
         routePoint.techMapName?.let { name ->
             _titleTechOperations.value = name
         }
 
     }
 
-    private fun getCard(dataId: String) {
+    private fun getOperations(dataId: String) {
         routesInteractor.getPlanTechOperations(dataId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { _progressVisibility.postValue(true) }
