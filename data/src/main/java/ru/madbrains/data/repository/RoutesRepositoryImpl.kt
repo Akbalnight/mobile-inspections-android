@@ -32,8 +32,10 @@ class RoutesRepositoryImpl(
         }
     }
 
-    override fun getPlanTechOperations(dataId: String): Single<List<PlanTechOperationsModel>>  {
-        val request = GetPlanTechOperationsReq(dataId)
+    override fun getPlanTechOperations(dataId: String): Single<List<PlanTechOperationsModel>> {
+        val request = GetPlanTechOperationsReq(
+            dataId = dataId
+        )
         return inspectionApi.getPlanTechOperations(request).map { resp ->
             resp.map { mapGetPlanTechOperationsResp(it) }
         }

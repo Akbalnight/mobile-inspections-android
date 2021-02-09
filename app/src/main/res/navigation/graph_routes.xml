@@ -72,7 +72,7 @@
         android:id="@+id/techOperationsCardFragment"
         android:name="ru.madbrains.inspection.ui.main.routes.techoperations.TechOperationsCardFragment"
         android:label="TechOperationsCardFragment"
-        tools:layout="@layout/fragment_tech_operations_card" >
+        tools:layout="@layout/fragment_tech_operations" >
 
 
     </fragment>

@@ -162,7 +162,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvTitleTechOperations"
             tools:itemCount="5"
-            tools:listitem="@layout/item_tech_operations_input_data" />
+            tools:listitem="@layout/item_tech_operations" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/fabTechOperationsContinue"
@@ -184,6 +184,15 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/ic_tech_operations_scan" />
+
+        <ru.madbrains.inspection.ui.view.ProgressView
+            android:id="@+id/progressView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
