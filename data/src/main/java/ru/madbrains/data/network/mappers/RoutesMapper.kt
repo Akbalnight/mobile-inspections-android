@@ -1,7 +1,9 @@
 package ru.madbrains.data.network.mappers
 
+import ru.madbrains.data.network.response.GetPlanTechOperationsResp
 import ru.madbrains.data.network.response.GetRoutePointResp
 import ru.madbrains.data.network.response.GetRouteResp
+import ru.madbrains.domain.model.PlanTechOperationsModel
 import ru.madbrains.domain.model.RouteModel
 import ru.madbrains.domain.model.RoutePointModel
 import ru.madbrains.domain.model.RouteStatus
@@ -48,6 +50,20 @@ fun mapGetRoutePointsResp(resp: GetRoutePointResp): RoutePointModel {
             detoursId = detoursId,
             position = position,
             duration = duration
+        )
+    }
+}
+
+fun mapGetPlanTechOperationsResp(resp: GetPlanTechOperationsResp): PlanTechOperationsModel {
+    return with(resp) {
+        PlanTechOperationsModel(
+            id = id,
+            dataId = dataId,
+            name = name,
+            needInputData = needInputData,
+            labelInputData = labelInputData,
+            techMapName = techMapName,
+            position = position
         )
     }
 }

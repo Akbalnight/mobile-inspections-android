@@ -29,4 +29,9 @@
         <item name="cornerRadius">8dp</item>
     </style>
 
+    <style name="inspection_edit_text" parent="@android:style/Widget.EditText">
+        <item name="android:textColor">@color/textMain</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+
 </resources>

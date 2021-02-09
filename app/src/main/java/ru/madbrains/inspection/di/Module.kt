@@ -13,6 +13,7 @@ import ru.madbrains.inspection.ui.main.routes.points.list.RoutePointsListViewMod
 import ru.madbrains.inspection.ui.main.routes.points.map.RoutePointsMapViewModel
 import ru.madbrains.inspection.ui.main.routes.routecalendar.RouteCalendarViewModel
 import ru.madbrains.inspection.ui.main.routes.routefilters.RouteFiltersViewModel
+import ru.madbrains.inspection.ui.main.routes.techoperations.TechOperationsViewModel
 import ru.madbrains.inspection.ui.main.routes.routelist.RouteListViewModel
 
 val appModule = module {
@@ -28,4 +29,5 @@ val appModule = module {
     viewModel { RoutePointsViewModel(get()) }
     viewModel { RoutePointsListViewModel() }
     viewModel { RoutePointsMapViewModel() }
+    viewModel { TechOperationsViewModel(get()) }
 }
