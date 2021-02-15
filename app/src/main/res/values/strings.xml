@@ -28,6 +28,15 @@
     <string name="fragment_tech_operations_device">Оборудование</string>
     <string name="fragment_tech_operations_app_bar">Контрольная точка №</string>
 
+    <!-- AddDefect -->
+    <string name="fragment_add_defect_scan">Сканировать</string>
+    <string name="fragment_add_defect_photo_video">Фото/Видео</string>
+    <string name="fragment_add_defect_drop_down_hint_device">Оборудование</string>
+    <string name="fragment_add_defect_drop_down_hint_type_defect">Тип дефекта</string>
+    <string name="fragment_add_defect_drop_down_hint_description">Описание</string>
+    <string name="fragment_add_defect_media">Фото и видео: 0 из 8</string>
+    <string name="fragment_add_defect_not_media">Нет прикрепленных медиафайлов. Для добавления нажмите на кнопку &#171;фото/видео&#187;</string>
+
     <!-- DefectListFragment -->
     <string name="fragment_defect_list_title">Реестр дефектов</string>
 

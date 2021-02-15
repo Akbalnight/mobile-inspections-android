@@ -11,4 +11,6 @@
         android:label="DefectListFragment"
         tools:layout="@layout/fragment_defect_list" />
 
+
+
 </navigation>
