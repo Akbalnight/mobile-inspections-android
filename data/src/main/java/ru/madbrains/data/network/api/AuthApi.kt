@@ -12,7 +12,7 @@ interface AuthApi {
     @POST("/oauth/token")
     fun getToken(
         @Field("grant_type") grantType: String = "authorization_code",
-        @Field("redirect_uri") redirectUri: String = "https://mobinspect.dias-dev.ru/authorization_code",
+        @Field("redirect_uri") redirectUri: String = "http://10.5.31.117/authorization_code",
         @Field("code") authCode: String,
         @Field("code_verifier") codeVerifier: String
     ): Single<GetTokenResp>

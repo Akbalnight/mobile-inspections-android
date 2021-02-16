@@ -6,6 +6,7 @@ import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleObserver
 import ru.madbrains.inspection.extensions.ContextAware
+import ru.madbrains.inspection.extensions.hideKeyboard
 
 abstract class BaseFragment(
     @LayoutRes layout: Int
@@ -16,5 +17,10 @@ abstract class BaseFragment(
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         lifecycle.addObserver(this)
+    }
+    
+    override fun onStop() {
+        hideKeyboard()
+        super.onStop()
     }
 }
