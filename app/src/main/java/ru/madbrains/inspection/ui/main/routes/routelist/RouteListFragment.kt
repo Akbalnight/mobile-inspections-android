@@ -41,8 +41,8 @@ class RouteListFragment : BaseFragment(R.layout.fragment_route_list) {
         rvRoutes.adapter = routesAdapter
 
         btnGetData.setOnClickListener {
-            //routesViewModel.getRoutes()
-            findNavController().navigate(R.id.action_routeFragment_to_addDefectFragment) //todo
+            routesViewModel.getRoutes()
+           // findNavController().navigate(R.id.action_routeFragment_to_addDefectFragment) //todo
         }
 
         routesViewModel.routes.observe(viewLifecycleOwner, Observer {
