@@ -41,6 +41,8 @@
 
     <!-- DefectListFragment -->
     <string name="fragment_defect_list_title">Реестр дефектов</string>
+    <string name="fragment_defect_add_title">Фиксация дефекта</string>
+    <string name="fragment_defect_edit_title">Просмотр дефектов</string>
 
     <!-- GroupListFragment -->
     <string name="fragment_group_list_title">Группа</string>

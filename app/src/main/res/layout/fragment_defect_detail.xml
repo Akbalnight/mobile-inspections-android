@@ -53,7 +53,7 @@
                     android:id="@+id/dropDownDevice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:alpha="0.5"
+                    android:textColor="@color/textMain"
                     android:inputType="none" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -83,7 +83,7 @@
                         android:id="@+id/dropDownTypeDefect"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:alpha="0.5"
+                        android:textColor="@color/textMain"
                         android:inputType="none" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -113,7 +113,7 @@
                     android:id="@+id/etAddDefectDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:alpha="0.5"
+                    android:textColor="@color/textMain"
                     android:ems="150"
                     android:focusedByDefault="false"
                     android:gravity="start|top"

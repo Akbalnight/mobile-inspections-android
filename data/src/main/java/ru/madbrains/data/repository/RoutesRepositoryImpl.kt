@@ -2,12 +2,15 @@ package ru.madbrains.data.repository
 
 import io.reactivex.Single
 import ru.madbrains.data.network.api.InspectionApi
+import ru.madbrains.data.network.mappers.mapGetDefectTypicalResp
 import ru.madbrains.data.network.mappers.mapGetRoutePointsResp
 import ru.madbrains.data.network.mappers.mapGetPlanTechOperationsResp
 import ru.madbrains.data.network.mappers.mapGetRoutesResp
+import ru.madbrains.data.network.request.GetDefectTypicalReq
 import ru.madbrains.data.network.request.GetPlanTechOperationsReq
 import ru.madbrains.data.network.request.GetRotesReq
 import ru.madbrains.data.network.request.GetRoutePointsReq
+import ru.madbrains.domain.model.DefectTypicalModel
 import ru.madbrains.domain.model.PlanTechOperationsModel
 import ru.madbrains.domain.model.RouteModel
 import ru.madbrains.domain.model.RoutePointModel
@@ -38,6 +41,13 @@ class RoutesRepositoryImpl(
         )
         return inspectionApi.getPlanTechOperations(request).map { resp ->
             resp.map { mapGetPlanTechOperationsResp(it) }
+        }
+    }
+
+    override fun getDefectTypical(): Single<List<DefectTypicalModel>> {
+        val request = GetDefectTypicalReq()
+        return  inspectionApi.getDefectTypical(request).map { resp ->
+            resp.map { mapGetDefectTypicalResp(it) }
         }
     }
 

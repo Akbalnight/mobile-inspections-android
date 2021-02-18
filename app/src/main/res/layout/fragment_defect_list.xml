@@ -50,7 +50,7 @@
             android:layout_marginBottom="24dp"
             android:backgroundTint="@color/accidentYellow"
             android:gravity="center_vertical"
-            app:iconSize="32dp"
+            app:iconSize="24dp"
             app:iconPadding="0dp"
             app:icon="@drawable/ic_add"
             app:layout_constraintBottom_toBottomOf="parent"

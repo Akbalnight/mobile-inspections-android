@@ -84,7 +84,7 @@
 
     <fragment
         android:id="@+id/addDefectFragment"
-        android:name="ru.madbrains.inspection.ui.main.defects.adddefect.AddDefectFragment"
+        android:name="ru.madbrains.inspection.ui.main.defects.defectdetail.AddDefectFragment"
         android:label="AddDefectFragment"
-        tools:layout="@layout/fragment_add_defect" />
+        tools:layout="@layout/fragment_defect_detail" />
 </navigation>

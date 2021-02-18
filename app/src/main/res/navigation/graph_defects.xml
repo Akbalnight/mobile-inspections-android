@@ -9,8 +9,23 @@
         android:id="@+id/defectListFragment"
         android:name="ru.madbrains.inspection.ui.main.defects.defectlist.DefectListFragment"
         android:label="DefectListFragment"
-        tools:layout="@layout/fragment_defect_list" />
+        tools:layout="@layout/fragment_defect_list" >
+        <action
+            android:id="@+id/action_defectListFragment_to_detailFragment"
+            app:destination="@id/defectDetailFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
 
+    <fragment
+        android:id="@+id/defectDetailFragment"
+        android:name="ru.madbrains.inspection.ui.main.defects.defectdetail.DefectDetailFragment"
+        android:label="DetailDefectFragment"
+        tools:layout="@layout/fragment_defect_detail" >
+
+    </fragment>
 
 
 </navigation>
