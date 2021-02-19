@@ -2,18 +2,9 @@ package ru.madbrains.data.repository
 
 import io.reactivex.Single
 import ru.madbrains.data.network.api.InspectionApi
-import ru.madbrains.data.network.mappers.mapGetDefectTypicalResp
-import ru.madbrains.data.network.mappers.mapGetRoutePointsResp
-import ru.madbrains.data.network.mappers.mapGetPlanTechOperationsResp
-import ru.madbrains.data.network.mappers.mapGetRoutesResp
-import ru.madbrains.data.network.request.GetDefectTypicalReq
-import ru.madbrains.data.network.request.GetPlanTechOperationsReq
-import ru.madbrains.data.network.request.GetRotesReq
-import ru.madbrains.data.network.request.GetRoutePointsReq
-import ru.madbrains.domain.model.DefectTypicalModel
-import ru.madbrains.domain.model.PlanTechOperationsModel
-import ru.madbrains.domain.model.RouteModel
-import ru.madbrains.domain.model.RoutePointModel
+import ru.madbrains.data.network.mappers.*
+import ru.madbrains.data.network.request.*
+import ru.madbrains.domain.model.*
 import ru.madbrains.domain.repository.RoutesRepository
 
 class RoutesRepositoryImpl(
@@ -46,8 +37,18 @@ class RoutesRepositoryImpl(
 
     override fun getDefectTypical(): Single<List<DefectTypicalModel>> {
         val request = GetDefectTypicalReq()
-        return  inspectionApi.getDefectTypical(request).map { resp ->
+        return inspectionApi.getDefectTypical(request).map { resp ->
             resp.map { mapGetDefectTypicalResp(it) }
+        }
+    }
+
+    override fun getEquipments(
+        names: List<String>,
+        uuid: List<String>
+    ): Single<List<EquipmentsModel>> {
+        val request = GetEquipmentsReq(names = names, controlPointIds = uuid)
+        return inspectionApi.getEquipments(request).map { resp ->
+            resp.map { mapGetEquipmentsResp(it) }
         }
     }
 

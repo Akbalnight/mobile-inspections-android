@@ -3,14 +3,8 @@ package ru.madbrains.data.network.api
 import io.reactivex.Single
 import retrofit2.http.Body
 import retrofit2.http.POST
-import ru.madbrains.data.network.request.GetDefectTypicalReq
-import ru.madbrains.data.network.request.GetPlanTechOperationsReq
-import ru.madbrains.data.network.request.GetRotesReq
-import ru.madbrains.data.network.request.GetRoutePointsReq
-import ru.madbrains.data.network.response.GetDefectTypicalResp
-import ru.madbrains.data.network.response.GetRoutePointResp
-import ru.madbrains.data.network.response.GetPlanTechOperationsResp
-import ru.madbrains.data.network.response.GetRouteResp
+import ru.madbrains.data.network.request.*
+import ru.madbrains.data.network.response.*
 
 interface InspectionApi {
 
@@ -30,5 +24,10 @@ interface InspectionApi {
     // region defects
     @POST("/api/dynamicdq/data/flat/mobileDefectTypical")
     fun getDefectTypical(@Body request: GetDefectTypicalReq): Single<List<GetDefectTypicalResp>>
+    // endregion
+
+    // region Equipments
+    @POST("/api/dynamicdq/data/flat/mobileEquipments")
+    fun getEquipments(@Body request: GetEquipmentsReq): Single<List<GetEquipmentsResp>>
     // endregion
 }

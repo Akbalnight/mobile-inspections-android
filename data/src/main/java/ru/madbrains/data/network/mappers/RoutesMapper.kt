@@ -1,9 +1,6 @@
 package ru.madbrains.data.network.mappers
 
-import ru.madbrains.data.network.response.GetDefectTypicalResp
-import ru.madbrains.data.network.response.GetPlanTechOperationsResp
-import ru.madbrains.data.network.response.GetRoutePointResp
-import ru.madbrains.data.network.response.GetRouteResp
+import ru.madbrains.data.network.response.*
 import ru.madbrains.domain.model.*
 
 fun mapGetRoutesResp(resp: GetRouteResp): RouteModel {
@@ -73,6 +70,21 @@ fun mapGetDefectTypicalResp(resp: GetDefectTypicalResp): DefectTypicalModel {
                 id = id,
                 name = name,
                 code = code
+        )
+    }
+}
+
+fun mapGetEquipmentsResp(resp: GetEquipmentsResp): EquipmentsModel {
+    return with(resp) {
+        EquipmentsModel(
+            id = id,
+            name = name,
+            isGroup = isGroup,
+            controlPointId = controlPointId,
+            markName = markName,
+            modelName = modelName,
+            defects = defects,
+            equipmentFiles = equipmentFiles
         )
     }
 }
