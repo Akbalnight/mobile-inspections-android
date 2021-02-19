@@ -48,6 +48,11 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
 
         setupDefectTypical()
 
+
+        dropDownDevice.setOnClickListener {
+            findNavController().navigate(R.id.action_defectDetailFragment_to_deviceSelectListFragment)
+        }
+
     }
 
     private fun setupNewDefect() {

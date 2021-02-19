@@ -38,6 +38,7 @@
     <string name="fragment_add_defect_not_media">Нет прикрепленных медиафайлов. Для добавления нажмите на кнопку &#171;фото/видео&#187;</string>
     <string name="fragment_btn_label_delete">Удалить</string>
     <string name="fragment_btn_label_edit">Редактировать</string>
+    <string name="fragment_title_select_device">Оборудование</string>
 
     <!-- DefectListFragment -->
     <string name="fragment_defect_list_title">Реестр дефектов</string>

@@ -32,7 +32,7 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor) :
     }
 
     fun changeCurrentDefectTypical(model: DefectTypicalUiModel){
-
+        // todo
     }
 
     private fun updateDefectTypicalList() {
