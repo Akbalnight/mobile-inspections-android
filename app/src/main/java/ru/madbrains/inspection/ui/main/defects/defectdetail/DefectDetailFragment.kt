@@ -48,9 +48,11 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
 
         setupDefectTypical()
 
-
+        layoutDropDownDevice.setEndIconOnClickListener {
+            openDeviceSelect()
+        }
         dropDownDevice.setOnClickListener {
-            findNavController().navigate(R.id.action_defectDetailFragment_to_deviceSelectListFragment)
+            openDeviceSelect()
         }
 
     }
@@ -88,4 +90,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
         }
     }
 
+    private fun openDeviceSelect(){
+        findNavController().navigate(R.id.action_defectDetailFragment_to_deviceSelectListFragment)
+    }
 }
