@@ -34,4 +34,30 @@
         <item name="cornerRadius">8dp</item>
     </style>
 
+    <style name="inspection_drop_down_menu" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="boxStrokeColor">@color/black50</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">1dp</item>
+        <item name="android:focusable">false</item>
+        <item name="android:focusableInTouchMode">false</item>
+        <item name="hintTextColor">@color/elementsBlue</item>
+        <item name="android:textColorHint">@color/elementsBlue</item>
+        <item name="expandedHintEnabled">false</item>
+        <item name="cornerRadius">4dp</item>
+        <item name="endIconDrawable">@drawable/ic_drop_down_selector</item>
+        <item name="endIconTint">@color/elementsBlue</item>
+
+    </style>
+
+    <style name="inspection_edit_text_hint" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/black</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">1dp</item>
+        <item name="android:focusable">false</item>
+        <item name="hintTextColor">@color/elementsBlue</item>
+        <item name="android:textColorHint">@color/elementsBlue</item>
+        <item name="expandedHintEnabled">false</item>
+        <item name="cornerRadius">4dp</item>
+    </style>
+
 </resources>

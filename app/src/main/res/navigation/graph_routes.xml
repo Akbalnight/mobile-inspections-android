@@ -27,6 +27,13 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_routeFragment_to_addDefectFragment"
+            app:destination="@id/addDefectFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
 
     <include app:graph="@navigation/graph_defects" />
@@ -74,4 +81,10 @@
         android:name="ru.madbrains.inspection.ui.main.routes.techoperations.TechOperationsFragment"
         android:label="TechOperationsFragment"
         tools:layout="@layout/fragment_tech_operations" />
+
+    <fragment
+        android:id="@+id/addDefectFragment"
+        android:name="ru.madbrains.inspection.ui.main.defects.defectdetail.AddDefectFragment"
+        android:label="AddDefectFragment"
+        tools:layout="@layout/fragment_defect_detail" />
 </navigation>
