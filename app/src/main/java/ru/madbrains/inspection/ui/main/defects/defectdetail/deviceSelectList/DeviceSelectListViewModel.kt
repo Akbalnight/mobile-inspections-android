@@ -1,12 +1,15 @@
 package ru.madbrains.inspection.ui.main.defects.defectdetail.deviceSelectList
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
 import ru.madbrains.domain.interactor.RoutesInteractor
 import ru.madbrains.domain.model.EquipmentsModel
+import ru.madbrains.domain.model.RoutePointModel
 import ru.madbrains.inspection.base.BaseViewModel
+import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.ui.delegates.DeviceSelectUiModel
 import ru.madbrains.inspection.ui.main.defects.defectdetail.DefectTypicalUiModel
 
@@ -16,13 +19,23 @@ class DeviceSelectListViewModel(private val routesInteractor: RoutesInteractor) 
     private var names: List<String> = emptyList()
     private var controlPointsIds: List<String> = emptyList()
 
-    private val deviceListModels = mutableListOf<EquipmentsModel>()
+    val deviceListModels = mutableListOf<EquipmentsModel>()
 
     private val _deviceList = MutableLiveData<List<DeviceSelectUiModel>>()
     val deviceList: LiveData<List<DeviceSelectUiModel>> = _deviceList
 
     private val _progressVisibility = MutableLiveData<Boolean>()
     val progressVisibility: LiveData<Boolean> = _progressVisibility
+
+    private val _navigateToDefectDetail = MutableLiveData<Event<EquipmentsModel>>()
+    val navigateToDefectDetail: LiveData<Event<EquipmentsModel>> = _navigateToDefectDetail
+
+    fun deviceSelectClick(equipment: EquipmentsModel?) {
+        Log.d("dfsfsdf", "deviceSelectClick")
+        equipment?.let {
+            Log.d("dfsfsdf", "deviceSelectClick no null")
+            _navigateToDefectDetail.value = Event(it) }
+    }
 
     fun getEquipments() {
         routesInteractor.getEquipments(names, controlPointsIds)

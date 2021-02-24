@@ -26,151 +26,156 @@
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/clContent"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="match_parent"
             app:layout_constraintBottom_toTopOf="@+id/bottomBarAddDefect"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layoutDropDownDevice"
-                style="@style/inspection_drop_down_menu"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clContent"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:hint="@string/fragment_add_defect_drop_down_hint_device"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <AutoCompleteTextView
-                    android:id="@+id/dropDownDevice"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/textMain"
-                    android:inputType="none" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <LinearLayout
-                android:id="@+id/llDropDownTypeDefect"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/layoutDropDownDevice">
+                android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/layoutDropDownTypeDefect"
+                    android:id="@+id/layoutDropDownDevice"
                     style="@style/inspection_drop_down_menu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:hint="@string/fragment_add_defect_drop_down_hint_device"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/dropDownDevice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:textColor="@color/textMain" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout
+                    android:id="@+id/llDropDownTypeDefect"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/layoutDropDownDevice">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layoutDropDownTypeDefect"
+                        style="@style/inspection_drop_down_menu"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_weight="2"
+                        android:hint="@string/fragment_add_defect_drop_down_hint_type_defect"
+                        android:orientation="horizontal">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/dropDownTypeDefect"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="none"
+                            android:textColor="@color/textMain" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                </LinearLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/editTextTextMultiLine"
+                    style="@style/inspection_edit_text_hint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:hint="@string/fragment_add_defect_drop_down_hint_description"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/llDropDownTypeDefect">
+
+                    <EditText
+                        android:id="@+id/etAddDefectDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="150"
+                        android:focusedByDefault="false"
+                        android:gravity="start|top"
+                        android:inputType="textMultiLine"
+                        android:maxLength="150"
+                        android:maxLines="5"
+                        android:textColor="@color/textMain" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvAddDefectMedia"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
-                    android:layout_weight="2"
-                    android:hint="@string/fragment_add_defect_drop_down_hint_type_defect"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="8dp"
+                    android:visibility="gone"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine"
+                    tools:itemCount="5"
+                    tools:listitem="@layout/item_media" />
 
-                    <AutoCompleteTextView
-                        android:id="@+id/dropDownTypeDefect"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/textMain"
-                        android:inputType="none" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <Space
+                <TextView
+                    android:id="@+id/tvMediaList"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="@string/fragment_add_defect_media"
+                    android:textColor="@color/elementLight"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/editTextTextMultiLine" />
 
-            </LinearLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/editTextTextMultiLine"
-                style="@style/inspection_edit_text_hint"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:hint="@string/fragment_add_defect_drop_down_hint_description"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/llDropDownTypeDefect">
-
-                <EditText
-                    android:id="@+id/etAddDefectDescription"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/tvMediaListNoData"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="@string/fragment_add_defect_not_media"
                     android:textColor="@color/textMain"
-                    android:ems="150"
-                    android:focusedByDefault="false"
-                    android:gravity="start|top"
-                    android:inputType="textMultiLine"
-                    android:maxLength="150"
-                    android:maxLines="5" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvAddDefectMedia"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:orientation="horizontal"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingBottom="8dp"
-                android:visibility="gone"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine"
-                tools:itemCount="5"
-                tools:listitem="@layout/item_media" />
-
-            <TextView
-                android:id="@+id/tvMediaList"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:text="@string/fragment_add_defect_media"
-                android:textColor="@color/elementLight"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/editTextTextMultiLine" />
-
-            <TextView
-                android:id="@+id/tvMediaListNoData"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:text="@string/fragment_add_defect_not_media"
-                android:textColor="@color/textMain"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvMediaList" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvMediaList" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
 
         <LinearLayout
             android:id="@+id/bottomBarAddDefect"

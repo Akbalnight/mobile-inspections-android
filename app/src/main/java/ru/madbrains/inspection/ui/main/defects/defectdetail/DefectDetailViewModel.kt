@@ -1,15 +1,14 @@
 package ru.madbrains.inspection.ui.main.defects.defectdetail
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
 import ru.madbrains.domain.interactor.RoutesInteractor
 import ru.madbrains.domain.model.DefectTypicalModel
-import ru.madbrains.domain.model.PlanTechOperationsModel
+import ru.madbrains.domain.model.EquipmentsModel
 import ru.madbrains.inspection.base.BaseViewModel
-import ru.madbrains.inspection.base.model.DiffItem
-import ru.madbrains.inspection.ui.delegates.TechOperationUiModel
 
 class DefectDetailViewModel(private val routesInteractor: RoutesInteractor) :
         BaseViewModel() {
@@ -18,6 +17,9 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor) :
 
     private val _defectTypicalList = MutableLiveData<List<DefectTypicalUiModel>>()
     val defectTypicalList: LiveData<List<DefectTypicalUiModel>> = _defectTypicalList
+
+    private val _device = MutableLiveData<EquipmentsModel>()
+    val device: LiveData<EquipmentsModel> = _device
 
     fun getDefectTypicalList() {
         routesInteractor.getDefectTypical()
@@ -33,6 +35,15 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor) :
 
     fun changeCurrentDefectTypical(model: DefectTypicalUiModel){
         // todo
+    }
+
+
+    fun changeCurrentDefectDevice(model: EquipmentsModel){
+        _device.value = model
+
+
+        Log.d("1111", "sdfsdfdsfsf222")
+        Log.d("1111", device.value.toString())
     }
 
     private fun updateDefectTypicalList() {

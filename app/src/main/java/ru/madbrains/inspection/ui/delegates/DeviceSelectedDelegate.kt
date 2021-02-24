@@ -1,18 +1,19 @@
 package ru.madbrains.inspection.ui.delegates
 
-import android.view.View
+
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
 import kotlinx.android.synthetic.main.item_device_select.view.*
-import kotlinx.android.synthetic.main.item_route.view.tvName
-import kotlinx.android.synthetic.main.item_tech_operations.view.*
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.model.DiffItem
 
-fun deviceSelectDelegate() =
+fun deviceSelectDelegate(clickListener: (DeviceSelectUiModel) -> Unit) =
     adapterDelegateLayoutContainer<DeviceSelectUiModel, DiffItem>(R.layout.item_device_select) {
 
         bind {
             itemView.apply {
+                clContainer.setOnClickListener {
+                    clickListener.invoke(item)
+                }
                 tvName.text = item.name
             }
         }

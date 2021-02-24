@@ -17,9 +17,11 @@ import kotlinx.android.synthetic.main.toolbar_with_back.view.*
 import kotlinx.android.synthetic.main.toolbar_with_menu.view.*
 import kotlinx.android.synthetic.main.toolbar_with_menu.view.tvTitle
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.madbrains.domain.model.RoutePointModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
+import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.adapters.RouteAdapter
 import ru.madbrains.inspection.ui.main.MainViewModel
@@ -47,6 +49,8 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
         }
 
         setupDefectTypical()
+
+        setupDefectDevice()
 
         layoutDropDownDevice.setEndIconOnClickListener {
             openDeviceSelect()
@@ -79,6 +83,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
         defectDetailViewModel.getDefectTypicalList()
 
         dropDownTypeDefect.setAdapter(defectTypicalAdapter)
+
         defectDetailViewModel.defectTypicalList.observe(viewLifecycleOwner, Observer {
             defectTypicalAdapter.addItems(it)
         })
@@ -88,6 +93,15 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
             defectDetailViewModel.changeCurrentDefectTypical(item)
             dropDownTypeDefect.setText(item.name, false)
         }
+    }
+
+    private fun setupDefectDevice(){
+
+        defectDetailViewModel.device.observe(viewLifecycleOwner, Observer {
+                Log.d("1111", "sdfsdfdsfsf")
+                dropDownDevice.setText(it.name, false)
+
+        })
     }
 
     private fun openDeviceSelect(){
