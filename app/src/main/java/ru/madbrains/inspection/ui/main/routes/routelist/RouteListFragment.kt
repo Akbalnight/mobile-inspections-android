@@ -1,6 +1,9 @@
 package ru.madbrains.inspection.ui.main.routes.routelist
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.se.omapi.Reader
+import android.util.Log
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
@@ -8,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import androidx.navigation.fragment.findNavController
+import com.pow.api.cls.RfidPower
 import kotlinx.android.synthetic.main.fragment_route_list.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -35,6 +39,7 @@ class RouteListFragment : BaseFragment(R.layout.fragment_route_list) {
         )
     }
 
+    @SuppressLint("LogNotTimber")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -42,6 +47,15 @@ class RouteListFragment : BaseFragment(R.layout.fragment_route_list) {
 
         btnGetData.setOnClickListener {
             routesViewModel.getRoutes()
+
+            val rPower = RfidPower(RfidPower.PDATYPE.ZoomSmart)
+
+            rPower.PowerUp()
+
+            Log.d("myLog", rPower.GetDevPath())
+
+            Log.d("myLog", rPower.toString())
+            
         }
 
         routesViewModel.routes.observe(viewLifecycleOwner, Observer {

@@ -10,7 +10,7 @@ import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.extensions.strings
-import ru.madbrains.inspection.ui.common.WebViewFragment
+import ru.madbrains.inspection.ui.common.web.WebViewFragment
 
 class AuthorizationFragment : BaseFragment(R.layout.fragment_authorization) {
 

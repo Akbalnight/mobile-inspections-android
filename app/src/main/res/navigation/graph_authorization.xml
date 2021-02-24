@@ -23,7 +23,7 @@
 
     <fragment
         android:id="@+id/webViewFragment"
-        android:name="ru.madbrains.inspection.ui.common.WebViewFragment"
+        android:name="ru.madbrains.inspection.ui.common.web.WebViewFragment"
         android:label="WebViewFragment"
         tools:layout="@layout/fragment_web_view" />
 

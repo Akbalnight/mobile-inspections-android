@@ -1,4 +1,4 @@
-package ru.madbrains.inspection.ui.common
+package ru.madbrains.inspection.ui.common.web
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
