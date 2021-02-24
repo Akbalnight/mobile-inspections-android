@@ -11,7 +11,7 @@ import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.main.MainViewModel
 import ru.madbrains.inspection.ui.main.sync.SyncViewModel
 
-class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
+class SettingsFragment : BaseFragment(R.layout.fragment_camera) {
 
     private val mainViewModel: MainViewModel by sharedViewModel()
     private val syncViewModel: SyncViewModel by viewModel()
