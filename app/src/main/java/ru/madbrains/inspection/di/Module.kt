@@ -6,6 +6,8 @@ import ru.madbrains.inspection.ui.auth.AuthorizationViewModel
 import ru.madbrains.inspection.ui.common.WebViewViewModel
 import ru.madbrains.inspection.ui.launcher.LauncherViewModel
 import ru.madbrains.inspection.ui.main.MainViewModel
+import ru.madbrains.inspection.ui.main.defects.defectdetail.DefectDetailViewModel
+import ru.madbrains.inspection.ui.main.defects.defectdetail.deviceSelectList.DeviceSelectListViewModel
 import ru.madbrains.inspection.ui.main.routes.RoutesViewModel
 import ru.madbrains.inspection.ui.main.routes.dateroutelist.DateRouteListViewModel
 import ru.madbrains.inspection.ui.main.routes.points.RoutePointsViewModel
@@ -30,4 +32,6 @@ val appModule = module {
     viewModel { RoutePointsListViewModel() }
     viewModel { RoutePointsMapViewModel() }
     viewModel { TechOperationsViewModel(get()) }
+    viewModel { DefectDetailViewModel(get()) }
+    viewModel { DeviceSelectListViewModel(get()) }
 }

@@ -14,7 +14,7 @@
 
         <include
             android:id="@+id/toolbarLayout"
-            layout="@layout/toolbar_with_menu"
+            layout="@layout/toolbar_with_back_and_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -26,35 +26,19 @@
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
+
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvDefectList"
-            android:background="@color/greyLight"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:paddingLeft="0dp"
-            android:paddingRight="0dp"
-            android:paddingBottom="0dp"
+            android:id="@+id/rvDeviceSelectList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:itemCount="5"
-            tools:listitem="@layout/item_defect" />
+            tools:listitem="@layout/item_device_select">
 
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/fabAddDefect"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="24dp"
-            android:backgroundTint="@color/accidentYellow"
-            android:gravity="center_vertical"
-            app:iconSize="24dp"
-            app:iconPadding="0dp"
-            app:icon="@drawable/ic_add"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+        </androidx.recyclerview.widget.RecyclerView>
 
         <ru.madbrains.inspection.ui.view.ProgressView
             android:id="@+id/progressView"

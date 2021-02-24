@@ -1,6 +1,7 @@
 package ru.madbrains.inspection.ui.main.defects.defectlist
 
 import android.os.Bundle
+import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_defect_list.*
 import kotlinx.android.synthetic.main.toolbar_with_menu.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -27,6 +28,10 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
             btnMenu.setOnClickListener {
                 mainViewModel.menuClick()
             }
+        }
+
+        fabAddDefect.setOnClickListener {
+            findNavController().navigate(R.id.action_defectListFragment_to_detailFragment)
         }
     }
 }
