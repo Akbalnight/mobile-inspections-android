@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.fragment_defect_detail.*
 import kotlinx.android.synthetic.main.fragment_defect_list.*
 import kotlinx.android.synthetic.main.fragment_defect_list.toolbarLayout
 import kotlinx.android.synthetic.main.fragment_route_list.*
+import kotlinx.android.synthetic.main.item_defect.*
 import kotlinx.android.synthetic.main.toolbar_with_back.*
 import kotlinx.android.synthetic.main.toolbar_with_back.btnBack
 import kotlinx.android.synthetic.main.toolbar_with_back.tvTitle
@@ -23,21 +24,34 @@ import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.extensions.strings
+import ru.madbrains.inspection.ui.adapters.DefectMediaAdapter
 import ru.madbrains.inspection.ui.adapters.RouteAdapter
+import ru.madbrains.inspection.ui.adapters.RoutePointAdapter
+import ru.madbrains.inspection.ui.common.camera.CameraViewModel
 import ru.madbrains.inspection.ui.main.MainViewModel
+import ru.madbrains.inspection.ui.main.routes.RoutesAdapter
 import ru.madbrains.inspection.ui.main.routes.techoperations.TechOperationsFragment
 
 class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
 
     private val defectTypicalAdapter by lazy {
         DefectTypicalListAdapter(
-            context = context,
-            layoutResource = R.layout.item_defect_typical,
-            textViewResourceId = R.id.tvName
+                context = context,
+                layoutResource = R.layout.item_defect_typical,
+                textViewResourceId = R.id.tvName
+        )
+    }
+
+    private val defectMediaAdapter by lazy{
+        DefectMediaAdapter(
+                onDefectMediaClick = {
+
+                }
         )
     }
 
     private val defectDetailViewModel: DefectDetailViewModel by sharedViewModel()
+    private val cameraViewModel: CameraViewModel by sharedViewModel()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -59,6 +73,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
             openDeviceSelect()
         }
 
+        setupMediaList()
     }
 
     private fun setupNewDefect() {
@@ -95,13 +110,28 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
         }
     }
 
-    private fun setupDefectDevice(){
+    private fun setupDefectDevice() {
         defectDetailViewModel.device.observe(viewLifecycleOwner, Observer {
-                dropDownDevice.setText(it.name, false)
+            dropDownDevice.setText(it.name, false)
         })
     }
 
-    private fun openDeviceSelect(){
+    private fun openDeviceSelect() {
         findNavController().navigate(R.id.action_defectDetailFragment_to_deviceSelectListFragment)
+    }
+
+    private fun setupMediaList() {
+
+        rvAddDefectMedia.adapter = defectMediaAdapter
+
+        defectDetailViewModel.mediaList.observe(viewLifecycleOwner, Observer {
+            defectMediaAdapter.items = it
+        })
+
+        cameraViewModel.capturedImage.observe(viewLifecycleOwner, EventObserver {
+            defectDetailViewModel.addImage(it)
+        })
+
+
     }
 }
