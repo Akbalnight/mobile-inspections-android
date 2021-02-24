@@ -96,11 +96,8 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
     }
 
     private fun setupDefectDevice(){
-
         defectDetailViewModel.device.observe(viewLifecycleOwner, Observer {
-                Log.d("1111", "sdfsdfdsfsf")
                 dropDownDevice.setText(it.name, false)
-
         })
     }
 

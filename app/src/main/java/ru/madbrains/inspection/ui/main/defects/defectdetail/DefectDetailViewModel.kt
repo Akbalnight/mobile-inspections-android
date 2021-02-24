@@ -40,10 +40,6 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor) :
 
     fun changeCurrentDefectDevice(model: EquipmentsModel){
         _device.value = model
-
-
-        Log.d("1111", "sdfsdfdsfsf222")
-        Log.d("1111", device.value.toString())
     }
 
     private fun updateDefectTypicalList() {

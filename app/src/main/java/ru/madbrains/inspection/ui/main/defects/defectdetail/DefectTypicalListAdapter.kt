@@ -19,7 +19,6 @@ class DefectTypicalListAdapter(context: Context,
         ArrayAdapter<DefectTypicalUiModel>(context, layoutResource) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        Log.d("fsfsd", "fdsfsdf")
         val view = createViewFromResource(convertView, parent, layoutResource)
 
         return bindData(getItem(position), view)
@@ -40,12 +39,7 @@ class DefectTypicalListAdapter(context: Context,
     }
 
     private fun bindData(value: DefectTypicalUiModel, view: View): View {
-        Log.d("fsfsd", "fdsfsdf222")
-
         view.tvName.text = value.name
-
-        // view.tvName.text = value.name
-        Log.d("fsfsd", value.name)
         return view
     }
 
