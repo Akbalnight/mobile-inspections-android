@@ -1,7 +1,6 @@
 package ru.madbrains.inspection.ui.main.defects.defectdetail
 
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -10,6 +9,7 @@ import ru.madbrains.domain.interactor.RoutesInteractor
 import ru.madbrains.domain.model.DefectTypicalModel
 import ru.madbrains.domain.model.EquipmentsModel
 import ru.madbrains.inspection.base.BaseViewModel
+import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.ui.delegates.MediaDefectUiModel
 import java.util.*
 
@@ -27,6 +27,9 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor) :
 
     private val _mediaList = MutableLiveData<List<MediaDefectUiModel>>()
     val mediaList: LiveData<List<MediaDefectUiModel>> = _mediaList
+
+    private val _navigateToCamera = MutableLiveData<Event<Unit>>()
+    val navigateToCamera: LiveData<Event<Unit>> = _navigateToCamera
 
     fun getDefectTypicalList() {
         routesInteractor.getDefectTypical()
@@ -79,5 +82,9 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor) :
             }
         }
         _mediaList.value = items
+    }
+
+    fun photoVideoClick() {
+        _navigateToCamera.value = Event(Unit)
     }
 }
