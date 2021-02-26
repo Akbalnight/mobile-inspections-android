@@ -14,12 +14,12 @@ class LauncherViewModel(
     val launchDestination: LiveData<Event<LaunchDestination>> = _launchDestination
 
     init {
-        _launchDestination.value = Event(LaunchDestination.Main)
-//        if (preferenceStorage.token.isNullOrEmpty()) {
-//            _launchDestination.value = Event(LaunchDestination.Authorization)
-//        } else {
-//            _launchDestination.value = Event(LaunchDestination.Main)
-//        }
+//        _launchDestination.value = Event(LaunchDestination.Main)
+       if (preferenceStorage.token.isNullOrEmpty()) {
+            _launchDestination.value = Event(LaunchDestination.Authorization)
+        } else {
+            _launchDestination.value = Event(LaunchDestination.Main)
+        }
     }
 }
 

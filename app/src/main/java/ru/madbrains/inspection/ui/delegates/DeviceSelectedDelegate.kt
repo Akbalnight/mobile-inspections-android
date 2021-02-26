@@ -25,7 +25,7 @@ data class DeviceSelectUiModel(
 ) : DiffItem {
 
     override fun areItemsTheSame(newItem: DiffItem): Boolean =
-        newItem is RouteUiModel && id == newItem.id
+        newItem is DeviceSelectUiModel && id == newItem.id
 
     override fun areContentsTheSame(newItem: DiffItem): Boolean = this == newItem
 }

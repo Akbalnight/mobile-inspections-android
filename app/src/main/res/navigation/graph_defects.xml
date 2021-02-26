@@ -33,6 +33,14 @@
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
 
+        <action
+            android:id="@+id/action_defectDetailFragment_to_cameraFragment"
+            app:destination="@id/cameraFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
     </fragment>
 
     <fragment
@@ -40,5 +48,11 @@
         android:name="ru.madbrains.inspection.ui.main.defects.defectdetail.deviceSelectList.DeviceSelectListFragment"
         android:label="DeviceSelectListFragment"
         tools:layout="@layout/fragment_defect_find_device" />
+
+    <fragment
+        android:id="@+id/cameraFragment"
+        android:name="ru.madbrains.inspection.ui.common.camera.CameraFragment"
+        android:label="CameraFragment"
+        tools:layout="@layout/fragment_camera" />
 
 </navigation>

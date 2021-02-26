@@ -48,6 +48,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:hint="@string/fragment_add_defect_drop_down_hint_device"
+                    android:clickable="true"
                     android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -58,6 +59,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="none"
+                        android:focusable="false"
+                        android:clickable="true"
                         android:textColor="@color/textMain" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -129,20 +132,19 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvAddDefectMedia"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:orientation="horizontal"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
+                    android:paddingRight="0dp"
                     android:paddingBottom="8dp"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine"
+                    app:layout_constraintTop_toBottomOf="@id/tvMediaList"
                     tools:itemCount="5"
                     tools:listitem="@layout/item_media" />
 
@@ -185,14 +187,14 @@
             android:baselineAligned="false"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
+            android:paddingLeft="64dp"
+            android:paddingRight="64dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
             <LinearLayout
-                android:id="@+id/layoutBottomButtonScan"
+                android:id="@+id/llBottomScan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -223,7 +225,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/layoutBottomButtonPhotoVideo"
+                android:id="@+id/llBottomPhotoVideo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -255,7 +257,7 @@
         </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/fabTechOperationsSave"
+            android:id="@+id/fabDefectSave"
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:layout_marginEnd="20dp"

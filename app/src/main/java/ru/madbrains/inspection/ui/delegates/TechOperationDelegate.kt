@@ -41,7 +41,7 @@ data class TechOperationUiModel(
 ) : DiffItem {
 
     override fun areItemsTheSame(newItem: DiffItem): Boolean =
-        newItem is RouteUiModel && id == newItem.id
+        newItem is TechOperationUiModel && id == newItem.id
 
     override fun areContentsTheSame(newItem: DiffItem): Boolean = this == newItem
 }
