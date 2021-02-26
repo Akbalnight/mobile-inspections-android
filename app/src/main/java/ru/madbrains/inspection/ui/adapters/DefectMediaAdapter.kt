@@ -6,11 +6,12 @@ import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.*
 
 class DefectMediaAdapter(
-        onDefectMediaClick: (MediaDefectUiModel) -> Unit
+        onMediaImageClick: (MediaDefectUiModel) -> Unit,
+        onMediaDeleteClick: (MediaDefectUiModel) -> Unit
 ) : AsyncListDifferDelegationAdapter<DiffItem>(BaseDiffCallback()) {
 
     init {
         delegatesManager
-                .addDelegate(mediaDefectDelegate(onDefectMediaClick))
+                .addDelegate(mediaDefectDelegate(onMediaImageClick, onMediaDeleteClick))
     }
 }

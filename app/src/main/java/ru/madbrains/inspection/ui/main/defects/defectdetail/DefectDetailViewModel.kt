@@ -1,6 +1,8 @@
 package ru.madbrains.inspection.ui.main.defects.defectdetail
 
 import android.graphics.Bitmap
+import android.text.Editable
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -18,6 +20,8 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor) :
 
     private val defectTypicalModels = mutableListOf<DefectTypicalModel>()
     private val mediaModels = mutableListOf<MediaDefectUiModel>()
+    private lateinit var currentTypical: DefectTypicalUiModel
+    private var description: String = ""
 
     private val _defectTypicalList = MutableLiveData<List<DefectTypicalUiModel>>()
     val defectTypicalList: LiveData<List<DefectTypicalUiModel>> = _defectTypicalList
@@ -28,8 +32,19 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor) :
     private val _mediaList = MutableLiveData<List<MediaDefectUiModel>>()
     val mediaList: LiveData<List<MediaDefectUiModel>> = _mediaList
 
+    //Events
     private val _navigateToCamera = MutableLiveData<Event<Unit>>()
     val navigateToCamera: LiveData<Event<Unit>> = _navigateToCamera
+
+    private val _showDialogBlankFields = MutableLiveData<Event<Unit>>()
+    val showDialogBlankFields: LiveData<Event<Unit>> = _showDialogBlankFields
+
+    private val _showDialogBlankRequiredFields = MutableLiveData<Event<Unit>>()
+    val showDialogBlankRequiredFields: LiveData<Event<Unit>> = _showDialogBlankRequiredFields
+
+    private val _popNavigation = MutableLiveData<Event<Unit>>()
+    val popNavigation: LiveData<Event<Unit>> = _popNavigation
+
 
     fun getDefectTypicalList() {
         routesInteractor.getDefectTypical()
@@ -44,12 +59,44 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor) :
     }
 
     fun changeCurrentDefectTypical(model: DefectTypicalUiModel) {
-        // todo
+        currentTypical = model
     }
 
 
     fun changeCurrentDefectDevice(model: EquipmentsModel) {
         _device.value = model
+    }
+
+    private fun checkIsNotEmptyFields(): Boolean {
+
+        var isNotEmpty = true
+
+        isNotEmpty = isNotEmpty && (this::currentTypical.isInitialized)
+
+        isNotEmpty = isNotEmpty && (description.isNotBlank())
+
+        isNotEmpty = isNotEmpty && (!mediaList.value.isNullOrEmpty())
+
+        return isNotEmpty
+    }
+
+    private fun checkIsNoEmptyRequiredFields(): Boolean {
+
+        var isNotEmpty = true
+        device.value?.let {
+            isNotEmpty = isNotEmpty && true
+        } ?: run {
+            isNotEmpty = isNotEmpty && false
+        }
+        return isNotEmpty
+    }
+
+    fun addDescription(text: CharSequence?) {
+        text?.let {
+            description = it.toString()
+        } ?: run {
+            description = ""
+        }
     }
 
     private fun updateDefectTypicalList() {
@@ -68,11 +115,20 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor) :
     }
 
     fun addImage(image: Bitmap) {
-        mediaModels.add(MediaDefectUiModel(
-                id = UUID.randomUUID().toString(),
-                image = image,
-                isVideo = false))
+        mediaModels.add(
+                MediaDefectUiModel(
+                        id = UUID.randomUUID().toString(),
+                        image = image,
+                        isVideo = false
+                )
+        )
         updateMediaList()
+    }
+
+    fun deleteMedia(deleteItem: MediaDefectUiModel) {
+        if (mediaModels.remove(deleteItem)) {
+            updateMediaList()
+        }
     }
 
     private fun updateMediaList() {
@@ -86,5 +142,24 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor) :
 
     fun photoVideoClick() {
         _navigateToCamera.value = Event(Unit)
+    }
+
+    fun saveDefect() {
+        //todo save defect
+        _popNavigation.value = Event(Unit)
+    }
+
+    fun checkAndSave() {
+
+        if (checkIsNoEmptyRequiredFields()){
+            if(checkIsNotEmptyFields()){
+                saveDefect()
+            } else {
+                _showDialogBlankFields.value = Event(Unit)
+            }
+        } else {
+            _showDialogBlankRequiredFields.value = Event(Unit)
+        }
+
     }
 }
