@@ -7,22 +7,40 @@ import io.reactivex.rxkotlin.addTo
 import ru.madbrains.domain.interactor.RoutesInteractor
 import ru.madbrains.domain.model.DefectModel
 import ru.madbrains.inspection.base.BaseViewModel
+import ru.madbrains.inspection.base.model.DiffItem
+import ru.madbrains.inspection.ui.delegates.DefectListUiModel
 
 class DefectListViewModel(private val routesInteractor: RoutesInteractor) : BaseViewModel() {
 
-    private val _defectList = MutableLiveData<List<DefectModel>>()
-    val defectList: LiveData<List<DefectModel>> = _defectList
+
+    private val _defectList = MutableLiveData<List<DiffItem>>()
+    val defectList: LiveData<List<DiffItem>> = _defectList
+
+    private val defectListModels = mutableListOf<DefectModel>()
 
     fun getDefectList() {
         routesInteractor.getDefects()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ items ->
-                    //   defectTypicalModels.addAll(items)
-                    // updateDefectTypicalList()
-                    _defectList.value = items
+                    defectListModels.addAll(items)
+                    updateDefectList()
                 }, {
                     it.printStackTrace()
                 })
                 .addTo(disposables)
+    }
+
+    private fun updateDefectList() {
+        val defects = mutableListOf<DiffItem>().apply {
+            defectListModels.map { defect ->
+                add(
+                        DefectListUiModel(
+                                id = defect.id,
+                                name = defect.defectName.orEmpty()
+                        )
+                )
+            }
+        }
+        _defectList.value = defects
     }
 }
