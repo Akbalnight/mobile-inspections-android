@@ -64,7 +64,7 @@
         app:iconSize="32dp"
         app:iconPadding="0dp"
         android:text="начать"
-        app:icon="@drawable/ic_route_in_progress"
+        app:icon="@drawable/ic_detour_in_progress"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

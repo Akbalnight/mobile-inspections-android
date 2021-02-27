@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.toolbar_with_back.view.*
 import kotlinx.android.synthetic.main.toolbar_with_close.view.tvTitle
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.madbrains.domain.model.RoutePointModel
+import ru.madbrains.domain.model.TechMapModel
 import ru.madbrains.inspection.R
 
 import ru.madbrains.inspection.base.BaseFragment
@@ -37,8 +38,8 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
         })
 
         requireNotNull(arguments).run {
-            (getSerializable(TechOperationsFragment.KEY_POINT) as? RoutePointModel)?.let {
-                setupToolbar(it.position)
+            (getSerializable(TechOperationsFragment.KEY_POINT) as? TechMapModel)?.let {
+//                setupToolbar(it.name)
                 techOperationsViewModel.setPoint(it)
             }
         }

@@ -1,7 +1,6 @@
 package ru.madbrains.inspection.ui.main.defects.defectdetail
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,7 @@ import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
 import kotlinx.android.synthetic.main.item_defect_typical.view.*
 import ru.madbrains.inspection.base.model.DiffItem
-import ru.madbrains.inspection.ui.delegates.RouteUiModel
+import ru.madbrains.inspection.ui.delegates.DetourUiModel
 
 class DefectTypicalListAdapter(context: Context,
                                @LayoutRes private val layoutResource: Int,
@@ -53,7 +52,7 @@ data class DefectTypicalUiModel(
 ) : DiffItem {
 
     override fun areItemsTheSame(newItem: DiffItem): Boolean =
-            newItem is RouteUiModel && id == newItem.id
+            newItem is DetourUiModel && id == newItem.id
 
     override fun areContentsTheSame(newItem: DiffItem): Boolean = this == newItem
 }

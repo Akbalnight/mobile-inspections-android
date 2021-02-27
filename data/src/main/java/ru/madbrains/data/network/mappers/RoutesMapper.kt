@@ -11,7 +11,7 @@ fun mapGetDetoursResp(resp: GetDetoursResp): DetourModel {
             routeId = routeId,
             staffId = staffId,
             repeaterId = repeaterId,
-            status = RouteStatus.values().find {
+            status = DetourStatus.values().find {
                 it.id == statusId
             },
             statusName = statusName,
@@ -30,21 +30,89 @@ fun mapGetDetoursResp(resp: GetDetoursResp): DetourModel {
             possibleDeviationDateStart = possibleDeviationDateStart,
             possibleDeviationDateFinish = possibleDeviationDateFinish,
             isDefectExist = isDefectExist,
-            route = mapRouteResp(route)
+            route = mapGetRouteResp(route)
         )
     }
 }
 
-fun mapRouteResp(resp: GetRouteResp): RouteModel {
+fun mapGetRouteResp(resp: GetRouteResp): RouteModel {
     return with(resp) {
         RouteModel(
             id = id,
             name = name,
             code = code,
-            duration = duration
+            duration = duration,
+            routeData = routesData.map { mapGetRoutesDataResp(it) }
         )
     }
 }
+
+fun mapGetRoutesDataResp(resp: GetRouteDataResp): RouteDataModel {
+    return with(resp) {
+        RouteDataModel(
+            id = id,
+            techMapId = techMapId,
+            controlPointId = controlPointId,
+            routeMapId = routeMapId,
+            routeId = routeId,
+            duration = duration,
+            xLocation = xLocation,
+            yLocation = yLocation,
+            position = position,
+            equipments = equipments.map { mapGetEquipmentResp(it) },
+            techMap = mapTechMapResp(techMap)
+        )
+    }
+}
+
+fun mapGetEquipmentResp(resp: GetEquipmentResp): EquipmentModel {
+    return with(resp) {
+        EquipmentModel(
+            id = id,
+            code = code,
+            name = name,
+            markId = markId,
+            modelId = modelId,
+            parentId = parentId,
+            isGroup = isGroup
+        )
+    }
+}
+
+fun mapTechMapResp(resp: GetTechMapResp): TechMapModel {
+    return with(resp) {
+        TechMapModel(
+            id = id,
+            name = name,
+            code = code,
+            dateStart = dateStart,
+            techMapsStatusId = techMapsStatusId,
+            parentId = parentId,
+            isGroup = isGroup,
+            techOperations = techOperations.map { mapGetTechOperationResp(it) }
+        )
+    }
+}
+
+fun mapGetTechOperationResp(resp: GetTechOperationResp): TechOperationModel {
+    return with(resp) {
+        TechOperationModel(
+            id = id,
+            name = name,
+            code = code,
+            needInputData = needInputData,
+            labelInputData = labelInputData,
+            equipmentStop = equipmentStop,
+            increasedDanger = increasedDanger,
+            duration = duration,
+            techMapId = techMapId,
+            position = position
+        )
+    }
+}
+
+
+
 
 fun mapGetRoutePointsResp(resp: GetRoutePointResp): RoutePointModel {
     return with(resp) {
@@ -79,9 +147,9 @@ fun mapGetPlanTechOperationsResp(resp: GetPlanTechOperationsResp): PlanTechOpera
 fun mapGetDefectTypicalResp(resp: GetDefectTypicalResp): DefectTypicalModel {
     return with(resp) {
         DefectTypicalModel(
-                id = id,
-                name = name,
-                code = code
+            id = id,
+            name = name,
+            code = code
         )
     }
 }

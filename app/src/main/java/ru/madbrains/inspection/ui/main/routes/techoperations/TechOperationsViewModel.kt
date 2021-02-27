@@ -7,6 +7,8 @@ import io.reactivex.rxkotlin.addTo
 import ru.madbrains.domain.interactor.RoutesInteractor
 import ru.madbrains.domain.model.PlanTechOperationsModel
 import ru.madbrains.domain.model.RoutePointModel
+import ru.madbrains.domain.model.TechMapModel
+import ru.madbrains.domain.model.TechOperationModel
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.TechOperationUiModel
@@ -23,32 +25,37 @@ class TechOperationsViewModel(private val routesInteractor: RoutesInteractor) :
     private val _techOperations = MutableLiveData<List<DiffItem>>()
     val techOperations: LiveData<List<DiffItem>> = _techOperations
 
-    private val operationsModels = mutableListOf<PlanTechOperationsModel>()
+    private val operationsModels = mutableListOf<TechOperationModel>()
 
     var routePointModel: RoutePointModel? = null
 
-    fun setPoint(routePoint: RoutePointModel) {
-        routePointModel = routePoint
-        getOperations(routePoint.id)
-        routePoint.techMapName?.let { name ->
-            _titleTechOperations.value = name
-        }
+    fun setPoint(routePoint: TechMapModel) {
+
+        routePoint.techOperations.let { operationsModels.addAll(it) }
+
+        updateData()
+
+//        routePointModel = routePoint
+//        getOperations(routePoint.id)
+//        routePoint.techMapName?.let { name ->
+//            _titleTechOperations.value = name
+//        }
 
     }
 
-    private fun getOperations(dataId: String) {
-        routesInteractor.getPlanTechOperations(dataId)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { _progressVisibility.postValue(true) }
-                .doAfterTerminate { _progressVisibility.postValue(false) }
-                .subscribe({ operations ->
-                    operationsModels.addAll(operations)
-                    updateData()
-                }, {
-                    it.printStackTrace()
-                })
-                .addTo(disposables)
-    }
+//    private fun getOperations(dataId: String) {
+//        routesInteractor.getPlanTechOperations(dataId)
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .doOnSubscribe { _progressVisibility.postValue(true) }
+//                .doAfterTerminate { _progressVisibility.postValue(false) }
+//                .subscribe({ operations ->
+////                    operationsModels.addAll(operations)
+//                    updateData()
+//                }, {
+//                    it.printStackTrace()
+//                })
+//                .addTo(disposables)
+//    }
 
     private fun updateData() {
         val operations = mutableListOf<DiffItem>().apply {

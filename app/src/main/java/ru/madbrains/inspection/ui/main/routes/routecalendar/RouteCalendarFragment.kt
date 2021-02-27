@@ -24,7 +24,7 @@ import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.extensions.colors
 import ru.madbrains.inspection.extensions.drawables
 import ru.madbrains.inspection.extensions.stringArrays
-import ru.madbrains.inspection.ui.delegates.RouteUiModel
+import ru.madbrains.inspection.ui.delegates.DetourUiModel
 import ru.madbrains.inspection.ui.main.routes.RoutesViewModel
 import ru.madbrains.inspection.ui.main.routes.dateroutelist.DateRouteListFragment
 import ru.madbrains.inspection.ui.view.DayViewContainer
@@ -45,8 +45,8 @@ class RouteCalendarFragment : BaseFragment(R.layout.fragment_route_calendar) {
 
         setupCalendar()
 
-        routesViewModel.routes.observe(viewLifecycleOwner, Observer {
-            routeCalendarViewModel.updateRouteDates(it.filterIsInstance<RouteUiModel>())
+        routesViewModel.detours.observe(viewLifecycleOwner, Observer {
+            routeCalendarViewModel.updateRouteDates(it.filterIsInstance<DetourUiModel>())
             calendarView.notifyCalendarChanged()
         })
         routeCalendarViewModel.navigateToDateRouteList.observe(viewLifecycleOwner, EventObserver { date ->

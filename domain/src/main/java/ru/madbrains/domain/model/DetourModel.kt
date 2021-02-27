@@ -8,7 +8,7 @@ data class DetourModel(
     val routeId: String?,
     val staffId: String?,
     val repeaterId: String?,
-    val status: RouteStatus?,
+    val status: DetourStatus?,
     val statusName: String?,
     val routeName: String?,
     val name: String?,

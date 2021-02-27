@@ -12,7 +12,7 @@ import ru.madbrains.domain.model.DetourModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
-import ru.madbrains.inspection.ui.adapters.RouteAdapter
+import ru.madbrains.inspection.ui.adapters.DetourAdapter
 import ru.madbrains.inspection.ui.main.routes.RoutesViewModel
 import ru.madbrains.inspection.ui.main.routes.points.RoutePointsFragment
 
@@ -22,12 +22,12 @@ class RouteListFragment : BaseFragment(R.layout.fragment_route_list) {
     private val routesViewModel: RoutesViewModel by sharedViewModel()
 
     private val routesAdapter by lazy {
-        RouteAdapter(
-            onRouteClick = {
-                val route = routesViewModel.routeModels.find { routeModel ->
-                    routeModel.id == it.id
+        DetourAdapter(
+            onDetourClick = {
+                val detour = routesViewModel.detourModels.find { detourModel ->
+                    detourModel.id == it.id
                 }
-                routeListViewModel.routeClick(route)
+                routeListViewModel.routeClick(detour)
             }
         )
     }
@@ -41,7 +41,7 @@ class RouteListFragment : BaseFragment(R.layout.fragment_route_list) {
             routesViewModel.getDetours()
         }
 
-        routesViewModel.routes.observe(viewLifecycleOwner, Observer {
+        routesViewModel.detours.observe(viewLifecycleOwner, Observer {
             routesAdapter.items = it
             ivGetData.isVisible = false
             btnGetData.isVisible = false

@@ -9,7 +9,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_route_filters.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import ru.madbrains.domain.model.RouteStatus
+import ru.madbrains.domain.model.DetourStatus
 import ru.madbrains.inspection.R
 
 class RouteFiltersFragment : DialogFragment() {
@@ -48,27 +48,27 @@ class RouteFiltersFragment : DialogFragment() {
         rbPending.setOnClickListener {
             rbs.map { it.isChecked = false }
             rbPending.isChecked = true
-            routeFiltersViewModel.setFilter(RouteStatus.PENDING)
+            routeFiltersViewModel.setFilter(DetourStatus.PENDING)
         }
         rbCompleted.setOnClickListener {
             rbs.map { it.isChecked = false }
             rbCompleted.isChecked = true
-            routeFiltersViewModel.setFilter(RouteStatus.COMPLETED)
+            routeFiltersViewModel.setFilter(DetourStatus.COMPLETED)
         }
         rbNotCompleted.setOnClickListener {
             rbs.map { it.isChecked = false }
             rbNotCompleted.isChecked = true
-            routeFiltersViewModel.setFilter(RouteStatus.NOT_COMPLETED)
+            routeFiltersViewModel.setFilter(DetourStatus.NOT_COMPLETED)
         }
         rbInProgress.setOnClickListener {
             rbs.map { it.isChecked = false }
             rbInProgress.isChecked = true
-            routeFiltersViewModel.setFilter(RouteStatus.IN_PROGRESS)
+            routeFiltersViewModel.setFilter(DetourStatus.IN_PROGRESS)
         }
         rbCompletedAhead.setOnClickListener {
             rbs.map { it.isChecked = false }
             rbCompletedAhead.isChecked = true
-            routeFiltersViewModel.setFilter(RouteStatus.COMPLETED_AHEAD)
+            routeFiltersViewModel.setFilter(DetourStatus.COMPLETED_AHEAD)
         }
 
         btnCancel.setOnClickListener {
@@ -82,23 +82,23 @@ class RouteFiltersFragment : DialogFragment() {
 
         routeFiltersViewModel.selectedFilter.observe(viewLifecycleOwner, Observer { status ->
             when (status) {
-                RouteStatus.PENDING -> {
+                DetourStatus.PENDING -> {
                     rbs.map { it.isChecked = false }
                     rbPending.isChecked = true
                 }
-                RouteStatus.COMPLETED -> {
+                DetourStatus.COMPLETED -> {
                     rbs.map { it.isChecked = false }
                     rbCompleted.isChecked = true
                 }
-                RouteStatus.NOT_COMPLETED -> {
+                DetourStatus.NOT_COMPLETED -> {
                     rbs.map { it.isChecked = false }
                     rbNotCompleted.isChecked = true
                 }
-                RouteStatus.IN_PROGRESS -> {
+                DetourStatus.IN_PROGRESS -> {
                     rbs.map { it.isChecked = false }
                     rbInProgress.isChecked = true
                 }
-                RouteStatus.COMPLETED_AHEAD -> {
+                DetourStatus.COMPLETED_AHEAD -> {
                     rbs.map { it.isChecked = false }
                     rbCompletedAhead.isChecked = true
                 }

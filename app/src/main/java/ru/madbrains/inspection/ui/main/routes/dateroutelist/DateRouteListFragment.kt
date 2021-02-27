@@ -12,8 +12,8 @@ import ru.madbrains.domain.model.DetourModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
-import ru.madbrains.inspection.ui.adapters.RouteAdapter
-import ru.madbrains.inspection.ui.delegates.RouteUiModel
+import ru.madbrains.inspection.ui.adapters.DetourAdapter
+import ru.madbrains.inspection.ui.delegates.DetourUiModel
 import ru.madbrains.inspection.ui.main.routes.RoutesViewModel
 import ru.madbrains.inspection.ui.main.routes.points.RoutePointsFragment
 
@@ -29,12 +29,12 @@ class DateRouteListFragment : BaseFragment(R.layout.fragment_route_list_date) {
     private var date: String? = null
 
     private val routesAdapter by lazy {
-        RouteAdapter(
-            onRouteClick = {
-                val route = routesViewModel.routeModels.find { routeModel ->
-                    routeModel.id == it.id
+        DetourAdapter(
+            onDetourClick = {
+                val detour = routesViewModel.detourModels.find { detourModel ->
+                    detourModel.id == it.id
                 }
-                dateRouteListViewModel.routeClick(route)
+                dateRouteListViewModel.routeClick(detour)
             }
         )
     }
@@ -49,8 +49,8 @@ class DateRouteListFragment : BaseFragment(R.layout.fragment_route_list_date) {
 
         rvRoutes.adapter = routesAdapter
 
-        routesViewModel.routes.observe(viewLifecycleOwner, Observer {
-            routesAdapter.items = it.filterIsInstance<RouteUiModel>().filter { route ->
+        routesViewModel.detours.observe(viewLifecycleOwner, Observer {
+            routesAdapter.items = it.filterIsInstance<DetourUiModel>().filter { route ->
                 route.date.split("T").firstOrNull() == date
             }
         })

@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.fragment_route_points_list.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.madbrains.domain.model.RoutePointModel
+import ru.madbrains.domain.model.TechMapModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
@@ -23,7 +24,8 @@ class RoutePointsListFragment : BaseFragment(R.layout.fragment_route_points_list
     private val routePointsAdapter by lazy {
         RoutePointAdapter(
             onRoutePointClick = {
-                val routePoint = routePointsViewModel.routePointModels.find { routePointModel ->
+                val techmaps = routePointsViewModel.routePointModels.map { it.techMap }
+                val routePoint = techmaps.find { routePointModel ->
                     routePointModel.id == it.id
                 }
                 routePointsListViewModel.routePointClick(routePoint)
@@ -54,7 +56,7 @@ class RoutePointsListFragment : BaseFragment(R.layout.fragment_route_points_list
             })
     }
 
-    private fun openTechOperationsFragment(point: RoutePointModel) {
+    private fun openTechOperationsFragment(point: TechMapModel) {
         val args = bundleOf(
             TechOperationsFragment.KEY_POINT to point
         )
