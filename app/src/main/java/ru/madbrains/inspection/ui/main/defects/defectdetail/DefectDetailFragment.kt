@@ -213,7 +213,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
                 setMessage(strings[R.string.fragment_add_defect_dialog_empty_fields_subtitle])
                 setPositiveButton(strings[R.string.fragment_add_defect_dialog_btn_save],
                         DialogInterface.OnClickListener { _, _ ->
-                            defectDetailViewModel.checkAndSave()
+                            defectDetailViewModel.saveDefect()
                         })
                 setNegativeButton(strings[R.string.fragment_add_defect_dialog_btn_cancel],
                         DialogInterface.OnClickListener { _, _ ->
