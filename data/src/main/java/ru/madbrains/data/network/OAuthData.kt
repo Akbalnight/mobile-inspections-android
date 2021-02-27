@@ -4,10 +4,10 @@ import ru.madbrains.data.extensions.toBase64HashWith256
 
 object OAuthData {
 
-    var oauthUrl  = "http://10.5.31.117:8809"
+    var oauthUrl  = "https://oauth.dias-dev.ru"
     var clientId = "System-Service-Dias"
     var clientSecret = "24U7tcNLHRSvvjrr9sFEXGyMTpzk59mG"
-    var authRedirectUrl = "http://10.5.31.117/authorization_code"
+    var authRedirectUrl = "https://mobinspect.dias-dev.ru/authorization_code"
 
     fun getAuthorizeUrl(codeVerifier: String): String {
         return "$oauthUrl/oauth/authorize" +
