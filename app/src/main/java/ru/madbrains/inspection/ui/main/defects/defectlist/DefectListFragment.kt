@@ -20,6 +20,12 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
         super.onActivityCreated(savedInstanceState)
 
         setupToolbar()
+
+
+        //todo
+
+
+        defectListViewModel.getDefectList()
     }
 
     private fun setupToolbar() {

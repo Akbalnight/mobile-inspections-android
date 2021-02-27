@@ -14,12 +14,12 @@ interface RoutesRepository {
 
     fun getEquipments(names: List<String>, uuid: List<String>): Single<List<EquipmentsModel>>
 
-    fun getDefects(id: String,
-                   codes: List<String>,
-                   dateDetectStart: String,
-                   dateDetectEnd: String,
-                   detourIds: List<String>,
-                   defectNames: List<String>,
-                   equipmentNames: List<String>,
-                   statusProcessId: String): Single<List<DefectModel>>
+    fun getDefects(id: String?,
+                   codes: List<String>?,
+                   dateDetectStart: String?,
+                   dateDetectEnd: String?,
+                   detourIds: List<String>?,
+                   defectNames: List<String>?,
+                   equipmentNames: List<String>?,
+                   statusProcessId: String?): Single<List<DefectModel>>
 }

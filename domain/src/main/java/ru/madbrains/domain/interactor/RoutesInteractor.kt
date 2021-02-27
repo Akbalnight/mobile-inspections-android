@@ -33,14 +33,14 @@ class RoutesInteractor(
                 .subscribeOn(Schedulers.io())
     }
 
-    fun getDefects(id: String,
-                   codes: List<String>,
-                   dateDetectStart: String,
-                   dateDetectEnd: String,
-                   detourIds: List<String>,
-                   defectNames: List<String>,
-                   equipmentNames: List<String>,
-                   statusProcessId: String): Single<List<DefectModel>> {
+    fun getDefects(id: String? = null,
+                   codes: List<String>? = null,
+                   dateDetectStart: String? = null,
+                   dateDetectEnd: String? = null,
+                   detourIds: List<String>? = null,
+                   defectNames: List<String>? = null,
+                   equipmentNames: List<String>? = null,
+                   statusProcessId: String? = null): Single<List<DefectModel>> {
         return routesRepository.getDefects(id, codes, dateDetectStart, dateDetectEnd, detourIds, defectNames, equipmentNames, statusProcessId)
                 .subscribeOn(Schedulers.io())
     }
