@@ -3,13 +3,13 @@ package ru.madbrains.domain.interactor
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import ru.madbrains.domain.model.*
-import ru.madbrains.domain.repository.RoutesRepository
+import ru.madbrains.domain.repository.DetoutsRepository
 
 class RoutesInteractor(
-    private val routesRepository: RoutesRepository
+    private val routesRepository: DetoutsRepository
 ) {
-    fun getRoutes(): Single<List<RouteModel>> {
-        return routesRepository.getRoutes()
+    fun getDetours(): Single<List<DetourModel>> {
+        return routesRepository.getDetours()
             .subscribeOn(Schedulers.io())
     }
 

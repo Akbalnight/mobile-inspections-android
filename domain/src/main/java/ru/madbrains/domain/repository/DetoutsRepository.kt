@@ -3,8 +3,8 @@ package ru.madbrains.domain.repository
 import io.reactivex.Single
 import ru.madbrains.domain.model.*
 
-interface RoutesRepository {
-    fun getRoutes(): Single<List<RouteModel>>
+interface DetoutsRepository {
+    fun getDetours(): Single<List<DetourModel>>
 
     fun getRoutePoints(routeId: String): Single<List<RoutePointModel>>
 

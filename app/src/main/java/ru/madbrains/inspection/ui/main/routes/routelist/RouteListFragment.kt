@@ -8,7 +8,7 @@ import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_route_list.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import ru.madbrains.domain.model.RouteModel
+import ru.madbrains.domain.model.DetourModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
@@ -38,7 +38,7 @@ class RouteListFragment : BaseFragment(R.layout.fragment_route_list) {
         rvRoutes.adapter = routesAdapter
 
         btnGetData.setOnClickListener {
-            routesViewModel.getRoutes()
+            routesViewModel.getDetours()
         }
 
         routesViewModel.routes.observe(viewLifecycleOwner, Observer {
@@ -51,7 +51,7 @@ class RouteListFragment : BaseFragment(R.layout.fragment_route_list) {
         })
     }
 
-    private fun openRoutePointsFragment(route: RouteModel) {
+    private fun openRoutePointsFragment(route: DetourModel) {
         val args = bundleOf(
             RoutePointsFragment.KEY_ROUTE to route
         )

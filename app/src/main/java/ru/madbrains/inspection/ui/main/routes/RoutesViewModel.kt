@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
 import ru.madbrains.domain.interactor.RoutesInteractor
-import ru.madbrains.domain.model.RouteModel
+import ru.madbrains.domain.model.DetourModel
 import ru.madbrains.domain.model.RouteStatus
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.model.DiffItem
@@ -21,10 +21,10 @@ class RoutesViewModel(
     private val _routes = MutableLiveData<List<DiffItem>>()
     val routes: LiveData<List<DiffItem>> = _routes
 
-    val routeModels = mutableListOf<RouteModel>()
+    val routeModels = mutableListOf<DetourModel>()
 
-    fun getRoutes() {
-        routesInteractor.getRoutes()
+    fun getDetours() {
+        routesInteractor.getDetours()
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { _progressVisibility.postValue(true) }
             .doAfterTerminate { _progressVisibility.postValue(false) }

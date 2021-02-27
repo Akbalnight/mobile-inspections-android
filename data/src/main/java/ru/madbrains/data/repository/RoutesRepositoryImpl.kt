@@ -5,15 +5,15 @@ import ru.madbrains.data.network.api.InspectionApi
 import ru.madbrains.data.network.mappers.*
 import ru.madbrains.data.network.request.*
 import ru.madbrains.domain.model.*
-import ru.madbrains.domain.repository.RoutesRepository
+import ru.madbrains.domain.repository.DetoutsRepository
 
 class RoutesRepositoryImpl(
     private val inspectionApi: InspectionApi
-) : RoutesRepository {
-    override fun getRoutes(): Single<List<RouteModel>> {
-        val request = GetRotesReq()
-        return inspectionApi.getRoutes(request).map { resp ->
-            resp.map { mapGetRoutesResp(it) }
+) : DetoutsRepository {
+    override fun getDetours(): Single<List<DetourModel>> {
+        val request = GetDetoursReq()
+        return inspectionApi.getDetours(request).map { resp ->
+            resp.map { mapGetDetoursResp(it) }
         }
     }
 

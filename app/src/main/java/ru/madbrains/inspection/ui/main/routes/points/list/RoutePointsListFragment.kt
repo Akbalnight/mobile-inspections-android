@@ -7,13 +7,11 @@ import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_route_points_list.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import ru.madbrains.domain.model.RouteModel
 import ru.madbrains.domain.model.RoutePointModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.ui.adapters.RoutePointAdapter
-import ru.madbrains.inspection.ui.main.routes.points.RoutePointsFragment
 import ru.madbrains.inspection.ui.main.routes.points.RoutePointsViewModel
 import ru.madbrains.inspection.ui.main.routes.techoperations.TechOperationsFragment
 

@@ -8,7 +8,7 @@ import kotlinx.android.synthetic.main.fragment_route_list_date.*
 import kotlinx.android.synthetic.main.toolbar_with_back.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import ru.madbrains.domain.model.RouteModel
+import ru.madbrains.domain.model.DetourModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
@@ -66,7 +66,7 @@ class DateRouteListFragment : BaseFragment(R.layout.fragment_route_list_date) {
         }
     }
 
-    private fun openRoutePointsFragment(route: RouteModel) {
+    private fun openRoutePointsFragment(route: DetourModel) {
         val args = bundleOf(
             RoutePointsFragment.KEY_ROUTE to route
         )

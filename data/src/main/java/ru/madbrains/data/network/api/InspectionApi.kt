@@ -8,9 +8,9 @@ import ru.madbrains.data.network.response.*
 
 interface InspectionApi {
 
-    // region routes
+    // region detours
     @POST("/api/dynamicdq/data/flat/mobileDetours")
-    fun getRoutes(@Body request: GetRotesReq): Single<List<GetRouteResp>>
+    fun getDetours(@Body request: GetDetoursReq): Single<List<GetDetoursResp>>
 
     @POST("/api/dynamicdq/data/flat/mobileDetoursPlanData")
     fun getRoutePoints(@Body request: GetRoutePointsReq): Single<List<GetRoutePointResp>>

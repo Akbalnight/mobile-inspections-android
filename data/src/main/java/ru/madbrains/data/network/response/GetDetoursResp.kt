@@ -4,13 +4,13 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class GetRouteResp(
+data class GetDetoursResp(
     @field:Json(name = "id") val id: String,
     @field:Json(name = "code") val code: Int?,
     @field:Json(name = "routeId") val routeId: String?,
     @field:Json(name = "staffId") val staffId: String?,
     @field:Json(name = "repeaterId") val repeaterId: String?,
-    @field:Json(name = "status_id") val statusId: String?,
+    @field:Json(name = "statusId") val statusId: String?,
     @field:Json(name = "statusName") val statusName: String?,
     @field:Json(name = "routeName") val routeName: String?,
     @field:Json(name = "name") val name: String?,
@@ -26,5 +26,14 @@ data class GetRouteResp(
     @field:Json(name = "possibleDeviationLocationTime") val possibleDeviationLocationTime: Int?,
     @field:Json(name = "possibleDeviationDateStart") val possibleDeviationDateStart: Int?,
     @field:Json(name = "possibleDeviationDateFinish") val possibleDeviationDateFinish: Int?,
-    @field:Json(name = "isDefectExist") val isDefectExist: Int?
+    @field:Json(name = "isDefectExist") val isDefectExist: Int?,
+    @field:Json(name = "route") val route: GetRouteResp
+)
+
+@JsonClass(generateAdapter = true)
+data class GetRouteResp(
+    @field:Json(name = "id") val id: String,
+    @field:Json(name = "name") val name: String,
+    @field:Json(name = "code") val code: Int?,
+    @field:Json(name = "duration") val duration: Int?
 )

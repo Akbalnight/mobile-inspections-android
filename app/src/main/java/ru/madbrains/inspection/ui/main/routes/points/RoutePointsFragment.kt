@@ -7,7 +7,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.fragment_route_points.*
 import kotlinx.android.synthetic.main.toolbar_with_close.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import ru.madbrains.domain.model.RouteModel
+import ru.madbrains.domain.model.DetourModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.extensions.strings
@@ -28,7 +28,7 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
         super.onActivityCreated(savedInstanceState)
 
         requireNotNull(arguments).run {
-            (getSerializable(KEY_ROUTE) as? RouteModel)?.let {
+            (getSerializable(KEY_ROUTE) as? DetourModel)?.let {
                 setupToolbar(it.name)
                 routePointsViewModel.setRoute(it)
             }

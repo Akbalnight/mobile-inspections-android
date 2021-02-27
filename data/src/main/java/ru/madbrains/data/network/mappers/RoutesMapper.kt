@@ -3,9 +3,9 @@ package ru.madbrains.data.network.mappers
 import ru.madbrains.data.network.response.*
 import ru.madbrains.domain.model.*
 
-fun mapGetRoutesResp(resp: GetRouteResp): RouteModel {
+fun mapGetDetoursResp(resp: GetDetoursResp): DetourModel {
     return with(resp) {
-        RouteModel(
+        DetourModel(
             id = id,
             code = code,
             routeId = routeId,
@@ -29,7 +29,19 @@ fun mapGetRoutesResp(resp: GetRouteResp): RouteModel {
             possibleDeviationLocationTime = possibleDeviationLocationTime,
             possibleDeviationDateStart = possibleDeviationDateStart,
             possibleDeviationDateFinish = possibleDeviationDateFinish,
-            isDefectExist = isDefectExist
+            isDefectExist = isDefectExist,
+            route = mapRouteResp(route)
+        )
+    }
+}
+
+fun mapRouteResp(resp: GetRouteResp): RouteModel {
+    return with(resp) {
+        RouteModel(
+            id = id,
+            name = name,
+            code = code,
+            duration = duration
         )
     }
 }
