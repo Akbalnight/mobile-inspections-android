@@ -34,7 +34,7 @@ class RoutesInteractor(
     }
 
     fun getDefects(id: String,
-                   codes: List<Int>,
+                   codes: List<String>,
                    dateDetectStart: String,
                    dateDetectEnd: String,
                    detourIds: List<String>,

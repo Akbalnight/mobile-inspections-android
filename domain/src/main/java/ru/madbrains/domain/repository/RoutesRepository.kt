@@ -15,7 +15,7 @@ interface RoutesRepository {
     fun getEquipments(names: List<String>, uuid: List<String>): Single<List<EquipmentsModel>>
 
     fun getDefects(id: String,
-                   codes: List<Int>,
+                   codes: List<String>,
                    dateDetectStart: String,
                    dateDetectEnd: String,
                    detourIds: List<String>,

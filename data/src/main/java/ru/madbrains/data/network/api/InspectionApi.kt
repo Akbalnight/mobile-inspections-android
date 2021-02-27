@@ -22,6 +22,10 @@ interface InspectionApi {
     // endregion
 
     // region defects
+
+    @POST("/api/dynamicdq/data/flat/mobileDefects")
+    fun getDefects(@Body request: GetDefectsReq): Single<List<GetDefectsResp>>
+
     @POST("/api/dynamicdq/data/flat/mobileDefectTypical")
     fun getDefectTypical(@Body request: GetDefectTypicalReq): Single<List<GetDefectTypicalResp>>
     // endregion
