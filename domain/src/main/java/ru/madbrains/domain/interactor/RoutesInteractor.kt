@@ -15,12 +15,12 @@ class RoutesInteractor(
 
     fun getRoutePoints(routeId: String): Single<List<RoutePointModel>> {
         return routesRepository.getRoutePoints(routeId)
-            .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
     }
 
     fun getPlanTechOperations(dataId: String): Single<List<PlanTechOperationsModel>> {
         return routesRepository.getPlanTechOperations(dataId)
-            .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
     }
 
     fun getDefectTypical(): Single<List<DefectTypicalModel>> {
@@ -30,6 +30,18 @@ class RoutesInteractor(
 
     fun getEquipments(names: List<String>, uuid: List<String>): Single<List<EquipmentsModel>> {
         return routesRepository.getEquipments(names, uuid)
-            .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
+    }
+
+    fun getDefects(id: String? = null,
+                   codes: List<String>? = null,
+                   dateDetectStart: String? = null,
+                   dateDetectEnd: String? = null,
+                   detourIds: List<String>? = null,
+                   defectNames: List<String>? = null,
+                   equipmentNames: List<String>? = null,
+                   statusProcessId: String? = null): Single<List<DefectModel>> {
+        return routesRepository.getDefects(id, codes, dateDetectStart, dateDetectEnd, detourIds, defectNames, equipmentNames, statusProcessId)
+                .subscribeOn(Schedulers.io())
     }
 }
