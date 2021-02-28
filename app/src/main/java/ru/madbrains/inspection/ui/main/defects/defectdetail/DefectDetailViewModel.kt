@@ -12,6 +12,7 @@ import ru.madbrains.domain.model.DefectTypicalModel
 import ru.madbrains.domain.model.EquipmentsModel
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
+import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.MediaDefectUiModel
 import java.util.*
 
@@ -29,8 +30,8 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor) :
     private val _device = MutableLiveData<EquipmentsModel>()
     val device: LiveData<EquipmentsModel> = _device
 
-    private val _mediaList = MutableLiveData<List<MediaDefectUiModel>>()
-    val mediaList: LiveData<List<MediaDefectUiModel>> = _mediaList
+    private val _mediaList = MutableLiveData<List<DiffItem>>()
+    val mediaList: LiveData<List<DiffItem>> = _mediaList
 
     //Events
     private val _navigateToCamera = MutableLiveData<Event<Unit>>()
