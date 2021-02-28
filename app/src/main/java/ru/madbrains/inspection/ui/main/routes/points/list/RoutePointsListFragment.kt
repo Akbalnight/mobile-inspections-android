@@ -58,7 +58,7 @@ class RoutePointsListFragment : BaseFragment(R.layout.fragment_route_points_list
 
     private fun openTechOperationsFragment(point: TechMapModel) {
         val args = bundleOf(
-            TechOperationsFragment.KEY_POINT to point
+            TechOperationsFragment.KEY_TECH_MAP to point
         )
         findNavController().navigate(
             R.id.action_routePointsFragment_to_techOperationsFragment,
