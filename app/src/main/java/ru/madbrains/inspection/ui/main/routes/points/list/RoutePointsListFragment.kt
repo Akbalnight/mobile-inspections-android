@@ -7,6 +7,7 @@ import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_route_points_list.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.madbrains.domain.model.RoutePointModel
 import ru.madbrains.domain.model.TechMapModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment

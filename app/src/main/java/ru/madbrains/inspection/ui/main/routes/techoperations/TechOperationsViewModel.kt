@@ -7,6 +7,7 @@ import ru.madbrains.domain.model.RoutePointModel
 import ru.madbrains.domain.model.TechMapModel
 import ru.madbrains.domain.model.TechOperationModel
 import ru.madbrains.inspection.base.BaseViewModel
+import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.TechOperationUiModel
 
@@ -24,37 +25,22 @@ class TechOperationsViewModel(private val routesInteractor: RoutesInteractor) :
 
     private val operationsModels = mutableListOf<TechOperationModel>()
 
+    private val _navigateToAddDefect = MutableLiveData<Event<Unit>>()
+    val navigateToAddDefect: LiveData<Event<Unit>> = _navigateToAddDefect
+
     var routePointModel: RoutePointModel? = null
 
     fun setTechMapModel(techMapModel: TechMapModel) {
 
-        techMapModel.techOperations.let { operationsModels.addAll(it) }
+        techMapModel.techOperations.let {
+            operationsModels.clear()
+            operationsModels.addAll(it)
+        }
 
         _titleTechOperations.value = techMapModel.name
 
         updateData()
-
-//        routePointModel = routePoint
-//        getOperations(routePoint.id)
-//        routePoint.techMapName?.let { name ->
-//            _titleTechOperations.value = name
-//        }
-
     }
-
-//    private fun getOperations(dataId: String) {
-//        routesInteractor.getPlanTechOperations(dataId)
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .doOnSubscribe { _progressVisibility.postValue(true) }
-//                .doAfterTerminate { _progressVisibility.postValue(false) }
-//                .subscribe({ operations ->
-////                    operationsModels.addAll(operations)
-//                    updateData()
-//                }, {
-//                    it.printStackTrace()
-//                })
-//                .addTo(disposables)
-//    }
 
     private fun updateData() {
         val operations = mutableListOf<DiffItem>().apply {
@@ -71,5 +57,10 @@ class TechOperationsViewModel(private val routesInteractor: RoutesInteractor) :
             }
         }
         _techOperations.value = operations
+    }
+
+    fun addDefect() {
+        _navigateToAddDefect.value = Event(Unit)
+
     }
 }
