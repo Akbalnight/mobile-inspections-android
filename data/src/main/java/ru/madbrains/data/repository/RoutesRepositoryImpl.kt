@@ -2,11 +2,15 @@ package ru.madbrains.data.repository
 
 import com.squareup.moshi.Json
 import io.reactivex.Single
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import ru.madbrains.data.network.api.InspectionApi
 import ru.madbrains.data.network.mappers.*
 import ru.madbrains.data.network.request.*
 import ru.madbrains.domain.model.*
 import ru.madbrains.domain.repository.DetoutsRepository
+import java.io.File
 
 class RoutesRepositoryImpl(
     private val inspectionApi: InspectionApi
@@ -74,6 +78,27 @@ class RoutesRepositoryImpl(
             resp.map { mapGetDefectsResp(it) }
         }
 
+    }
+
+    override fun saveDefect(files: List<File>?, detoursId: String?, equipmentId: String?, staffDetectId: String?, defectTypicalId: String?, description: String?, dateDetectDefect: String?): Single<String> {
+        val request = CreateDefectReq(
+                detoursId = detoursId,
+                equipmentId = equipmentId,
+                staffDetectId = staffDetectId,
+                defectTypicalId = defectTypicalId,
+                description = description,
+                dateDetectDefect = dateDetectDefect
+        )
+
+        val fileList = files?.map {
+            MultipartBody.Part.createFormData(
+                    name = "file",
+                    filename = it.name,
+                    body = it.asRequestBody("image/*".toMediaTypeOrNull())
+            )
+        }
+
+        return inspectionApi.saveDefect( defectObject = request)
     }
 
 }

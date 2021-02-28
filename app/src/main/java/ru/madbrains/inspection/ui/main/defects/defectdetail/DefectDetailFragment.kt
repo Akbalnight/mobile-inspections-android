@@ -1,6 +1,7 @@
 package ru.madbrains.inspection.ui.main.defects.defectdetail
 
 import android.content.DialogInterface
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -20,6 +21,9 @@ import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.adapters.DefectMediaAdapter
 import ru.madbrains.inspection.ui.common.camera.CameraViewModel
 import ru.madbrains.inspection.ui.delegates.MediaDefectUiModel
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
 
 class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
 
@@ -239,4 +243,16 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
         alertDialog?.show()
     }
 
+    fun createFile(bitmap: Bitmap, filename: String): File {
+        val file = File(context.cacheDir, filename).apply { createNewFile() }
+        val stream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 30, stream)
+        val bitmapData = stream.toByteArray()
+        FileOutputStream(file).apply {
+            write(bitmapData)
+            flush()
+            close()
+        }
+        return file
+    }
 }

@@ -14,6 +14,9 @@ import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.MediaDefectUiModel
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
 import java.util.*
 
 class DefectDetailViewModel(private val routesInteractor: RoutesInteractor) :
@@ -152,15 +155,34 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor) :
 
     fun checkAndSave() {
 
-        if (checkIsNoEmptyRequiredFields()){
-            if(checkIsNotEmptyFields()){
-                saveDefect()
-            } else {
-                _showDialogBlankFields.value = Event(Unit)
-            }
-        } else {
-            _showDialogBlankRequiredFields.value = Event(Unit)
-        }
+        routesInteractor.saveDefect(detoursId = "a0af3d69-f68a-4e29-bc9b-37b19f35423c",
+                equipmentId = "54211ba6-6f65-4c57-83ce-71ec9f8ff567",
+                staffDetectId = "1f627c88-8f43-4105-a679-3a693559debc",
+                defectTypicalId = "8ea718c9-b5ef-4f67-b87f-bab4f70c0b61",
+                description = "Описание дефекта №1 test 555",
+                dateDetectDefect = "2020-12-01T00:00:00+03:00"
+        )
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ items ->
+                    Log.d("dafa", items)
+                }, {
+                    it.printStackTrace()
+                })
+                .addTo(disposables)
+
+        /*   if (checkIsNoEmptyRequiredFields()){
+               if(checkIsNotEmptyFields()){
+                   saveDefect()
+               } else {
+                   _showDialogBlankFields.value = Event(Unit)
+               }
+           } else {
+               _showDialogBlankRequiredFields.value = Event(Unit)
+           }
+
+         */
 
     }
+
+
 }

@@ -4,13 +4,14 @@ import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import ru.madbrains.domain.model.*
 import ru.madbrains.domain.repository.DetoutsRepository
+import java.io.File
 
 class RoutesInteractor(
-    private val routesRepository: DetoutsRepository
+        private val routesRepository: DetoutsRepository
 ) {
     fun getDetours(): Single<List<DetourModel>> {
         return routesRepository.getDetours()
-            .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
     }
 
     fun getRoutePoints(routeId: String): Single<List<RoutePointModel>> {
@@ -43,5 +44,16 @@ class RoutesInteractor(
                    statusProcessId: String? = null): Single<List<DefectModel>> {
         return routesRepository.getDefects(id, codes, dateDetectStart, dateDetectEnd, detourIds, defectNames, equipmentNames, statusProcessId)
                 .subscribeOn(Schedulers.io())
+    }
+
+    fun saveDefect(files: List<File>? = null,
+                   detoursId: String? = null,
+                   equipmentId: String? = null,
+                   staffDetectId: String? = null,
+                   defectTypicalId: String? = null,
+                   description: String? = null,
+                   dateDetectDefect: String? = null): Single<String> {
+
+        return routesRepository.saveDefect(files, detoursId, equipmentId, staffDetectId, defectTypicalId, description, dateDetectDefect).subscribeOn(Schedulers.io())
     }
 }
