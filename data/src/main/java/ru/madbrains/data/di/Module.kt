@@ -21,6 +21,7 @@ import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.data.prefs.SharedPreferenceStorage
 import ru.madbrains.data.repository.AuthRepositoryImpl
 import ru.madbrains.data.repository.RoutesRepositoryImpl
+import ru.madbrains.data.utils.FileUtil
 import ru.madbrains.domain.repository.AuthRepository
 import ru.madbrains.domain.repository.DetoutsRepository
 import java.util.concurrent.TimeUnit
@@ -32,6 +33,7 @@ val dataModule = module {
     single { getAuthApi(get()) }
     single { getAuthRepository(get()) }
     single { getDetoursRepository(get()) }
+    single { getFileUtil(get()) }
 }
 
 private fun getPreferenceStorage(context: Context): PreferenceStorage {
@@ -100,4 +102,8 @@ private fun getAuthRepository(api: AuthApi): AuthRepository {
 
 private fun getDetoursRepository(api: InspectionApi): DetoutsRepository {
     return RoutesRepositoryImpl(api)
+}
+
+private fun getFileUtil(context: Context): FileUtil {
+    return FileUtil(context)
 }

@@ -40,7 +40,7 @@ val appModule = module {
     viewModel { RoutePointsMapViewModel() }
     viewModel { TechOperationsViewModel(get()) }
     viewModel { DefectListViewModel(get()) }
-    viewModel { DefectDetailViewModel(get()) }
+    viewModel { DefectDetailViewModel(get(), get()) }
     viewModel { DeviceSelectListViewModel(get()) }
     viewModel { CameraViewModel() }
 }

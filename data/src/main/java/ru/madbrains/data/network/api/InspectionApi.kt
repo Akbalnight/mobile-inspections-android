@@ -2,6 +2,7 @@ package ru.madbrains.data.network.api
 
 import io.reactivex.Single
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.http.*
 import ru.madbrains.data.network.request.*
 import ru.madbrains.data.network.response.*
@@ -28,7 +29,7 @@ interface InspectionApi {
 
     @Multipart
     @POST("/api/dynamicdq/mobile/saveDefects")
-    fun saveDefect(@Part("defectObject") defectObject: CreateDefectReq/*, @Part files: List<MultipartBody.Part>?*/): Single<String>
+    fun saveDefect(@Part("defectObject") defectObject: CreateDefectReq, @Part files: List<MultipartBody.Part>?): Single<String>
 
     @POST("/api/dynamicdq/data/flat/mobileDefectTypical")
     fun getDefectTypical(@Body request: GetDefectTypicalReq): Single<List<GetDefectTypicalResp>>

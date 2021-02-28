@@ -242,17 +242,4 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
         }
         alertDialog?.show()
     }
-
-    fun createFile(bitmap: Bitmap, filename: String): File {
-        val file = File(context.cacheDir, filename).apply { createNewFile() }
-        val stream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 30, stream)
-        val bitmapData = stream.toByteArray()
-        FileOutputStream(file).apply {
-            write(bitmapData)
-            flush()
-            close()
-        }
-        return file
-    }
 }

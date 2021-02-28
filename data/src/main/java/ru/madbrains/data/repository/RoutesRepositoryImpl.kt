@@ -90,15 +90,28 @@ class RoutesRepositoryImpl(
                 dateDetectDefect = dateDetectDefect
         )
 
+      //  files
         val fileList = files?.map {
             MultipartBody.Part.createFormData(
-                    name = "file",
+                    name = "files[]",
                     filename = it.name,
-                    body = it.asRequestBody("image/*".toMediaTypeOrNull())
-            )
-        }
+                    body = it.asRequestBody("multipart/form-data".toMediaTypeOrNull()))
 
-        return inspectionApi.saveDefect( defectObject = request)
+        }
+/*
+        val requestBody = MultipartBody.Builder().setType(MultipartBody.FORM).apply {
+            addFormDataPart("type", "booking")
+            addFormDataPart("user", "username")
+            addFormDataPart("message", "message text goes here")
+            addFormDataPart("contact_number", "0123456789")
+            addFormDataPart("contact_email", "email@address.com")
+            // my files are List<ByteArray>, okhttp has a few utility methods like .toRequestBody for various types like below
+            files.forEachIndexed { index, bytes ->
+                addFormDataPart("files[]", "$index.jpg", bytes.toRequestBody("multipart/form-data".toMediaTypeOrNull(), 0, bytes.size))
+            }
+        }.build()*/
+
+        return inspectionApi.saveDefect(request, fileList )
     }
 
 }

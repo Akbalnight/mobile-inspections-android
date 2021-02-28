@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
+import ru.madbrains.data.utils.FileUtil
 import ru.madbrains.domain.interactor.RoutesInteractor
 import ru.madbrains.domain.model.DefectTypicalModel
 import ru.madbrains.domain.model.EquipmentsModel
@@ -17,9 +18,11 @@ import ru.madbrains.inspection.ui.delegates.MediaDefectUiModel
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.nio.file.Files
 import java.util.*
 
-class DefectDetailViewModel(private val routesInteractor: RoutesInteractor) :
+class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
+                            private val fileUtil: FileUtil) :
         BaseViewModel() {
 
     private val defectTypicalModels = mutableListOf<DefectTypicalModel>()
@@ -155,12 +158,23 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor) :
 
     fun checkAndSave() {
 
+        val listFiles = mediaModels.map {
+            fileUtil.createFile(it.image, it.id)
+        }
+
+        var myFiles: File? = null
+        if (mediaModels.isNotEmpty()) {
+            myFiles = fileUtil.createFile(mediaModels[0].image, mediaModels[0].id)
+        }
+
+       // Log.d("list", listFiles.size.toString())
         routesInteractor.saveDefect(detoursId = "a0af3d69-f68a-4e29-bc9b-37b19f35423c",
                 equipmentId = "54211ba6-6f65-4c57-83ce-71ec9f8ff567",
                 staffDetectId = "1f627c88-8f43-4105-a679-3a693559debc",
                 defectTypicalId = "8ea718c9-b5ef-4f67-b87f-bab4f70c0b61",
-                description = "Описание дефекта №1 test 555",
-                dateDetectDefect = "2020-12-01T00:00:00+03:00"
+                description = "Описание дефекта №1 test 777",
+                dateDetectDefect = "2020-12-01T00:00:00+03:00",
+                files = listFiles
         )
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ items ->
