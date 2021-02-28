@@ -10,6 +10,7 @@ import ru.madbrains.domain.model.RoutePointModel
 import ru.madbrains.domain.model.TechMapModel
 import ru.madbrains.domain.model.TechOperationModel
 import ru.madbrains.inspection.base.BaseViewModel
+import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.TechOperationUiModel
 
@@ -26,6 +27,9 @@ class TechOperationsViewModel(private val routesInteractor: RoutesInteractor) :
     val techOperations: LiveData<List<DiffItem>> = _techOperations
 
     private val operationsModels = mutableListOf<TechOperationModel>()
+
+    private val _navigateToAddDefect = MutableLiveData<Event<Unit>>()
+    val navigateToAddDefect: LiveData<Event<Unit>> = _navigateToAddDefect
 
     var routePointModel: RoutePointModel? = null
 
@@ -72,5 +76,10 @@ class TechOperationsViewModel(private val routesInteractor: RoutesInteractor) :
             }
         }
         _techOperations.value = operations
+    }
+
+    fun addDefect() {
+        _navigateToAddDefect.value = Event(Unit)
+
     }
 }

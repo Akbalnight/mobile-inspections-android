@@ -13,6 +13,7 @@ import ru.madbrains.domain.model.TechMapModel
 import ru.madbrains.inspection.R
 
 import ru.madbrains.inspection.base.BaseFragment
+import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.adapters.TechOperationAdapter
 
@@ -56,6 +57,14 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
             techOperationsAdapter.items = it
         })
 
+        layoutBottomButtonAddDefect.setOnClickListener {
+            clickAddDefect()
+        }
+
+        setupOnClickListener()
+
+        setupNavigation()
+
     }
 
     private fun setupToolbar(positionPoint: Int?) {
@@ -70,5 +79,23 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
                 findNavController().popBackStack()
             }
         }
+    }
+
+    private fun setupOnClickListener() {
+
+        layoutBottomButtonAddDefect.setOnClickListener { clickAddDefect() }
+
+    }
+
+    private fun setupNavigation() {
+
+        techOperationsViewModel.navigateToAddDefect.observe(viewLifecycleOwner, EventObserver {
+            findNavController().navigate(R.id.action_techOperationsFragment_to_addDefectFragment)
+        })
+
+    }
+
+    private fun clickAddDefect() {
+        techOperationsViewModel.addDefect()
     }
 }
