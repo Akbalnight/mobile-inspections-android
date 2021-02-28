@@ -24,8 +24,8 @@ class RoutePointsListFragment : BaseFragment(R.layout.fragment_route_points_list
     private val routePointsAdapter by lazy {
         RoutePointAdapter(
             onRoutePointClick = {
-                val techmaps = routePointsViewModel.routePointModels.map { it.techMap }
-                val routePoint = techmaps.find { routePointModel ->
+                val techMaps = routePointsViewModel.routeDataModels.map { it.techMap }
+                val routePoint = techMaps.find { routePointModel ->
                     routePointModel.id == it.id
                 }
                 routePointsListViewModel.routePointClick(routePoint)
@@ -36,7 +36,7 @@ class RoutePointsListFragment : BaseFragment(R.layout.fragment_route_points_list
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        routePointsViewModel.routeModel?.run {
+        routePointsViewModel.detourModel?.run {
             tvPlanStartValue.text = dateStartPlan?.replace("T", " ")
             tvPlanEndValue.text = dateFinishPlan?.replace("T", " ")
             tvFactStartValue.text = dateStartFact?.replace("T", " ")

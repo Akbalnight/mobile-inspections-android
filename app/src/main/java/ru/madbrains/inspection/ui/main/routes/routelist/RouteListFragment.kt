@@ -13,18 +13,18 @@ import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.ui.adapters.DetourAdapter
-import ru.madbrains.inspection.ui.main.routes.RoutesViewModel
+import ru.madbrains.inspection.ui.main.routes.DetoursViewModel
 import ru.madbrains.inspection.ui.main.routes.points.RoutePointsFragment
 
 class RouteListFragment : BaseFragment(R.layout.fragment_route_list) {
 
     private val routeListViewModel: RouteListViewModel by viewModel()
-    private val routesViewModel: RoutesViewModel by sharedViewModel()
+    private val detoursViewModel: DetoursViewModel by sharedViewModel()
 
     private val routesAdapter by lazy {
         DetourAdapter(
             onDetourClick = {
-                val detour = routesViewModel.detourModels.find { detourModel ->
+                val detour = detoursViewModel.detourModels.find { detourModel ->
                     detourModel.id == it.id
                 }
                 routeListViewModel.routeClick(detour)
@@ -38,10 +38,10 @@ class RouteListFragment : BaseFragment(R.layout.fragment_route_list) {
         rvRoutes.adapter = routesAdapter
 
         btnGetData.setOnClickListener {
-            routesViewModel.getDetours()
+            detoursViewModel.getDetours()
         }
 
-        routesViewModel.detours.observe(viewLifecycleOwner, Observer {
+        detoursViewModel.detours.observe(viewLifecycleOwner, Observer {
             routesAdapter.items = it
             ivGetData.isVisible = false
             btnGetData.isVisible = false
@@ -53,7 +53,7 @@ class RouteListFragment : BaseFragment(R.layout.fragment_route_list) {
 
     private fun openRoutePointsFragment(route: DetourModel) {
         val args = bundleOf(
-            RoutePointsFragment.KEY_ROUTE to route
+            RoutePointsFragment.KEY_DETOUR to route
         )
         findNavController().navigate(R.id.action_routesFragment_to_routePointsFragment, args)
     }

@@ -17,7 +17,7 @@ import ru.madbrains.inspection.ui.main.routes.points.map.RoutePointsMapFragment
 class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
 
     companion object {
-        const val KEY_ROUTE = "route"
+        const val KEY_DETOUR = "detour"
     }
 
     private lateinit var routePointsAdapter: RoutePointsAdapter
@@ -28,9 +28,10 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
         super.onActivityCreated(savedInstanceState)
 
         requireNotNull(arguments).run {
-            (getSerializable(KEY_ROUTE) as? DetourModel)?.let {
+            val detour = getSerializable(KEY_DETOUR) as? DetourModel
+            detour?.let {
                 setupToolbar(it.name)
-                routePointsViewModel.setRoute(it)
+                routePointsViewModel.setDetour(it)
             }
         }
 

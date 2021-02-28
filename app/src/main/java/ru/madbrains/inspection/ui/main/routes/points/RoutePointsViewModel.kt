@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import ru.madbrains.domain.interactor.RoutesInteractor
 import ru.madbrains.domain.model.DetourModel
 import ru.madbrains.domain.model.RouteDataModel
-import ru.madbrains.domain.model.RoutePointModel
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.RoutePointUiModel
@@ -20,35 +19,20 @@ class RoutePointsViewModel(
     private val _routePoints = MutableLiveData<List<DiffItem>>()
     val routePoints: LiveData<List<DiffItem>> = _routePoints
 
-    var routeModel: DetourModel? = null
-    val routePointModels = mutableListOf<RouteDataModel>()
+    var detourModel: DetourModel? = null
 
-    private fun getRoutePoints(routeId: String) {
-        routePointModels.clear()
-        routeModel?.route?.routeData?.let { routePointModels.addAll(it) }
+    val routeDataModels = mutableListOf<RouteDataModel>()
+
+    fun setDetour(detour: DetourModel) {
+        detourModel = detour
+        routeDataModels.clear()
+        routeDataModels.addAll(detour.route.routeData)
         updateData()
-//        routesInteractor.getRoutePoints(routeId)
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .doOnSubscribe { _progressVisibility.postValue(true) }
-//            .doAfterTerminate { _progressVisibility.postValue(false) }
-//            .subscribe({
-//                routePointModels.clear()
-//                routePointModels.addAll(it)
-//                updateData()
-//            }, {
-//                it.printStackTrace()
-//            })
-//            .addTo(disposables)
-    }
-
-    fun setRoute(route: DetourModel) {
-        routeModel = route
-        getRoutePoints(route.id)
     }
 
     private fun updateData() {
         val routePoints = mutableListOf<DiffItem>().apply {
-            routePointModels.map { route ->
+            routeDataModels.map { route ->
                 add(
                     RoutePointUiModel(
                         id = route.techMap.id,

@@ -3,7 +3,7 @@ package ru.madbrains.inspection.ui.main.routes
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
-class RoutesAdapter(
+class DetoursAdapter(
     fragment: Fragment
 ) : FragmentStateAdapter(fragment) {
 

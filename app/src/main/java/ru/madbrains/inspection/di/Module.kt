@@ -10,7 +10,7 @@ import ru.madbrains.inspection.ui.main.MainViewModel
 import ru.madbrains.inspection.ui.main.defects.defectdetail.DefectDetailViewModel
 import ru.madbrains.inspection.ui.main.defects.defectdetail.deviceSelectList.DeviceSelectListViewModel
 import ru.madbrains.inspection.ui.main.defects.defectlist.DefectListViewModel
-import ru.madbrains.inspection.ui.main.routes.RoutesViewModel
+import ru.madbrains.inspection.ui.main.routes.DetoursViewModel
 import ru.madbrains.inspection.ui.main.routes.dateroutelist.DateRouteListViewModel
 import ru.madbrains.inspection.ui.main.routes.points.RoutePointsViewModel
 import ru.madbrains.inspection.ui.main.routes.points.list.RoutePointsListViewModel
@@ -30,7 +30,7 @@ val appModule = module {
         )
     }
     viewModel { MainViewModel(get()) }
-    viewModel { RoutesViewModel(get()) }
+    viewModel { DetoursViewModel(get()) }
     viewModel { RouteFiltersViewModel() }
     viewModel { RouteListViewModel() }
     viewModel { RouteCalendarViewModel() }

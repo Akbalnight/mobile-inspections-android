@@ -4,8 +4,7 @@ import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.android.synthetic.main.fragment_routes.*
-import kotlinx.android.synthetic.main.fragment_routes.toolbarLayout
+import kotlinx.android.synthetic.main.fragment_detours.*
 import kotlinx.android.synthetic.main.toolbar_with_menu_and_filter.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import ru.madbrains.inspection.R
@@ -16,13 +15,13 @@ import ru.madbrains.inspection.ui.main.routes.routecalendar.RouteCalendarFragmen
 import ru.madbrains.inspection.ui.main.routes.routefilters.RouteFiltersViewModel
 import ru.madbrains.inspection.ui.main.routes.routelist.RouteListFragment
 
-class RoutesFragment : BaseFragment(R.layout.fragment_routes) {
+class DetoursFragment : BaseFragment(R.layout.fragment_detours) {
 
-    private lateinit var routesAdapter: RoutesAdapter
+    private lateinit var detoursAdapter: DetoursAdapter
 
     private val mainViewModel: MainViewModel by sharedViewModel()
     private val routeFiltersViewModel: RouteFiltersViewModel by sharedViewModel()
-    private val routesViewModel: RoutesViewModel by sharedViewModel()
+    private val detoursViewModel: DetoursViewModel by sharedViewModel()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -39,11 +38,11 @@ class RoutesFragment : BaseFragment(R.layout.fragment_routes) {
             toolbarLayout.btnFilter.setImageResource(filterImage)
         })
 
-        routesViewModel.progressVisibility.observe(viewLifecycleOwner, Observer {
+        detoursViewModel.progressVisibility.observe(viewLifecycleOwner, Observer {
             progressView.changeVisibility(it)
         })
         routeFiltersViewModel.selectedFilter.observe(viewLifecycleOwner, Observer {
-            routesViewModel.updateData(it)
+            detoursViewModel.updateData(it)
         })
     }
 
@@ -65,7 +64,7 @@ class RoutesFragment : BaseFragment(R.layout.fragment_routes) {
 
         routesViewPager.isUserInputEnabled = false
 
-        routesAdapter = RoutesAdapter(this).apply {
+        detoursAdapter = DetoursAdapter(this).apply {
             setItems(fragments)
             routesViewPager.adapter = this
         }

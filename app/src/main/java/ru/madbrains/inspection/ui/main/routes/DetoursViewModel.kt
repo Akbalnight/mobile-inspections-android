@@ -11,7 +11,7 @@ import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.DetourUiModel
 
-class RoutesViewModel(
+class DetoursViewModel(
     private val routesInteractor: RoutesInteractor
 ) : BaseViewModel() {
 
