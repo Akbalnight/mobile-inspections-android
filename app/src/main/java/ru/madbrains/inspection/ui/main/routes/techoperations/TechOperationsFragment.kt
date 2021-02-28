@@ -21,7 +21,7 @@ import ru.madbrains.inspection.ui.adapters.TechOperationAdapter
 class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
 
     companion object {
-        const val KEY_POINT = "point"
+        const val KEY_TECH_MAP = "tech_map"
     }
 
     private val techOperationsViewModel: TechOperationsViewModel by viewModel()
@@ -38,9 +38,10 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
         })
 
         requireNotNull(arguments).run {
-            (getSerializable(TechOperationsFragment.KEY_POINT) as? TechMapModel)?.let {
-//                setupToolbar(it.name)
-                techOperationsViewModel.setPoint(it)
+            val techMapModel = (getSerializable(KEY_TECH_MAP) as? TechMapModel)
+            techMapModel?.let {
+                techOperationsViewModel.setTechMapModel(it)
+                setupToolbar(it.pointNumber)
             }
         }
 

@@ -36,7 +36,8 @@ class RoutePointsViewModel(
                 add(
                     RoutePointUiModel(
                         id = route.techMap.id,
-                        name = route.techMap.name.orEmpty()
+                        name = route.techMap.name.orEmpty(),
+                        position = routeDataModels.indexOf(route) + 1
                     )
                 )
             }

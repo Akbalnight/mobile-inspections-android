@@ -11,4 +11,6 @@ data class TechMapModel(
     val parentId: String?,
     val isGroup: Boolean?,
     val techOperations: List<TechOperationModel>
-): Serializable
+) : Serializable {
+    var pointNumber: Int? = null
+}

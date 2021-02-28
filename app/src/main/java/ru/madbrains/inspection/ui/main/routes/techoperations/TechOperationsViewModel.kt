@@ -2,10 +2,7 @@ package ru.madbrains.inspection.ui.main.routes.techoperations
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.rxkotlin.addTo
 import ru.madbrains.domain.interactor.RoutesInteractor
-import ru.madbrains.domain.model.PlanTechOperationsModel
 import ru.madbrains.domain.model.RoutePointModel
 import ru.madbrains.domain.model.TechMapModel
 import ru.madbrains.domain.model.TechOperationModel
@@ -14,7 +11,7 @@ import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.TechOperationUiModel
 
 class TechOperationsViewModel(private val routesInteractor: RoutesInteractor) :
-        BaseViewModel() {
+    BaseViewModel() {
 
     private val _progressVisibility = MutableLiveData<Boolean>()
     val progressVisibility: LiveData<Boolean> = _progressVisibility
@@ -29,9 +26,11 @@ class TechOperationsViewModel(private val routesInteractor: RoutesInteractor) :
 
     var routePointModel: RoutePointModel? = null
 
-    fun setPoint(routePoint: TechMapModel) {
+    fun setTechMapModel(techMapModel: TechMapModel) {
 
-        routePoint.techOperations.let { operationsModels.addAll(it) }
+        techMapModel.techOperations.let { operationsModels.addAll(it) }
+
+        _titleTechOperations.value = techMapModel.name
 
         updateData()
 
@@ -61,13 +60,13 @@ class TechOperationsViewModel(private val routesInteractor: RoutesInteractor) :
         val operations = mutableListOf<DiffItem>().apply {
             operationsModels.map { operation ->
                 add(
-                        TechOperationUiModel(
-                                id = operation.id,
-                                name = operation.name.orEmpty(),
-                                labelInputData = operation.labelInputData.orEmpty(),
-                                needInputData = operation.needInputData,
-                                position = operation.position
-                        )
+                    TechOperationUiModel(
+                        id = operation.id,
+                        name = operation.name.orEmpty(),
+                        labelInputData = operation.labelInputData.orEmpty(),
+                        needInputData = operation.needInputData,
+                        position = operation.position
+                    )
                 )
             }
         }

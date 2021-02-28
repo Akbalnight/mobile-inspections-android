@@ -21,7 +21,8 @@ fun routePointDelegate(clickListener: (RoutePointUiModel) -> Unit) =
 
 data class RoutePointUiModel(
     val id: String,
-    val name: String
+    val name: String,
+    val position: Int?
 ) : DiffItem {
 
     override fun areItemsTheSame(newItem: DiffItem): Boolean =

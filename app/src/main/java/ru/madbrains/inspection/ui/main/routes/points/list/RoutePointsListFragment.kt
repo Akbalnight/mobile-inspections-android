@@ -7,7 +7,6 @@ import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_route_points_list.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import ru.madbrains.domain.model.RoutePointModel
 import ru.madbrains.domain.model.TechMapModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
@@ -25,10 +24,11 @@ class RoutePointsListFragment : BaseFragment(R.layout.fragment_route_points_list
         RoutePointAdapter(
             onRoutePointClick = {
                 val techMaps = routePointsViewModel.routeDataModels.map { it.techMap }
-                val routePoint = techMaps.find { routePointModel ->
-                    routePointModel.id == it.id
+                val techMap = techMaps.find { techMap ->
+                    techMap.id == it.id
                 }
-                routePointsListViewModel.routePointClick(routePoint)
+                techMap?.pointNumber = it.position
+                routePointsListViewModel.routePointClick(techMap)
             }
         )
     }
@@ -56,13 +56,10 @@ class RoutePointsListFragment : BaseFragment(R.layout.fragment_route_points_list
             })
     }
 
-    private fun openTechOperationsFragment(point: TechMapModel) {
+    private fun openTechOperationsFragment(techMap: TechMapModel) {
         val args = bundleOf(
-            TechOperationsFragment.KEY_POINT to point
+            TechOperationsFragment.KEY_TECH_MAP to techMap
         )
-        findNavController().navigate(
-            R.id.action_routePointsFragment_to_techOperationsFragment,
-            args
-        )
+        findNavController().navigate(R.id.action_routePointsFragment_to_techOperationsFragment, args)
     }
 }
