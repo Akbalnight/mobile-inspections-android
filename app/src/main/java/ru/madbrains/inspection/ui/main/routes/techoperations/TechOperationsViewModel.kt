@@ -28,9 +28,18 @@ class TechOperationsViewModel(private val routesInteractor: RoutesInteractor) :
     private val _navigateToAddDefect = MutableLiveData<Event<Unit>>()
     val navigateToAddDefect: LiveData<Event<Unit>> = _navigateToAddDefect
 
-    var routePointModel: RoutePointModel? = null
+    private val _completeTechMapEvent = MutableLiveData<Event<TechMapModel>>()
+    val completeTechMapEvent: LiveData<Event<TechMapModel>> = _completeTechMapEvent
+
+    var techMap: TechMapModel? = null
+
+    fun finishTechMap() {
+        techMap?.let { _completeTechMapEvent.value = Event(it) }
+    }
 
     fun setTechMapModel(techMapModel: TechMapModel) {
+
+        techMap = techMapModel
 
         techMapModel.techOperations.let {
             operationsModels.clear()

@@ -7,7 +7,6 @@ import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_route_points_list.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import ru.madbrains.domain.model.RoutePointModel
 import ru.madbrains.domain.model.TechMapModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
@@ -49,6 +48,11 @@ class RoutePointsListFragment : BaseFragment(R.layout.fragment_route_points_list
         routePointsViewModel.routePoints.observe(viewLifecycleOwner, Observer {
             routePointsAdapter.items = it
         })
+        routePointsViewModel.navigateToNextRoute.observe(viewLifecycleOwner, EventObserver {
+            val techMap = it.techMap
+            techMap.pointNumber = it.position
+            openTechOperationsFragment(techMap)
+        })
 
         routePointsListViewModel.navigateToTechOperations.observe(
             viewLifecycleOwner,
@@ -61,6 +65,9 @@ class RoutePointsListFragment : BaseFragment(R.layout.fragment_route_points_list
         val args = bundleOf(
             TechOperationsFragment.KEY_TECH_MAP to techMap
         )
-        findNavController().navigate(R.id.action_routePointsFragment_to_techOperationsFragment, args)
+        findNavController().navigate(
+            R.id.action_routePointsFragment_to_techOperationsFragment,
+            args
+        )
     }
 }

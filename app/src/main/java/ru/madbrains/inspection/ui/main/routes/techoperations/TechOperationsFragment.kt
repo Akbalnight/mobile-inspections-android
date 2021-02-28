@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.fragment_tech_operations.progressView
 import kotlinx.android.synthetic.main.fragment_tech_operations.toolbarLayout
 import kotlinx.android.synthetic.main.toolbar_with_back.view.*
 import kotlinx.android.synthetic.main.toolbar_with_close.view.tvTitle
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.madbrains.domain.model.RoutePointModel
 import ru.madbrains.domain.model.TechMapModel
@@ -25,7 +26,7 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
         const val KEY_TECH_MAP = "tech_map"
     }
 
-    private val techOperationsViewModel: TechOperationsViewModel by viewModel()
+    private val techOperationsViewModel: TechOperationsViewModel by sharedViewModel()
 
     private val techOperationsAdapter by lazy {
         TechOperationAdapter()
@@ -44,6 +45,11 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
                 techOperationsViewModel.setTechMapModel(it)
                 setupToolbar(it.pointNumber)
             }
+        }
+
+        fabTechOperationsSave.setOnClickListener {
+            techOperationsViewModel.finishTechMap()
+            findNavController().popBackStack()
         }
 
         rvTechOperations.adapter = techOperationsAdapter
