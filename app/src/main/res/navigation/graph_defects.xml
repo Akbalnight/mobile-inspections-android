@@ -5,6 +5,8 @@
     android:id="@+id/graph_defects"
     app:startDestination="@id/defectListFragment">
 
+    <include app:graph="@navigation/graph_defects_detail" />
+
     <fragment
         android:id="@+id/defectListFragment"
         android:name="ru.madbrains.inspection.ui.main.defects.defectlist.DefectListFragment"

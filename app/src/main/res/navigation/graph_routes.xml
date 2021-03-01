@@ -44,6 +44,8 @@
 
     <include app:graph="@navigation/grapg_settings" />
 
+    <include app:graph="@navigation/graph_defects_detail" />
+
     <dialog
         android:id="@+id/routeFiltersFragment"
         android:name="ru.madbrains.inspection.ui.main.routes.routefilters.RouteFiltersFragment"
