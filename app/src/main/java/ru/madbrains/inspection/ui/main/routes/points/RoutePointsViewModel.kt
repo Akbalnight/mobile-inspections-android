@@ -21,6 +21,12 @@ class RoutePointsViewModel(
     private val _navigateToNextRoute = MutableLiveData<Event<RouteDataModel>>()
     val navigateToNextRoute: LiveData<Event<RouteDataModel>> = _navigateToNextRoute
 
+    private val _navigateToBack = MutableLiveData<Event<Unit>>()
+    val navigateToBack: LiveData<Event<Unit>> = _navigateToBack
+
+    private val _navigateToCloseDialog = MutableLiveData<Event<Unit>>()
+    val navigateToCloseDialog: LiveData<Event<Unit>> = _navigateToCloseDialog
+
     private val _routePoints = MutableLiveData<List<DiffItem>>()
     val routePoints: LiveData<List<DiffItem>> = _routePoints
 
@@ -36,6 +42,23 @@ class RoutePointsViewModel(
         updateData()
     }
 
+    fun finishDetour() {
+        // todo add sending detour to server
+        onBack()
+    }
+
+    fun onBack() {
+        _navigateToBack.value = Event(Unit)
+    }
+
+    fun closeClick() {
+        if (routeDataModels.all { it.completed }) {
+            onBack()
+        } else {
+            _navigateToCloseDialog.value = Event(Unit)
+        }
+    }
+
     fun setDetour(detour: DetourModel) {
         detourModel = detour
         routeDataModels.clear()
@@ -44,7 +67,7 @@ class RoutePointsViewModel(
     }
 
     fun startNextRoute() {
-        val route  = routeDataModels.firstOrNull() { !it.completed }
+        val route = routeDataModels.firstOrNull() { !it.completed }
         route?.let { _navigateToNextRoute.value = Event(route) }
     }
 
@@ -55,7 +78,7 @@ class RoutePointsViewModel(
             allPoints == completedPoints -> {
                 RouteStatus.COMPLETED
             }
-            completedPoints == 0  -> {
+            completedPoints == 0 -> {
                 RouteStatus.NOT_STARTED
             }
             else -> {

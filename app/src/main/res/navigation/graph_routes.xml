@@ -74,6 +74,9 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_routePointsFragment_to_routePointsCloseDialog"
+            app:destination="@id/routePointsCloseDialog" />
     </fragment>
 
     <fragment
@@ -95,4 +98,9 @@
         android:name="ru.madbrains.inspection.ui.main.defects.defectdetail.DefectDetailFragment"
         android:label="AddDefectFragment"
         tools:layout="@layout/fragment_defect_detail" />
+    <dialog
+        android:id="@+id/routePointsCloseDialog"
+        android:name="ru.madbrains.inspection.ui.main.routes.points.RoutePointsCloseDialog"
+        tools:layout="@layout/fragment_route_points_close_dialog"
+        android:label="RoutePointsCloseDialog" />
 </navigation>

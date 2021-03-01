@@ -55,8 +55,7 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
             routePointsViewModel.startNextRoute()
         }
         fabFinish.setOnClickListener {
-            // todo add dialog
-            findNavController().popBackStack()
+            routePointsViewModel.finishDetour()
         }
 
         routePointsViewModel.progressVisibility.observe(viewLifecycleOwner, Observer {
@@ -73,12 +72,18 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
                 RoutePointsViewModel.RouteStatus.COMPLETED -> fabFinish.isInvisible = false
             }
         })
+        routePointsViewModel.navigateToBack.observe(viewLifecycleOwner, EventObserver {
+            findNavController().popBackStack()
+        })
+        routePointsViewModel.navigateToCloseDialog.observe(viewLifecycleOwner, EventObserver {
+            openCloseDialog()
+        })
     }
 
     private fun setupToolbar(title: String?) {
         toolbarLayout.tvTitle.text = title.orEmpty()
         toolbarLayout.btnClose.setOnClickListener {
-            findNavController().popBackStack()
+            routePointsViewModel.closeClick()
         }
     }
 
@@ -103,5 +108,9 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
             }
             routePointsViewPager.setCurrentItem(tab.position, true)
         }.attach()
+    }
+
+    private fun openCloseDialog() {
+        findNavController().navigate(R.id.action_routePointsFragment_to_routePointsCloseDialog)
     }
 }
