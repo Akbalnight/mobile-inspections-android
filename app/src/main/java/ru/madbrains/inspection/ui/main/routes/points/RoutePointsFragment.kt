@@ -64,7 +64,7 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
         techOperationsViewModel.completeTechMapEvent.observe(viewLifecycleOwner, EventObserver {
             routePointsViewModel.completeTechMap(it)
         })
-        routePointsViewModel.routeStatus.observe(viewLifecycleOwner, Observer { status ->
+        routePointsViewModel.routeStatus.observe(viewLifecycleOwner, EventObserver { status ->
             stateFabs.map { it.isInvisible = true }
             when (status) {
                 RoutePointsViewModel.RouteStatus.NOT_STARTED -> fabStart.isInvisible = false

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ru.madbrains.domain.interactor.RoutesInteractor
 import ru.madbrains.domain.model.DetourModel
+import ru.madbrains.domain.model.DetourStatus
 import ru.madbrains.domain.model.RouteDataModel
 import ru.madbrains.domain.model.TechMapModel
 import ru.madbrains.inspection.base.BaseViewModel
@@ -30,8 +31,8 @@ class RoutePointsViewModel(
     private val _routePoints = MutableLiveData<List<DiffItem>>()
     val routePoints: LiveData<List<DiffItem>> = _routePoints
 
-    private val _routeStatus = MutableLiveData<RouteStatus>()
-    val routeStatus: LiveData<RouteStatus> = _routeStatus
+    private val _routeStatus = MutableLiveData<Event<RouteStatus>>()
+    val routeStatus: LiveData<Event<RouteStatus>> = _routeStatus
 
     var detourModel: DetourModel? = null
 
@@ -72,20 +73,7 @@ class RoutePointsViewModel(
     }
 
     private fun updateData() {
-        val completedPoints = routeDataModels.filter { it.completed }.count()
-        val allPoints = routeDataModels.count()
-        _routeStatus.value = when {
-            allPoints == completedPoints -> {
-                RouteStatus.COMPLETED
-            }
-            completedPoints == 0 -> {
-                RouteStatus.NOT_STARTED
-            }
-            else -> {
-                RouteStatus.IN_PROGRESS
-            }
-        }
-
+        setRouteStatus()
         val routePoints = mutableListOf<DiffItem>().apply {
             routeDataModels.map { route ->
                 add(
@@ -99,6 +87,23 @@ class RoutePointsViewModel(
             }
         }
         _routePoints.value = routePoints
+    }
+
+    private fun setRouteStatus() {
+        if (detourModel?.status == DetourStatus.COMPLETED) return
+        val completedPoints = routeDataModels.filter { it.completed }.count()
+        val allPoints = routeDataModels.count()
+        _routeStatus.value = when {
+            allPoints == completedPoints -> {
+                Event(RouteStatus.COMPLETED)
+            }
+            completedPoints == 0 -> {
+                Event(RouteStatus.NOT_STARTED)
+            }
+            else -> {
+                Event(RouteStatus.IN_PROGRESS)
+            }
+        }
     }
 
     enum class RouteStatus {
