@@ -1,5 +1,6 @@
 package ru.madbrains.inspection.ui.main.defects.defectdetail
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.text.Editable
 import android.util.Log
@@ -19,6 +20,8 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.nio.file.Files
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.*
 
 class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
@@ -164,45 +167,44 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
         _navigateToCamera.value = Event(Unit)
     }
 
+    @SuppressLint("SimpleDateFormat")
     fun saveDefect() {
         //todo save defect
-        _popNavigation.value = Event(Unit)
-    }
-
-    fun checkAndSave() {
-
         val listFiles = mediaModels.map {
             fileUtil.createFile(it.image, it.id)
         }
 
-        routesInteractor.saveDefect(detoursId = "a0af3d69-f68a-4e29-bc9b-37b19f35423c",
-                equipmentId = "54211ba6-6f65-4c57-83ce-71ec9f8ff567",
-                staffDetectId = "1f627c88-8f43-4105-a679-3a693559debc",
-                defectTypicalId = "8ea718c9-b5ef-4f67-b87f-bab4f70c0b61",
-                description = "Описание дефекта №1 test 999",
-                dateDetectDefect = "2020-12-01T00:00:00+03:00",
+        val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
+        val timeStamp = format.format(Date())
+        routesInteractor.saveDefect(detoursId = null,
+                equipmentId = _device.value?.id,
+                defectTypicalId = currentTypical?.id,
+                description = description,
+                dateDetectDefect = timeStamp,
                 files = listFiles
         )
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { _progressVisibility.postValue(true) }
                 .doAfterTerminate { _progressVisibility.postValue(false) }
                 .subscribe({ items ->
+                    _popNavigation.value = Event(Unit)
                 }, {
                     it.printStackTrace()
                 })
                 .addTo(disposables)
+    }
 
-        /*   if (checkIsNoEmptyRequiredFields()){
-               if(checkIsNotEmptyFields()){
-                   saveDefect()
-               } else {
-                   _showDialogBlankFields.value = Event(Unit)
-               }
-           } else {
-               _showDialogBlankRequiredFields.value = Event(Unit)
-           }
 
-         */
+    fun checkAndSave() {
+        if (checkIsNoEmptyRequiredFields()) {
+            if (checkIsNotEmptyFields()) {
+                saveDefect()
+            } else {
+                _showDialogBlankFields.value = Event(Unit)
+            }
+        } else {
+            _showDialogBlankRequiredFields.value = Event(Unit)
+        }
 
     }
 

@@ -86,7 +86,6 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
 
     override fun onDetach() {
         super.onDetach()
-        Log.d("onDestroy", "destroy")
         defectDetailViewModel.clearData()
     }
 
