@@ -266,6 +266,14 @@
             app:layout_constraintEnd_toEndOf="@+id/bottomBarAddDefect"
             app:srcCompat="@drawable/ic_fab_save" />
 
+        <ru.madbrains.inspection.ui.view.ProgressView
+            android:id="@+id/progressView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

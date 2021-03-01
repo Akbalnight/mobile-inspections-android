@@ -1,14 +1,15 @@
 package ru.madbrains.inspection.ui.main.defects.defectdetail
 
 import android.content.DialogInterface
-import android.graphics.Bitmap
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_defect_detail.*
+import kotlinx.android.synthetic.main.fragment_defect_detail.progressView
 import kotlinx.android.synthetic.main.fragment_defect_list.toolbarLayout
 import kotlinx.android.synthetic.main.toolbar_with_back.view.*
 import kotlinx.android.synthetic.main.toolbar_with_menu.view.tvTitle
@@ -21,9 +22,6 @@ import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.adapters.DefectMediaAdapter
 import ru.madbrains.inspection.ui.common.camera.CameraViewModel
 import ru.madbrains.inspection.ui.delegates.MediaDefectUiModel
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
 
 class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
 
@@ -80,7 +78,18 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
         defectDetailViewModel.popNavigation.observe(viewLifecycleOwner, EventObserver {
             findNavController().popBackStack()
         })
+
+        defectDetailViewModel.progressVisibility.observe(viewLifecycleOwner, Observer {
+            progressView.changeVisibility(it)
+        })
     }
+
+    override fun onDetach() {
+        super.onDetach()
+        Log.d("onDestroy", "destroy")
+        defectDetailViewModel.clearData()
+    }
+
 
     private fun setupNewDefect() {
         toolbarLayout.apply {
@@ -149,8 +158,10 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
     }
 
     private fun setupDefectDevice() {
-        defectDetailViewModel.device.observe(viewLifecycleOwner, Observer {
-            dropDownDevice.setText(it.name, false)
+        defectDetailViewModel.device.observe(viewLifecycleOwner, Observer {equipments ->
+            equipments?.let {
+                dropDownDevice.setText(it.name, false)
+            }
         })
     }
 

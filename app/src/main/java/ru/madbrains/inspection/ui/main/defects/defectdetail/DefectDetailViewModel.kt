@@ -27,14 +27,17 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
 
     private val defectTypicalModels = mutableListOf<DefectTypicalModel>()
     private val mediaModels = mutableListOf<MediaDefectUiModel>()
-    private lateinit var currentTypical: DefectTypicalUiModel
+    private var currentTypical: DefectTypicalUiModel? = null
     private var description: String = ""
+
+    private val _progressVisibility = MutableLiveData<Boolean>()
+    val progressVisibility: LiveData<Boolean> = _progressVisibility
 
     private val _defectTypicalList = MutableLiveData<List<DefectTypicalUiModel>>()
     val defectTypicalList: LiveData<List<DefectTypicalUiModel>> = _defectTypicalList
 
-    private val _device = MutableLiveData<EquipmentsModel>()
-    val device: LiveData<EquipmentsModel> = _device
+    private val _device = MutableLiveData<EquipmentsModel?>()
+    val device: LiveData<EquipmentsModel?> = _device
 
     private val _mediaList = MutableLiveData<List<DiffItem>>()
     val mediaList: LiveData<List<DiffItem>> = _mediaList
@@ -74,11 +77,21 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
         _device.value = model
     }
 
+    fun clearData() {
+        defectTypicalModels.clear()
+        mediaModels.clear()
+        currentTypical?.let { currentTypical = null }
+        description = ""
+        _defectTypicalList.value = emptyList()
+        _device.value = null
+        _mediaList.value = emptyList()
+    }
+
     private fun checkIsNotEmptyFields(): Boolean {
 
         var isNotEmpty = true
 
-        isNotEmpty = isNotEmpty && (this::currentTypical.isInitialized)
+        isNotEmpty = isNotEmpty && (currentTypical != null)
 
         isNotEmpty = isNotEmpty && (description.isNotBlank())
 
@@ -171,6 +184,8 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
                 files = listFiles
         )
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { _progressVisibility.postValue(true) }
+                .doAfterTerminate { _progressVisibility.postValue(false) }
                 .subscribe({ items ->
                 }, {
                     it.printStackTrace()
