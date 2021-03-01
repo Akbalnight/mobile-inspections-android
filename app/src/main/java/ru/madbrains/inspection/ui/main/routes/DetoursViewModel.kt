@@ -29,7 +29,12 @@ class DetoursViewModel(
             .doOnSubscribe { _progressVisibility.postValue(true) }
             .doAfterTerminate { _progressVisibility.postValue(false) }
             .subscribe({ routes ->
-                detourModels.addAll(routes.filter { it.status != null })
+                detourModels.addAll(
+                    routes
+                        .filter { it.status != null }
+                        .filter { it.route.routeData.all { it.techMap != null } }
+                        .filter { it.route.routeData.all { it.equipments != null } }
+                )
                 updateData()
             }, {
                 it.printStackTrace()
