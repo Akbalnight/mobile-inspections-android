@@ -76,14 +76,16 @@ class RoutePointsViewModel(
         setRouteStatus()
         val routePoints = mutableListOf<DiffItem>().apply {
             routeDataModels.map { route ->
-                add(
-                    RoutePointUiModel(
-                        id = route.techMap.id,
-                        name = route.techMap.name.orEmpty(),
-                        position = route.position,
-                        completed = route.completed
+                route.techMap?.let {
+                    add(
+                        RoutePointUiModel(
+                            id = it.id,
+                            name = it.name.orEmpty(),
+                            position = route.position,
+                            completed = route.completed
+                        )
                     )
-                )
+                }
             }
         }
         _routePoints.value = routePoints

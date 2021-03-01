@@ -50,8 +50,8 @@ data class GetRouteDataResp(
     @field:Json(name = "xLocation") val xLocation: Int?,
     @field:Json(name = "yLocation") val yLocation: Int?,
     @field:Json(name = "position") val position: Int?,
-    @field:Json(name = "equipments") val equipments: List<GetEquipmentResp>,
-    @field:Json(name = "techMap") val techMap: GetTechMapResp
+    @field:Json(name = "equipments") val equipments: List<GetEquipmentResp>?,
+    @field:Json(name = "techMap") val techMap: GetTechMapResp?
 )
 
 @JsonClass(generateAdapter = true)

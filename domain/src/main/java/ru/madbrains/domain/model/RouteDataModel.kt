@@ -10,8 +10,8 @@ data class RouteDataModel(
     val xLocation: Int?,
     val yLocation: Int?,
     val position: Int?,
-    val equipments: List<EquipmentModel>,
-    val techMap: TechMapModel
+    val equipments: List<EquipmentModel>?,
+    val techMap: TechMapModel?
 ) {
     var completed: Boolean = false
 }

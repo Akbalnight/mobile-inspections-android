@@ -25,7 +25,7 @@ class RoutePointsListFragment : BaseFragment(R.layout.fragment_route_points_list
             onRoutePointClick = {
                 val techMaps = routePointsViewModel.routeDataModels.map { it.techMap }
                 val techMap = techMaps.find { techMap ->
-                    techMap.id == it.id
+                    techMap?.id == it.id
                 }
                 techMap?.pointNumber = it.position
                 routePointsListViewModel.routePointClick(techMap)
@@ -48,11 +48,15 @@ class RoutePointsListFragment : BaseFragment(R.layout.fragment_route_points_list
         routePointsViewModel.routePoints.observe(viewLifecycleOwner, Observer {
             routePointsAdapter.items = it
         })
-        routePointsViewModel.navigateToNextRoute.observe(viewLifecycleOwner, EventObserver {
-            val techMap = it.techMap
-            techMap.pointNumber = it.position
-            openTechOperationsFragment(techMap)
-        })
+        routePointsViewModel.navigateToNextRoute.observe(
+            viewLifecycleOwner,
+            EventObserver { routeData ->
+                val techMap = routeData.techMap
+                techMap?.let {
+                    techMap.pointNumber = routeData.position
+                    openTechOperationsFragment(techMap)
+                }
+            })
 
         routePointsListViewModel.navigateToTechOperations.observe(
             viewLifecycleOwner,

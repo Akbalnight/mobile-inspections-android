@@ -12,7 +12,7 @@ class RoutePointsListViewModel : BaseViewModel() {
     private val _navigateToTechOperations = MutableLiveData<Event<TechMapModel>>()
     val navigateToTechOperations: LiveData<Event<TechMapModel>> = _navigateToTechOperations
 
-    fun routePointClick(point: TechMapModel?) {
-        point?.let {  _navigateToTechOperations.value = Event(it) }
+    fun routePointClick(techMap: TechMapModel?) {
+        techMap?.let {  _navigateToTechOperations.value = Event(it) }
     }
 }
