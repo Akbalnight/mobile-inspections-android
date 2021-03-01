@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
-import ru.madbrains.inspection.ui.delegates.RouteUiModel
+import ru.madbrains.inspection.ui.delegates.DetourUiModel
 
 class RouteCalendarViewModel : BaseViewModel() {
 
@@ -14,7 +14,7 @@ class RouteCalendarViewModel : BaseViewModel() {
 
     var routeDates = mutableListOf<String>()
 
-    fun updateRouteDates(routes: List<RouteUiModel>) {
+    fun updateRouteDates(routes: List<DetourUiModel>) {
         routeDates.clear()
         routes.map { route ->
             route.date.split("T").firstOrNull()?.let { routeDates.add(it) }

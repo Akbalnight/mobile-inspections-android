@@ -8,13 +8,13 @@ import kotlinx.android.synthetic.main.fragment_route_list_date.*
 import kotlinx.android.synthetic.main.toolbar_with_back.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import ru.madbrains.domain.model.RouteModel
+import ru.madbrains.domain.model.DetourModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
-import ru.madbrains.inspection.ui.adapters.RouteAdapter
-import ru.madbrains.inspection.ui.delegates.RouteUiModel
-import ru.madbrains.inspection.ui.main.routes.RoutesViewModel
+import ru.madbrains.inspection.ui.adapters.DetourAdapter
+import ru.madbrains.inspection.ui.delegates.DetourUiModel
+import ru.madbrains.inspection.ui.main.routes.DetoursViewModel
 import ru.madbrains.inspection.ui.main.routes.points.RoutePointsFragment
 
 class DateRouteListFragment : BaseFragment(R.layout.fragment_route_list_date) {
@@ -24,17 +24,17 @@ class DateRouteListFragment : BaseFragment(R.layout.fragment_route_list_date) {
     }
 
     private val dateRouteListViewModel: DateRouteListViewModel by viewModel()
-    private val routesViewModel: RoutesViewModel by sharedViewModel()
+    private val detoursViewModel: DetoursViewModel by sharedViewModel()
 
     private var date: String? = null
 
     private val routesAdapter by lazy {
-        RouteAdapter(
-            onRouteClick = {
-                val route = routesViewModel.routeModels.find { routeModel ->
-                    routeModel.id == it.id
+        DetourAdapter(
+            onDetourClick = {
+                val detour = detoursViewModel.detourModels.find { detourModel ->
+                    detourModel.id == it.id
                 }
-                dateRouteListViewModel.routeClick(route)
+                dateRouteListViewModel.routeClick(detour)
             }
         )
     }
@@ -49,8 +49,8 @@ class DateRouteListFragment : BaseFragment(R.layout.fragment_route_list_date) {
 
         rvRoutes.adapter = routesAdapter
 
-        routesViewModel.routes.observe(viewLifecycleOwner, Observer {
-            routesAdapter.items = it.filterIsInstance<RouteUiModel>().filter { route ->
+        detoursViewModel.detours.observe(viewLifecycleOwner, Observer {
+            routesAdapter.items = it.filterIsInstance<DetourUiModel>().filter { route ->
                 route.date.split("T").firstOrNull() == date
             }
         })
@@ -66,9 +66,9 @@ class DateRouteListFragment : BaseFragment(R.layout.fragment_route_list_date) {
         }
     }
 
-    private fun openRoutePointsFragment(route: RouteModel) {
+    private fun openRoutePointsFragment(detour: DetourModel) {
         val args = bundleOf(
-            RoutePointsFragment.KEY_ROUTE to route
+            RoutePointsFragment.KEY_DETOUR to detour
         )
         findNavController().navigate(R.id.action_dateRouteListFragment_to_routePointsFragment, args)
     }

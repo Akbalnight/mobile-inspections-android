@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/routesFragment"
-        android:name="ru.madbrains.inspection.ui.main.routes.RoutesFragment"
+        android:name="ru.madbrains.inspection.ui.main.routes.DetoursFragment"
         android:label="RoutesFragment"
-        tools:layout="@layout/fragment_routes">
+        tools:layout="@layout/fragment_detours">
         <action
             android:id="@+id/action_routesFragment_to_routeFiltersFragment"
             app:destination="@id/routeFiltersFragment" />
@@ -29,7 +29,7 @@
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <action
             android:id="@+id/action_routeFragment_to_addDefectFragment"
-            app:destination="@id/addDefectFragment"
+            app:destination="@id/defectDetailFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
@@ -43,6 +43,8 @@
     <include app:graph="@navigation/grapg_sync" />
 
     <include app:graph="@navigation/grapg_settings" />
+
+    <include app:graph="@navigation/graph_defects_detail" />
 
     <dialog
         android:id="@+id/routeFiltersFragment"
@@ -74,17 +76,33 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_routePointsFragment_to_routePointsCloseDialog"
+            app:destination="@id/routePointsCloseDialog" />
     </fragment>
 
     <fragment
         android:id="@+id/techOperationsFragment"
         android:name="ru.madbrains.inspection.ui.main.routes.techoperations.TechOperationsFragment"
         android:label="TechOperationsFragment"
-        tools:layout="@layout/fragment_tech_operations" />
+        tools:layout="@layout/fragment_tech_operations" >
+        <action
+            android:id="@+id/action_techOperationsFragment_to_addDefectFragment"
+            app:destination="@id/graph_defects_detail"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
 
     <fragment
         android:id="@+id/addDefectFragment"
-        android:name="ru.madbrains.inspection.ui.main.defects.defectdetail.AddDefectFragment"
+        android:name="ru.madbrains.inspection.ui.main.defects.defectdetail.DefectDetailFragment"
         android:label="AddDefectFragment"
         tools:layout="@layout/fragment_defect_detail" />
+    <dialog
+        android:id="@+id/routePointsCloseDialog"
+        android:name="ru.madbrains.inspection.ui.main.routes.points.RoutePointsCloseDialog"
+        tools:layout="@layout/fragment_route_points_close_dialog"
+        android:label="RoutePointsCloseDialog" />
 </navigation>

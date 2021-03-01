@@ -8,7 +8,7 @@
     android:background="?attr/selectableItemBackground">
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/ivRouteStatus"
+        android:id="@+id/ivDetourStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
@@ -29,8 +29,8 @@
         android:layout_marginStart="8dp"
         android:textColor="@color/textMain"
         app:layout_constraintBottom_toTopOf="@id/tvDate"
-        app:layout_constraintStart_toEndOf="@+id/ivRouteStatus"
-        app:layout_constraintTop_toTopOf="@+id/ivRouteStatus"
+        app:layout_constraintStart_toEndOf="@+id/ivDetourStatus"
+        app:layout_constraintTop_toTopOf="@+id/ivDetourStatus"
         tools:text="Name" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -39,8 +39,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:textColor="@color/black50"
-        app:layout_constraintBottom_toBottomOf="@+id/ivRouteStatus"
-        app:layout_constraintStart_toEndOf="@+id/ivRouteStatus"
+        app:layout_constraintBottom_toBottomOf="@+id/ivDetourStatus"
+        app:layout_constraintStart_toEndOf="@+id/ivDetourStatus"
         app:layout_constraintTop_toBottomOf="@+id/tvName"
         tools:text="Date" />
 

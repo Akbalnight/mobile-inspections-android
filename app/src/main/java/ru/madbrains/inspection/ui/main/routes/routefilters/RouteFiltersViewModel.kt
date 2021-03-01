@@ -2,17 +2,17 @@ package ru.madbrains.inspection.ui.main.routes.routefilters
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import ru.madbrains.domain.model.RouteStatus
+import ru.madbrains.domain.model.DetourStatus
 import ru.madbrains.inspection.base.BaseViewModel
 
 class RouteFiltersViewModel : BaseViewModel() {
 
-    private val _selectedFilter = MutableLiveData<RouteStatus>()
-    val selectedFilter: LiveData<RouteStatus> = _selectedFilter
+    private val _selectedFilter = MutableLiveData<DetourStatus>()
+    val selectedFilter: LiveData<DetourStatus> = _selectedFilter
 
-    var currentFilter: RouteStatus? = null
+    var currentFilter: DetourStatus? = null
 
-    fun setFilter(status: RouteStatus?) {
+    fun setFilter(status: DetourStatus?) {
         currentFilter = status
     }
 

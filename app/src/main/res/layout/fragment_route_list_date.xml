@@ -36,7 +36,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:itemCount="5"
-            tools:listitem="@layout/item_route" />
+            tools:listitem="@layout/item_detour" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

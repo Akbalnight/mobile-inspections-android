@@ -5,6 +5,7 @@
     android:layout_height="match_parent">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -64,7 +65,39 @@
         app:iconSize="32dp"
         app:iconPadding="0dp"
         android:text="начать"
-        app:icon="@drawable/ic_route_in_progress"
+        android:visibility="invisible"
+        app:icon="@drawable/ic_detour_in_progress"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabContinue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/accidentYellow"
+        android:gravity="center_vertical"
+        android:visibility="invisible"
+        app:iconPadding="8dp"
+        android:text="продолжить"
+        app:icon="@drawable/ic_fab_continue"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabFinish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/accidentYellow"
+        android:gravity="center_vertical"
+        app:iconSize="32dp"
+        android:visibility="invisible"
+        app:iconPadding="0dp"
+        android:text="завершить"
+        app:icon="@drawable/ic_detour_completed"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

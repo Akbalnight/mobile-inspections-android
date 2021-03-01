@@ -8,11 +8,14 @@ import kotlinx.android.synthetic.main.fragment_tech_operations.progressView
 import kotlinx.android.synthetic.main.fragment_tech_operations.toolbarLayout
 import kotlinx.android.synthetic.main.toolbar_with_back.view.*
 import kotlinx.android.synthetic.main.toolbar_with_close.view.tvTitle
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.madbrains.domain.model.RoutePointModel
+import ru.madbrains.domain.model.TechMapModel
 import ru.madbrains.inspection.R
 
 import ru.madbrains.inspection.base.BaseFragment
+import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.adapters.TechOperationAdapter
 
@@ -20,10 +23,10 @@ import ru.madbrains.inspection.ui.adapters.TechOperationAdapter
 class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
 
     companion object {
-        const val KEY_POINT = "point"
+        const val KEY_TECH_MAP = "tech_map"
     }
 
-    private val techOperationsViewModel: TechOperationsViewModel by viewModel()
+    private val techOperationsViewModel: TechOperationsViewModel by sharedViewModel()
 
     private val techOperationsAdapter by lazy {
         TechOperationAdapter()
@@ -37,10 +40,16 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
         })
 
         requireNotNull(arguments).run {
-            (getSerializable(TechOperationsFragment.KEY_POINT) as? RoutePointModel)?.let {
-                setupToolbar(it.position)
-                techOperationsViewModel.setPoint(it)
+            val techMapModel = (getSerializable(KEY_TECH_MAP) as? TechMapModel)
+            techMapModel?.let {
+                techOperationsViewModel.setTechMapModel(it)
+                setupToolbar(it.pointNumber)
             }
+        }
+
+        fabTechOperationsSave.setOnClickListener {
+            techOperationsViewModel.finishTechMap()
+            findNavController().popBackStack()
         }
 
         rvTechOperations.adapter = techOperationsAdapter
@@ -52,6 +61,14 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
         techOperationsViewModel.techOperations.observe(viewLifecycleOwner, Observer {
             techOperationsAdapter.items = it
         })
+
+        layoutBottomButtonAddDefect.setOnClickListener {
+            clickAddDefect()
+        }
+
+        setupOnClickListener()
+
+        setupNavigation()
 
     }
 
@@ -67,5 +84,23 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
                 findNavController().popBackStack()
             }
         }
+    }
+
+    private fun setupOnClickListener() {
+
+        layoutBottomButtonAddDefect.setOnClickListener { clickAddDefect() }
+
+    }
+
+    private fun setupNavigation() {
+
+        techOperationsViewModel.navigateToAddDefect.observe(viewLifecycleOwner, EventObserver {
+            findNavController().navigate(R.id.action_techOperationsFragment_to_addDefectFragment)
+        })
+
+    }
+
+    private fun clickAddDefect() {
+        techOperationsViewModel.addDefect()
     }
 }
