@@ -4,7 +4,10 @@ import com.squareup.moshi.Json
 import io.reactivex.Single
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.ResponseBody
+import retrofit2.http.Multipart
 import ru.madbrains.data.network.api.InspectionApi
 import ru.madbrains.data.network.mappers.*
 import ru.madbrains.data.network.request.*
@@ -98,6 +101,45 @@ class RoutesRepositoryImpl(
                     body = it.asRequestBody("multipart/form-data".toMediaTypeOrNull()))
 
         }
+
+        var multiParts: List<MultipartBody.Part>? = null
+        files?.let { list  ->
+            if(list.isNotEmpty()) {
+                val body = MultipartBody.Builder().apply {
+                    list?.forEach {item ->
+                        addFormDataPart(name = "files",
+                                filename = item.name,
+                                body = item.asRequestBody("multipart/form-data".toMediaTypeOrNull()))
+                    }
+
+                }.build()
+                multiParts = body.parts
+            }
+        }
+
+       /* var dfs:List<MultipartBody.Part>? = null
+
+        body?.let { dfs = it.parts }
+
+
+        var multiRequest: RequestBody? = null
+        files?.let {list ->
+            if(list.isNotEmpty()){
+                val _body = MultipartBody.Builder().apply {
+                    setType(MultipartBody.FORM)
+                    list?.forEach {
+                        addFormDataPart(name = "files",
+                                filename = it.name,
+                                body = it.asRequestBody("multipart/form-data".toMediaTypeOrNull()))
+                    }
+                }.build()
+                multiRequest = _body
+            }
+
+
+        }
+*/
+
 /*
         val requestBody = MultipartBody.Builder().setType(MultipartBody.FORM).apply {
             addFormDataPart("type", "booking")
@@ -111,7 +153,7 @@ class RoutesRepositoryImpl(
             }
         }.build()*/
 
-        return inspectionApi.saveDefect(request, fileList )
+        return inspectionApi.saveDefect(request, multiParts)
     }
 
 }
