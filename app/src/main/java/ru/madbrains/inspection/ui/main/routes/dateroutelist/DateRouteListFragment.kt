@@ -14,7 +14,7 @@ import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.ui.adapters.DetourAdapter
 import ru.madbrains.inspection.ui.delegates.DetourUiModel
-import ru.madbrains.inspection.ui.main.routes.RoutesViewModel
+import ru.madbrains.inspection.ui.main.routes.DetoursViewModel
 import ru.madbrains.inspection.ui.main.routes.points.RoutePointsFragment
 
 class DateRouteListFragment : BaseFragment(R.layout.fragment_route_list_date) {
@@ -24,14 +24,14 @@ class DateRouteListFragment : BaseFragment(R.layout.fragment_route_list_date) {
     }
 
     private val dateRouteListViewModel: DateRouteListViewModel by viewModel()
-    private val routesViewModel: RoutesViewModel by sharedViewModel()
+    private val detoursViewModel: DetoursViewModel by sharedViewModel()
 
     private var date: String? = null
 
     private val routesAdapter by lazy {
         DetourAdapter(
             onDetourClick = {
-                val detour = routesViewModel.detourModels.find { detourModel ->
+                val detour = detoursViewModel.detourModels.find { detourModel ->
                     detourModel.id == it.id
                 }
                 dateRouteListViewModel.routeClick(detour)
@@ -49,7 +49,7 @@ class DateRouteListFragment : BaseFragment(R.layout.fragment_route_list_date) {
 
         rvRoutes.adapter = routesAdapter
 
-        routesViewModel.detours.observe(viewLifecycleOwner, Observer {
+        detoursViewModel.detours.observe(viewLifecycleOwner, Observer {
             routesAdapter.items = it.filterIsInstance<DetourUiModel>().filter { route ->
                 route.date.split("T").firstOrNull() == date
             }
@@ -66,9 +66,9 @@ class DateRouteListFragment : BaseFragment(R.layout.fragment_route_list_date) {
         }
     }
 
-    private fun openRoutePointsFragment(route: DetourModel) {
+    private fun openRoutePointsFragment(detour: DetourModel) {
         val args = bundleOf(
-            RoutePointsFragment.KEY_ROUTE to route
+            RoutePointsFragment.KEY_DETOUR to detour
         )
         findNavController().navigate(R.id.action_dateRouteListFragment_to_routePointsFragment, args)
     }

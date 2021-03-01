@@ -25,7 +25,7 @@ import ru.madbrains.inspection.extensions.colors
 import ru.madbrains.inspection.extensions.drawables
 import ru.madbrains.inspection.extensions.stringArrays
 import ru.madbrains.inspection.ui.delegates.DetourUiModel
-import ru.madbrains.inspection.ui.main.routes.RoutesViewModel
+import ru.madbrains.inspection.ui.main.routes.DetoursViewModel
 import ru.madbrains.inspection.ui.main.routes.dateroutelist.DateRouteListFragment
 import ru.madbrains.inspection.ui.view.DayViewContainer
 import java.text.SimpleDateFormat
@@ -35,7 +35,7 @@ import java.util.*
 class RouteCalendarFragment : BaseFragment(R.layout.fragment_route_calendar) {
 
     private val routeCalendarViewModel: RouteCalendarViewModel by viewModel()
-    private val routesViewModel: RoutesViewModel by sharedViewModel()
+    private val detoursViewModel: DetoursViewModel by sharedViewModel()
 
     private var nextMonth: YearMonth? = null
     private var previousMonth: YearMonth? = null
@@ -45,7 +45,7 @@ class RouteCalendarFragment : BaseFragment(R.layout.fragment_route_calendar) {
 
         setupCalendar()
 
-        routesViewModel.detours.observe(viewLifecycleOwner, Observer {
+        detoursViewModel.detours.observe(viewLifecycleOwner, Observer {
             routeCalendarViewModel.updateRouteDates(it.filterIsInstance<DetourUiModel>())
             calendarView.notifyCalendarChanged()
         })

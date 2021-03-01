@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/routesFragment"
-        android:name="ru.madbrains.inspection.ui.main.routes.RoutesFragment"
+        android:name="ru.madbrains.inspection.ui.main.routes.DetoursFragment"
         android:label="RoutesFragment"
-        tools:layout="@layout/fragment_routes">
+        tools:layout="@layout/fragment_detours">
         <action
             android:id="@+id/action_routesFragment_to_routeFiltersFragment"
             app:destination="@id/routeFiltersFragment" />

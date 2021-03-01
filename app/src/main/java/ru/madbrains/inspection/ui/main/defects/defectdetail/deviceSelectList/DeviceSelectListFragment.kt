@@ -1,29 +1,20 @@
 package ru.madbrains.inspection.ui.main.defects.defectdetail.deviceSelectList
 
 import android.os.Bundle
-import android.util.Log
-import androidx.core.os.bundleOf
-
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_defect_find_device.*
-import kotlinx.android.synthetic.main.fragment_defect_find_device.toolbarLayout
-import kotlinx.android.synthetic.main.fragment_defect_find_device.progressView
-import kotlinx.android.synthetic.main.fragment_defect_list.*
-import kotlinx.android.synthetic.main.fragment_routes.*
 import kotlinx.android.synthetic.main.toolbar_with_back.view.*
 import kotlinx.android.synthetic.main.toolbar_with_menu.view.tvTitle
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.madbrains.domain.model.EquipmentsModel
-import ru.madbrains.domain.model.RoutePointModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.adapters.DeviceSelectAdapter
 import ru.madbrains.inspection.ui.main.defects.defectdetail.DefectDetailViewModel
-import ru.madbrains.inspection.ui.main.routes.techoperations.TechOperationsFragment
 
 class DeviceSelectListFragment : BaseFragment(R.layout.fragment_defect_find_device) {
 
@@ -32,12 +23,12 @@ class DeviceSelectListFragment : BaseFragment(R.layout.fragment_defect_find_devi
 
     private val deviceSelectAdapter by lazy {
         DeviceSelectAdapter(
-                onDeviceSelectClick = {
-                    val deviceSelect = deviceSelectViewModel.deviceListModels.find { deviceSelect ->
-                        deviceSelect.id == it.id
-                    }
-                    deviceSelectViewModel.deviceSelectClick(deviceSelect)
-                })
+            onDeviceSelectClick = {
+                val deviceSelect = deviceSelectViewModel.deviceListModels.find { deviceSelect ->
+                    deviceSelect.id == it.id
+                }
+                deviceSelectViewModel.deviceSelectClick(deviceSelect)
+            })
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -58,10 +49,10 @@ class DeviceSelectListFragment : BaseFragment(R.layout.fragment_defect_find_devi
         })
 
         deviceSelectViewModel.navigateToDefectDetail.observe(
-                viewLifecycleOwner,
-                EventObserver {
-                    backToDefectDetailFragment(it)
-                })
+            viewLifecycleOwner,
+            EventObserver {
+                backToDefectDetailFragment(it)
+            })
     }
 
     private fun setupToolBar() {

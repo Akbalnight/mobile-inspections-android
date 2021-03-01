@@ -2,10 +2,7 @@ package ru.madbrains.inspection.ui.main.routes.techoperations
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.rxkotlin.addTo
 import ru.madbrains.domain.interactor.RoutesInteractor
-import ru.madbrains.domain.model.PlanTechOperationsModel
 import ru.madbrains.domain.model.RoutePointModel
 import ru.madbrains.domain.model.TechMapModel
 import ru.madbrains.domain.model.TechOperationModel
@@ -15,7 +12,7 @@ import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.TechOperationUiModel
 
 class TechOperationsViewModel(private val routesInteractor: RoutesInteractor) :
-        BaseViewModel() {
+    BaseViewModel() {
 
     private val _progressVisibility = MutableLiveData<Boolean>()
     val progressVisibility: LiveData<Boolean> = _progressVisibility
@@ -31,47 +28,40 @@ class TechOperationsViewModel(private val routesInteractor: RoutesInteractor) :
     private val _navigateToAddDefect = MutableLiveData<Event<Unit>>()
     val navigateToAddDefect: LiveData<Event<Unit>> = _navigateToAddDefect
 
-    var routePointModel: RoutePointModel? = null
+    private val _completeTechMapEvent = MutableLiveData<Event<TechMapModel>>()
+    val completeTechMapEvent: LiveData<Event<TechMapModel>> = _completeTechMapEvent
 
-    fun setPoint(routePoint: TechMapModel) {
+    var techMap: TechMapModel? = null
 
-        routePoint.techOperations.let { operationsModels.addAll(it) }
-
-        updateData()
-
-//        routePointModel = routePoint
-//        getOperations(routePoint.id)
-//        routePoint.techMapName?.let { name ->
-//            _titleTechOperations.value = name
-//        }
-
+    fun finishTechMap() {
+        techMap?.let { _completeTechMapEvent.value = Event(it) }
     }
 
-//    private fun getOperations(dataId: String) {
-//        routesInteractor.getPlanTechOperations(dataId)
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .doOnSubscribe { _progressVisibility.postValue(true) }
-//                .doAfterTerminate { _progressVisibility.postValue(false) }
-//                .subscribe({ operations ->
-////                    operationsModels.addAll(operations)
-//                    updateData()
-//                }, {
-//                    it.printStackTrace()
-//                })
-//                .addTo(disposables)
-//    }
+    fun setTechMapModel(techMapModel: TechMapModel) {
+
+        techMap = techMapModel
+
+        techMapModel.techOperations.let {
+            operationsModels.clear()
+            operationsModels.addAll(it)
+        }
+
+        _titleTechOperations.value = techMapModel.name
+
+        updateData()
+    }
 
     private fun updateData() {
         val operations = mutableListOf<DiffItem>().apply {
             operationsModels.map { operation ->
                 add(
-                        TechOperationUiModel(
-                                id = operation.id,
-                                name = operation.name.orEmpty(),
-                                labelInputData = operation.labelInputData.orEmpty(),
-                                needInputData = operation.needInputData,
-                                position = operation.position
-                        )
+                    TechOperationUiModel(
+                        id = operation.id,
+                        name = operation.name.orEmpty(),
+                        labelInputData = operation.labelInputData.orEmpty(),
+                        needInputData = operation.needInputData,
+                        position = operation.position
+                    )
                 )
             }
         }
