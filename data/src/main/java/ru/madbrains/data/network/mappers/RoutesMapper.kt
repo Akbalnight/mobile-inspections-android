@@ -13,9 +13,7 @@ fun mapGetDetoursResp(resp: GetDetoursResp): DetourModel {
             routeId = routeId,
             staffId = staffId,
             repeaterId = repeaterId,
-            status = DetourStatus.values().find {
-                it.id == statusId
-            },
+            statusId = statusId,
             statusName = statusName,
             routeName = routeName,
             name = name,
@@ -32,6 +30,7 @@ fun mapGetDetoursResp(resp: GetDetoursResp): DetourModel {
             possibleDeviationDateStart = possibleDeviationDateStart,
             possibleDeviationDateFinish = possibleDeviationDateFinish,
             isDefectExist = isDefectExist,
+            frozen = frozen,
             route = mapGetRouteResp(route)
         )
     }
@@ -44,7 +43,7 @@ fun mapGetRouteResp(resp: GetRouteResp): RouteModel {
             name = name,
             code = code,
             duration = duration,
-            routeData = routesData.map { mapGetRoutesDataResp(it) }
+            routesData = routesData.map { mapGetRoutesDataResp(it) }
         )
     }
 }
@@ -104,6 +103,7 @@ fun mapGetTechOperationResp(resp: GetTechOperationResp): TechOperationModel {
             code = code,
             needInputData = needInputData,
             labelInputData = labelInputData,
+            valueInputData = valueInputData,
             equipmentStop = equipmentStop,
             increasedDanger = increasedDanger,
             duration = duration,

@@ -10,10 +10,12 @@ import kotlinx.android.synthetic.main.fragment_route_points.*
 import kotlinx.android.synthetic.main.toolbar_with_close.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import ru.madbrains.domain.model.DetourModel
+import ru.madbrains.domain.model.DetourStatus
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.extensions.strings
+import ru.madbrains.inspection.ui.main.routes.DetoursViewModel
 import ru.madbrains.inspection.ui.main.routes.points.list.RoutePointsListFragment
 import ru.madbrains.inspection.ui.main.routes.points.map.RoutePointsMapFragment
 import ru.madbrains.inspection.ui.main.routes.techoperations.TechOperationsViewModel
@@ -28,6 +30,7 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
 
     private val routePointsViewModel: RoutePointsViewModel by sharedViewModel()
     private val techOperationsViewModel: TechOperationsViewModel by sharedViewModel()
+    private val detoursViewModel: DetoursViewModel by sharedViewModel()
 
     private val stateFabs = mutableListOf<ExtendedFloatingActionButton>()
 
@@ -49,13 +52,13 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
         setupViewPager()
 
         fabStart.setOnClickListener {
-            routePointsViewModel.startNextRoute()
+            routePointsViewModel.startRoute()
         }
         fabContinue.setOnClickListener {
             routePointsViewModel.startNextRoute()
         }
         fabFinish.setOnClickListener {
-            routePointsViewModel.finishDetour()
+            routePointsViewModel.finishDetour(DetourStatus.COMPLETED.id)
         }
 
         routePointsViewModel.progressVisibility.observe(viewLifecycleOwner, Observer {
@@ -73,6 +76,7 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
             }
         })
         routePointsViewModel.navigateToBack.observe(viewLifecycleOwner, EventObserver {
+            detoursViewModel.getDetours()
             findNavController().popBackStack()
         })
         routePointsViewModel.navigateToCloseDialog.observe(viewLifecycleOwner, EventObserver {

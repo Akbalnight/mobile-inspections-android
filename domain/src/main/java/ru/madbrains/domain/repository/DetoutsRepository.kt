@@ -1,11 +1,16 @@
 package ru.madbrains.domain.repository
 
+import io.reactivex.Completable
 import io.reactivex.Single
 import ru.madbrains.domain.model.*
 import java.io.File
 
 interface DetoutsRepository {
     fun getDetours(): Single<List<DetourModel>>
+
+    fun saveDetour(detour: DetourModel): Completable
+
+    fun freezeDetours(detourIds: List<String>): Completable
 
     fun getRoutePoints(routeId: String): Single<List<RoutePointModel>>
 

@@ -1,6 +1,7 @@
 package ru.madbrains.domain.model
 
 import java.io.Serializable
+import java.util.*
 
 data class DetourModel(
     val id: String,
@@ -8,15 +9,15 @@ data class DetourModel(
     val routeId: String?,
     val staffId: String?,
     val repeaterId: String?,
-    val status: DetourStatus?,
+    var statusId: String?,
     val statusName: String?,
     val routeName: String?,
     val name: String?,
     val staffName: String?,
     val dateStartPlan: String?,
     val dateFinishPlan: String?,
-    val dateStartFact: String?,
-    val dateFinishFact: String?,
+    var dateStartFact: String?,
+    var dateFinishFact: String?,
     val saveOrderControlPoints: Boolean?,
     val takeIntoAccountTimeLocation: Boolean?,
     val takeIntoAccountDateStart: Boolean?,
@@ -25,5 +26,8 @@ data class DetourModel(
     val possibleDeviationDateStart: Int?,
     val possibleDeviationDateFinish: Int?,
     val isDefectExist: Int?,
-    val route: RouteModel
-) : Serializable
+    val frozen: Boolean?,
+    var route: RouteModel
+) : Serializable {
+    @Transient var startTime: Date? = null
+}

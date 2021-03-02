@@ -32,7 +32,7 @@ val dataModule = module {
     single { getInspectionApi(get(), get()) }
     single { getAuthApi(get()) }
     single { getAuthRepository(get()) }
-    single { getDetoursRepository(get()) }
+    single { getDetoursRepository(get(), get()) }
     single { getFileUtil(get()) }
 }
 
@@ -100,8 +100,8 @@ private fun getAuthRepository(api: AuthApi): AuthRepository {
     return AuthRepositoryImpl(api)
 }
 
-private fun getDetoursRepository(api: InspectionApi): DetoutsRepository {
-    return RoutesRepositoryImpl(api)
+private fun getDetoursRepository(api: InspectionApi, preferenceStorage: PreferenceStorage): DetoutsRepository {
+    return RoutesRepositoryImpl(api, preferenceStorage)
 }
 
 private fun getFileUtil(context: Context): FileUtil {

@@ -27,6 +27,7 @@ data class GetDetoursResp(
     @field:Json(name = "possibleDeviationDateStart") val possibleDeviationDateStart: Int?,
     @field:Json(name = "possibleDeviationDateFinish") val possibleDeviationDateFinish: Int?,
     @field:Json(name = "isDefectExist") val isDefectExist: Int?,
+    @field:Json(name = "frozen") val frozen: Boolean?,
     @field:Json(name = "route") val route: GetRouteResp
 )
 
@@ -84,6 +85,7 @@ data class GetTechOperationResp(
     @field:Json(name = "code") val code: Int?,
     @field:Json(name = "needInputData") val needInputData: Boolean?,
     @field:Json(name = "labelInputData") val labelInputData: String?,
+    @field:Json(name = "valueInputData") val valueInputData: String?,
     @field:Json(name = "equipmentStop") val equipmentStop: Boolean?,
     @field:Json(name = "increasedDanger") val increasedDanger: Boolean?,
     @field:Json(name = "duration") val duration: Int?,
