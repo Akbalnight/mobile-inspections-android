@@ -1,6 +1,7 @@
 package ru.madbrains.data.repository
 
 import com.squareup.moshi.Json
+import io.reactivex.Completable
 import io.reactivex.Single
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -11,18 +12,33 @@ import retrofit2.http.Multipart
 import ru.madbrains.data.network.api.InspectionApi
 import ru.madbrains.data.network.mappers.*
 import ru.madbrains.data.network.request.*
+import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.domain.model.*
 import ru.madbrains.domain.repository.DetoutsRepository
 import java.io.File
 
 class RoutesRepositoryImpl(
-    private val inspectionApi: InspectionApi
+    private val inspectionApi: InspectionApi,
+    private val preferenceStorage: PreferenceStorage
 ) : DetoutsRepository {
     override fun getDetours(): Single<List<DetourModel>> {
-        val request = GetDetoursReq()
+        val request = GetDetoursReq(
+            staffIds = listOf(preferenceStorage.userId.orEmpty())
+        )
         return inspectionApi.getDetours(request).map { resp ->
             resp.map { mapGetDetoursResp(it) }
         }
+    }
+
+    override fun saveDetour(detour: DetourModel): Completable {
+        return inspectionApi.saveDetour(detour)
+    }
+
+    override fun freezeDetours(detourIds: List<String>): Completable {
+        val request = FreezeDetoursReq(
+            detourIds = detourIds
+        )
+        return inspectionApi.freezeDetours(request)
     }
 
     override fun getRoutePoints(routeId: String): Single<List<RoutePointModel>> {

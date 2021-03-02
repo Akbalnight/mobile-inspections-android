@@ -1,5 +1,6 @@
 package ru.madbrains.domain.interactor
 
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import ru.madbrains.domain.model.*
@@ -12,6 +13,18 @@ class RoutesInteractor(
     fun getDetours(): Single<List<DetourModel>> {
         return routesRepository.getDetours()
                 .subscribeOn(Schedulers.io())
+    }
+
+    fun saveDetour(detour: DetourModel): Completable {
+        return routesRepository.saveDetour(detour)
+            .subscribeOn(Schedulers.io())
+    }
+
+    fun freezeDetours(detourIds: List<String>): Completable {
+        return if (detourIds.isEmpty()) Completable.complete() else {
+            routesRepository.freezeDetours(detourIds)
+                .subscribeOn(Schedulers.io())
+        }
     }
 
     fun getRoutePoints(routeId: String): Single<List<RoutePointModel>> {
