@@ -27,7 +27,7 @@
             android:paddingBottom="16dp">
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/ivIcon"
+                android:id="@+id/ivIconDetour"
                 android:layout_width="16dp"
                 android:layout_height="32dp"
                 android:layout_marginStart="16dp"
@@ -35,18 +35,40 @@
                 android:visibility="visible"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_defect_card" />
+                app:srcCompat="@drawable/ic_defect_card_detour" />
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/ivIconOpenedStatus"
+                android:id="@+id/ivIconNoDetour"
+                android:layout_width="16dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="22dp"
+                android:visibility="visible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_defect_card_no_detour" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ivIconClosedStatus"
                 android:layout_width="13dp"
                 android:layout_height="9dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
                 android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_defect_card_open" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ivIconOpenedStatus"
+                android:layout_width="13dp"
+                android:layout_height="9dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_defect_card_close" />
 
             <TextView
                 android:id="@+id/tvTitleDate"
@@ -58,9 +80,8 @@
                 android:text="17.10.2020"
                 android:textColor="@color/textMain"
                 android:textSize="18sp"
-                android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/ivIconOpenedStatus"
-                app:layout_constraintStart_toEndOf="@+id/ivIcon"
+                app:layout_constraintStart_toEndOf="@+id/ivIconDetour"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -74,7 +95,7 @@
                 android:textColor="@color/textMain"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toStartOf="@+id/ivIconOpenedStatus"
-                app:layout_constraintStart_toEndOf="@+id/ivIcon"
+                app:layout_constraintStart_toEndOf="@+id/ivIconDetour"
                 app:layout_constraintTop_toBottomOf="@+id/tvTitleDate" />
 
             <TextView
@@ -88,7 +109,7 @@
                 android:textColor="@color/elementLight"
                 android:textSize="10sp"
                 app:layout_constraintEnd_toStartOf="@+id/ivIconOpenedStatus"
-                app:layout_constraintStart_toEndOf="@+id/ivIcon"
+                app:layout_constraintStart_toEndOf="@+id/ivIconDetour"
                 app:layout_constraintTop_toBottomOf="@id/tvTime" />
 
             <TextView
@@ -102,7 +123,7 @@
                 android:textColor="@color/textMain"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toStartOf="@+id/ivIconOpenedStatus"
-                app:layout_constraintStart_toEndOf="@+id/ivIcon"
+                app:layout_constraintStart_toEndOf="@+id/ivIconDetour"
                 app:layout_constraintTop_toBottomOf="@id/tvDeviceTitle" />
 
             <TextView
@@ -116,7 +137,7 @@
                 android:textColor="@color/elementLight"
                 android:textSize="10sp"
                 app:layout_constraintEnd_toStartOf="@+id/ivIconOpenedStatus"
-                app:layout_constraintStart_toEndOf="@+id/ivIcon"
+                app:layout_constraintStart_toEndOf="@+id/ivIconDetour"
                 app:layout_constraintTop_toBottomOf="@id/tvDeviceData" />
 
             <TextView
@@ -131,7 +152,7 @@
                 android:textColor="@color/textMain"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toStartOf="@+id/ivIconOpenedStatus"
-                app:layout_constraintStart_toEndOf="@+id/ivIcon"
+                app:layout_constraintStart_toEndOf="@+id/ivIconDetour"
                 app:layout_constraintTop_toBottomOf="@id/tvTypeDefectTitle" />
 
             <TextView
@@ -146,7 +167,7 @@
                 android:textSize="10sp"
                 android:visibility="gone"
                 app:layout_constraintEnd_toStartOf="@+id/ivIconOpenedStatus"
-                app:layout_constraintStart_toEndOf="@+id/ivIcon"
+                app:layout_constraintStart_toEndOf="@+id/ivIconDetour"
                 app:layout_constraintTop_toBottomOf="@id/tvTypeDefectData" />
 
             <TextView
@@ -161,7 +182,7 @@
                 android:textSize="12sp"
                 android:visibility="gone"
                 app:layout_constraintEnd_toStartOf="@+id/ivIconOpenedStatus"
-                app:layout_constraintStart_toEndOf="@+id/ivIcon"
+                app:layout_constraintStart_toEndOf="@+id/ivIconDetour"
                 app:layout_constraintTop_toBottomOf="@id/tvDescriptionTitle" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -176,7 +197,7 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.259"
-                app:layout_constraintStart_toEndOf="@+id/ivIcon"
+                app:layout_constraintStart_toEndOf="@+id/ivIconDetour"
                 app:layout_constraintTop_toBottomOf="@id/tvDescriptionData"
                 tools:listitem="@layout/item_media" />
 
@@ -188,7 +209,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:text="@string/fragment_btn_label_delete"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 android:visibility="gone"
                 app:iconPadding="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -202,7 +223,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:text="@string/fragment_btn_label_edit"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 android:visibility="gone"
                 app:iconPadding="8dp"
                 app:layout_constraintEnd_toStartOf="@id/btnDelete"

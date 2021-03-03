@@ -11,7 +11,7 @@ import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.ui.delegates.DeviceSelectUiModel
 
 class DeviceSelectListViewModel(private val routesInteractor: RoutesInteractor) :
-    BaseViewModel() {
+        BaseViewModel() {
 
     private var names: List<String> = emptyList()
     private var controlPointsIds: List<String> = emptyList()
@@ -29,21 +29,22 @@ class DeviceSelectListViewModel(private val routesInteractor: RoutesInteractor) 
 
     fun deviceSelectClick(equipment: EquipmentsModel?) {
         equipment?.let {
-            _navigateToDefectDetail.value = Event(it) }
+            _navigateToDefectDetail.value = Event(it)
+        }
     }
 
     fun getEquipments() {
         routesInteractor.getEquipments(names, controlPointsIds)
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { _progressVisibility.postValue(true) }
-            .doAfterTerminate { _progressVisibility.postValue(false) }
-            .subscribe({ items ->
-                deviceListModels.addAll(items)
-                updateDeviceList()
-            }, {
-                it.printStackTrace()
-            })
-            .addTo(disposables)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { _progressVisibility.postValue(true) }
+                .doAfterTerminate { _progressVisibility.postValue(false) }
+                .subscribe({ items ->
+                    deviceListModels.addAll(items)
+                    updateDeviceList()
+                }, {
+                    it.printStackTrace()
+                })
+                .addTo(disposables)
     }
 
     private fun updateDeviceList() {

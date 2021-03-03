@@ -2,8 +2,6 @@ package ru.madbrains.inspection.ui.main.defects.defectdetail
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
-import android.text.Editable
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -16,11 +14,6 @@ import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.MediaDefectUiModel
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
-import java.nio.file.Files
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -193,7 +186,6 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
                 })
                 .addTo(disposables)
     }
-
 
     fun checkAndSave() {
         if (checkIsNoEmptyRequiredFields()) {

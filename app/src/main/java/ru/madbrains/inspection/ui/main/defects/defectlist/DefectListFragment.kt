@@ -1,6 +1,7 @@
 package ru.madbrains.inspection.ui.main.defects.defectlist
 
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_defect_list.*
@@ -22,7 +23,11 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
 
     private val defectsAdapter by lazy {
         DefectListAdapter(
-                onDefectClick = {
+               onEditClick = {
+
+               },
+                onDeleteClick = {
+
                 }
         )
     }

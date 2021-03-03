@@ -1,8 +1,8 @@
 package ru.madbrains.inspection.ui.delegates
 
-
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
 import kotlinx.android.synthetic.main.item_device_select.view.*
+import kotlinx.android.synthetic.main.item_device_select.view.clContainer
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.model.DiffItem
 
