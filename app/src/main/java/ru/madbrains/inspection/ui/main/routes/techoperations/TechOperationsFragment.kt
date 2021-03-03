@@ -1,6 +1,7 @@
 package ru.madbrains.inspection.ui.main.routes.techoperations
 
 import android.os.Bundle
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_tech_operations.*
@@ -10,6 +11,7 @@ import kotlinx.android.synthetic.main.toolbar_with_back.view.*
 import kotlinx.android.synthetic.main.toolbar_with_close.view.tvTitle
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.madbrains.domain.model.DetourModel
 import ru.madbrains.domain.model.RoutePointModel
 import ru.madbrains.domain.model.TechMapModel
 import ru.madbrains.inspection.R
@@ -18,6 +20,8 @@ import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.adapters.TechOperationAdapter
+import ru.madbrains.inspection.ui.main.defects.defectlist.DefectListFragment
+import ru.madbrains.inspection.ui.main.routes.points.RoutePointsFragment
 
 
 class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
@@ -62,10 +66,6 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
             techOperationsAdapter.items = it
         })
 
-        layoutBottomButtonAddDefect.setOnClickListener {
-            clickAddDefect()
-        }
-
         setupOnClickListener()
 
         setupNavigation()
@@ -90,6 +90,8 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
 
         layoutBottomButtonAddDefect.setOnClickListener { clickAddDefect() }
 
+        layoutBottomButtonDefect.setOnClickListener { clickDefectListFragment("dffefef") }
+
     }
 
     private fun setupNavigation() {
@@ -102,5 +104,12 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
 
     private fun clickAddDefect() {
         techOperationsViewModel.addDefect()
+    }
+
+    private fun clickDefectListFragment(detour: String) {
+        val args = bundleOf(
+                DefectListFragment.KEY_DETOUR_ID_DEFECT_LIST to detour
+        )
+        findNavController().navigate(R.id.graph_defects, args)
     }
 }

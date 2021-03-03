@@ -21,10 +21,14 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
 
     private val defectListModels = mutableListOf<DefectModel>()
 
+    private val _progressVisibility = MutableLiveData<Boolean>()
+    val progressVisibility: LiveData<Boolean> = _progressVisibility
 
     fun getDefectList() {
         routesInteractor.getDefects()
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { _progressVisibility.postValue(true) }
+                .doAfterTerminate { _progressVisibility.postValue(false) }
                 .subscribe({ items ->
                     defectListModels.addAll(items)
                     updateDefectList()

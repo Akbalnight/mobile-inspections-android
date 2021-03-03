@@ -7,8 +7,8 @@ import kotlinx.android.synthetic.main.item_defect.view.clContainer
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.model.DiffItem
 
-fun defectListDelegate(editItem: (DefectListUiModel) -> Unit,
-                       deleteItem: (DefectListUiModel) -> Unit) =
+fun defectListDelegate(clickActionLeft: (DefectListUiModel) -> Unit,
+                       clickActionRight: (DefectListUiModel) -> Unit) =
         adapterDelegateLayoutContainer<DefectListUiModel, DiffItem>(R.layout.item_defect) {
 
             bind {
@@ -28,36 +28,34 @@ fun defectListDelegate(editItem: (DefectListUiModel) -> Unit,
                     tvDescriptionData.text = item.description
 
                     clContainer.setOnClickListener {
-                        if (ivIconClosedStatus.visibility == View.VISIBLE) {
-                            ivIconClosedStatus.visibility = View.GONE
-                            ivIconOpenedStatus.visibility = View.VISIBLE
+                        if (tvDescriptionData.visibility != View.VISIBLE) {
+                            ivUnfoldStatus.setImageResource(R.drawable.ic_defect_card_close)
                             tvDescriptionTitle.visibility = View.VISIBLE
                             tvDescriptionData.visibility = View.VISIBLE
                             rvDefectMedia.visibility = View.VISIBLE
-                            btnEdit.visibility = View.VISIBLE
-                            btnDelete.visibility = View.VISIBLE
+                            btnActionLeft.visibility = View.VISIBLE
+                            btnActionRight.visibility = View.VISIBLE
                             //todo
                             ivIconMedia.visibility = View.GONE
 
                         } else {
-                            ivIconClosedStatus.visibility = View.VISIBLE
-                            ivIconOpenedStatus.visibility = View.GONE
+                            ivUnfoldStatus.setImageResource(R.drawable.ic_defect_card_open)
                             tvDescriptionTitle.visibility = View.GONE
                             tvDescriptionData.visibility = View.GONE
                             rvDefectMedia.visibility = View.GONE
-                            btnEdit.visibility = View.GONE
-                            btnDelete.visibility = View.GONE
+                            btnActionLeft.visibility = View.GONE
+                            btnActionRight.visibility = View.GONE
                             ivIconMedia.visibility = View.GONE
                             ivIconMedia.visibility = View.VISIBLE
                         }
                     }
 
-                    btnEdit.setOnClickListener {
-                        editItem.invoke(item)
+                    btnActionLeft.setOnClickListener {
+                        clickActionLeft.invoke(item)
                     }
 
-                    btnDelete.setOnClickListener {
-                        deleteItem.invoke(item)
+                    btnActionRight.setOnClickListener {
+                        clickActionRight.invoke(item)
                     }
 
                 }
