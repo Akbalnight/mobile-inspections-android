@@ -51,6 +51,14 @@ class TechOperationsViewModel(private val routesInteractor: RoutesInteractor) :
         updateData()
     }
 
+    fun onTechDataInput(techOperationId: String, dataValue: String) {
+        techMap?.let { techMap ->
+            techMap.techOperations.find { it.id == techOperationId }?.let { techOperation ->
+                techOperation.valueInputData = dataValue
+            }
+        }
+    }
+
     private fun updateData() {
         val operations = mutableListOf<DiffItem>().apply {
             operationsModels.map { operation ->
@@ -59,6 +67,7 @@ class TechOperationsViewModel(private val routesInteractor: RoutesInteractor) :
                         id = operation.id,
                         name = operation.name.orEmpty(),
                         labelInputData = operation.labelInputData.orEmpty(),
+                        valueInputData = operation.valueInputData.orEmpty(),
                         needInputData = operation.needInputData,
                         position = operation.position
                     )

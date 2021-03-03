@@ -1,6 +1,7 @@
 package ru.madbrains.inspection.ui.main.routes.techoperations
 
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_tech_operations.*
@@ -29,7 +30,11 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
     private val techOperationsViewModel: TechOperationsViewModel by sharedViewModel()
 
     private val techOperationsAdapter by lazy {
-        TechOperationAdapter()
+        TechOperationAdapter(
+            onDataInput = {
+                techOperationsViewModel.onTechDataInput(it.id, it.inputData)
+            }
+        )
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
