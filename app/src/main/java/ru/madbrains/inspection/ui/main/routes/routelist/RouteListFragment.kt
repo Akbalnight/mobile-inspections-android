@@ -5,6 +5,8 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.pow.api.cls.RfidPower
+import com.uhf.api.cls.Reader
 import kotlinx.android.synthetic.main.fragment_route_list.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -15,6 +17,7 @@ import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.ui.adapters.DetourAdapter
 import ru.madbrains.inspection.ui.main.routes.DetoursViewModel
 import ru.madbrains.inspection.ui.main.routes.points.RoutePointsFragment
+import timber.log.Timber
 
 class RouteListFragment : BaseFragment(R.layout.fragment_route_list) {
 
@@ -34,6 +37,31 @@ class RouteListFragment : BaseFragment(R.layout.fragment_route_list) {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        val rPower = RfidPower(RfidPower.PDATYPE.ZoomSmart)
+
+        val reader = Reader()
+
+        val ants: IntArray = intArrayOf()
+        val tagcnt = IntArray(1)
+
+        var er: Reader.READER_ERR = reader.TagInventory_Raw(ants, ants.size, 50, tagcnt)
+
+        if (er == Reader.READER_ERR.MT_OK_ERR) {
+            val tagInfo: Reader.TAGINFO = reader.TAGINFO()
+            er = reader.GetNextTag(tagInfo)
+            if (er === Reader.READER_ERR.MT_OK_ERR) {
+                Timber.tag("RFID").d("info=%s", Reader.bytes_Hexstr(tagInfo.EpcId))
+            }
+        }
+
+        startScan.setOnClickListener {
+            rPower.PowerUp()
+        }
+
+        stopScan.setOnClickListener {
+            rPower.PowerDown()
+        }
 
         rvRoutes.adapter = routesAdapter
 
