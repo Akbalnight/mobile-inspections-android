@@ -42,6 +42,8 @@ class RouteListFragment : BaseFragment(R.layout.fragment_route_list) {
 
         val reader = Reader()
 
+        reader.InitReader_Notype("/dev/ttyHSL3", 1)
+
         val ants: IntArray = intArrayOf()
         val tagcnt = IntArray(1)
 
