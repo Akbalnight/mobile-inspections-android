@@ -58,6 +58,14 @@ fun defectListDelegate(clickActionLeft: (DefectListUiModel) -> Unit,
                         clickActionRight.invoke(item)
                     }
 
+                    if(item.isCommonList){
+                        btnActionLeft.text = resources?.getText(R.string.fragment_btn_label_edit)
+                        btnActionRight.text = resources?.getText(R.string.fragment_btn_label_delete)
+                    } else {
+                        btnActionLeft.text = resources?.getText(R.string.fragment_btn_label_confirm)
+                        btnActionRight.text = resources?.getText(R.string.fragment_btn_label_fixed)
+                    }
+
                 }
             }
         }
@@ -69,7 +77,8 @@ data class DefectListUiModel(
         val time: String,
         val device: String,
         val type: String,
-        val description: String
+        val description: String,
+        val isCommonList: Boolean
 
 ) : DiffItem {
 

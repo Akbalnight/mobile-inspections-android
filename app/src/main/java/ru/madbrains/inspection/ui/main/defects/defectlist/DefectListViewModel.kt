@@ -17,6 +17,7 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
 
 
     private val _defectList = MutableLiveData<List<DiffItem>>()
+    private var detourId: String? = null
     val defectList: LiveData<List<DiffItem>> = _defectList
 
     private val defectListModels = mutableListOf<DefectModel>()
@@ -24,20 +25,27 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
     private val _progressVisibility = MutableLiveData<Boolean>()
     val progressVisibility: LiveData<Boolean> = _progressVisibility
 
-    fun getDefectList() {
-        routesInteractor.getDefects()
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { _progressVisibility.postValue(true) }
-                .doAfterTerminate { _progressVisibility.postValue(false) }
-                .subscribe({ items ->
-                    defectListModels.addAll(items)
-                    updateDefectList()
-                }, {
-                    it.printStackTrace()
-                })
-                .addTo(disposables)
+    fun getDefectList(detour: String?) {
+        detourId = detour
+                routesInteractor.getDefects(detourIds = getDetourIdsList())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe { _progressVisibility.postValue(true) }
+                        .doAfterTerminate { _progressVisibility.postValue(false) }
+                        .subscribe({ items ->
+                            defectListModels.addAll(items)
+                            updateDefectList()
+                        }, {
+                            it.printStackTrace()
+                        })
+                        .addTo(disposables)
+        
+    }
 
-
+    private fun getDetourIdsList(): List<String> {
+        detourId?.let {
+            return listOf(it)
+        }
+        return emptyList()
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -68,7 +76,8 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
                                 time = time,
                                 device = defect.equipmentName.orEmpty(),
                                 type = defect.defectName.orEmpty(),
-                                description = defect.description.orEmpty()
+                                description = defect.description.orEmpty(),
+                                isCommonList = detourId.isNullOrEmpty()
                         )
                 )
             }
