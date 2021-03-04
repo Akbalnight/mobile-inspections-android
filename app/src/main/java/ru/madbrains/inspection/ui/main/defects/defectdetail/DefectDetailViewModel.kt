@@ -135,7 +135,9 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
                 MediaDefectUiModel(
                         id = UUID.randomUUID().toString(),
                         image = image,
-                        isVideo = false
+                        isVideo = false,
+                        videoPreview = image,
+                        url = "https://s1.1zoom.ru/big3/984/Canada_Parks_Lake_Mountains_Forests_Scenery_Rocky_567540_3840x2400.jpg"
                 )
         )
         updateMediaList()
@@ -164,7 +166,7 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
     fun saveDefect() {
         //todo save defect
         val listFiles = mediaModels.map {
-            fileUtil.createFile(it.image, it.id)
+        //    fileUtil.createFile(it.image, it.id)
         }
 
         val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
@@ -173,8 +175,8 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
                 equipmentId = _device.value?.id,
                 defectTypicalId = currentTypical?.id,
                 description = description,
-                dateDetectDefect = timeStamp,
-                files = listFiles
+                dateDetectDefect = timeStamp
+                //files = listFiles
         )
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { _progressVisibility.postValue(true) }

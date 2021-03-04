@@ -68,9 +68,9 @@ data class MediaDefectUiModel(
         val id: String,
         val isVideo: Boolean = false,
         val isEditing: Boolean = false,
-        val videoPreview: Bitmap,
+        val videoPreview: Bitmap?,
         val image: Bitmap?,
-        val url: String?
+        val url: String
 ) : DiffItem {
 
     override fun areItemsTheSame(newItem: DiffItem): Boolean =

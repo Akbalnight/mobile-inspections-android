@@ -77,7 +77,8 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
                                 device = defect.equipmentName.orEmpty(),
                                 type = defect.defectName.orEmpty(),
                                 description = defect.description.orEmpty(),
-                                isCommonList = detourId.isNullOrEmpty()
+                                isCommonList = detourId.isNullOrEmpty(),
+                            images = emptyList()
                         )
                 )
             }
