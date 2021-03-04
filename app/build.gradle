@@ -42,6 +42,10 @@ android {
         versionName "1.0.0-alpha03"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        ndk {
+            abiFilters 'armeabi'
+        }
     }
 
     buildTypes {
