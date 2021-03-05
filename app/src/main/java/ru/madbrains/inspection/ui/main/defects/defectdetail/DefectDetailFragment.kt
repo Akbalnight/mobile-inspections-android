@@ -2,7 +2,6 @@ package ru.madbrains.inspection.ui.main.defects.defectdetail
 
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.doOnTextChanged
@@ -93,7 +92,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
     private fun setupNewDefect() {
         toolbarLayout.apply {
             tvTitle.text = strings[R.string.fragment_defect_add_title]
-            btnBack.setOnClickListener {
+            btnLeading.setOnClickListener {
                 findNavController().popBackStack()
             }
         }
@@ -102,7 +101,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
     private fun setupEditDefect() {
         toolbarLayout.apply {
             tvTitle.text = strings[R.string.fragment_defect_edit_title]
-            btnBack.setOnClickListener {
+            btnLeading.setOnClickListener {
                 findNavController().popBackStack()
             }
         }
@@ -157,7 +156,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
     }
 
     private fun setupDefectDevice() {
-        defectDetailViewModel.device.observe(viewLifecycleOwner, Observer {equipments ->
+        defectDetailViewModel.device.observe(viewLifecycleOwner, Observer { equipments ->
             equipments?.let {
                 dropDownDevice.setText(it.name, false)
             }
