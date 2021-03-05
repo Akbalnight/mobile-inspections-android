@@ -85,7 +85,7 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
                 toolBarTitle += it.toString()
             }
             tvTitle.text = toolBarTitle
-            toolbarLayout.btnBack.setOnClickListener {
+            toolbarLayout.btnLeading.setOnClickListener {
                 findNavController().popBackStack()
             }
         }

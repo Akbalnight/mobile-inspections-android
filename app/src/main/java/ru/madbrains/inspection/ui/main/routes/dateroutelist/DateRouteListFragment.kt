@@ -61,7 +61,7 @@ class DateRouteListFragment : BaseFragment(R.layout.fragment_route_list_date) {
 
     private fun setupToolbar() {
         toolbarLayout.tvTitle.text = date.orEmpty()
-        toolbarLayout.btnBack.setOnClickListener {
+        toolbarLayout.btnLeading.setOnClickListener {
             findNavController().popBackStack()
         }
     }
