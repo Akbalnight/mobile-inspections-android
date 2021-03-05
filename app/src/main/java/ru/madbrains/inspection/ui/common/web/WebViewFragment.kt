@@ -45,7 +45,7 @@ class WebViewFragment : BaseFragment(R.layout.fragment_web_view) {
 
     private fun setupToolbar(title: String?) {
         title?.let { toolbarLayout.tvTitle.text = it }
-        toolbarLayout.btnBack.setOnClickListener {
+        toolbarLayout.btnLeading.setOnClickListener {
             findNavController().popBackStack()
         }
     }
