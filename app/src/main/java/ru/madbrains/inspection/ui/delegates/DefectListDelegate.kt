@@ -1,12 +1,12 @@
 package ru.madbrains.inspection.ui.delegates
 
-import android.graphics.Bitmap
 import android.view.View
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
 import kotlinx.android.synthetic.main.item_defect.view.*
 import kotlinx.android.synthetic.main.item_defect.view.clContainer
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.model.DiffItem
+import ru.madbrains.inspection.extensions.drawables
 import ru.madbrains.inspection.ui.adapters.DefectMediaAdapter
 import java.util.*
 
@@ -19,9 +19,9 @@ fun defectListDelegate(
         bind {
             itemView.apply {
                 if (item.detour.isEmpty()) {
-                    ivIconDetour.setImageResource(R.drawable.ic_defect_card_no_detour)
+                    ivIconDetour.setImageDrawable(context.drawables[R.drawable.ic_defect_card_no_detour])
                 } else {
-                    ivIconDetour.setImageResource(R.drawable.ic_defect_card_detour)
+                    ivIconDetour.setImageDrawable(context.drawables[R.drawable.ic_defect_card_detour])
                 }
 
                 tvTitleDate.text = item.date
@@ -70,23 +70,26 @@ fun defectListDelegate(
                     btnActionRight.text = resources?.getText(R.string.fragment_btn_label_fixed)
                 }
 
-                var defAdapter = DefectMediaAdapter(
+                val mediaAdapter = DefectMediaAdapter(
                     onMediaDeleteClick = {
 
                     },
                     onMediaImageClick = {
 
                     })
-                rvDefectMedia.adapter = defAdapter
+
+              //  if(!item.images.isNullOrEmpty()){
+                    rvDefectMedia.adapter = mediaAdapter
 
 
-                defAdapter.items = listOf(      MediaDefectUiModel(
-                    id = UUID.randomUUID().toString(),
-                    image = null,
-                    isVideo = false,
-                    videoPreview = null,
-                    url = "https://s1.1zoom.ru/big3/984/Canada_Parks_Lake_Mountains_Forests_Scenery_Rocky_567540_3840x2400.jpg"
-                ))
+                    mediaAdapter.items = listOf(
+                        MediaDefectUiModel(
+                            id = UUID.randomUUID().toString(),
+                            url = "https://mobinspect.dias-dev.ru/api/dynamicdq/data/file/mobileFiles/7b46c999-d2e3-4a4a-840e-a90d6b7166ac"
+                        )
+                    )
+               // }
+
             }
         }
 
@@ -102,7 +105,7 @@ data class DefectListUiModel(
     val type: String,
     val description: String,
     val isCommonList: Boolean,
-    val images: List<String>?
+    val images: List<MediaDefectUiModel>?
 
 ) : DiffItem {
 

@@ -135,8 +135,6 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
                 MediaDefectUiModel(
                         id = UUID.randomUUID().toString(),
                         image = image,
-                        isVideo = false,
-                        videoPreview = image,
                         url = "https://s1.1zoom.ru/big3/984/Canada_Parks_Lake_Mountains_Forests_Scenery_Rocky_567540_3840x2400.jpg"
                 )
         )
