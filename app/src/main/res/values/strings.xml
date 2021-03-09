@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <string name="app_name">Управление мобильным персоналом - Энергетика</string>
 
     <!-- MainActivity -->
@@ -48,6 +48,7 @@
     <string name="fragment_add_defect_dialog_empty_fields_subtitle">Вы хотите сохранить изменения?</string>
     <string name="fragment_add_defect_dialog_empty_required_fields_subtitle">Не заполнены обязательные поля</string>
     <string name="fragment_add_defect_media_list_title">Фото и видео: %s из 8</string>
+    <string name="fragment_add_defect_search">Поиск</string>
 
     <!-- DefectListFragment -->
     <string name="fragment_defect_list_title">Реестр дефектов</string>

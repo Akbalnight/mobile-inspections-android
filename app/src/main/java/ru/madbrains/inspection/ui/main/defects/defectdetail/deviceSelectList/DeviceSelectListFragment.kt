@@ -12,9 +12,11 @@ import ru.madbrains.domain.model.EquipmentsModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
+import ru.madbrains.inspection.extensions.drawables
 import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.adapters.DeviceSelectAdapter
 import ru.madbrains.inspection.ui.main.defects.defectdetail.DefectDetailViewModel
+import ru.madbrains.inspection.ui.view.SearchToolbar
 
 class DeviceSelectListFragment : BaseFragment(R.layout.fragment_defect_find_device) {
 
@@ -23,12 +25,12 @@ class DeviceSelectListFragment : BaseFragment(R.layout.fragment_defect_find_devi
 
     private val deviceSelectAdapter by lazy {
         DeviceSelectAdapter(
-            onDeviceSelectClick = {
-                val deviceSelect = deviceSelectViewModel.deviceListModels.find { deviceSelect ->
-                    deviceSelect.id == it.id
-                }
-                deviceSelectViewModel.deviceSelectClick(deviceSelect)
-            })
+                onDeviceSelectClick = {
+                    val deviceSelect = deviceSelectViewModel.deviceListModels.find { deviceSelect ->
+                        deviceSelect.id == it.id
+                    }
+                    deviceSelectViewModel.deviceSelectClick(deviceSelect)
+                })
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -49,18 +51,21 @@ class DeviceSelectListFragment : BaseFragment(R.layout.fragment_defect_find_devi
         })
 
         deviceSelectViewModel.navigateToDefectDetail.observe(
-            viewLifecycleOwner,
-            EventObserver {
-                backToDefectDetailFragment(it)
-            })
+                viewLifecycleOwner,
+                EventObserver {
+                    backToDefectDetailFragment(it)
+                })
     }
 
     private fun setupToolBar() {
-        toolbarLayout.apply {
+        (toolbarLayout as SearchToolbar).apply {
             tvTitle.text = strings[R.string.fragment_title_select_device]
-            btnBack.setOnClickListener {
-                findNavController().popBackStack()
+            btnLeading.setOnClickListener {
+                onNavigationBack(this@DeviceSelectListFragment)
             }
+            setupSearch(context.drawables[R.drawable.ic_back],
+                    { deviceSelectViewModel.searchEquipments(it) }
+            )
         }
     }
 
