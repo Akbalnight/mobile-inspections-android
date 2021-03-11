@@ -2,16 +2,23 @@ package ru.madbrains.inspection.ui.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.addTo
 import ru.madbrains.data.prefs.PreferenceStorage
+import ru.madbrains.domain.interactor.AuthInteractor
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 
 class MainViewModel(
-    private val preferenceStorage: PreferenceStorage
+    private val preferenceStorage: PreferenceStorage,
+    private val authInteractor: AuthInteractor
 ) : BaseViewModel() {
 
     val username: String
         get() = preferenceStorage.username.orEmpty()
+
+    private val _progressVisibility = MutableLiveData<Boolean>()
+    val progressVisibility: LiveData<Boolean> = _progressVisibility
 
     private val _navigateToMenu = MutableLiveData<Event<Unit>>()
     val navigateToMenu: LiveData<Event<Unit>> = _navigateToMenu
@@ -30,6 +37,9 @@ class MainViewModel(
 
     private val _navigateToSettings = MutableLiveData<Event<Unit>>()
     val navigateToSettings: LiveData<Event<Unit>> = _navigateToSettings
+
+    private val _navigateToAuthorization = MutableLiveData<Event<Unit>>()
+    val navigateToAuthorization: LiveData<Event<Unit>> = _navigateToAuthorization
 
     fun menuClick() {
         _navigateToMenu.value = Event(Unit)
@@ -56,7 +66,20 @@ class MainViewModel(
     }
 
     fun logoutClick() {
-        // TODO add logout action
+        val accessToken = preferenceStorage.token.orEmpty()
+        logout(accessToken)
     }
 
+    private fun logout(accessToken: String) {
+        authInteractor.logout(accessToken)
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { _progressVisibility.postValue(true) }
+            .doAfterTerminate { _progressVisibility.postValue(false) }
+            .subscribe({
+                _navigateToAuthorization.postValue(Event(Unit))
+            }, {
+                it.printStackTrace()
+            })
+            .addTo(disposables)
+    }
 }
