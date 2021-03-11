@@ -7,9 +7,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
 import ru.madbrains.domain.interactor.RoutesInteractor
 import ru.madbrains.domain.model.DefectModel
+import ru.madbrains.domain.model.FileModel
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.DefectListUiModel
+import ru.madbrains.inspection.ui.delegates.MediaDefectUiModel
 import java.text.ParseException
 import java.text.SimpleDateFormat
 
@@ -84,5 +86,28 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
             }
         }
         _defectList.value = defects
+    }
+
+    private fun getMediaListItem(files: List<FileModel>?) : List<MediaDefectUiModel> {
+
+
+        files?.let {
+            return arrayListOf<MediaDefectUiModel>().apply {
+                files.map {fileModel ->
+                    fileModel.fileId?.let { fileId ->
+                        add(MediaDefectUiModel(
+                            id = fileModel.id.orEmpty(),
+                            isEditing = false,
+                            url = "https://mobinspect.dias-dev.ru/api/dynamicdq/data/file/mobileFiles/${fileId}" //todo change to constant
+                            //todo isImage если видео
+                            //todo image если видео
+                        ))
+                    }
+                }
+            }
+
+        } ?: run {
+            return emptyList()
+        }
     }
 }

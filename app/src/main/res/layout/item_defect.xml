@@ -46,7 +46,7 @@
                 android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_defect_card_open" />
+                app:srcCompat="@drawable/ic_defect_card_close" />
 
             <TextView
                 android:id="@+id/tvTitleDate"
@@ -216,6 +216,23 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:srcCompat="@drawable/ic_defect_card_media" />
+
+            <TextView
+                android:id="@+id/tvPopupLinkDetour"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/text_view_popup_link_detour"
+                android:paddingStart="16dp"
+                android:paddingTop="6dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="6dp"
+                android:text="@string/fragment_defect_card_link_detour"
+                android:textColor="@color/textWhite"
+                android:visibility="gone"
+                app:layout_constraintStart_toEndOf="@+id/ivIconDetour"
+                app:layout_constraintTop_toTopOf="@+id/tvTitleDate" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
