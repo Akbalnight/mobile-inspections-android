@@ -1,12 +1,15 @@
 package ru.madbrains.inspection.ui.main.routes.routelist
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.pow.api.cls.RfidPower
 import com.uhf.api.cls.Reader
+import com.uhf.api.cls.Reader.READER_ERR
 import kotlinx.android.synthetic.main.fragment_route_list.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -18,6 +21,8 @@ import ru.madbrains.inspection.ui.adapters.DetourAdapter
 import ru.madbrains.inspection.ui.main.routes.DetoursViewModel
 import ru.madbrains.inspection.ui.main.routes.points.RoutePointsFragment
 import timber.log.Timber
+import java.util.concurrent.Executors
+
 
 class RouteListFragment : BaseFragment(R.layout.fragment_route_list) {
 
@@ -35,30 +40,36 @@ class RouteListFragment : BaseFragment(R.layout.fragment_route_list) {
         )
     }
 
+    @SuppressLint("LogNotTimber")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         val rPower = RfidPower(RfidPower.PDATYPE.ZoomSmart)
-
         val reader = Reader()
 
-        reader.InitReader_Notype("/dev/ttyHSL3", 1)
-
-        val ants: IntArray = intArrayOf()
-        val tagcnt = IntArray(1)
-
-        var er: Reader.READER_ERR = reader.TagInventory_Raw(ants, ants.size, 50, tagcnt)
-
-        if (er == Reader.READER_ERR.MT_OK_ERR) {
-            val tagInfo: Reader.TAGINFO = reader.TAGINFO()
-            er = reader.GetNextTag(tagInfo)
-            if (er === Reader.READER_ERR.MT_OK_ERR) {
-                Timber.tag("RFID").d("info=%s", Reader.bytes_Hexstr(tagInfo.EpcId))
-            }
-        }
-
         startScan.setOnClickListener {
-            rPower.PowerUp()
+
+            Executors.newSingleThreadExecutor().execute {
+
+                rPower.PowerUp()
+
+                Log.d("RFID", rPower.GetDevPath())
+
+                reader.InitReader_Notype("/dev/ttyHSL3", 1)
+
+                val ants = IntArray(1)
+                val tagcnt = IntArray(1)
+
+                var er = reader.TagInventory_Raw(ants, ants.size, 50, tagcnt)
+
+                if (er == READER_ERR.MT_OK_ERR) {
+                    val tagInfo = reader.TAGINFO()
+                    er = reader.GetNextTag(tagInfo)
+                    if (er == READER_ERR.MT_OK_ERR) {
+                        Log.d("RFID", "...info=" + Reader.bytes_Hexstr(tagInfo.EpcId))
+                    }
+                }
+            }
         }
 
         stopScan.setOnClickListener {
