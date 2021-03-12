@@ -30,19 +30,19 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
 
     fun getDefectList(detour: String?) {
         detourId = detour
-                routesInteractor.getDefects(detourIds = getDetourIdsList())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doOnSubscribe { _progressVisibility.postValue(true) }
-                        .doAfterTerminate { _progressVisibility.postValue(false) }
-                        .subscribe({ items ->
-                            defectListModels.clear()
-                            defectListModels.addAll(items)
-                            updateDefectList()
-                        }, {
-                            it.printStackTrace()
-                        })
-                        .addTo(disposables)
-        
+        routesInteractor.getDefects(detourIds = getDetourIdsList())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { _progressVisibility.postValue(true) }
+                .doAfterTerminate { _progressVisibility.postValue(false) }
+                .subscribe({ items ->
+                    defectListModels.clear()
+                    defectListModels.addAll(items)
+                    updateDefectList()
+                }, {
+                    it.printStackTrace()
+                })
+                .addTo(disposables)
+
     }
 
     private fun getDetourIdsList(): List<String> {
@@ -71,10 +71,6 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
                         e.printStackTrace()
                     }
                 }
-
-                val list = getMediaListItem(defect.files)
-
-                Log.d("TAG", "getMediaListItem list" + list.size)
                 add(
                         DefectListUiModel(
                                 id = defect.id,
@@ -85,7 +81,7 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
                                 type = defect.defectName.orEmpty(),
                                 description = defect.description.orEmpty(),
                                 isCommonList = detourId.isNullOrEmpty(),
-                            images = getMediaListItem(defect.files)
+                                images = getMediaListItem(defect.files)
                         )
                 )
             }
@@ -93,28 +89,24 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
         _defectList.value = defects
     }
 
-    private fun getMediaListItem(files: List<FileModel>?) : List<MediaDefectUiModel> {
+    private fun getMediaListItem(files: List<FileModel>?): List<MediaDefectUiModel> {
 
+        val list: MutableList<MediaDefectUiModel> = mutableListOf()
 
-        var list: MutableList<MediaDefectUiModel> = mutableListOf()
-
+        //todo preview video
         files?.let {
-                files.map {fileModel ->
-                    fileModel.id?.let { fileId ->
-                        list.add(MediaDefectUiModel(
-                            id = fileModel.id.orEmpty(),
-                            isEditing = false,
-                            url = "https://mobinspect.dias-dev.ru${fileId}" //todo change to constant
-                            //todo isImage если видео
-                            //todo image если видео
-                        ))
-                    }
-                }
-          //  }
+            files.map { fileModel ->
+                list.add(MediaDefectUiModel(
+                        id = fileModel.id.orEmpty(),
+                        isEditing = false,
+                        url = "https://mobinspect.dias-dev.ru${fileModel.url?.orEmpty()}" //todo change to constant
+                        //todo isImage если видео
+                        //todo image если видео
+                ))
+            }
+            //  }
 
         }
-
-        Log.d("TAG", "list" + list.size)
         return list
     }
 }

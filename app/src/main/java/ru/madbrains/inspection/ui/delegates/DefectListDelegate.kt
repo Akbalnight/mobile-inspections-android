@@ -1,5 +1,6 @@
 package ru.madbrains.inspection.ui.delegates
 
+import android.util.Log
 import android.view.View
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
 import kotlinx.android.synthetic.main.item_defect.view.*
@@ -26,7 +27,8 @@ fun defectListDelegate(
                         tvPopupLinkDetour.text = context.strings[R.string.fragment_defect_card_link_detour]
                     }
 
-                    tvTitleDate.text = item.date
+                    tvTitleDate.text = item.id
+                    //todo tvTitleDate.text = item.date
                     tvTime.text = item.time
                     tvDeviceData.text = item.device
                     tvTypeDefectData.text = item.type
@@ -50,7 +52,9 @@ fun defectListDelegate(
                             ivUnfoldStatus.setImageResource(R.drawable.ic_defect_card_open)
                             tvDescriptionTitle.visibility = View.VISIBLE
                             tvDescriptionData.visibility = View.VISIBLE
-                            rvDefectMedia.visibility = View.VISIBLE
+                            if (!item.images.isNullOrEmpty()) {
+                                rvDefectMedia.visibility = View.VISIBLE
+                            }
                             btnActionLeft.visibility = View.VISIBLE
                             btnActionRight.visibility = View.VISIBLE
                             //todo
@@ -90,8 +94,14 @@ fun defectListDelegate(
                             onMediaImageClick = {
 
                             })
-
+                    Log.d("TAG", "item.id " + item.id)
                     if (!item.images.isNullOrEmpty()) {
+                        item.images?.let {
+                            it.forEach {
+                                Log.d("TAG", it.url)
+                            }
+                        }
+                        Log.d("TAG", "!item.images.isNullOrEmpty() " + item.images!!.size)
                         rvDefectMedia.adapter = mediaAdapter
                         mediaAdapter.items = item.images
                     }
