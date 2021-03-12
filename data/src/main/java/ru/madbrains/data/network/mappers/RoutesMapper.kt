@@ -195,8 +195,9 @@ fun mapGetFileResp(resp: GetFileResp): FileModel {
     return with(resp) {
         FileModel(
                 id = id,
-                someIdDef = someIdDef,
-                fileId = fileId
+                url = url,
+                name = name,
+                extension = extension
         )
     }
 }

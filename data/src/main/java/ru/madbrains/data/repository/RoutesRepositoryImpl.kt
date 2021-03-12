@@ -93,15 +93,6 @@ class RoutesRepositoryImpl(
                 dateDetectDefect = dateDetectDefect
         )
 
-      //  files
-        val fileList = files?.map {
-            MultipartBody.Part.createFormData(
-                    name = "files[]",
-                    filename = it.name,
-                    body = it.asRequestBody("multipart/form-data".toMediaTypeOrNull()))
-
-        }
-
         var multiParts: List<MultipartBody.Part>? = null
         files?.let { list  ->
             if(list.isNotEmpty()) {
@@ -116,42 +107,6 @@ class RoutesRepositoryImpl(
                 multiParts = body.parts
             }
         }
-
-       /* var dfs:List<MultipartBody.Part>? = null
-
-        body?.let { dfs = it.parts }
-
-
-        var multiRequest: RequestBody? = null
-        files?.let {list ->
-            if(list.isNotEmpty()){
-                val _body = MultipartBody.Builder().apply {
-                    setType(MultipartBody.FORM)
-                    list?.forEach {
-                        addFormDataPart(name = "files",
-                                filename = it.name,
-                                body = it.asRequestBody("multipart/form-data".toMediaTypeOrNull()))
-                    }
-                }.build()
-                multiRequest = _body
-            }
-
-
-        }
-*/
-
-/*
-        val requestBody = MultipartBody.Builder().setType(MultipartBody.FORM).apply {
-            addFormDataPart("type", "booking")
-            addFormDataPart("user", "username")
-            addFormDataPart("message", "message text goes here")
-            addFormDataPart("contact_number", "0123456789")
-            addFormDataPart("contact_email", "email@address.com")
-            // my files are List<ByteArray>, okhttp has a few utility methods like .toRequestBody for various types like below
-            files.forEachIndexed { index, bytes ->
-                addFormDataPart("files[]", "$index.jpg", bytes.toRequestBody("multipart/form-data".toMediaTypeOrNull(), 0, bytes.size))
-            }
-        }.build()*/
 
         return inspectionApi.saveDefect(request, multiParts)
     }

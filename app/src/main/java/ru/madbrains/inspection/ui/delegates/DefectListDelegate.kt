@@ -9,7 +9,6 @@ import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.extensions.drawables
 import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.adapters.DefectMediaAdapter
-import java.util.*
 
 fun defectListDelegate(
         clickActionLeft: (DefectListUiModel) -> Unit,
@@ -76,7 +75,6 @@ fun defectListDelegate(
                         clickActionRight.invoke(item)
                     }
 
-
                     if (item.isCommonList) {
                         btnActionLeft.text = resources?.getText(R.string.fragment_btn_label_edit)
                         btnActionRight.text = resources?.getText(R.string.fragment_btn_label_delete)
@@ -95,15 +93,7 @@ fun defectListDelegate(
 
                     if (!item.images.isNullOrEmpty()) {
                         rvDefectMedia.adapter = mediaAdapter
-
-                        mediaAdapter.items =
-
-                                listOf(
-                                        MediaDefectUiModel(
-                                                id = UUID.randomUUID().toString(),
-                                                url = "https://mobinspect.dias-dev.ru/api/dynamicdq/data/file/mobileFiles/7b46c999-d2e3-4a4a-840e-a90d6b7166ac"
-                                        )
-                                )
+                        mediaAdapter.items = item.images
                     }
 
                 }

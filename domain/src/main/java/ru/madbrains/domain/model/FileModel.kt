@@ -4,6 +4,7 @@ import java.io.Serializable
 
 data class FileModel(
         val id: String?,
-        val someIdDef: String?,
-        val fileId: String?
+        val url: String?,
+        val name: String?,
+        val extension: String?
 ) : Serializable

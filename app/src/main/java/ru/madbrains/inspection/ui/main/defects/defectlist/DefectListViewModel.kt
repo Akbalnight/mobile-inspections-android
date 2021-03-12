@@ -1,6 +1,7 @@
 package ru.madbrains.inspection.ui.main.defects.defectlist
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -34,6 +35,7 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
                         .doOnSubscribe { _progressVisibility.postValue(true) }
                         .doAfterTerminate { _progressVisibility.postValue(false) }
                         .subscribe({ items ->
+                            defectListModels.clear()
                             defectListModels.addAll(items)
                             updateDefectList()
                         }, {
@@ -70,6 +72,9 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
                     }
                 }
 
+                val list = getMediaListItem(defect.files)
+
+                Log.d("TAG", "getMediaListItem list" + list.size)
                 add(
                         DefectListUiModel(
                                 id = defect.id,
@@ -80,7 +85,7 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
                                 type = defect.defectName.orEmpty(),
                                 description = defect.description.orEmpty(),
                                 isCommonList = detourId.isNullOrEmpty(),
-                            images = emptyList()
+                            images = getMediaListItem(defect.files)
                         )
                 )
             }
@@ -91,23 +96,25 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
     private fun getMediaListItem(files: List<FileModel>?) : List<MediaDefectUiModel> {
 
 
+        var list: MutableList<MediaDefectUiModel> = mutableListOf()
+
         files?.let {
-            return arrayListOf<MediaDefectUiModel>().apply {
                 files.map {fileModel ->
-                    fileModel.fileId?.let { fileId ->
-                        add(MediaDefectUiModel(
+                    fileModel.id?.let { fileId ->
+                        list.add(MediaDefectUiModel(
                             id = fileModel.id.orEmpty(),
                             isEditing = false,
-                            url = "https://mobinspect.dias-dev.ru/api/dynamicdq/data/file/mobileFiles/${fileId}" //todo change to constant
+                            url = "https://mobinspect.dias-dev.ru${fileId}" //todo change to constant
                             //todo isImage если видео
                             //todo image если видео
                         ))
                     }
                 }
-            }
+          //  }
 
-        } ?: run {
-            return emptyList()
         }
+
+        Log.d("TAG", "list" + list.size)
+        return list
     }
 }
