@@ -1,12 +1,13 @@
 package ru.madbrains.inspection.ui.delegates
 
 import android.view.View
+import androidx.core.widget.doAfterTextChanged
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
 import kotlinx.android.synthetic.main.item_tech_operations.view.*
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.model.DiffItem
 
-fun techOperationDelegate() =
+fun techOperationDelegate(onDataInput: (TechOperationUiModel) -> Unit) =
     adapterDelegateLayoutContainer<TechOperationUiModel, DiffItem>(R.layout.item_tech_operations) {
 
         bind {
@@ -22,6 +23,11 @@ fun techOperationDelegate() =
                             tvInputData.visibility = View.VISIBLE
                             tvInputData.text = label
                             etInputData.visibility = View.VISIBLE
+                            etInputData.setText(item.valueInputData)
+                            etInputData.doAfterTextChanged { inputData ->
+                                item.inputData = inputData.toString()
+                                onDataInput.invoke(item)
+                            }
                         }
                     } else {
                         tvInputData.visibility = View.GONE
@@ -37,8 +43,11 @@ data class TechOperationUiModel(
     val name: String,
     val needInputData: Boolean?,
     val labelInputData: String?,
+    val valueInputData: String?,
     val position: Int?
 ) : DiffItem {
+
+    var inputData: String = ""
 
     override fun areItemsTheSame(newItem: DiffItem): Boolean =
         newItem is TechOperationUiModel && id == newItem.id

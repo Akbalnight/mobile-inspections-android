@@ -8,6 +8,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_route_points_close_dialog.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import ru.madbrains.domain.model.DetourStatus
 import ru.madbrains.inspection.R
 
 class RoutePointsCloseDialog : DialogFragment() {
@@ -27,7 +28,7 @@ class RoutePointsCloseDialog : DialogFragment() {
 
         btnComplete.setOnClickListener {
             findNavController().popBackStack()
-            routePointsViewModel.finishDetour()
+            routePointsViewModel.finishDetour(DetourStatus.NOT_COMPLETED.id)
         }
         btnSuspend.setOnClickListener {
             findNavController().popBackStack()

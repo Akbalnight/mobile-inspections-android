@@ -10,9 +10,6 @@ import kotlinx.android.synthetic.main.fragment_tech_operations.toolbarLayout
 import kotlinx.android.synthetic.main.toolbar_with_back.view.*
 import kotlinx.android.synthetic.main.toolbar_with_close.view.tvTitle
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import ru.madbrains.domain.model.DetourModel
-import ru.madbrains.domain.model.RoutePointModel
 import ru.madbrains.domain.model.TechMapModel
 import ru.madbrains.inspection.R
 
@@ -33,7 +30,11 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
     private val techOperationsViewModel: TechOperationsViewModel by sharedViewModel()
 
     private val techOperationsAdapter by lazy {
-        TechOperationAdapter()
+        TechOperationAdapter(
+            onDataInput = {
+                techOperationsViewModel.onTechDataInput(it.id, it.inputData)
+            }
+        )
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -80,7 +81,7 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
                 toolBarTitle += it.toString()
             }
             tvTitle.text = toolBarTitle
-            toolbarLayout.btnBack.setOnClickListener {
+            toolbarLayout.btnLeading.setOnClickListener {
                 findNavController().popBackStack()
             }
         }

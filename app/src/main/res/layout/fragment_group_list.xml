@@ -13,7 +13,7 @@
 
         <include
             android:id="@+id/toolbarLayout"
-            layout="@layout/toolbar_with_menu_and_search"
+            layout="@layout/toolbar_with_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

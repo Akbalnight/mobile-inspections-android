@@ -18,6 +18,9 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_authorizationFragment_to_serverSettingsFragment"
+            app:destination="@id/serverSettingsFragment" />
 
     </fragment>
 
@@ -26,5 +29,10 @@
         android:name="ru.madbrains.inspection.ui.common.web.WebViewFragment"
         android:label="WebViewFragment"
         tools:layout="@layout/fragment_web_view" />
+    <dialog
+        android:id="@+id/serverSettingsFragment"
+        android:name="ru.madbrains.inspection.ui.auth.serversettings.ServerSettingsFragment"
+        android:label="ServerSettingsFragment"
+        tools:layout="@layout/fragment_server_settings" />
 
 </navigation>

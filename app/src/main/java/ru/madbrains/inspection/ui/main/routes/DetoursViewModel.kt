@@ -28,13 +28,20 @@ class DetoursViewModel(
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { _progressVisibility.postValue(true) }
             .doAfterTerminate { _progressVisibility.postValue(false) }
-            .subscribe({ routes ->
+            .flatMapCompletable { routes ->
+                detourModels.clear()
                 detourModels.addAll(
                     routes
-                        .filter { it.status != null }
-                        .filter { it.route.routeData.all { it.techMap != null } }
-                        .filter { it.route.routeData.all { it.equipments != null } }
+                        .filter { it.statusId != null }
+                        .filter { it.route.routesData.all { it.techMap != null } }
+                        .filter { it.route.routesData.all { it.equipments != null } }
                 )
+                routesInteractor.freezeDetours(detourModels
+                    .filter { it.frozen != true }
+                    .map { it.id }
+                )
+            }
+            .subscribe({
                 updateData()
             }, {
                 it.printStackTrace()
@@ -46,13 +53,13 @@ class DetoursViewModel(
         val detours = mutableListOf<DiffItem>().apply {
             val models = detourModels
             status?.let {
-                val filteredModels = status.let { models.filter { it.status == status } }
+                val filteredModels = status.let { models.filter { it.statusId == status.id } }
                 filteredModels.map { detour ->
                     add(
                         DetourUiModel(
                             id = detour.id,
                             name = detour.name.orEmpty(),
-                            status = detour.status,
+                            status = DetourStatus.values().find { it.id == detour.statusId },
                             date = detour.dateStartPlan.orEmpty()
                         )
                     )
@@ -63,13 +70,13 @@ class DetoursViewModel(
                         DetourUiModel(
                             id = detour.id,
                             name = detour.name.orEmpty(),
-                            status = detour.status,
+                            status = DetourStatus.values().find { it.id == detour.statusId },
                             date = detour.dateStartPlan.orEmpty()
                         )
                     )
                 }
             }
         }
-        _detours.value = detours
+        _detours.postValue(detours)
     }
 }

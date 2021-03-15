@@ -1,7 +1,10 @@
 package ru.madbrains.inspection.ui.main.routes.points
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.addTo
 import ru.madbrains.domain.interactor.RoutesInteractor
 import ru.madbrains.domain.model.DetourModel
 import ru.madbrains.domain.model.DetourStatus
@@ -11,6 +14,8 @@ import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.RoutePointUiModel
+import java.text.SimpleDateFormat
+import java.util.*
 
 class RoutePointsViewModel(
     private val routesInteractor: RoutesInteractor
@@ -38,14 +43,37 @@ class RoutePointsViewModel(
 
     val routeDataModels = mutableListOf<RouteDataModel>()
 
+    private var startTime: Long? = null
+
     fun completeTechMap(techMap: TechMapModel) {
         routeDataModels.find { it.techMap == techMap }?.completed = true
         updateData()
     }
 
-    fun finishDetour() {
-        // todo add sending detour to server
-        onBack()
+    @SuppressLint("SimpleDateFormat")
+    fun finishDetour(statusId: String) {
+        detourModel?.let { detour ->
+
+            val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
+
+            val startTime = detour.startTime?.let { format.format(it) }.orEmpty()
+            val finishTime = format.format(Date())
+
+            detour.dateStartFact = startTime
+            detour.dateFinishFact = finishTime
+            detour.statusId = statusId
+
+            routesInteractor.saveDetour(detour)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { _progressVisibility.postValue(true) }
+                .doAfterTerminate { _progressVisibility.postValue(false) }
+                .subscribe({
+                    onBack()
+                }, {
+                    it.printStackTrace()
+                })
+                .addTo(disposables)
+        }
     }
 
     fun onBack() {
@@ -53,7 +81,7 @@ class RoutePointsViewModel(
     }
 
     fun closeClick() {
-        if (routeDataModels.all { it.completed }) {
+        if (routeDataModels.all { it.completed } || detourModel?.statusId == DetourStatus.COMPLETED.id) {
             onBack()
         } else {
             _navigateToCloseDialog.value = Event(Unit)
@@ -62,9 +90,16 @@ class RoutePointsViewModel(
 
     fun setDetour(detour: DetourModel) {
         detourModel = detour
+        startTime = null
         routeDataModels.clear()
-        routeDataModels.addAll(detour.route.routeData.sortedBy { it.position })
+        routeDataModels.addAll(detour.route.routesData.sortedBy { it.position })
         updateData()
+    }
+
+    fun startRoute() {
+        detourModel?.startTime = Date()
+        val route = routeDataModels.firstOrNull() { !it.completed }
+        route?.let { _navigateToNextRoute.value = Event(route) }
     }
 
     fun startNextRoute() {
@@ -92,7 +127,7 @@ class RoutePointsViewModel(
     }
 
     private fun setRouteStatus() {
-        if (detourModel?.status == DetourStatus.COMPLETED) return
+        if (detourModel?.statusId == DetourStatus.COMPLETED.id) return
         val completedPoints = routeDataModels.filter { it.completed }.count()
         val allPoints = routeDataModels.count()
         _routeStatus.value = when {

@@ -47,14 +47,26 @@ class DeviceSelectListViewModel(private val routesInteractor: RoutesInteractor) 
                 .addTo(disposables)
     }
 
+    fun searchEquipments(query: String) {
+        val items = deviceListModels
+                .filter { it.name.orEmpty().contains(query) }
+                .map {
+                    DeviceSelectUiModel(
+                            id = it.id.orEmpty(),
+                            name = it.name.orEmpty()
+                    )
+                }
+        _deviceList.value = items
+    }
+
     private fun updateDeviceList() {
         val items = mutableListOf<DeviceSelectUiModel>().apply {
             deviceListModels.map { item ->
                 add(
-                    DeviceSelectUiModel(
-                        id = item.id.orEmpty(),
-                        name = item.name.orEmpty()
-                    )
+                        DeviceSelectUiModel(
+                                id = item.id.orEmpty(),
+                                name = item.name.orEmpty()
+                        )
                 )
             }
         }

@@ -6,6 +6,7 @@ data class TechOperationModel(
     val code: Int?,
     val needInputData: Boolean?,
     val labelInputData: String?,
+    var valueInputData: String?,
     val equipmentStop: Boolean?,
     val increasedDanger: Boolean?,
     val duration: Int?,

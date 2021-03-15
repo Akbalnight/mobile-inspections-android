@@ -3,6 +3,7 @@ package ru.madbrains.inspection.di
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import ru.madbrains.inspection.ui.auth.AuthorizationViewModel
+import ru.madbrains.inspection.ui.auth.serversettings.ServerSettingsViewModel
 import ru.madbrains.inspection.ui.common.camera.CameraViewModel
 import ru.madbrains.inspection.ui.common.web.WebViewViewModel
 import ru.madbrains.inspection.ui.launcher.LauncherViewModel
@@ -29,7 +30,7 @@ val appModule = module {
             get()
         )
     }
-    viewModel { MainViewModel(get()) }
+    viewModel { MainViewModel(get(), get()) }
     viewModel { DetoursViewModel(get()) }
     viewModel { RouteFiltersViewModel() }
     viewModel { RouteListViewModel() }
@@ -43,4 +44,5 @@ val appModule = module {
     viewModel { DefectDetailViewModel(get(), get()) }
     viewModel { DeviceSelectListViewModel(get()) }
     viewModel { CameraViewModel() }
+    viewModel { ServerSettingsViewModel(get()) }
 }
