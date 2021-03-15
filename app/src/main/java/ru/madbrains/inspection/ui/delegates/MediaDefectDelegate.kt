@@ -29,26 +29,24 @@ fun mediaDefectDelegate(
                     clickImageListener.invoke(item)
                 }
 
-                if (item.isEditing) {
+                if (item.isEditing){
                     ivMediaDelete.visibility = View.VISIBLE
                     ivMediaDelete.setOnClickListener {
                         clickDeleteListener.invoke(item)
                     }
-                    item.image?.let { ivMediaContent.setImageBitmap(item.image) }
                 } else {
                     ivMediaDelete.visibility = View.GONE
-                    if (item.isImage) {
-                        Glide.with(context)
+                }
+
+                if (item.isNetworkImage) {
+                    Glide.with(context)
                             .load(item.url)
                             .apply(RequestOptions.bitmapTransform(CenterCrop()))
                             .placeholder(context.drawables[R.drawable.ic_item_media])
                             .into(ivMediaContent)
-
-                    } else {
-                        item.image?.let { ivMediaContent.setImageBitmap(item.image) }
-                    }
+                } else {
+                    item.imageBitmap?.let { ivMediaContent.setImageBitmap(it) }
                 }
-
             }
         }
 
@@ -57,10 +55,11 @@ fun mediaDefectDelegate(
 
 data class MediaDefectUiModel(
     val id: String,
-    val isImage: Boolean = true,
-    val isEditing: Boolean = false,
-    val image: Bitmap? = null,
-    val url: String = ""
+    val isImage: Boolean = true, // признак изображение или видео
+    val isNetworkImage: Boolean = true, // признак онлайн медиа или локально
+    val imageBitmap: Bitmap? = null, // изображение для оффлайн изобржений (либо превью видео)
+    val url: String = "", // адрес для онлайн медиа
+    val isEditing: Boolean = false // возможность редактирования (удаления)
 ) : DiffItem {
 
     override fun areItemsTheSame(newItem: DiffItem): Boolean =

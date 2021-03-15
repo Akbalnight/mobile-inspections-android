@@ -90,7 +90,7 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
 
         layoutBottomButtonAddDefect.setOnClickListener { clickAddDefect() }
 
-        layoutBottomButtonDefect.setOnClickListener { clickDefectListFragment("dffefef") }
+        layoutBottomButtonDefect.setOnClickListener { clickDefectListFragment( arrayListOf("")) }
 
     }
 
@@ -106,9 +106,9 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
         techOperationsViewModel.addDefect()
     }
 
-    private fun clickDefectListFragment(detour: String) {
+    private fun clickDefectListFragment(device: ArrayList<String>) {
         val args = bundleOf(
-                DefectListFragment.KEY_DETOUR_ID_DEFECT_LIST to detour
+                DefectListFragment.KEY_DEVICE_ID_DEFECT_LIST to device
         )
         findNavController().navigate(R.id.graph_defects, args)
     }

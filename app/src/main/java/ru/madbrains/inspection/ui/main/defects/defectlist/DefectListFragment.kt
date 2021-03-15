@@ -20,7 +20,7 @@ import ru.madbrains.inspection.ui.main.MainViewModel
 class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
 
     companion object {
-        const val KEY_DETOUR_ID_DEFECT_LIST = "detour_id_defect_list"
+        const val KEY_DEVICE_ID_DEFECT_LIST = "device_id_defect_list"
     }
 
     private val mainViewModel: MainViewModel by sharedViewModel()
@@ -40,18 +40,16 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val detourId = arguments?.getString(DefectListFragment.KEY_DETOUR_ID_DEFECT_LIST)
-        detourId?.let {
-            Log.d("defectList", "Arg != null")
+        val deviceIds = arguments?.getStringArrayList(DefectListFragment.KEY_DEVICE_ID_DEFECT_LIST)
+        deviceIds?.let {
             setupViewingDefects()
         } ?: run {
-            Log.d("defectList", "Arg == null")
             setupRegisterDefects()
         }
 
         setupRVList()
 
-        defectListViewModel.getDefectList(detourId)
+        defectListViewModel.getDefectList(deviceIds)
 
         defectListViewModel.progressVisibility.observe(viewLifecycleOwner, Observer {
             progressView.changeVisibility(it)

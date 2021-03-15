@@ -1,7 +1,6 @@
 package ru.madbrains.inspection.ui.main.defects.defectlist
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -20,7 +19,7 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
 
 
     private val _defectList = MutableLiveData<List<DiffItem>>()
-    private var detourId: String? = null
+    private var deviceIds: List<String>? = null
     val defectList: LiveData<List<DiffItem>> = _defectList
 
     private val defectListModels = mutableListOf<DefectModel>()
@@ -28,9 +27,9 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
     private val _progressVisibility = MutableLiveData<Boolean>()
     val progressVisibility: LiveData<Boolean> = _progressVisibility
 
-    fun getDefectList(detour: String?) {
-        detourId = detour
-        routesInteractor.getDefects(detourIds = getDetourIdsList())
+    fun getDefectList(device: List<String>?) {
+        deviceIds = device
+        routesInteractor.getDefects(equipmentNames = getDeviceIdsList())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { _progressVisibility.postValue(true) }
                 .doAfterTerminate { _progressVisibility.postValue(false) }
@@ -45,9 +44,9 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
 
     }
 
-    private fun getDetourIdsList(): List<String> {
-        detourId?.let {
-            return listOf(it)
+    private fun getDeviceIdsList(): List<String> {
+        deviceIds?.let {
+            return it
         }
         return emptyList()
     }
@@ -80,7 +79,7 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
                                 device = defect.equipmentName.orEmpty(),
                                 type = defect.defectName.orEmpty(),
                                 description = defect.description.orEmpty(),
-                                isCommonList = detourId.isNullOrEmpty(),
+                                isCommonList = getDeviceIdsList().isNullOrEmpty(),
                                 images = getMediaListItem(defect.files)
                         )
                 )
@@ -92,20 +91,33 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
     private fun getMediaListItem(files: List<FileModel>?): List<MediaDefectUiModel> {
 
         val list: MutableList<MediaDefectUiModel> = mutableListOf()
-
-        //todo preview video
         files?.let {
             files.map { fileModel ->
-                list.add(MediaDefectUiModel(
-                        id = fileModel.id.orEmpty(),
-                        isEditing = false,
-                        url = "https://mobinspect.dias-dev.ru${fileModel.url?.orEmpty()}" //todo change to constant
-                        //todo isImage если видео
-                        //todo image если видео
-                ))
+                when (fileModel.extension) {
+                    "png" -> { // если в файле изображение добавляем в список
+                        list.add(MediaDefectUiModel(
+                                id = fileModel.id.orEmpty(),
+                                isEditing = false,
+                                url = "https://mobinspect.dias-dev.ru${fileModel.url.orEmpty()}" //todo change to constant
+                                //todo isImage если видео
+                                //todo image если видео
+                        ))
+                    }
+                    "mpeg" -> {
+                        //todo preview video
+                    }
+                    else -> {
+                        //todo delete when extension all files
+                        list.add(MediaDefectUiModel(
+                                id = fileModel.id.orEmpty(),
+                                isEditing = false,
+                                url = "https://mobinspect.dias-dev.ru${fileModel.url.orEmpty()}" //todo change to constant
+                                //todo isImage если видео
+                                //todo image если видео
+                        ))
+                    }
+                }
             }
-            //  }
-
         }
         return list
     }
