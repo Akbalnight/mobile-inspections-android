@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.lifecycle.Observer
@@ -11,6 +12,8 @@ import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_web_view.*
 import kotlinx.android.synthetic.main.toolbar_with_back.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.madbrains.data.network.ApiData
+import ru.madbrains.data.network.OAuthData
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
@@ -75,6 +78,9 @@ class WebViewFragment : BaseFragment(R.layout.fragment_web_view) {
                 }
             }
             loadUrl(startUrl)
+
+            Log.d("WebViewLog", "auth server: ${OAuthData.oauthUrl}")
+            Log.d("WebViewLog", "portal server: ${ApiData.apiUrl}")
         }
     }
 

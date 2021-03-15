@@ -1,0 +1,22 @@
+package ru.madbrains.inspection.ui.auth.serversettings
+
+import ru.madbrains.data.network.ApiData
+import ru.madbrains.data.network.OAuthData
+import ru.madbrains.data.prefs.PreferenceStorage
+import ru.madbrains.inspection.base.BaseViewModel
+
+class ServerSettingsViewModel(
+    private val preferenceStorage: PreferenceStorage
+) : BaseViewModel() {
+
+    fun applyClick(authServer: String, portalServer: String) {
+        ApiData.apiUrl = portalServer
+        OAuthData.oauthUrl = authServer
+        initApi(preferenceStorage)
+    }
+
+    private fun initApi(preferenceStorage: PreferenceStorage) {
+        OAuthData.initApi()
+        ApiData.initApi(preferenceStorage)
+    }
+}

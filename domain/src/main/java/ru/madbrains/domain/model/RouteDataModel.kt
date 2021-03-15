@@ -4,7 +4,7 @@ data class RouteDataModel(
     val id: String?,
     val techMapId: String?,
     val controlPointId: String?,
-    val routeMapId: Int?,
+    val routeMapId: String?,
     val routeId: String?,
     val duration: Int?,
     val xLocation: Int?,

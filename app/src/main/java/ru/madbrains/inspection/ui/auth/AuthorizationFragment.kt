@@ -52,6 +52,6 @@ class AuthorizationFragment : BaseFragment(R.layout.fragment_authorization) {
     }
 
     private fun openServerSettings() {
-        // TODO add navigation
+        findNavController().navigate(R.id.action_authorizationFragment_to_serverSettingsFragment)
     }
 }
