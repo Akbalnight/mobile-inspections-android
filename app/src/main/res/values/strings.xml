@@ -68,6 +68,13 @@
     <string name="fragment_route_points_list">Список</string>
     <string name="fragment_route_points_map">Карта</string>
 
+    <!-- RoutePointsListFragment -->
+    <string name="factOrderFlag">Учитывать порядок обхода:</string>
+
+    <!-- common -->
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+
     <string-array name="months">
         <item>Январь</item>
         <item>Февраль</item>

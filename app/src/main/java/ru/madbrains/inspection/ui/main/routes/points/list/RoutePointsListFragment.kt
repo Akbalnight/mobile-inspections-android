@@ -11,6 +11,7 @@ import ru.madbrains.domain.model.TechMapModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
+import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.adapters.RoutePointAdapter
 import ru.madbrains.inspection.ui.main.routes.points.RoutePointsViewModel
 import ru.madbrains.inspection.ui.main.routes.techoperations.TechOperationsFragment
@@ -41,6 +42,7 @@ class RoutePointsListFragment : BaseFragment(R.layout.fragment_route_points_list
             tvPlanEndValue.text = dateFinishPlan?.replace("T", " ")
             tvFactStartValue.text = dateStartFact?.replace("T", " ")
             tvFactEndValue.text = dateFinishFact?.replace("T", " ")
+            tvFactOrderValue.text = if(saveOrderControlPoints == true) strings[R.string.yes] else strings[R.string.no]
         }
 
         rvRoutePoints.adapter = routePointsAdapter
