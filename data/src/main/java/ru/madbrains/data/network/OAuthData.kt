@@ -11,6 +11,7 @@ import ru.madbrains.data.BuildConfig
 import ru.madbrains.data.extensions.toBase64HashWith256
 import ru.madbrains.data.network.api.AuthApi
 import ru.madbrains.data.network.interceptors.AuthInterceptor
+import ru.madbrains.data.prefs.PreferenceStorage
 import java.util.concurrent.TimeUnit
 
 object OAuthData {
@@ -31,12 +32,12 @@ object OAuthData {
                 "&code_challenge_method=s256"
     }
 
-    private fun getAuthOkHttpClient(): OkHttpClient {
+    private fun getAuthOkHttpClient(preferenceStorage: PreferenceStorage): OkHttpClient {
         val builder = OkHttpClient.Builder().apply {
             connectTimeout(30, TimeUnit.SECONDS)
             readTimeout(30, TimeUnit.SECONDS)
             writeTimeout(30, TimeUnit.SECONDS)
-            addInterceptor(AuthInterceptor())
+            addInterceptor(AuthInterceptor(preferenceStorage))
             if (BuildConfig.DEBUG) {
                 addInterceptor(HttpLoggingInterceptor().apply {
                     level = HttpLoggingInterceptor.Level.BODY
@@ -46,10 +47,10 @@ object OAuthData {
         return builder.build()
     }
 
-    fun initApi() {
+    fun initApi(preferenceStorage: PreferenceStorage) {
         authApi = Retrofit.Builder()
-            .baseUrl(OAuthData.oauthUrl)
-            .client(getAuthOkHttpClient())
+            .baseUrl(oauthUrl)
+            .client(getAuthOkHttpClient(preferenceStorage))
             .addConverterFactory(MoshiConverterFactory.create(getMoshi()))
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()

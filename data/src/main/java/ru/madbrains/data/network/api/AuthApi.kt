@@ -2,12 +2,8 @@ package ru.madbrains.data.network.api
 
 import io.reactivex.Completable
 import io.reactivex.Single
-import retrofit2.http.Body
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
+import retrofit2.http.*
 import ru.madbrains.data.network.ApiData
-import ru.madbrains.data.network.request.LogoutReq
 import ru.madbrains.data.network.response.GetTokenResp
 
 interface AuthApi {
@@ -22,6 +18,6 @@ interface AuthApi {
     ): Single<GetTokenResp>
 
 
-    @POST("/oauth/revokeToken")
-    fun logout(@Body request: LogoutReq): Completable
+    @GET("/oauth/revokeToken")
+    fun logout(@Query("token") token: String): Completable
 }

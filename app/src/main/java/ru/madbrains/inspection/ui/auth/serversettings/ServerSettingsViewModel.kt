@@ -16,7 +16,7 @@ class ServerSettingsViewModel(
     }
 
     private fun initApi(preferenceStorage: PreferenceStorage) {
-        OAuthData.initApi()
+        OAuthData.initApi(preferenceStorage)
         ApiData.initApi(preferenceStorage)
     }
 }
