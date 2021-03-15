@@ -1,10 +1,13 @@
 package ru.madbrains.data.network.api
 
+import io.reactivex.Completable
 import io.reactivex.Single
+import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
 import ru.madbrains.data.network.ApiData
+import ru.madbrains.data.network.request.LogoutReq
 import ru.madbrains.data.network.response.GetTokenResp
 
 interface AuthApi {
@@ -17,4 +20,8 @@ interface AuthApi {
         @Field("code") authCode: String,
         @Field("code_verifier") codeVerifier: String
     ): Single<GetTokenResp>
+
+
+    @POST("/oauth/revokeToken")
+    fun logout(@Body request: LogoutReq): Completable
 }
