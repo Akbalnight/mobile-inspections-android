@@ -1,6 +1,5 @@
 package ru.madbrains.inspection.ui.delegates
 
-import android.util.Log
 import android.view.View
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
 import kotlinx.android.synthetic.main.item_defect.view.*
@@ -19,6 +18,7 @@ fun defectListDelegate(
 
             bind {
                 itemView.apply {
+                    // customization popup
                     if (item.detour.isEmpty()) {
                         ivIconDetour.setImageDrawable(context.drawables[R.drawable.ic_defect_card_no_detour])
                         tvPopupLinkDetour.text = context.strings[R.string.fragment_defect_card_no_link_detour]
@@ -27,47 +27,63 @@ fun defectListDelegate(
                         tvPopupLinkDetour.text = context.strings[R.string.fragment_defect_card_link_detour]
                     }
 
+                    //setting new card
+                    if(item.hideDetail){
+                        unfoldingContainer.visibility = View.GONE
+                        ivUnfoldStatus.setImageResource(R.drawable.ic_defect_card_close)
+                        ivIconMedia.visibility = visibleIvMedia(item.images)
+                    }
+                    else{
+                        unfoldingContainer.visibility = View.VISIBLE
+                        ivUnfoldStatus.setImageResource(R.drawable.ic_defect_card_open)
+                        ivIconMedia.visibility = View.GONE
+                    }
+
+                    tvPopupLinkDetour.visibility = if(item.hideLinkDetour){
+                        View.GONE
+                    } else {
+                        View.VISIBLE
+                    }
+
+                    //filling data
                     tvTitleDate.text = item.id
-                    //todo tvTitleDate.text = item.date
+                    tvTitleDate.text = item.date
                     tvTime.text = item.time
                     tvDeviceData.text = item.device
                     tvTypeDefectData.text = item.type
                     tvDescriptionData.text = item.description
-                    ivIconMedia.visibility = visibleIvMedia(item.images)
+                    rvDefectMedia.visibility = visibleIvMedia(item.images)
 
+                    //show popup link detour
                     ivIconDetour.setOnClickListener {
-                        tvPopupLinkDetour.visibility = if (tvPopupLinkDetour.visibility == View.VISIBLE) {
-                            View.GONE
-                        } else {
+                        tvPopupLinkDetour.visibility = if (item.hideLinkDetour) {
+                            item.hideLinkDetour = false
                             View.VISIBLE
+                        } else {
+                            item.hideLinkDetour = true
+                            View.GONE
                         }
                     }
 
+                    //hide popup link detour
                     tvPopupLinkDetour.setOnClickListener {
+                        item.hideLinkDetour = true
                         tvPopupLinkDetour.visibility = View.GONE
                     }
 
-                    clContainer.setOnClickListener {
-                        if (tvDescriptionData.visibility != View.VISIBLE) {
-                            ivUnfoldStatus.setImageResource(R.drawable.ic_defect_card_open)
-                            tvDescriptionTitle.visibility = View.VISIBLE
-                            tvDescriptionData.visibility = View.VISIBLE
-                            if (!item.images.isNullOrEmpty()) {
-                                rvDefectMedia.visibility = View.VISIBLE
-                            }
-                            btnActionLeft.visibility = View.VISIBLE
-                            btnActionRight.visibility = View.VISIBLE
-                            //todo
-                            ivIconMedia.visibility = View.GONE
 
+                    // show/hide unfold card
+                    clContainer.setOnClickListener {
+                        if (item.hideDetail) {
+                            unfoldingContainer.visibility = View.VISIBLE
+                            ivUnfoldStatus.setImageResource(R.drawable.ic_defect_card_open)
+                            ivIconMedia.visibility = View.GONE
+                            item.hideDetail = false
                         } else {
-                            ivUnfoldStatus.setImageResource(R.drawable.ic_defect_card_close)
-                            tvDescriptionTitle.visibility = View.GONE
-                            tvDescriptionData.visibility = View.GONE
-                            rvDefectMedia.visibility = View.GONE
-                            btnActionLeft.visibility = View.GONE
-                            btnActionRight.visibility = View.GONE
+                            unfoldingContainer.visibility = View.GONE
                             ivIconMedia.visibility = visibleIvMedia(item.images)
+                            ivUnfoldStatus.setImageResource(R.drawable.ic_defect_card_close)
+                            item.hideDetail = true
                         }
                     }
 
@@ -88,20 +104,9 @@ fun defectListDelegate(
                     }
 
                     val mediaAdapter = DefectMediaAdapter(
-                            onMediaDeleteClick = {
-
-                            },
-                            onMediaImageClick = {
-
-                            })
-                    Log.d("TAG", "item.id " + item.id)
+                            onMediaDeleteClick = {},
+                            onMediaImageClick = {})
                     if (!item.images.isNullOrEmpty()) {
-                        item.images?.let {
-                            it.forEach {
-                                Log.d("TAG", it.url)
-                            }
-                        }
-                        Log.d("TAG", "!item.images.isNullOrEmpty() " + item.images!!.size)
                         rvDefectMedia.adapter = mediaAdapter
                         mediaAdapter.items = item.images
                     }
@@ -127,7 +132,9 @@ data class DefectListUiModel(
         val type: String,
         val description: String,
         val isCommonList: Boolean,
-        val images: List<MediaDefectUiModel>?
+        val images: List<MediaDefectUiModel>?,
+        var hideDetail: Boolean = true,
+        var hideLinkDetour: Boolean = true
 
 ) : DiffItem {
 
