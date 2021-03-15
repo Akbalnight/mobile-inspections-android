@@ -50,6 +50,7 @@ class RoutePointsListFragment : BaseFragment(R.layout.fragment_route_points_list
         routePointsViewModel.routePoints.observe(viewLifecycleOwner, Observer {
             routePointsAdapter.items = it
         })
+
         routePointsViewModel.navigateToNextRoute.observe(
             viewLifecycleOwner,
             EventObserver { routeData ->
