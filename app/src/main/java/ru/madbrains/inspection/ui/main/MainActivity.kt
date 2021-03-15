@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import kotlinx.android.synthetic.main.activity_main.*
@@ -12,6 +13,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseActivity
 import ru.madbrains.inspection.base.EventObserver
+import ru.madbrains.inspection.ui.auth.AuthorizationActivity
 
 class MainActivity : BaseActivity(R.layout.activity_main) {
 
@@ -33,6 +35,9 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
         setupMenu()
 
+        mainViewModel.progressVisibility.observe(this, Observer {
+            progressView.changeVisibility(it)
+        })
         mainViewModel.navigateToMenu.observe(this, EventObserver {
             mainDrawer.openDrawer(GravityCompat.START)
         })
@@ -50,6 +55,9 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         })
         mainViewModel.navigateToSettings.observe(this, EventObserver {
             openSettingsGraph()
+        })
+        mainViewModel.navigateToAuthorization.observe(this, EventObserver {
+            startAuthActivity()
         })
     }
 
@@ -105,5 +113,10 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         navController.popBackStack(navController.graph.startDestination, false)
         navController.navigate(R.id.grapg_settings)
         mainDrawer.closeDrawer(GravityCompat.START)
+    }
+
+    private fun startAuthActivity() {
+        AuthorizationActivity.start(this)
+        this.finish()
     }
 }
