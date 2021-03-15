@@ -76,6 +76,7 @@ class MainViewModel(
             .doOnSubscribe { _progressVisibility.postValue(true) }
             .doAfterTerminate { _progressVisibility.postValue(false) }
             .subscribe({
+                preferenceStorage.clearData()
                 _navigateToAuthorization.postValue(Event(Unit))
             }, {
                 it.printStackTrace()
