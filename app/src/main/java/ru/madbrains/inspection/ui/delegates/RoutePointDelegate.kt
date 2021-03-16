@@ -12,7 +12,7 @@ fun routePointDelegate(clickListener: (RoutePointUiModel) -> Unit) =
 
         bind {
             itemView.apply {
-                clContainer.setOnClickListener {
+                if(item.clickable) clContainer.setOnClickListener {
                     clickListener.invoke(item)
                 }
                 tvPointNumber.text = item.position.toString()
@@ -31,7 +31,8 @@ data class RoutePointUiModel(
     val id: String,
     val name: String,
     val position: Int?,
-    val completed: Boolean = false
+    val completed: Boolean = false,
+    val clickable: Boolean
 ) : DiffItem {
 
     override fun areItemsTheSame(newItem: DiffItem): Boolean =

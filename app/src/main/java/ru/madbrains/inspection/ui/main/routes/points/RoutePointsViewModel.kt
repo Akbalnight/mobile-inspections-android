@@ -110,14 +110,17 @@ class RoutePointsViewModel(
     private fun updateData() {
         setRouteStatus()
         val routePoints = mutableListOf<DiffItem>().apply {
-            routeDataModels.map { route ->
+            routeDataModels.mapIndexed { index, route ->
+                val prevWasCompleted = if(index > 0) routeDataModels[index-1].completed else false
+                val preserveOrder = detourModel?.saveOrderControlPoints == true
                 route.techMap?.let {
                     add(
                         RoutePointUiModel(
                             id = it.id,
                             name = it.name.orEmpty(),
                             position = route.position,
-                            completed = route.completed
+                            completed = route.completed,
+                            clickable = !preserveOrder || route.completed || index == 0 || prevWasCompleted
                         )
                     )
                 }
