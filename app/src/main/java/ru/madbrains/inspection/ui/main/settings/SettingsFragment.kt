@@ -20,6 +20,13 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
         super.onActivityCreated(savedInstanceState)
 
         setupToolbar()
+        setupNumberPicker()
+    }
+
+    private fun setupNumberPicker(){
+        npSaveInfoDuration.minValue = 0
+        npSaveInfoDuration.maxValue = 5
+        npSaveInfoDuration.value = 5
     }
 
     private fun setupToolbar() {
