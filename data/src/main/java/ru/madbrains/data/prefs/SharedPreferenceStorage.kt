@@ -15,6 +15,7 @@ interface PreferenceStorage {
     var username: String?
     var userId: String?
     var codeChallenge: String?
+    var saveInfoDuration: Int
     fun clearData()
 }
 
@@ -33,6 +34,7 @@ class SharedPreferenceStorage(
         const val PREF_USERNAME = "pref_username"
         const val PREF_USER_ID = "pref_user_id"
         const val PREF_CODE_CHALLENGE = "pref_code_challenge"
+        const val PREF_SAVE_INFO_DURATION = "PREF_SAVE_INFO_DURATION"
     }
 
     private val prefs = context.applicationContext.getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
@@ -43,6 +45,7 @@ class SharedPreferenceStorage(
     override var username by StringPreference(prefs, PREF_USERNAME, "")
     override var userId by StringPreference(prefs, PREF_USER_ID, "")
     override var codeChallenge by StringPreference(prefs, PREF_CODE_CHALLENGE, "")
+    override var saveInfoDuration by IntPreference(prefs, PREF_SAVE_INFO_DURATION, 5)
 
     override fun clearData() {
         prefs.edit { clear() }
