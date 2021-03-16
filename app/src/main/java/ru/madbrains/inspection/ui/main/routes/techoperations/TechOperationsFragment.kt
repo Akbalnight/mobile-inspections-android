@@ -19,6 +19,7 @@ import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.adapters.TechOperationAdapter
 import ru.madbrains.inspection.ui.main.defects.defectlist.DefectListFragment
 import ru.madbrains.inspection.ui.main.routes.points.RoutePointsFragment
+import ru.madbrains.inspection.ui.main.routes.points.RoutePointsViewModel
 
 
 class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
@@ -28,12 +29,13 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
     }
 
     private val techOperationsViewModel: TechOperationsViewModel by sharedViewModel()
+    private val routePointsViewModel: RoutePointsViewModel by sharedViewModel()
 
     private val techOperationsAdapter by lazy {
         TechOperationAdapter(
-            onDataInput = {
-                techOperationsViewModel.onTechDataInput(it.id, it.inputData)
-            }
+                onDataInput = {
+                    techOperationsViewModel.onTechDataInput(it.id, it.inputData)
+                }
         )
     }
 
@@ -91,16 +93,31 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
 
         layoutBottomButtonAddDefect.setOnClickListener { clickAddDefect() }
 
-        layoutBottomButtonDefect.setOnClickListener { clickDefectListFragment( arrayListOf("")) }
-
+        layoutBottomButtonDefect.setOnClickListener {
+            techOperationsViewModel.techMap?.let { techMapModel ->
+                if (!routePointsViewModel.routeDataModels.isNullOrEmpty()) {
+                    val routePoints = routePointsViewModel.routeDataModels.filter {
+                        it.techMapId == techMapModel.id
+                    }
+                    if (!routePoints.isNullOrEmpty()) {
+                        val deviceList = arrayListOf<String>().apply {
+                            routePoints[0].equipments?.map { equipmentModel ->
+                                equipmentModel.name?.let { name ->
+                                    add(name)
+                                }
+                            }
+                        }
+                        clickDefectListFragment(deviceList)
+                    }
+                }
+            }
+        }
     }
 
     private fun setupNavigation() {
-
         techOperationsViewModel.navigateToAddDefect.observe(viewLifecycleOwner, EventObserver {
             findNavController().navigate(R.id.action_techOperationsFragment_to_addDefectFragment)
         })
-
     }
 
     private fun clickAddDefect() {
