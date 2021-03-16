@@ -20,6 +20,7 @@ import ru.madbrains.inspection.ui.main.routes.routecalendar.RouteCalendarViewMod
 import ru.madbrains.inspection.ui.main.routes.routefilters.RouteFiltersViewModel
 import ru.madbrains.inspection.ui.main.routes.routelist.RouteListViewModel
 import ru.madbrains.inspection.ui.main.routes.techoperations.TechOperationsViewModel
+import ru.madbrains.inspection.ui.main.settings.SettingsViewModel
 
 val appModule = module {
     viewModel { LauncherViewModel(get()) }
@@ -45,4 +46,5 @@ val appModule = module {
     viewModel { DeviceSelectListViewModel(get()) }
     viewModel { CameraViewModel() }
     viewModel { ServerSettingsViewModel(get()) }
+    viewModel { SettingsViewModel(get()) }
 }
