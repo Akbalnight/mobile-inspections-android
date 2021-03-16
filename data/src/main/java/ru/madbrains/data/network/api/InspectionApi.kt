@@ -50,6 +50,6 @@ interface InspectionApi {
 
     // region Equipments
     @POST("/api/dynamicdq/data/flat/mobileEquipments")
-    fun getEquipments(@Body request: GetEquipmentsReq): Single<List<GetEquipmentsResp>>
+    fun getEquipments(@Body request: GetEquipmentsReq): Single<List<GetEquipmentResp>>
     // endregion
 }

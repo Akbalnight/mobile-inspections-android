@@ -42,7 +42,7 @@ class RoutesInteractor(
                 .subscribeOn(Schedulers.io())
     }
 
-    fun getEquipments(names: List<String>, uuid: List<String>): Single<List<EquipmentsModel>> {
+    fun getEquipments(names: List<String>, uuid: List<String>): Single<List<EquipmentModel>> {
         return routesRepository.getEquipments(names, uuid)
                 .subscribeOn(Schedulers.io())
     }

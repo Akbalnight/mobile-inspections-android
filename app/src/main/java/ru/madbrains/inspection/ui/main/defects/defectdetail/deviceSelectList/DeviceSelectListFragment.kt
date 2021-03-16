@@ -8,7 +8,7 @@ import kotlinx.android.synthetic.main.toolbar_with_back.view.*
 import kotlinx.android.synthetic.main.toolbar_with_menu.view.tvTitle
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import ru.madbrains.domain.model.EquipmentsModel
+import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
@@ -69,7 +69,7 @@ class DeviceSelectListFragment : BaseFragment(R.layout.fragment_defect_find_devi
         }
     }
 
-    private fun backToDefectDetailFragment(equipment: EquipmentsModel) {
+    private fun backToDefectDetailFragment(equipment: EquipmentModel) {
         defectDetailViewModel.changeCurrentDefectDevice(equipment)
         findNavController().popBackStack()
     }

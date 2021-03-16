@@ -18,7 +18,7 @@ interface DetoutsRepository {
 
     fun getDefectTypical(): Single<List<DefectTypicalModel>>
 
-    fun getEquipments(names: List<String>, uuid: List<String>): Single<List<EquipmentsModel>>
+    fun getEquipments(names: List<String>, uuid: List<String>): Single<List<EquipmentModel>>
 
     fun getDefects(id: String?,
                    codes: List<String>?,

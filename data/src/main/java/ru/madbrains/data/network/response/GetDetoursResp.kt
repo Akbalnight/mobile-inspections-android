@@ -55,16 +55,6 @@ data class GetRouteDataResp(
     @field:Json(name = "techMap") val techMap: GetTechMapResp?
 )
 
-@JsonClass(generateAdapter = true)
-data class GetEquipmentResp(
-    @field:Json(name = "id") val id: String,
-    @field:Json(name = "code") val code: Int?,
-    @field:Json(name = "name") val name: String?,
-    @field:Json(name = "markId") val markId: String?,
-    @field:Json(name = "modelId") val modelId: String?,
-    @field:Json(name = "parentId") val parentId: String?,
-    @field:Json(name = "isGroup") val isGroup: Boolean?
-)
 
 @JsonClass(generateAdapter = true)
 data class GetTechMapResp(

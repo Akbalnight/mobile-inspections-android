@@ -65,10 +65,10 @@ class RoutesRepositoryImpl(
     override fun getEquipments(
         names: List<String>,
         uuid: List<String>
-    ): Single<List<EquipmentsModel>> {
+    ): Single<List<EquipmentModel>> {
         val request = GetEquipmentsReq(names = names, controlPointIds = uuid)
         return ApiData.inspectionApi.getEquipments(request).map { resp ->
-            resp.map { mapGetEquipmentsResp(it) }
+            resp.map { mapGetEquipmentResp(it) }
         }
     }
 

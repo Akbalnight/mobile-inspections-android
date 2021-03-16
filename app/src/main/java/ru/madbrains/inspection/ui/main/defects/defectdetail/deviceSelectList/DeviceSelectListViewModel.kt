@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
 import ru.madbrains.domain.interactor.RoutesInteractor
-import ru.madbrains.domain.model.EquipmentsModel
+import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.ui.delegates.DeviceSelectUiModel
@@ -16,7 +16,7 @@ class DeviceSelectListViewModel(private val routesInteractor: RoutesInteractor) 
     private var names: List<String> = emptyList()
     private var controlPointsIds: List<String> = emptyList()
 
-    val deviceListModels = mutableListOf<EquipmentsModel>()
+    val deviceListModels = mutableListOf<EquipmentModel>()
 
     private val _deviceList = MutableLiveData<List<DeviceSelectUiModel>>()
     val deviceList: LiveData<List<DeviceSelectUiModel>> = _deviceList
@@ -24,10 +24,10 @@ class DeviceSelectListViewModel(private val routesInteractor: RoutesInteractor) 
     private val _progressVisibility = MutableLiveData<Boolean>()
     val progressVisibility: LiveData<Boolean> = _progressVisibility
 
-    private val _navigateToDefectDetail = MutableLiveData<Event<EquipmentsModel>>()
-    val navigateToDefectDetail: LiveData<Event<EquipmentsModel>> = _navigateToDefectDetail
+    private val _navigateToDefectDetail = MutableLiveData<Event<EquipmentModel>>()
+    val navigateToDefectDetail: LiveData<Event<EquipmentModel>> = _navigateToDefectDetail
 
-    fun deviceSelectClick(equipment: EquipmentsModel?) {
+    fun deviceSelectClick(equipment: EquipmentModel?) {
         equipment?.let {
             _navigateToDefectDetail.value = Event(it)
         }

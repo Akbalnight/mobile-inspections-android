@@ -9,7 +9,7 @@ import io.reactivex.rxkotlin.addTo
 import ru.madbrains.data.utils.FileUtil
 import ru.madbrains.domain.interactor.RoutesInteractor
 import ru.madbrains.domain.model.DefectTypicalModel
-import ru.madbrains.domain.model.EquipmentsModel
+import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
@@ -32,8 +32,8 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
     private val _defectTypicalList = MutableLiveData<List<DefectTypicalUiModel>>()
     val defectTypicalList: LiveData<List<DefectTypicalUiModel>> = _defectTypicalList
 
-    private val _device = MutableLiveData<EquipmentsModel?>()
-    val device: LiveData<EquipmentsModel?> = _device
+    private val _device = MutableLiveData<EquipmentModel?>()
+    val device: LiveData<EquipmentModel?> = _device
 
     private val _mediaList = MutableLiveData<List<DiffItem>>()
     val mediaList: LiveData<List<DiffItem>> = _mediaList
@@ -69,7 +69,7 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
     }
 
 
-    fun changeCurrentDefectDevice(model: EquipmentsModel) {
+    fun changeCurrentDefectDevice(model: EquipmentModel) {
         _device.value = model
     }
 
