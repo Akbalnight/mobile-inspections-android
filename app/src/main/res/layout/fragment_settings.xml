@@ -25,8 +25,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_marginStart="103dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="40dp"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <LinearLayout
@@ -65,7 +65,7 @@
             android:id="@+id/btnSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             android:text="@string/save"
             style="@style/inspection_button_text_compact" />
 
