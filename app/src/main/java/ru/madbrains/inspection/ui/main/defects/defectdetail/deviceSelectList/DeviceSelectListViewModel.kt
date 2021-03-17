@@ -33,18 +33,29 @@ class DeviceSelectListViewModel(private val routesInteractor: RoutesInteractor) 
         }
     }
 
+    fun setEquipments(equipment: List<EquipmentModel>) {
+        deviceListModels.clear()
+        deviceListModels.addAll(equipment)
+    }
+
     fun getEquipments() {
-        routesInteractor.getEquipments(names, controlPointsIds)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { _progressVisibility.postValue(true) }
-                .doAfterTerminate { _progressVisibility.postValue(false) }
-                .subscribe({ items ->
-                    deviceListModels.addAll(items)
-                    updateDeviceList()
-                }, {
-                    it.printStackTrace()
-                })
-                .addTo(disposables)
+        if(deviceListModels.isNullOrEmpty()) {
+            routesInteractor.getEquipments(names, controlPointsIds)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe { _progressVisibility.postValue(true) }
+                    .doAfterTerminate { _progressVisibility.postValue(false) }
+                    .subscribe({ items ->
+                        deviceListModels.clear()
+                        deviceListModels.addAll(items)
+                        updateDeviceList()
+                    }, {
+                        it.printStackTrace()
+                    })
+                    .addTo(disposables)
+        }
+        else {
+            updateDeviceList()
+        }
     }
 
     fun searchEquipments(query: String) {

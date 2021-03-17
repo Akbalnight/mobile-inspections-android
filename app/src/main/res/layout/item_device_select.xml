@@ -17,13 +17,13 @@
         android:layout_marginBottom="16dp"
         android:textColor="@color/textMain"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/ivRouteStatus"
+        app:layout_constraintEnd_toStartOf="@+id/ivSelectedStatus"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="1. Внешний осмотр насоса" />
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/ivRouteStatus"
+        android:id="@+id/ivSelectedStatus"
         android:layout_width="20dp"
         android:layout_height="15dp"
         android:layout_gravity="center_vertical"
