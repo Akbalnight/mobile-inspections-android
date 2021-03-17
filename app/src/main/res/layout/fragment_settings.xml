@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBar"
@@ -24,50 +24,58 @@
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_marginStart="70dp"
         android:layout_marginTop="40dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-        <LinearLayout
-            android:id="@+id/llSaveInfoDuration"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tvSaveInfoDuration"
+            <LinearLayout
+                android:id="@+id/llSaveInfoDuration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/saveInfoDuration"
-                android:textColor="@color/textMain" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-            <NumberPicker
-                android:id="@+id/npSaveInfoDuration"
-                android:layout_width="wrap_content"
-                android:layout_marginStart="27dp"
-                android:layout_marginEnd="16dp"
-                android:layout_height="124dp" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvSaveInfoDuration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/saveInfoDuration"
+                    android:textColor="@color/textMain" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tvSaveInfoDurationPrefix"
+                <NumberPicker
+                    android:id="@+id/npSaveInfoDuration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="124dp"
+                    android:layout_marginStart="27dp"
+                    android:layout_marginEnd="16dp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvSaveInfoDurationPrefix"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/days"
+                    android:textColor="@color/textMain" />
+
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSave"
+                style="@style/inspection_button_text_compact"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/days"
-                android:textColor="@color/textMain" />
-
-        </LinearLayout>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSave"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/save"
-            style="@style/inspection_button_text_compact" />
+                android:layout_marginTop="10dp"
+                android:text="@string/save"
+                app:layout_constraintStart_toStartOf="@+id/llSaveInfoDuration"
+                app:layout_constraintTop_toBottomOf="@+id/llSaveInfoDuration" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 
