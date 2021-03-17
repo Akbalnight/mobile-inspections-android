@@ -21,6 +21,7 @@ fun detourDelegate(clickListener: (DetourUiModel) -> Unit) =
                     DetourStatus.NOT_COMPLETED -> R.drawable.ic_detour_not_completed
                     DetourStatus.IN_PROGRESS -> R.drawable.ic_detour_in_progress
                     DetourStatus.COMPLETED_AHEAD -> R.drawable.ic_detour_completed
+                    DetourStatus.PAUSED -> R.drawable.ic_detour_paused
                     else -> null
                 }
                 detourImageStatus?.let {

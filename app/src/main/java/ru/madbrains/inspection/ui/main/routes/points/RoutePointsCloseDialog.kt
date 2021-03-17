@@ -28,11 +28,11 @@ class RoutePointsCloseDialog : DialogFragment() {
 
         btnComplete.setOnClickListener {
             findNavController().popBackStack()
-            routePointsViewModel.finishDetour(DetourStatus.NOT_COMPLETED.id)
+            routePointsViewModel.finishDetour(DetourStatus.COMPLETED_AHEAD.id)
         }
         btnSuspend.setOnClickListener {
             findNavController().popBackStack()
-            routePointsViewModel.onBack()
+            routePointsViewModel.finishDetour(DetourStatus.PAUSED.id)
         }
         btnCancel.setOnClickListener {
             findNavController().popBackStack()

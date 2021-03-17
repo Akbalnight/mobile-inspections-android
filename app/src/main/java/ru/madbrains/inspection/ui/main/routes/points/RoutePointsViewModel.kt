@@ -76,7 +76,7 @@ class RoutePointsViewModel(
         }
     }
 
-    fun onBack() {
+    private fun onBack() {
         _navigateToBack.value = Event(Unit)
     }
 
@@ -111,7 +111,8 @@ class RoutePointsViewModel(
         setRouteStatus()
         val routePoints = mutableListOf<DiffItem>().apply {
             routeDataModels.mapIndexed { index, route ->
-                val prevWasCompleted = if(index > 0) routeDataModels[index-1].completed else false
+                val prevWasCompleted =
+                    if (index > 0) routeDataModels[index - 1].completed else false
                 val preserveOrder = detourModel?.saveOrderControlPoints == true
                 route.techMap?.let {
                     add(
@@ -130,7 +131,9 @@ class RoutePointsViewModel(
     }
 
     private fun setRouteStatus() {
-        if (detourModel?.statusId == DetourStatus.COMPLETED.id) return
+        if (detourModel?.statusId == DetourStatus.COMPLETED.id ||
+            detourModel?.statusId == DetourStatus.COMPLETED_AHEAD.id
+        ) return
         val completedPoints = routeDataModels.filter { it.completed }.count()
         val allPoints = routeDataModels.count()
         _routeStatus.value = when {
