@@ -71,9 +71,14 @@
     <!-- RoutePointsListFragment -->
     <string name="factOrderFlag">Учитывать порядок обхода:</string>
 
+    <!-- SettingsFragment -->
+    <string name="saveInfoDuration">Сохранять информацию на устройстве</string>
+
     <!-- common -->
     <string name="yes">Да</string>
     <string name="no">Нет</string>
+    <string name="save">Сохранить</string>
+    <string name="days">дней</string>
 
     <string-array name="months">
         <item>Январь</item>

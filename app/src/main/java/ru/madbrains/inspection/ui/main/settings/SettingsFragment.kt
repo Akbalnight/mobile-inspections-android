@@ -9,17 +9,30 @@ import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.main.MainViewModel
-import ru.madbrains.inspection.ui.main.sync.SyncViewModel
 
-class SettingsFragment : BaseFragment(R.layout.fragment_camera) {
+class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
 
     private val mainViewModel: MainViewModel by sharedViewModel()
-    private val syncViewModel: SyncViewModel by viewModel()
+    private val settingsViewModel: SettingsViewModel by viewModel()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         setupToolbar()
+        setupNumberPicker()
+        setupSaveButton()
+    }
+
+    private fun setupNumberPicker(){
+        npSaveInfoDuration.minValue = 1
+        npSaveInfoDuration.maxValue = 5
+        npSaveInfoDuration.value = settingsViewModel.saveInfoDuration
+    }
+
+    private fun setupSaveButton(){
+        btnSave.setOnClickListener {
+            settingsViewModel.saveInfoDuration = npSaveInfoDuration.value
+        }
     }
 
     private fun setupToolbar() {
@@ -29,5 +42,6 @@ class SettingsFragment : BaseFragment(R.layout.fragment_camera) {
                 mainViewModel.menuClick()
             }
         }
+
     }
 }
