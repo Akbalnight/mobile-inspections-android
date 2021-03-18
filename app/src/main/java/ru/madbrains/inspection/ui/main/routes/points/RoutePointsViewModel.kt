@@ -81,7 +81,9 @@ class RoutePointsViewModel(
     }
 
     fun closeClick() {
-        if (routeDataModels.all { it.completed } || detourModel?.statusId == DetourStatus.COMPLETED.id) {
+        if (routeDataModels.all { it.completed } ||
+            detourModel?.statusId == DetourStatus.COMPLETED.id ||
+            detourModel?.startTime == null) {
             onBack()
         } else {
             _navigateToCloseDialog.value = Event(Unit)
