@@ -56,7 +56,7 @@ class RoutePointsViewModel(
 
             val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
 
-            val startTime = detour.startTime?.let { format.format(it) }.orEmpty()
+            val startTime = detour.startTime?.let { format.format(it) }
             val finishTime = format.format(Date())
 
             detour.dateStartFact = startTime
