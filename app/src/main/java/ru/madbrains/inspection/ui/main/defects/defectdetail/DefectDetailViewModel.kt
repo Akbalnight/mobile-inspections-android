@@ -55,17 +55,20 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
     private val _showDialogBlankRequiredFields = MutableLiveData<Event<Unit>>()
     val showDialogBlankRequiredFields: LiveData<Event<Unit>> = _showDialogBlankRequiredFields
 
-    private val _fixFieldDevice = MutableLiveData<Event<EquipmentModel>>()
-    val fixFieldDevice: LiveData<Event<EquipmentModel>> = _fixFieldDevice
-
     private val _popNavigation = MutableLiveData<Event<Unit>>()
     val popNavigation: LiveData<Event<Unit>> = _popNavigation
 
+    private val _disableEquipmentField = MutableLiveData<Event<Unit>>()
+    val disableEquipmentField: LiveData<Event<Unit>> = _disableEquipmentField
+
+    private val _disableTypicalDefectField = MutableLiveData<Event<Unit>>()
+    val disableTypicalDefectField: LiveData<Event<Unit>> = _disableTypicalDefectField
 
     fun getDefectTypicalList() {
         routesInteractor.getDefectTypical()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ items ->
+                    defectTypicalModels.clear()
                     defectTypicalModels.addAll(items)
                     updateDefectTypicalList()
                 }, {
@@ -80,6 +83,10 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
 
     fun setEquipments(equipments: List<EquipmentModel>?){
         equipmentList = equipments
+        if (equipmentList?.size == 1){
+            changeCurrentDefectDevice(equipmentList!!.get(index = 0))
+            _disableEquipmentField.value = Event(Unit)
+        }
     }
 
     fun changeCurrentDefectTypical(model: DefectTypicalUiModel) {

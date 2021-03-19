@@ -8,6 +8,7 @@ import androidx.core.os.bundleOf
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.fragment_defect_detail.*
 import kotlinx.android.synthetic.main.fragment_defect_detail.progressView
 import kotlinx.android.synthetic.main.fragment_defect_list.toolbarLayout
@@ -18,6 +19,7 @@ import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
+import ru.madbrains.inspection.extensions.colors
 import ru.madbrains.inspection.extensions.formattedStrings
 import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.adapters.DefectMediaAdapter
@@ -29,6 +31,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
 
     companion object {
         const val KEY_EQUIPMENT_LIST = "equipment_list_defect_detail_fragment"
+
         //const val KEY_DETAIL_DEFECT = "current_equipment_select_list_fragment"
         const val KEY_DETOUR_ID = "detour_id_defect_detail_fragment"
     }
@@ -63,7 +66,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
         arguments?.let {
             setupEditDefect()
         } ?: run {
-            setupNewDefect()
+            setupNewDefect() //todo
         }
 
         // настройка поля выбора типа дефекта
@@ -91,6 +94,18 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
 
         defectDetailViewModel.progressVisibility.observe(viewLifecycleOwner, Observer {
             progressView.changeVisibility(it)
+        })
+
+        defectDetailViewModel.disableEquipmentField.observe(viewLifecycleOwner, EventObserver {
+            layoutDropDownDevice.isEnabled = false
+            layoutDropDownDevice.endIconMode = TextInputLayout.END_ICON_NONE
+            dropDownDevice.setTextColor(colors[R.color.black50])
+        })
+
+        defectDetailViewModel.disableTypicalDefectField.observe(viewLifecycleOwner, EventObserver {
+            layoutDropDownTypeDefect.isEnabled = false
+            layoutDropDownTypeDefect.endIconMode = TextInputLayout.END_ICON_NONE
+            dropDownTypeDefect.setTextColor(colors[R.color.black50])
         })
     }
 
@@ -130,15 +145,11 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
             // todo scan
         }
 
-        // клик по иконке выбора списка
-        layoutDropDownDevice.setOnClickListener {
-            toDeviceSelect()
-        }
-
         // клик по полю ввода
-        dropDownDevice.setOnClickListener {
-            toDeviceSelect()
-        }
+        dropDownDevice.setOnClickListener { toDeviceSelect() }
+
+
+        layoutDropDownDevice.setEndIconOnClickListener { toDeviceSelect() }
 
         // клик по кнопке сохранения дефекта
         fabDefectSave.setOnClickListener {
