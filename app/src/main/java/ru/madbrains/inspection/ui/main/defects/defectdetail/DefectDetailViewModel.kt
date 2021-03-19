@@ -29,10 +29,7 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
 
     private var detourId: String? = null
 
-
-
     //Models Input Data
-    private var currentTypicalDefect: DefectTypicalModel? = null
 
     var equipmentList = listOf<EquipmentModel>()
 

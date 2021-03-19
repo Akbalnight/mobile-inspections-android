@@ -34,17 +34,19 @@ class EquipmentSelectListViewModel(private val routesInteractor: RoutesInteracto
         }
     }
 
-    fun setEquipments(equipment: List<EquipmentModel>) {
+    fun setEquipments(equipment: List<EquipmentModel>?) {
         deviceListModels.clear()
-        deviceListModels.addAll(equipment)
+        equipment?.let {
+            deviceListModels.addAll(it)
+        }
     }
 
-    fun setCurrentDevice(device: EquipmentModel) {
+    fun setCurrentDevice(device: EquipmentModel?) {
         currentDevice = device
     }
 
     fun getEquipments() {
-        if(deviceListModels.isNullOrEmpty()) {
+        if (deviceListModels.isNullOrEmpty()) {
             routesInteractor.getEquipments(names, controlPointsIds)
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnSubscribe { _progressVisibility.postValue(true) }
@@ -57,8 +59,7 @@ class EquipmentSelectListViewModel(private val routesInteractor: RoutesInteracto
                         it.printStackTrace()
                     })
                     .addTo(disposables)
-        }
-        else {
+        } else {
             updateDeviceList()
         }
     }
@@ -79,7 +80,7 @@ class EquipmentSelectListViewModel(private val routesInteractor: RoutesInteracto
         val items = mutableListOf<EquipmentSelectUiModel>().apply {
             deviceListModels.map { item ->
                 add(
-                    EquipmentSelectUiModel(
+                        EquipmentSelectUiModel(
                                 id = item.id,
                                 name = item.name.orEmpty(),
                                 isSelected = item.id == currentDevice?.id

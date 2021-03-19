@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvLabel"
+        android:textColor="@color/textMain87"
+        android:textSize="16sp"
+        tools:text="Тип единицы оборудования"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvValue"
+        android:layout_marginStart="31dp"
+        android:textColor="@color/elementsBlue"
+        android:textSize="16sp"
+        tools:text="OC"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</merge>

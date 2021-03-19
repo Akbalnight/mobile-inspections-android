@@ -24,13 +24,12 @@ import ru.madbrains.inspection.ui.adapters.DefectMediaAdapter
 import ru.madbrains.inspection.ui.common.camera.CameraViewModel
 import ru.madbrains.inspection.ui.delegates.MediaDefectUiModel
 import ru.madbrains.inspection.ui.main.defects.defectdetail.equipmentselectlist.EquipmentSelectListFragment
-import ru.madbrains.inspection.ui.main.defects.defectdetail.equipmentselectlist.EquipmentSelectListViewModel
 
 class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
 
     companion object {
         const val KEY_EQUIPMENT_LIST = "equipment_list_defect_detail_fragment"
-        const val KEY_DETAIL_DEFECT = "current_equipment_select_list_fragment"
+        //const val KEY_DETAIL_DEFECT = "current_equipment_select_list_fragment"
         const val KEY_DETOUR_ID = "detour_id_defect_detail_fragment"
     }
 
@@ -143,12 +142,12 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
 
         // клик по иконке выбора списка
         layoutDropDownDevice.setOnClickListener {
-            openDeviceSelect()
+            toDeviceSelect()
         }
 
         // клик по полю ввода
         dropDownDevice.setOnClickListener {
-            openDeviceSelect()
+            toDeviceSelect()
         }
 
         // клик по кнопке сохранения дефекта
@@ -195,23 +194,12 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
         })
     }
 
-    private fun openDeviceSelect() {
-        val openArgs = bundleOf(
+    private fun toDeviceSelect() {
+        findNavController().navigate(R.id.action_defectDetailFragment_to_deviceSelectListFragment, bundleOf(
                 EquipmentSelectListFragment.KEY_CURRENT_EQUIPMENT to defectDetailViewModel.device.value,
                 EquipmentSelectListFragment.KEY_EQUIPMENT_LIST to defectDetailViewModel.equipmentList
 
-        )
-
-        /* defectDetailViewModel.device.value?.let {
-            // equipmentSelectViewModel.setCurrentDevice(it)
-             openArgs.putSerializable(EquipmentSelectListFragment.KEY_CURRENT_EQUIPMENT, it)
-         }
-         if(!defectDetailViewModel.equipmentList.isNullOrEmpty()){
-            // equipmentSelectViewModel.setEquipments(defectDetailViewModel.equipmentList)
-             openArgs.putSerializable(EquipmentSelectListFragment.KEY_EQUIPMENT_LIST, defectDetailViewModel.equipmentList)
-         }*/
-
-        findNavController().navigate(R.id.action_defectDetailFragment_to_deviceSelectListFragment, openArgs)
+        ))
     }
 
     private fun setupMediaList() {

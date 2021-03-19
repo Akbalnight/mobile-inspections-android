@@ -1,7 +1,5 @@
 package ru.madbrains.data.network.mappers
 
-import android.graphics.Insets.add
-import ru.madbrains.data.network.request.GetDefectsReq
 import ru.madbrains.data.network.response.*
 import ru.madbrains.domain.model.*
 
@@ -69,31 +67,41 @@ fun mapGetRoutesDataResp(resp: GetRouteDataResp): RouteDataModel {
 fun mapGetEquipmentResp(resp: GetEquipmentResp): EquipmentModel {
     return with(resp) {
         EquipmentModel(
-                id = id,
-                code = code,
-                name = name,
-                parentId = parentId,
-                isGroup = isGroup,
-                techPlace = techPlace,
-                techPlacePath = techPlacePath,
-                sapId = sapId,
-                constructionType = constructionType,
-                material = material,
-                size = size,
-                weight = weight,
-                manufacturer = manufacturer,
-                dateFinish = dateFinish,
-                measuringPoints = measuringPoints,
-                dateWarrantyStart = dateWarrantyStart,
-                dateWarrantyFinish = dateWarrantyFinish,
-                typeEquipment = typeEquipment,
-                deleted = deleted,
-                warrantyFiles = warrantyFiles?.map { mapGetFileResp(it) },
-                attachmentFiles = attachmentFiles?.map { mapGetFileResp(it) }
+            id = id,
+            code = code,
+            name = name,
+            parentId = parentId,
+            isGroup = isGroup,
+            techPlace = techPlace,
+            techPlacePath = techPlacePath,
+            sapId = sapId,
+            constructionType = constructionType,
+            material = material,
+            size = size,
+            weight = weight,
+            manufacturer = manufacturer,
+            dateFinish = dateFinish,
+            measuringPoints = measuringPoints,
+            dateWarrantyStart = dateWarrantyStart,
+            dateWarrantyFinish = dateWarrantyFinish,
+            typeEquipment = typeEquipment,
+            warrantyFiles = warrantyFiles?.map { mapGetEquipmentFileResp(it) },
+            attachmentFiles = attachmentFiles?.map { mapGetEquipmentFileResp(it) },
+            deleted = deleted
         )
     }
 }
 
+fun mapGetEquipmentFileResp(resp: GetEquipmentFileResp): EquipmentFileModel {
+    return with(resp) {
+        EquipmentFileModel(
+            id = id,
+            url = url,
+            name = name,
+            extension = extension
+        )
+    }
+}
 
 fun mapTechMapResp(resp: GetTechMapResp): TechMapModel {
     return with(resp) {

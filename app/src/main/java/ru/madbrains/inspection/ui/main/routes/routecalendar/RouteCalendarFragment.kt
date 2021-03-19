@@ -18,6 +18,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.YearMonth
 import org.threeten.bp.temporal.WeekFields
+import ru.madbrains.data.extensions.toYYYYMMDD
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
@@ -28,7 +29,6 @@ import ru.madbrains.inspection.ui.delegates.DetourUiModel
 import ru.madbrains.inspection.ui.main.routes.DetoursViewModel
 import ru.madbrains.inspection.ui.main.routes.dateroutelist.DateRouteListFragment
 import ru.madbrains.inspection.ui.view.DayViewContainer
-import java.text.SimpleDateFormat
 import java.util.*
 
 @SuppressLint("SetTextI18n", "DefaultLocale")
@@ -65,8 +65,7 @@ class RouteCalendarFragment : BaseFragment(R.layout.fragment_route_calendar) {
                     !routeCalendarViewModel.routeDates.contains(day.date.toString())
 
                 val timeNow = Calendar.getInstance().time
-                val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                val dateNow: String = dateFormat.format(timeNow)
+                val dateNow: String = timeNow.toYYYYMMDD()
 
                 if (day.date.toString() == dateNow) {
                     container.clDate.background = drawables[R.drawable.light_blue_circle]

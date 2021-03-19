@@ -56,7 +56,7 @@ class RoutePointsViewModel(
 
             val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
 
-            val startTime = detour.startTime?.let { format.format(it) }.orEmpty()
+            val startTime = detour.startTime?.let { format.format(it) }
             val finishTime = format.format(Date())
 
             detour.dateStartFact = startTime
@@ -76,12 +76,14 @@ class RoutePointsViewModel(
         }
     }
 
-    fun onBack() {
+    private fun onBack() {
         _navigateToBack.value = Event(Unit)
     }
 
     fun closeClick() {
-        if (routeDataModels.all { it.completed } || detourModel?.statusId == DetourStatus.COMPLETED.id) {
+        if (routeDataModels.all { it.completed } ||
+            detourModel?.statusId == DetourStatus.COMPLETED.id ||
+            detourModel?.startTime == null) {
             onBack()
         } else {
             _navigateToCloseDialog.value = Event(Unit)
@@ -111,7 +113,8 @@ class RoutePointsViewModel(
         setRouteStatus()
         val routePoints = mutableListOf<DiffItem>().apply {
             routeDataModels.mapIndexed { index, route ->
-                val prevWasCompleted = if(index > 0) routeDataModels[index-1].completed else false
+                val prevWasCompleted =
+                    if (index > 0) routeDataModels[index - 1].completed else false
                 val preserveOrder = detourModel?.saveOrderControlPoints == true
                 route.techMap?.let {
                     add(
@@ -130,7 +133,9 @@ class RoutePointsViewModel(
     }
 
     private fun setRouteStatus() {
-        if (detourModel?.statusId == DetourStatus.COMPLETED.id) return
+        if (detourModel?.statusId == DetourStatus.COMPLETED.id ||
+            detourModel?.statusId == DetourStatus.COMPLETED_AHEAD.id
+        ) return
         val completedPoints = routeDataModels.filter { it.completed }.count()
         val allPoints = routeDataModels.count()
         _routeStatus.value = when {

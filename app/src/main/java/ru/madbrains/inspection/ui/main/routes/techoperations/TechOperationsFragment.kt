@@ -11,14 +11,16 @@ import kotlinx.android.synthetic.main.toolbar_with_back.view.*
 import kotlinx.android.synthetic.main.toolbar_with_close.view.tvTitle
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import ru.madbrains.domain.model.EquipmentModel
-import ru.madbrains.domain.model.TechMapModel
+import ru.madbrains.domain.model.RouteDataModel
 import ru.madbrains.inspection.R
 
 import ru.madbrains.inspection.base.BaseFragment
+import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.adapters.TechOperationAdapter
 import ru.madbrains.inspection.ui.main.defects.defectdetail.DefectDetailFragment
 import ru.madbrains.inspection.ui.main.defects.defectlist.DefectListFragment
+import ru.madbrains.inspection.ui.main.equipment.EquipmentFragment
 import ru.madbrains.inspection.ui.main.routes.DetoursViewModel
 import ru.madbrains.inspection.ui.main.routes.points.RoutePointsViewModel
 
@@ -26,11 +28,10 @@ import ru.madbrains.inspection.ui.main.routes.points.RoutePointsViewModel
 class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
 
     companion object {
-        const val KEY_TECH_MAP = "tech_map"
+        const val KEY_ROUTE_DATA = "KEY_ROUTE_DATA"
     }
 
     private val techOperationsViewModel: TechOperationsViewModel by sharedViewModel()
-    private val routePointsViewModel: RoutePointsViewModel by sharedViewModel()
     private val detoursViewModel: DetoursViewModel by sharedViewModel()
 
     private val techOperationsAdapter by lazy {
@@ -49,10 +50,10 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
         })
 
         requireNotNull(arguments).run {
-            val techMapModel = (getSerializable(KEY_TECH_MAP) as? TechMapModel)
-            techMapModel?.let {
-                techOperationsViewModel.setTechMapModel(it)
-                setupToolbar(it.pointNumber)
+            val routeDataModel = (getSerializable(KEY_ROUTE_DATA) as? RouteDataModel)
+            routeDataModel?.let {
+                techOperationsViewModel.setRouteData(it)
+                setupToolbar(it.techMap?.pointNumber)
             }
         }
 
@@ -73,6 +74,8 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
 
         setupOnClickListener()
 
+        setupNavigation()
+
     }
 
     private fun setupToolbar(positionPoint: Int?) {
@@ -91,25 +94,33 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
 
     private fun setupOnClickListener() {
 
-        layoutBottomButtonAddDefect.setOnClickListener { clickAddDefect() }
+        layoutBottomButtonAddDefect.setOnClickListener { toDefectDetailFragment() }
 
         layoutBottomButtonDefect.setOnClickListener {
-            clickDefectListFragment()
+            toDefectListFragment()
+        }
+        layoutBottomButtonDevice.setOnClickListener {
+            techOperationsViewModel.toEquipmentFragment()
         }
     }
 
+    private fun setupNavigation() {
+
+        techOperationsViewModel.navigateToEquipment.observe(viewLifecycleOwner, EventObserver {
+            findNavController().navigate(R.id.action_techOperationsFragment_to_equipmentFragment, bundleOf(
+                    EquipmentFragment.KEY_EQUIPMENT_DATA to it
+            ))
+        })
+    }
+
+
     private fun getEquipmentNames(): ArrayList<String>? {
-        techOperationsViewModel.techMap?.let { techMapModel ->
-            if (!routePointsViewModel.routeDataModels.isNullOrEmpty()) {
-                val routePoints = routePointsViewModel.routeDataModels.filter {
-                    it.techMapId == techMapModel.id
-                }
-                if (!routePoints.isNullOrEmpty()) {
-                    return arrayListOf<String>().apply {
-                        routePoints[0].equipments?.map { equipmentModel ->
-                            equipmentModel.name?.let { name ->
-                                add(name)
-                            }
+        techOperationsViewModel.savedRouteData?.equipments?.let {
+            if (!it.isNullOrEmpty()) {
+                return arrayListOf<String>().apply {
+                    it.map { equipmentModel ->
+                        equipmentModel.name?.let { name ->
+                            add(name)
                         }
                     }
                 }
@@ -119,53 +130,33 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
     }
 
     private fun getEquipments(): List<EquipmentModel>? {
-        techOperationsViewModel.techMap?.let { techMapModel ->
-            if (!routePointsViewModel.routeDataModels.isNullOrEmpty()) {
-                val routePoints = routePointsViewModel.routeDataModels.filter {
-                    it.techMapId == techMapModel.id
-                }
-                if (!routePoints.isNullOrEmpty()) {
-                    return routePoints[0].equipments
-                }
-            }
+        techOperationsViewModel.savedRouteData?.equipments?.let {
+            return it
         }
         return null
     }
 
     private fun getDetourId(): String? {
-        techOperationsViewModel.techMap?.let { techMapModel ->
-            if (!routePointsViewModel.routeDataModels.isNullOrEmpty()) {
-                val routePoints = routePointsViewModel.routeDataModels.filter {
-                    it.techMapId == techMapModel.id
-                }
-                if (!routePoints.isNullOrEmpty()) {
-                    val routeId = routePoints[0].routeId
-                    routeId?.let { routeIdIt ->
-                        val detourId = detoursViewModel.detourModels.find { it.id == routeIdIt }
-                        detourId?.let {
-                            return it.id
-                        }
-                    }
-
-                }
+        techOperationsViewModel.savedRouteData?.routeId?.let { routeId ->
+            val detourId = detoursViewModel.detourModels.find { it.id == routeId }
+            detourId?.let {
+                return it.id
             }
         }
         return null
     }
 
-    private fun clickAddDefect() {
-        val args = bundleOf(
+    private fun toDefectDetailFragment() {
+        findNavController().navigate(R.id.action_techOperationsFragment_to_addDefectFragment, bundleOf(
                 DefectDetailFragment.KEY_EQUIPMENT_LIST to getEquipments(),
                 DefectDetailFragment.KEY_DETOUR_ID to getDetourId()
-        )
-        findNavController().navigate(R.id.action_techOperationsFragment_to_addDefectFragment, args)
+        ))
     }
 
-    private fun clickDefectListFragment() {
-        val args = bundleOf(
+    private fun toDefectListFragment() {
+        findNavController().navigate(R.id.graph_defects, bundleOf(
                 DefectListFragment.KEY_EQUIPMENTS_IDS_DEFECT_LIST to getEquipmentNames(),
                 DefectListFragment.KEY_IS_FILTER_DEFECT_LIST to true
-        )
-        findNavController().navigate(R.id.graph_defects, args)
+        ))
     }
 }

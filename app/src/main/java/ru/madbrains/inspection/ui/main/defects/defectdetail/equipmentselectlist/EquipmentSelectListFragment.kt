@@ -43,6 +43,11 @@ class EquipmentSelectListFragment : BaseFragment(R.layout.fragment_defect_find_e
 
         setupToolBar()
 
+        arguments?.let { it ->
+            equipmentSelectViewModel.setCurrentDevice(it.getSerializable(EquipmentSelectListFragment.KEY_CURRENT_EQUIPMENT) as? EquipmentModel)
+            equipmentSelectViewModel.setEquipments(it.getSerializable(EquipmentSelectListFragment.KEY_EQUIPMENT_LIST) as? List<EquipmentModel>)
+        }
+
         rvDeviceSelectList.adapter = equipmentSelectAdapter
 
         equipmentSelectViewModel.getEquipments()
