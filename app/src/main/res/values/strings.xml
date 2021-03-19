@@ -74,6 +74,30 @@
     <!-- SettingsFragment -->
     <string name="saveInfoDuration">Сохранять информацию на устройстве</string>
 
+    <!-- EquipmentFragment -->
+    <string name="equipmentCommonData">Общие данные</string>
+    <string name="equipmentDefects">Дефекты</string>
+    <string name="equipmentDocuments">Документы</string>
+    <string name="equipment_specs_type_equipment">Тип единицы оборудования</string>
+    <string name="equipment_specs_id_sap">ID_SAP</string>
+    <string name="equipment_specs_name">Название</string>
+    <string name="equipment_specs_code_tech_place">Код технического места</string>
+    <string name="equipment_specs_name_tech_place">Название технического места</string>
+    <string name="equipment_specs_construction_type">Тип конструкции</string>
+    <string name="equipment_specs_material">Материал</string>
+    <string name="equipment_specs_size">Величина/размер</string>
+    <string name="equipment_specs_weight">Вес</string>
+    <string name="equipment_specs_manufacturer">Изготовитель</string>
+    <string name="equipment_specs_del_mark">Метка удаления</string>
+    <string name="equipment_specs_valid_by">Действителен по</string>
+    <string name="equipmentMeasurementPoints">Точки измерений</string>
+    <string name="equipment_specs_pressure">Давление</string>
+    <string name="equipment_specs_temperature">Температура</string>
+    <string name="equipment_specs_rpm">Частота оборотов</string>
+    <string name="equipmentWarranty">Гарантии</string>
+    <string name="equipment_specs_warranty_start">Начало гарантии:</string>
+    <string name="equipment_specs_warranty_end">Окончание гарантии:</string>
+
     <!-- common -->
     <string name="yes">Да</string>
     <string name="no">Нет</string>

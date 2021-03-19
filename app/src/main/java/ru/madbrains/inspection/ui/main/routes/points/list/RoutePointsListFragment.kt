@@ -7,7 +7,7 @@ import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_route_points_list.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import ru.madbrains.domain.model.TechMapModel
+import ru.madbrains.domain.model.RouteDataModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
@@ -24,12 +24,11 @@ class RoutePointsListFragment : BaseFragment(R.layout.fragment_route_points_list
     private val routePointsAdapter by lazy {
         RoutePointAdapter(
             onRoutePointClick = {
-                val techMaps = routePointsViewModel.routeDataModels.map { it.techMap }
-                val techMap = techMaps.find { techMap ->
-                    techMap?.id == it.id
+                val routeData = routePointsViewModel.routeDataModels.find { data ->
+                    data.techMap?.id == it.id
                 }
-                techMap?.pointNumber = it.position
-                routePointsListViewModel.routePointClick(techMap)
+                routeData?.techMap?.pointNumber = it.position
+                routePointsListViewModel.routePointClick(routeData)
             }
         )
     }
@@ -57,7 +56,7 @@ class RoutePointsListFragment : BaseFragment(R.layout.fragment_route_points_list
                 val techMap = routeData.techMap
                 techMap?.let {
                     techMap.pointNumber = routeData.position
-                    openTechOperationsFragment(techMap)
+                    openTechOperationsFragment(routeData)
                 }
             })
 
@@ -68,9 +67,9 @@ class RoutePointsListFragment : BaseFragment(R.layout.fragment_route_points_list
             })
     }
 
-    private fun openTechOperationsFragment(techMap: TechMapModel) {
+    private fun openTechOperationsFragment(routeData: RouteDataModel) {
         val args = bundleOf(
-            TechOperationsFragment.KEY_TECH_MAP to techMap
+            TechOperationsFragment.KEY_ROUTE_DATA to routeData
         )
         findNavController().navigate(
             R.id.action_routePointsFragment_to_techOperationsFragment,
