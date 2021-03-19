@@ -46,8 +46,6 @@
 
     <include app:graph="@navigation/graph_defects_detail" />
 
-    <include app:graph="@navigation/grapg_equipment" />
-
     <dialog
         android:id="@+id/routeFiltersFragment"
         android:name="ru.madbrains.inspection.ui.main.routes.routefilters.RouteFiltersFragment"
@@ -97,7 +95,14 @@
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <action
             android:id="@+id/action_techOperationsFragment_to_equipmentFragment"
-            app:destination="@id/grapg_equipment"
+            app:destination="@id/equipmentFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_techOperationsFragment_to_equipmentListFragment"
+            app:destination="@id/equipmentListFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
@@ -114,6 +119,11 @@
         android:name="ru.madbrains.inspection.ui.main.equipment.EquipmentFragment"
         android:label="EquipmentFragment"
         tools:layout="@layout/fragment_equipment" />
+    <fragment
+        android:id="@+id/equipmentListFragment"
+        android:name="ru.madbrains.inspection.ui.main.equipmentList.EquipmentListFragment"
+        android:label="EquipmentListFragment"
+        tools:layout="@layout/fragment_equipment_list" />
     <dialog
         android:id="@+id/routePointsCloseDialog"
         android:name="ru.madbrains.inspection.ui.main.routes.points.RoutePointsCloseDialog"

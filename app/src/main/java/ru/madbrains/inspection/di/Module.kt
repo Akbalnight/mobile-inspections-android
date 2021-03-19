@@ -12,6 +12,7 @@ import ru.madbrains.inspection.ui.main.defects.defectdetail.DefectDetailViewMode
 import ru.madbrains.inspection.ui.main.defects.defectdetail.deviceSelectList.DeviceSelectListViewModel
 import ru.madbrains.inspection.ui.main.defects.defectlist.DefectListViewModel
 import ru.madbrains.inspection.ui.main.equipment.EquipmentViewModel
+import ru.madbrains.inspection.ui.main.equipmentList.EquipmentListViewModel
 import ru.madbrains.inspection.ui.main.routes.DetoursViewModel
 import ru.madbrains.inspection.ui.main.routes.dateroutelist.DateRouteListViewModel
 import ru.madbrains.inspection.ui.main.routes.points.RoutePointsViewModel
@@ -48,5 +49,6 @@ val appModule = module {
     viewModel { CameraViewModel() }
     viewModel { ServerSettingsViewModel(get()) }
     viewModel { EquipmentViewModel() }
+    viewModel { EquipmentListViewModel() }
     viewModel { SettingsViewModel(get()) }
 }
