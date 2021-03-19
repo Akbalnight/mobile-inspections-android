@@ -5,6 +5,7 @@
     <color name="colorAccent">#FFBF1F</color>
 
     <color name="textMain">#000000</color>
+    <color name="textMain87">#DE000000</color>
     <color name="elementsBlue">#205E7A</color>
     <color name="elementLight">#548BA9</color>
     <color name="elementDark">#00344E</color>

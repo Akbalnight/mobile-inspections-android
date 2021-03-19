@@ -3,7 +3,8 @@ package ru.madbrains.inspection.ui.main.routes.techoperations
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ru.madbrains.domain.interactor.RoutesInteractor
-import ru.madbrains.domain.model.RoutePointModel
+import ru.madbrains.domain.model.EquipmentModel
+import ru.madbrains.domain.model.RouteDataModel
 import ru.madbrains.domain.model.TechMapModel
 import ru.madbrains.domain.model.TechOperationModel
 import ru.madbrains.inspection.base.BaseViewModel
@@ -28,32 +29,35 @@ class TechOperationsViewModel(private val routesInteractor: RoutesInteractor) :
     private val _navigateToAddDefect = MutableLiveData<Event<Unit>>()
     val navigateToAddDefect: LiveData<Event<Unit>> = _navigateToAddDefect
 
+    private val _navigateToEquipment = MutableLiveData<Event<EquipmentModel>>()
+    val navigateToEquipment: LiveData<Event<EquipmentModel>> = _navigateToEquipment
+
     private val _completeTechMapEvent = MutableLiveData<Event<TechMapModel>>()
     val completeTechMapEvent: LiveData<Event<TechMapModel>> = _completeTechMapEvent
 
-    var techMap: TechMapModel? = null
+    var savedRouteData: RouteDataModel? = null
 
     fun finishTechMap() {
-        techMap?.let { _completeTechMapEvent.value = Event(it) }
+        savedRouteData?.techMap?.let { _completeTechMapEvent.value = Event(it) }
     }
 
-    fun setTechMapModel(techMapModel: TechMapModel) {
+    fun setRouteData(routeDataModel: RouteDataModel) {
 
-        techMap = techMapModel
+        savedRouteData = routeDataModel
 
-        techMapModel.techOperations.let {
+        routeDataModel.techMap?.techOperations?.let {
             operationsModels.clear()
             operationsModels.addAll(it)
         }
 
-        _titleTechOperations.value = techMapModel.name
+        _titleTechOperations.value = routeDataModel.techMap?.name
 
         updateData()
     }
 
     fun onTechDataInput(techOperationId: String, dataValue: String) {
-        techMap?.let { techMap ->
-            techMap.techOperations.find { it.id == techOperationId }?.let { techOperation ->
+        savedRouteData?.let { routeData->
+            routeData.techMap?.techOperations?.find { it.id == techOperationId }?.let { techOperation ->
                 techOperation.valueInputData = dataValue
             }
         }
@@ -77,8 +81,15 @@ class TechOperationsViewModel(private val routesInteractor: RoutesInteractor) :
         _techOperations.value = operations
     }
 
-    fun addDefect() {
+    fun toAddDefect() {
         _navigateToAddDefect.value = Event(Unit)
+    }
 
+    fun toEquipmentFragment() {
+        savedRouteData?.equipments?.let {
+            if(it.isNotEmpty()){
+                _navigateToEquipment.value = Event(it[0])
+            }
+        }
     }
 }

@@ -1,5 +1,7 @@
 package ru.madbrains.domain.model
 
+import java.io.Serializable
+
 data class RouteDataModel(
     val id: String?,
     val techMapId: String?,
@@ -12,6 +14,6 @@ data class RouteDataModel(
     val position: Int?,
     val equipments: List<EquipmentModel>?,
     var techMap: TechMapModel?
-) {
+): Serializable {
     var completed: Boolean = false
 }
