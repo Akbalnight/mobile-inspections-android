@@ -1,7 +1,6 @@
 package ru.madbrains.inspection.ui.main.defects.defectlist
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -20,7 +19,8 @@ import ru.madbrains.inspection.ui.main.MainViewModel
 class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
 
     companion object {
-        const val KEY_EQUIPMENTS_IDS_DEFECT_LIST = "device_id_defect_list"
+        const val KEY_EQUIPMENTS_IDS_DEFECT_LIST = "device_id_defect_list_fragment"
+        const val KEY_IS_FILTER_DEFECT_LIST = "is_filter_defect_list_fragment"
     }
 
     private val mainViewModel: MainViewModel by sharedViewModel()
@@ -41,8 +41,13 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
         super.onActivityCreated(savedInstanceState)
 
         val deviceIds = arguments?.getStringArrayList(DefectListFragment.KEY_EQUIPMENTS_IDS_DEFECT_LIST)
-        deviceIds?.let {
-            setupViewingDefects()
+        val isFilterList = arguments?.getBoolean(DefectListFragment.KEY_IS_FILTER_DEFECT_LIST, false)
+        isFilterList?.let {
+            if (it) {
+                setupViewingDefects()
+            } else {
+                setupRegisterDefects()
+            }
         } ?: run {
             setupRegisterDefects()
         }

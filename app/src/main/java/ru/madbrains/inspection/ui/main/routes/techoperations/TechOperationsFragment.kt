@@ -163,7 +163,8 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
 
     private fun clickDefectListFragment() {
         val args = bundleOf(
-                DefectListFragment.KEY_EQUIPMENTS_IDS_DEFECT_LIST to getEquipmentNames()
+                DefectListFragment.KEY_EQUIPMENTS_IDS_DEFECT_LIST to getEquipmentNames(),
+                DefectListFragment.KEY_IS_FILTER_DEFECT_LIST to true
         )
         findNavController().navigate(R.id.graph_defects, args)
     }

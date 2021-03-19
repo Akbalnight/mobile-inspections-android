@@ -25,7 +25,6 @@ import ru.madbrains.inspection.ui.common.camera.CameraViewModel
 import ru.madbrains.inspection.ui.delegates.MediaDefectUiModel
 import ru.madbrains.inspection.ui.main.defects.defectdetail.equipmentselectlist.EquipmentSelectListFragment
 import ru.madbrains.inspection.ui.main.defects.defectdetail.equipmentselectlist.EquipmentSelectListViewModel
-import ru.madbrains.inspection.ui.main.defects.defectlist.DefectListFragment
 
 class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
 
@@ -56,7 +55,6 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
     }
 
     private val defectDetailViewModel: DefectDetailViewModel by sharedViewModel()
-    private val equipmentSelectViewModel: EquipmentSelectListViewModel by sharedViewModel()
     private val cameraViewModel: CameraViewModel by sharedViewModel()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
