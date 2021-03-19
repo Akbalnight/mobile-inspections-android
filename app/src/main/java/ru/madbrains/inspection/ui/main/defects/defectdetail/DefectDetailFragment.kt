@@ -33,7 +33,6 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
         const val KEY_DETOUR_ID = "detour_id_defect_detail_fragment"
     }
 
-
     private val defectTypicalAdapter by lazy {
         DefectTypicalListAdapter(
                 context = context,
@@ -59,18 +58,9 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        arguments?.let { it ->
-
-            val detourId = it.getString(DefectDetailFragment.KEY_DETOUR_ID)
-            detourId?.let { detour ->
-                defectDetailViewModel.setDetourId(detour)
-            }
-
-            val equipmentList = it.getSerializable(DefectDetailFragment.KEY_EQUIPMENT_LIST) as? List<EquipmentModel>
-            if (!equipmentList.isNullOrEmpty()) {
-                defectDetailViewModel.setEquipments(equipmentList)
-            }
-
+        defectDetailViewModel.setEquipments(this.arguments?.getSerializable(DefectDetailFragment.KEY_EQUIPMENT_LIST) as? List<EquipmentModel>)
+        defectDetailViewModel.setDetourId(this.arguments?.getString(DefectDetailFragment.KEY_DETOUR_ID))
+        arguments?.let {
             setupEditDefect()
         } ?: run {
             setupNewDefect()

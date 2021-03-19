@@ -31,7 +31,7 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
 
     //Models Input Data
 
-    var equipmentList = listOf<EquipmentModel>()
+    var equipmentList: List<EquipmentModel>? = null
 
     private val _progressVisibility = MutableLiveData<Boolean>()
     val progressVisibility: LiveData<Boolean> = _progressVisibility
@@ -55,6 +55,9 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
     private val _showDialogBlankRequiredFields = MutableLiveData<Event<Unit>>()
     val showDialogBlankRequiredFields: LiveData<Event<Unit>> = _showDialogBlankRequiredFields
 
+    private val _fixFieldDevice = MutableLiveData<Event<EquipmentModel>>()
+    val fixFieldDevice: LiveData<Event<EquipmentModel>> = _fixFieldDevice
+
     private val _popNavigation = MutableLiveData<Event<Unit>>()
     val popNavigation: LiveData<Event<Unit>> = _popNavigation
 
@@ -71,11 +74,11 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
                 .addTo(disposables)
     }
 
-    fun setDetourId(id:String){
+    fun setDetourId(id:String?){
         detourId = id
     }
 
-    fun setEquipments(equipments: List<EquipmentModel>){
+    fun setEquipments(equipments: List<EquipmentModel>?){
         equipmentList = equipments
     }
 
