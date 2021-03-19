@@ -20,7 +20,7 @@ import ru.madbrains.inspection.ui.main.MainViewModel
 class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
 
     companion object {
-        const val KEY_DEVICE_ID_DEFECT_LIST = "device_id_defect_list"
+        const val KEY_EQUIPMENTS_IDS_DEFECT_LIST = "device_id_defect_list"
     }
 
     private val mainViewModel: MainViewModel by sharedViewModel()
@@ -40,7 +40,7 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val deviceIds = arguments?.getStringArrayList(DefectListFragment.KEY_DEVICE_ID_DEFECT_LIST)
+        val deviceIds = arguments?.getStringArrayList(DefectListFragment.KEY_EQUIPMENTS_IDS_DEFECT_LIST)
         deviceIds?.let {
             setupViewingDefects()
         } ?: run {

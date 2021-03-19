@@ -1,9 +1,9 @@
-package ru.madbrains.inspection.ui.main.defects.defectdetail.deviceSelectList
+package ru.madbrains.inspection.ui.main.defects.defectdetail.equipmentselectlist
 
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import kotlinx.android.synthetic.main.fragment_defect_find_device.*
+import kotlinx.android.synthetic.main.fragment_defect_find_equipment.*
 import kotlinx.android.synthetic.main.toolbar_with_back.view.*
 import kotlinx.android.synthetic.main.toolbar_with_menu.view.tvTitle
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -14,22 +14,27 @@ import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.extensions.drawables
 import ru.madbrains.inspection.extensions.strings
-import ru.madbrains.inspection.ui.adapters.DeviceSelectAdapter
+import ru.madbrains.inspection.ui.adapters.EquipmentSelectAdapter
 import ru.madbrains.inspection.ui.main.defects.defectdetail.DefectDetailViewModel
 import ru.madbrains.inspection.ui.view.SearchToolbar
 
-class DeviceSelectListFragment : BaseFragment(R.layout.fragment_defect_find_device) {
+class EquipmentSelectListFragment : BaseFragment(R.layout.fragment_defect_find_equipment) {
 
-    private val deviceSelectViewModel: DeviceSelectListViewModel by viewModel()
+    companion object {
+        const val KEY_CURRENT_EQUIPMENT = "current_equipment_select_list_fragment"
+        const val KEY_EQUIPMENT_LIST = "equipment_list_select_list_fragment"
+    }
+
+    private val equipmentSelectViewModel: EquipmentSelectListViewModel by viewModel()
     private val defectDetailViewModel: DefectDetailViewModel by sharedViewModel()
 
-    private val deviceSelectAdapter by lazy {
-        DeviceSelectAdapter(
+    private val equipmentSelectAdapter by lazy {
+        EquipmentSelectAdapter(
                 onDeviceSelectClick = {
-                    val deviceSelect = deviceSelectViewModel.deviceListModels.find { deviceSelect ->
+                    val deviceSelect = equipmentSelectViewModel.deviceListModels.find { deviceSelect ->
                         deviceSelect.id == it.id
                     }
-                    deviceSelectViewModel.deviceSelectClick(deviceSelect)
+                    equipmentSelectViewModel.deviceSelectClick(deviceSelect)
                 })
     }
 
@@ -38,19 +43,19 @@ class DeviceSelectListFragment : BaseFragment(R.layout.fragment_defect_find_devi
 
         setupToolBar()
 
-        rvDeviceSelectList.adapter = deviceSelectAdapter
+        rvDeviceSelectList.adapter = equipmentSelectAdapter
 
-        deviceSelectViewModel.getEquipments()
+        equipmentSelectViewModel.getEquipments()
 
-        deviceSelectViewModel.deviceList.observe(viewLifecycleOwner, Observer {
-            deviceSelectAdapter.items = it
+        equipmentSelectViewModel.deviceList.observe(viewLifecycleOwner, Observer {
+            equipmentSelectAdapter.items = it
         })
 
-        deviceSelectViewModel.progressVisibility.observe(viewLifecycleOwner, Observer {
+        equipmentSelectViewModel.progressVisibility.observe(viewLifecycleOwner, Observer {
             progressView.changeVisibility(it)
         })
 
-        deviceSelectViewModel.navigateToDefectDetail.observe(
+        equipmentSelectViewModel.navigateToDefectDetail.observe(
                 viewLifecycleOwner,
                 EventObserver {
                     backToDefectDetailFragment(it)
@@ -61,10 +66,10 @@ class DeviceSelectListFragment : BaseFragment(R.layout.fragment_defect_find_devi
         (toolbarLayout as SearchToolbar).apply {
             tvTitle.text = strings[R.string.fragment_title_select_device]
             btnLeading.setOnClickListener {
-                onNavigationBack(this@DeviceSelectListFragment)
+                onNavigationBack(this@EquipmentSelectListFragment)
             }
             setupSearch(context.drawables[R.drawable.ic_back],
-                    { deviceSelectViewModel.searchEquipments(it) }
+                    { equipmentSelectViewModel.searchEquipments(it) }
             )
         }
     }

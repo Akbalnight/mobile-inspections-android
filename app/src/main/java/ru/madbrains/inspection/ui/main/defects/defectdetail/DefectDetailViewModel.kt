@@ -26,6 +26,16 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
     private var currentTypical: DefectTypicalUiModel? = null
     private var description: String = ""
 
+
+    private var detourId: String? = null
+
+
+
+    //Models Input Data
+    private var currentTypicalDefect: DefectTypicalModel? = null
+
+    var equipmentList = listOf<EquipmentModel>()
+
     private val _progressVisibility = MutableLiveData<Boolean>()
     val progressVisibility: LiveData<Boolean> = _progressVisibility
 
@@ -64,6 +74,14 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
                 .addTo(disposables)
     }
 
+    fun setDetourId(id:String){
+        detourId = id
+    }
+
+    fun setEquipments(equipments: List<EquipmentModel>){
+        equipmentList = equipments
+    }
+
     fun changeCurrentDefectTypical(model: DefectTypicalUiModel) {
         currentTypical = model
     }
@@ -81,6 +99,7 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
         _defectTypicalList.value = emptyList()
         _device.value = null
         _mediaList.value = emptyList()
+        detourId = null
     }
 
     private fun checkIsNotEmptyFields(): Boolean {

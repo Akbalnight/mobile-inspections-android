@@ -4,6 +4,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.core.os.bundleOf
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -13,6 +14,7 @@ import kotlinx.android.synthetic.main.fragment_defect_list.toolbarLayout
 import kotlinx.android.synthetic.main.toolbar_with_back.view.*
 import kotlinx.android.synthetic.main.toolbar_with_menu.view.tvTitle
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
@@ -21,8 +23,18 @@ import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.adapters.DefectMediaAdapter
 import ru.madbrains.inspection.ui.common.camera.CameraViewModel
 import ru.madbrains.inspection.ui.delegates.MediaDefectUiModel
+import ru.madbrains.inspection.ui.main.defects.defectdetail.equipmentselectlist.EquipmentSelectListFragment
+import ru.madbrains.inspection.ui.main.defects.defectdetail.equipmentselectlist.EquipmentSelectListViewModel
+import ru.madbrains.inspection.ui.main.defects.defectlist.DefectListFragment
 
 class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
+
+    companion object {
+        const val KEY_EQUIPMENT_LIST = "equipment_list_defect_detail_fragment"
+        const val KEY_DETAIL_DEFECT = "current_equipment_select_list_fragment"
+        const val KEY_DETOUR_ID = "detour_id_defect_detail_fragment"
+    }
+
 
     private val defectTypicalAdapter by lazy {
         DefectTypicalListAdapter(
@@ -44,12 +56,24 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
     }
 
     private val defectDetailViewModel: DefectDetailViewModel by sharedViewModel()
+    private val equipmentSelectViewModel: EquipmentSelectListViewModel by sharedViewModel()
     private val cameraViewModel: CameraViewModel by sharedViewModel()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        arguments?.let {
+        arguments?.let { it ->
+
+            val detourId = it.getString(DefectDetailFragment.KEY_DETOUR_ID)
+            detourId?.let { detour ->
+                defectDetailViewModel.setDetourId(detour)
+            }
+
+            val equipmentList = it.getSerializable(DefectDetailFragment.KEY_EQUIPMENT_LIST) as? List<EquipmentModel>
+            if (!equipmentList.isNullOrEmpty()) {
+                defectDetailViewModel.setEquipments(equipmentList)
+            }
+
             setupEditDefect()
         } ?: run {
             setupNewDefect()
@@ -174,7 +198,22 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
     }
 
     private fun openDeviceSelect() {
-        findNavController().navigate(R.id.action_defectDetailFragment_to_deviceSelectListFragment)
+        val openArgs = bundleOf(
+                EquipmentSelectListFragment.KEY_CURRENT_EQUIPMENT to defectDetailViewModel.device.value,
+                EquipmentSelectListFragment.KEY_EQUIPMENT_LIST to defectDetailViewModel.equipmentList
+
+        )
+
+        /* defectDetailViewModel.device.value?.let {
+            // equipmentSelectViewModel.setCurrentDevice(it)
+             openArgs.putSerializable(EquipmentSelectListFragment.KEY_CURRENT_EQUIPMENT, it)
+         }
+         if(!defectDetailViewModel.equipmentList.isNullOrEmpty()){
+            // equipmentSelectViewModel.setEquipments(defectDetailViewModel.equipmentList)
+             openArgs.putSerializable(EquipmentSelectListFragment.KEY_EQUIPMENT_LIST, defectDetailViewModel.equipmentList)
+         }*/
+
+        findNavController().navigate(R.id.action_defectDetailFragment_to_deviceSelectListFragment, openArgs)
     }
 
     private fun setupMediaList() {

@@ -32,7 +32,7 @@
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tvName"
-        tools:srcCompat="@drawable/ic_select_item_blue"
+        app:srcCompat="@drawable/ic_select_item_blue"
         tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

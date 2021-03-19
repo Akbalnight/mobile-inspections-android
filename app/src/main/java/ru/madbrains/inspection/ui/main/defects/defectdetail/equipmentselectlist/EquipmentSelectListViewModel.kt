@@ -1,4 +1,4 @@
-package ru.madbrains.inspection.ui.main.defects.defectdetail.deviceSelectList
+package ru.madbrains.inspection.ui.main.defects.defectdetail.equipmentselectlist
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,18 +8,19 @@ import ru.madbrains.domain.interactor.RoutesInteractor
 import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
-import ru.madbrains.inspection.ui.delegates.DeviceSelectUiModel
+import ru.madbrains.inspection.ui.delegates.EquipmentSelectUiModel
 
-class DeviceSelectListViewModel(private val routesInteractor: RoutesInteractor) :
+class EquipmentSelectListViewModel(private val routesInteractor: RoutesInteractor) :
         BaseViewModel() {
 
     private var names: List<String> = emptyList()
     private var controlPointsIds: List<String> = emptyList()
 
     val deviceListModels = mutableListOf<EquipmentModel>()
+    private var currentDevice: EquipmentModel? = null
 
-    private val _deviceList = MutableLiveData<List<DeviceSelectUiModel>>()
-    val deviceList: LiveData<List<DeviceSelectUiModel>> = _deviceList
+    private val _deviceList = MutableLiveData<List<EquipmentSelectUiModel>>()
+    val deviceList: LiveData<List<EquipmentSelectUiModel>> = _deviceList
 
     private val _progressVisibility = MutableLiveData<Boolean>()
     val progressVisibility: LiveData<Boolean> = _progressVisibility
@@ -36,6 +37,10 @@ class DeviceSelectListViewModel(private val routesInteractor: RoutesInteractor) 
     fun setEquipments(equipment: List<EquipmentModel>) {
         deviceListModels.clear()
         deviceListModels.addAll(equipment)
+    }
+
+    fun setCurrentDevice(device: EquipmentModel) {
+        currentDevice = device
     }
 
     fun getEquipments() {
@@ -62,7 +67,7 @@ class DeviceSelectListViewModel(private val routesInteractor: RoutesInteractor) 
         val items = deviceListModels
                 .filter { it.name.orEmpty().contains(query) }
                 .map {
-                    DeviceSelectUiModel(
+                    EquipmentSelectUiModel(
                             id = it.id.orEmpty(),
                             name = it.name.orEmpty()
                     )
@@ -71,12 +76,13 @@ class DeviceSelectListViewModel(private val routesInteractor: RoutesInteractor) 
     }
 
     private fun updateDeviceList() {
-        val items = mutableListOf<DeviceSelectUiModel>().apply {
+        val items = mutableListOf<EquipmentSelectUiModel>().apply {
             deviceListModels.map { item ->
                 add(
-                        DeviceSelectUiModel(
-                                id = item.id.orEmpty(),
-                                name = item.name.orEmpty()
+                    EquipmentSelectUiModel(
+                                id = item.id,
+                                name = item.name.orEmpty(),
+                                isSelected = item.id == currentDevice?.id
                         )
                 )
             }
