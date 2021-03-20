@@ -1,7 +1,5 @@
 package ru.madbrains.data.network.mappers
 
-import android.graphics.Insets.add
-import ru.madbrains.data.network.request.GetDefectsReq
 import ru.madbrains.data.network.response.*
 import ru.madbrains.domain.model.*
 
@@ -72,10 +70,35 @@ fun mapGetEquipmentResp(resp: GetEquipmentResp): EquipmentModel {
             id = id,
             code = code,
             name = name,
-            markId = markId,
-            modelId = modelId,
             parentId = parentId,
-            isGroup = isGroup
+            isGroup = isGroup,
+            techPlace = techPlace,
+            techPlacePath = techPlacePath,
+            sapId = sapId,
+            constructionType = constructionType,
+            material = material,
+            size = size,
+            weight = weight,
+            manufacturer = manufacturer,
+            dateFinish = dateFinish,
+            measuringPoints = measuringPoints,
+            dateWarrantyStart = dateWarrantyStart,
+            dateWarrantyFinish = dateWarrantyFinish,
+            typeEquipment = typeEquipment,
+            warrantyFiles = warrantyFiles?.map { mapGetEquipmentFileResp(it) },
+            attachmentFiles = attachmentFiles?.map { mapGetEquipmentFileResp(it) },
+            deleted = deleted
+        )
+    }
+}
+
+fun mapGetEquipmentFileResp(resp: GetEquipmentFileResp): EquipmentFileModel {
+    return with(resp) {
+        EquipmentFileModel(
+            id = id,
+            url = url,
+            name = name,
+            extension = extension
         )
     }
 }

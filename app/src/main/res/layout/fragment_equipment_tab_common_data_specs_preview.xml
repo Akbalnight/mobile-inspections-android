@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:showIn="@layout/fragment_equipment_tab_common_data">
+
+    <ru.madbrains.inspection.ui.view.EquipmentSpecsTableRow
+        app:labelText="Тип единицы оборудования"
+        app:valueText="OC" />
+
+    <ru.madbrains.inspection.ui.view.EquipmentSpecsTableRow
+        android:layout_width="match_parent"
+        app:labelText="ID_SAP"
+        app:valueText="123456789" />
+
+    <ru.madbrains.inspection.ui.view.EquipmentSpecsTableRow
+        app:labelText="Название"
+        app:valueText="Насосы подпитки теплосети" />
+</merge>

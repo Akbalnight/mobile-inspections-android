@@ -1,6 +1,8 @@
 package ru.madbrains.data.network
 
+import com.google.gson.Gson
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -11,6 +13,7 @@ import ru.madbrains.data.BuildConfig
 import ru.madbrains.data.network.api.InspectionApi
 import ru.madbrains.data.network.interceptors.SessionInterceptor
 import ru.madbrains.data.prefs.PreferenceStorage
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 object ApiData {
@@ -47,6 +50,7 @@ object ApiData {
     private fun getMoshi(): Moshi {
         return Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
+            .add(Date::class.java, Rfc3339DateJsonAdapter().nullSafe())
             .build()
     }
 }

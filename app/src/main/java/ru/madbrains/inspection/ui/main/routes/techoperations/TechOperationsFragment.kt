@@ -1,7 +1,7 @@
 package ru.madbrains.inspection.ui.main.routes.techoperations
 
 import android.os.Bundle
-import android.util.Log
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_tech_operations.*
@@ -10,21 +10,20 @@ import kotlinx.android.synthetic.main.fragment_tech_operations.toolbarLayout
 import kotlinx.android.synthetic.main.toolbar_with_back.view.*
 import kotlinx.android.synthetic.main.toolbar_with_close.view.tvTitle
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import ru.madbrains.domain.model.RoutePointModel
-import ru.madbrains.domain.model.TechMapModel
+import ru.madbrains.domain.model.RouteDataModel
 import ru.madbrains.inspection.R
 
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.adapters.TechOperationAdapter
+import ru.madbrains.inspection.ui.main.equipment.EquipmentFragment
 
 
 class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
 
     companion object {
-        const val KEY_TECH_MAP = "tech_map"
+        const val KEY_ROUTE_DATA = "KEY_ROUTE_DATA"
     }
 
     private val techOperationsViewModel: TechOperationsViewModel by sharedViewModel()
@@ -45,10 +44,10 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
         })
 
         requireNotNull(arguments).run {
-            val techMapModel = (getSerializable(KEY_TECH_MAP) as? TechMapModel)
-            techMapModel?.let {
-                techOperationsViewModel.setTechMapModel(it)
-                setupToolbar(it.pointNumber)
+            val routeDataModel = (getSerializable(KEY_ROUTE_DATA) as? RouteDataModel)
+            routeDataModel?.let {
+                techOperationsViewModel.setRouteData(it)
+                setupToolbar(it.techMap?.pointNumber)
             }
         }
 
@@ -66,10 +65,6 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
         techOperationsViewModel.techOperations.observe(viewLifecycleOwner, Observer {
             techOperationsAdapter.items = it
         })
-
-        layoutBottomButtonAddDefect.setOnClickListener {
-            clickAddDefect()
-        }
 
         setupOnClickListener()
 
@@ -93,8 +88,13 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
 
     private fun setupOnClickListener() {
 
-        layoutBottomButtonAddDefect.setOnClickListener { clickAddDefect() }
+        layoutBottomButtonAddDefect.setOnClickListener {
+            techOperationsViewModel.toAddDefect()
+        }
 
+        layoutBottomButtonDevice.setOnClickListener {
+            techOperationsViewModel.toEquipmentFragment()
+        }
     }
 
     private fun setupNavigation() {
@@ -103,9 +103,11 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
             findNavController().navigate(R.id.action_techOperationsFragment_to_addDefectFragment)
         })
 
-    }
+        techOperationsViewModel.navigateToEquipment.observe(viewLifecycleOwner, EventObserver {
+            findNavController().navigate(R.id.action_techOperationsFragment_to_equipmentFragment, bundleOf(
+                EquipmentFragment.KEY_EQUIPMENT_DATA to it
+            ))
+        })
 
-    private fun clickAddDefect() {
-        techOperationsViewModel.addDefect()
     }
 }
