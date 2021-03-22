@@ -27,8 +27,8 @@ class EquipmentFragment : BaseFragment(R.layout.fragment_equipment) {
         super.onActivityCreated(savedInstanceState)
 
         requireNotNull(arguments).run {
-            val routeDataModel = (getSerializable(KEY_EQUIPMENT_DATA) as? EquipmentModel)
-            routeDataModel?.let {
+            val data = (getSerializable(KEY_EQUIPMENT_DATA) as? EquipmentModel)
+            data?.let {
                 equipmentViewModel.setEquipmentData(it)
                 setupToolbar(it.name)
                 setupViewPager()

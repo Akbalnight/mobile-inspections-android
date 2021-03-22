@@ -18,6 +18,7 @@ import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.adapters.TechOperationAdapter
 import ru.madbrains.inspection.ui.main.equipment.EquipmentFragment
+import ru.madbrains.inspection.ui.main.equipmentList.EquipmentListFragment
 
 
 class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
@@ -109,5 +110,10 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
             ))
         })
 
+        techOperationsViewModel.navigateToEquipmentList.observe(viewLifecycleOwner, EventObserver {
+            findNavController().navigate(R.id.action_techOperationsFragment_to_equipmentListFragment, bundleOf(
+                EquipmentListFragment.KEY_EQUIPMENT_LIST_DATA to it
+            ))
+        })
     }
 }

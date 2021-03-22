@@ -8,7 +8,7 @@ import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.model.DiffItem
-import ru.madbrains.inspection.ui.delegates.EquipmentImageUiModel
+import ru.madbrains.inspection.ui.delegates.EquipmentDetailMediaUiModel
 
 class EquipmentViewModel : BaseViewModel() {
     var savedEquipmentData: EquipmentModel? = null
@@ -29,10 +29,10 @@ class EquipmentViewModel : BaseViewModel() {
     fun prepareCommonData() {
         savedEquipmentData?.let { data ->
             data.getImageUrls().map {
-                EquipmentImageUiModel(url = ApiData.apiUrl + it.url)
+                EquipmentDetailMediaUiModel(url = ApiData.apiUrl + it.url)
             }.let { images ->
                 _equipmentImageList.value =
-                    if (images.isNotEmpty()) images else arrayListOf(EquipmentImageUiModel("placeholder"))
+                    if (images.isNotEmpty()) images else arrayListOf(EquipmentDetailMediaUiModel("placeholder"))
             }
 
             _commonSpecsList.value = mapOf(

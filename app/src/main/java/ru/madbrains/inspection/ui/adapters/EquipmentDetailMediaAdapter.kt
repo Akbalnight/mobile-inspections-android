@@ -8,12 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
 import ru.madbrains.inspection.base.BaseDiffCallback
 import ru.madbrains.inspection.base.model.DiffItem
-import ru.madbrains.inspection.ui.delegates.EquipmentImageUiModel
-import ru.madbrains.inspection.ui.delegates.equipmentImageListDelegate
+import ru.madbrains.inspection.ui.delegates.EquipmentDetailMediaUiModel
+import ru.madbrains.inspection.ui.delegates.equipmentDetailMediaDelegate
 import kotlin.math.roundToInt
 
 class EquipmentImageAdapter(
-    onImageClick: (EquipmentImageUiModel) -> Unit
+    onImageClick: (EquipmentDetailMediaUiModel) -> Unit
 ) : AsyncListDifferDelegationAdapter<DiffItem>(BaseDiffCallback()) {
 
     var hasInitParentDimensions = false
@@ -34,7 +34,7 @@ class EquipmentImageAdapter(
 
     init {
         delegatesManager
-            .addDelegate(equipmentImageListDelegate(onImageClick, this))
+            .addDelegate(equipmentDetailMediaDelegate(onImageClick, this))
     }
 }
 

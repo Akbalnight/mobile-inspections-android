@@ -16,11 +16,11 @@ import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.adapters.EquipmentImageAdapter
 import kotlin.math.roundToInt
 
-fun equipmentImageListDelegate(
-    clickListener: (EquipmentImageUiModel) -> Unit,
+fun equipmentDetailMediaDelegate(
+    clickListener: (EquipmentDetailMediaUiModel) -> Unit,
     adapter: EquipmentImageAdapter
 ) =
-    adapterDelegateLayoutContainer<EquipmentImageUiModel, DiffItem>(R.layout.item_equipment_image) {
+    adapterDelegateLayoutContainer<EquipmentDetailMediaUiModel, DiffItem>(R.layout.item_equipment_image) {
 
         onViewAttachedToWindow {  }
 
@@ -76,12 +76,12 @@ fun equipmentImageListDelegate(
         }
     }
 
-data class EquipmentImageUiModel(
+data class EquipmentDetailMediaUiModel(
     val url: String
 ) : DiffItem {
 
     override fun areItemsTheSame(newItem: DiffItem): Boolean =
-        newItem is EquipmentImageUiModel && url == newItem.url
+        newItem is EquipmentDetailMediaUiModel && url == newItem.url
 
     override fun areContentsTheSame(newItem: DiffItem): Boolean = this == newItem
 }
