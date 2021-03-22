@@ -2,6 +2,7 @@ package ru.madbrains.inspection.ui.main.equipmentList
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import ru.madbrains.data.network.ApiData
 import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.model.DiffItem
@@ -17,7 +18,11 @@ class EquipmentListViewModel() : BaseViewModel() {
                 add(
                     EquipmentListUiModel(
                         id = equipment.id,
-                        name = equipment.name
+                        name = equipment.name,
+                        type = equipment.typeEquipment,
+                        images = equipment.getImageUrls().map {
+                            ApiData.apiUrl + it.url
+                        }
                     )
                 )
             }

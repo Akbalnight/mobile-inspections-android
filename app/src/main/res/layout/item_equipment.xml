@@ -103,7 +103,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="8dp"
                 android:orientation="horizontal"
                 android:visibility="gone"
@@ -113,7 +113,7 @@
                 app:layout_constraintHorizontal_bias="0.259"
                 app:layout_constraintStart_toEndOf="@+id/ivIcon"
                 app:layout_constraintTop_toBottomOf="@id/tvEquipmentName"
-                tools:listitem="@layout/item_media" />
+                tools:listitem="@layout/item_media_equipment" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
