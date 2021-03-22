@@ -1,5 +1,9 @@
 package ru.madbrains.inspection.ui.main.equipment
 
+import android.content.ActivityNotFoundException
+import android.net.Uri
+import android.os.Parcelable
+import android.webkit.MimeTypeMap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -12,10 +16,10 @@ import ru.madbrains.domain.interactor.RoutesInteractor
 import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseViewModel
+import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.EquipmentDetailMediaUiModel
 import ru.madbrains.inspection.ui.delegates.FilesUiModel
-import timber.log.Timber
 import java.io.*
 import java.util.*
 
@@ -37,6 +41,12 @@ class EquipmentViewModel(private val routesInteractor: RoutesInteractor) : BaseV
 
     private val _progressVisibility = MutableLiveData<Boolean>()
     val progressVisibility: LiveData<Boolean> = _progressVisibility
+
+    private val _commonError = MutableLiveData<Event<Unit>>()
+    val commonError: LiveData<Event<Unit>> = _commonError
+
+    private val _startIntent = MutableLiveData<Event<Pair<File, String?>>>()
+    val startFileIntent: LiveData<Event<Pair<File, String?>>> = _startIntent
 
     fun setEquipmentData(data: EquipmentModel) {
         savedEquipmentData = data
@@ -93,7 +103,7 @@ class EquipmentViewModel(private val routesInteractor: RoutesInteractor) : BaseV
         }
     }
 
-    fun openFile(file: FilesUiModel, directory: File) {
+    fun downloadAndOpenFile(file: FilesUiModel, directory: File) {
         routesInteractor.downloadFile(ApiData.apiUrl + file.url)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { _progressVisibility.postValue(true) }
@@ -101,18 +111,22 @@ class EquipmentViewModel(private val routesInteractor: RoutesInteractor) : BaseV
             .subscribe({ response ->
                 if (response.isSuccessful) {
                     response.body()?.run {
-                        saveFile(this, file.name, directory)
+                        saveFile(this, file, directory)
                     }
                 }
             }, {
-                it.printStackTrace()
+                _commonError.value = Event(Unit)
             })
             .addTo(disposables)
     }
 
-    private fun saveFile(body: ResponseBody, name: String, directory: File) {
+    fun showError(){
+        _commonError.value = Event(Unit)
+    }
+
+    private fun saveFile(body: ResponseBody, fileUI: FilesUiModel, directory: File) {
         try {
-            val file = File(directory, name)
+            val file = File(directory, fileUI.name)
             var inputStream: InputStream? = null
             var outputStream: OutputStream? = null
             try {
@@ -129,16 +143,26 @@ class EquipmentViewModel(private val routesInteractor: RoutesInteractor) : BaseV
                     fileSizeDownloaded += read.toLong()
                 }
                 outputStream.flush()
-                Timber.d("debug_dmm outputStream ${outputStream}")
-                Timber.d("debug_dmm directory ${directory.absolutePath}")
             } catch (e: IOException) {
+                _commonError.value = Event(Unit)
                 e.printStackTrace()
             } finally {
                 inputStream?.close()
                 outputStream?.close()
+                openFile(file, fileUI)
             }
         } catch (e: IOException) {
-            e.printStackTrace()
+            _commonError.value = Event(Unit)
+        }
+    }
+
+    private fun openFile(file:File, fileUI: FilesUiModel) {
+        val myMime = MimeTypeMap.getSingleton()
+        val mimeType = myMime.getMimeTypeFromExtension(fileUI.extension)
+        try {
+            _startIntent.value = Event(Pair(file, mimeType))
+        } catch (e: ActivityNotFoundException) {
+            _commonError.value = Event(Unit)
         }
     }
 }
