@@ -7,7 +7,6 @@ import ru.madbrains.inspection.base.model.DiffItem
 
 fun filesDelegate(clickListener: (FilesUiModel) -> Unit) =
     adapterDelegateLayoutContainer<FilesUiModel, DiffItem>(R.layout.item_file) {
-
         bind {
             itemView.apply {
                 clContainer.setOnClickListener {

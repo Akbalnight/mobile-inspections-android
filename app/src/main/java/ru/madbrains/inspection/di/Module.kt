@@ -48,7 +48,7 @@ val appModule = module {
     viewModel { DeviceSelectListViewModel(get()) }
     viewModel { CameraViewModel() }
     viewModel { ServerSettingsViewModel(get()) }
-    viewModel { EquipmentViewModel() }
+    viewModel { EquipmentViewModel(get()) }
     viewModel { EquipmentListViewModel() }
     viewModel { SettingsViewModel(get()) }
 }

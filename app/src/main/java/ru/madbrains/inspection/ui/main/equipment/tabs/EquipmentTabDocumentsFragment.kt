@@ -1,6 +1,7 @@
 package ru.madbrains.inspection.ui.main.equipment.tabs
 
 import android.os.Bundle
+import android.os.Environment
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_equipment_tab_documents.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -14,7 +15,11 @@ class EquipmentTabDocumentsFragment : BaseFragment(R.layout.fragment_equipment_t
     private val equipmentViewModel: EquipmentViewModel by sharedViewModel()
     private val filesAdapter by lazy {
         FilesAdapter(
-            onFileClick = {}
+            onFileClick = { file->
+                context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)?.let { directory ->
+                    equipmentViewModel.openFile(file, directory)
+                }
+            }
         )
     }
 

@@ -2,19 +2,25 @@ package ru.madbrains.inspection.ui.main.equipment
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.addTo
+import okhttp3.ResponseBody
 import ru.madbrains.data.extensions.toDDMMYYYY
 import ru.madbrains.data.extensions.toHHmmYYYYMMDD
 import ru.madbrains.data.network.ApiData
-import ru.madbrains.domain.model.EquipmentFileModel
+import ru.madbrains.domain.interactor.RoutesInteractor
 import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.EquipmentDetailMediaUiModel
 import ru.madbrains.inspection.ui.delegates.FilesUiModel
+import timber.log.Timber
+import java.io.*
 import java.util.*
 
-class EquipmentViewModel : BaseViewModel() {
+
+class EquipmentViewModel(private val routesInteractor: RoutesInteractor) : BaseViewModel() {
     var savedEquipmentData: EquipmentModel? = null
 
     private val _equipmentImageList = MutableLiveData<List<DiffItem>>()
@@ -28,6 +34,9 @@ class EquipmentViewModel : BaseViewModel() {
 
     private val _files = MutableLiveData<List<FilesUiModel>>()
     val files: LiveData<List<FilesUiModel>> = _files
+
+    private val _progressVisibility = MutableLiveData<Boolean>()
+    val progressVisibility: LiveData<Boolean> = _progressVisibility
 
     fun setEquipmentData(data: EquipmentModel) {
         savedEquipmentData = data
@@ -81,6 +90,55 @@ class EquipmentViewModel : BaseViewModel() {
                     date = Date().toHHmmYYYYMMDD()
                 )
             }
+        }
+    }
+
+    fun openFile(file: FilesUiModel, directory: File) {
+        routesInteractor.downloadFile(ApiData.apiUrl + file.url)
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { _progressVisibility.postValue(true) }
+            .doAfterTerminate { _progressVisibility.postValue(false) }
+            .subscribe({ response ->
+                if (response.isSuccessful) {
+                    response.body()?.run {
+                        saveFile(this, file.name, directory)
+                    }
+                }
+            }, {
+                it.printStackTrace()
+            })
+            .addTo(disposables)
+    }
+
+    private fun saveFile(body: ResponseBody, name: String, directory: File) {
+        try {
+            val file = File(directory, name)
+            var inputStream: InputStream? = null
+            var outputStream: OutputStream? = null
+            try {
+                val fileReader = ByteArray(4096)
+                var fileSizeDownloaded: Long = 0
+                inputStream = body.byteStream()
+                outputStream = FileOutputStream(file)
+                while (true) {
+                    val read = inputStream.read(fileReader)
+                    if (read == -1) {
+                        break
+                    }
+                    outputStream.write(fileReader, 0, read)
+                    fileSizeDownloaded += read.toLong()
+                }
+                outputStream.flush()
+                Timber.d("debug_dmm outputStream ${outputStream}")
+                Timber.d("debug_dmm directory ${directory.absolutePath}")
+            } catch (e: IOException) {
+                e.printStackTrace()
+            } finally {
+                inputStream?.close()
+                outputStream?.close()
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
     }
 }

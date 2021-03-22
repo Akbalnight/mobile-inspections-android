@@ -3,6 +3,8 @@ package ru.madbrains.domain.interactor
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
+import okhttp3.ResponseBody
+import retrofit2.Response
 import ru.madbrains.domain.model.*
 import ru.madbrains.domain.repository.DetoutsRepository
 import java.io.File
@@ -44,6 +46,11 @@ class RoutesInteractor(
 
     fun getEquipments(names: List<String>, uuid: List<String>): Single<List<EquipmentsModel>> {
         return routesRepository.getEquipments(names, uuid)
+                .subscribeOn(Schedulers.io())
+    }
+
+    fun downloadFile(fileUrl:String): Single<Response<ResponseBody>> {
+        return routesRepository.downloadFile(fileUrl)
                 .subscribeOn(Schedulers.io())
     }
 
