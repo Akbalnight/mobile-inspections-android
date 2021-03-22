@@ -123,7 +123,15 @@
         android:id="@+id/equipmentListFragment"
         android:name="ru.madbrains.inspection.ui.main.equipmentList.EquipmentListFragment"
         android:label="EquipmentListFragment"
-        tools:layout="@layout/fragment_equipment_list" />
+        tools:layout="@layout/fragment_equipment_list" >
+        <action
+            android:id="@+id/action_equipmentListFragment_to_equipmentFragment"
+            app:destination="@id/equipmentFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
     <dialog
         android:id="@+id/routePointsCloseDialog"
         android:name="ru.madbrains.inspection.ui.main.routes.points.RoutePointsCloseDialog"

@@ -5,12 +5,16 @@ import androidx.lifecycle.MutableLiveData
 import ru.madbrains.data.network.ApiData
 import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.inspection.base.BaseViewModel
+import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.EquipmentListUiModel
 
-class EquipmentListViewModel() : BaseViewModel() {
+class EquipmentListViewModel : BaseViewModel() {
     private val _equipmentList = MutableLiveData<List<DiffItem>>()
     val equipmentList: LiveData<List<DiffItem>> = _equipmentList
+    private val _navigateToEquipment = MutableLiveData<Event<EquipmentModel>>()
+    val navigateToEquipment: LiveData<Event<EquipmentModel>> = _navigateToEquipment
+    var itemList: List<EquipmentModel>? = null
 
     fun setEquipmentList(list: List<EquipmentModel>) {
         val equipments = mutableListOf<DiffItem>().apply {
@@ -28,5 +32,12 @@ class EquipmentListViewModel() : BaseViewModel() {
             }
         }
         _equipmentList.value = equipments
+        itemList = list
+    }
+
+    fun toEquipmentFragment(item: EquipmentListUiModel) {
+        itemList?.find { item.id == it.id }?.let {
+            _navigateToEquipment.value = Event(it)
+        }
     }
 }

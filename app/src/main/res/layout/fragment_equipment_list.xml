@@ -14,7 +14,7 @@
 
         <include
             android:id="@+id/toolbarLayout"
-            layout="@layout/toolbar_with_menu"
+            layout="@layout/toolbar_with_back"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

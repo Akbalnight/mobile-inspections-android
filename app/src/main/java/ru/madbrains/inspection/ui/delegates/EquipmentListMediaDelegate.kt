@@ -7,7 +7,7 @@ import kotlinx.android.synthetic.main.item_media_equipment.view.*
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.model.DiffItem
 
-fun equipmentListMediaDelegate(clickImageListener: (EquipmentListImageUiModel) -> Unit) =
+fun equipmentListMediaDelegate(clickImageListener: ((EquipmentListImageUiModel) -> Unit)?) =
         adapterDelegateLayoutContainer<EquipmentListImageUiModel, DiffItem>(R.layout.item_media_equipment) {
 
             bind {
@@ -18,8 +18,8 @@ fun equipmentListMediaDelegate(clickImageListener: (EquipmentListImageUiModel) -
                         .placeholder(R.drawable.ic_item_media_padded)
                         .into(ivMediaContent)
 
-                    ivMediaContent.setOnClickListener {
-                        clickImageListener.invoke(item)
+                    clickImageListener?.run {
+                        ivMediaContent.setOnClickListener { invoke(item) }
                     }
                 }
             }

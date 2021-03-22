@@ -6,7 +6,7 @@ import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.*
 
 class EquipmentListMediaAdapter(
-        onMediaImageClick: (EquipmentListImageUiModel) -> Unit
+        onMediaImageClick: ((EquipmentListImageUiModel) -> Unit)?
 ) : AsyncListDifferDelegationAdapter<DiffItem>(BaseDiffCallback()) {
 
     init {

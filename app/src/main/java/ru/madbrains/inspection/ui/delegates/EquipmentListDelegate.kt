@@ -1,5 +1,6 @@
 package ru.madbrains.inspection.ui.delegates
 
+import android.view.MotionEvent
 import androidx.core.view.isVisible
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
 import kotlinx.android.synthetic.main.item_equipment.view.*
@@ -14,15 +15,16 @@ fun equipmentListDelegate(clickListener: (EquipmentListUiModel) -> Unit) =
             bind {
                 itemView.apply {
                     tvEquipmentType.text = item.type?: "-"
-                    tvEquipmentName.text = item.name
+                    tvEquipmentName.text = item.name?: "-"
                     clCard.setOnClickListener { clickListener(item) }
                     rvEquipmentMedia.apply {
                         isVisible = true
-                        adapter = EquipmentListMediaAdapter(onMediaImageClick = {}).apply {
+                        adapter = EquipmentListMediaAdapter(onMediaImageClick = null).apply {
                             items = item.images?.map {
                                 EquipmentListImageUiModel(it)
                             }
                         }
+                        setOnClickListener { clickListener(item) }
                     }
                 }
             }
