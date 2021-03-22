@@ -32,4 +32,10 @@ data class EquipmentModel(
 
         return images + warrantyImages
     }
+    fun getAllDocs(): List<EquipmentFileModel> {
+        val attach = attachmentFiles?: emptyList()
+        val warranty = warrantyFiles?: emptyList()
+
+        return attach + warranty
+    }
 }

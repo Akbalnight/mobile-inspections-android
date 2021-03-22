@@ -3,12 +3,16 @@ package ru.madbrains.inspection.ui.main.equipment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ru.madbrains.data.extensions.toDDMMYYYY
+import ru.madbrains.data.extensions.toHHmmYYYYMMDD
 import ru.madbrains.data.network.ApiData
+import ru.madbrains.domain.model.EquipmentFileModel
 import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.EquipmentDetailMediaUiModel
+import ru.madbrains.inspection.ui.delegates.FilesUiModel
+import java.util.*
 
 class EquipmentViewModel : BaseViewModel() {
     var savedEquipmentData: EquipmentModel? = null
@@ -21,6 +25,9 @@ class EquipmentViewModel : BaseViewModel() {
     val commonSpecsList: LiveData<Map<Int, Any?>> = _commonSpecsList
     private val _warrantyData = MutableLiveData<Map<Int, String?>>()
     val warrantyData: LiveData<Map<Int, String?>> = _warrantyData
+
+    private val _files = MutableLiveData<List<FilesUiModel>>()
+    val files: LiveData<List<FilesUiModel>> = _files
 
     fun setEquipmentData(data: EquipmentModel) {
         savedEquipmentData = data
@@ -58,6 +65,20 @@ class EquipmentViewModel : BaseViewModel() {
                 _warrantyData.value = mapOf(
                     R.string.equipment_specs_warranty_start to data.dateWarrantyStart?.toDDMMYYYY(),
                     R.string.equipment_specs_warranty_end to data.dateWarrantyFinish?.toDDMMYYYY()
+                )
+            }
+        }
+    }
+
+    fun prepareFiles(){
+        savedEquipmentData?.let { data ->
+            _files.value = data.getAllDocs().map {
+                FilesUiModel(
+                    id = it.id,
+                    url = it.url,
+                    name = it.name,
+                    extension = it.extension,
+                    date = Date().toHHmmYYYYMMDD()
                 )
             }
         }
