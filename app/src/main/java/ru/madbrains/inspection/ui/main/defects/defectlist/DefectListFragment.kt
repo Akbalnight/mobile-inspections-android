@@ -33,7 +33,6 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
     private val defectsAdapter by lazy {
         DefectListAdapter(
                 onLeftActionClick = {
-
                     val defect = defectListViewModel.defectListModels.find { detourModel ->
                         detourModel.id == it.id
                     }
