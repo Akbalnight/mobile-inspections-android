@@ -1,6 +1,8 @@
 package ru.madbrains.inspection.ui.main.equipment
 
 import android.os.Bundle
+import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.fragment_equipment.*
@@ -9,10 +11,12 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
+import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.main.equipment.tabs.EquipmentTabCommonDataFragment
 import ru.madbrains.inspection.ui.main.equipment.tabs.EquipmentTabDefectsFragment
 import ru.madbrains.inspection.ui.main.equipment.tabs.EquipmentTabDocumentsFragment
+
 
 class EquipmentFragment : BaseFragment(R.layout.fragment_equipment) {
 
@@ -32,8 +36,26 @@ class EquipmentFragment : BaseFragment(R.layout.fragment_equipment) {
                 equipmentViewModel.setEquipmentData(it)
                 setupToolbar(it.name)
                 setupViewPager()
+                observeData()
             }
         }
+    }
+
+    private fun observeData() {
+        equipmentViewModel.progressVisibility.observe(viewLifecycleOwner, Observer {
+            progressView.changeVisibility(it)
+        })
+
+        equipmentViewModel.commonError.observe(viewLifecycleOwner, EventObserver {
+            showErrorToast()
+        })
+    }
+
+    private fun showErrorToast() {
+        Toast.makeText(
+            activity, strings[R.string.error],
+            Toast.LENGTH_LONG
+        ).show()
     }
 
     private fun setupToolbar(equipmentName: String?) {

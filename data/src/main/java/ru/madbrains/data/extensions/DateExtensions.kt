@@ -15,3 +15,7 @@ fun Date.toYYYYMMDD(): String {
     val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     return dateFormat.format(this)
 }
+fun Date.toHHmmYYYYMMDD(): String {
+    val dateFormat = SimpleDateFormat("HH:mm  dd.MM.yyyy", Locale.getDefault())
+    return dateFormat.format(this)
+}

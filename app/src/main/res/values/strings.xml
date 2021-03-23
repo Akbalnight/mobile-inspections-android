@@ -108,6 +108,8 @@
     <string name="no">Нет</string>
     <string name="save">Сохранить</string>
     <string name="days">дней</string>
+    <string name="error">Ошибка</string>
+    <string name="ok">ОК</string>
 
     <string-array name="months">
         <item>Январь</item>

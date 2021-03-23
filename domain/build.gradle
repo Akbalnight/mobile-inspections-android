@@ -12,4 +12,5 @@ dependencies {
     implementation "org.koin:koin-androidx-scope:$rootProject.koin_version"
     implementation "org.koin:koin-androidx-viewmodel:$rootProject.koin_version"
     testImplementation "org.koin:koin-test:$rootProject.koin_version"
+    implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
 }
