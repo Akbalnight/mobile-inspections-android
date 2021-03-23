@@ -2,6 +2,7 @@ package ru.madbrains.inspection.ui.main.defects.defectlist
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_defect_list.*
@@ -12,9 +13,12 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
+import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.adapters.DefectListAdapter
 import ru.madbrains.inspection.ui.main.MainViewModel
+import ru.madbrains.inspection.ui.main.defects.defectdetail.DefectDetailFragment
+import ru.madbrains.inspection.ui.main.routes.points.RoutePointsFragment
 
 class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
 
@@ -30,6 +34,10 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
         DefectListAdapter(
                 onLeftActionClick = {
 
+                    val defect = defectListViewModel.defectListModels.find { detourModel ->
+                        detourModel.id == it.id
+                    }
+                    defectListViewModel.defectClick(defect)
                 },
                 onRightActionClick = {
 
@@ -58,6 +66,13 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
 
         defectListViewModel.progressVisibility.observe(viewLifecycleOwner, Observer {
             progressView.changeVisibility(it)
+        })
+
+        defectListViewModel.navigateToDefect.observe(viewLifecycleOwner, EventObserver {
+            val args = bundleOf(
+                    DefectDetailFragment.KEY_DETAIL_DEFECT to it
+            )
+            findNavController().navigate(R.id.action_defectListFragment_to_detailFragment, args)
         })
 
         setupClickListener()

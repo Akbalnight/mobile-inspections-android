@@ -15,6 +15,8 @@ import kotlinx.android.synthetic.main.fragment_defect_list.toolbarLayout
 import kotlinx.android.synthetic.main.toolbar_with_back.view.*
 import kotlinx.android.synthetic.main.toolbar_with_menu.view.tvTitle
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.madbrains.domain.model.DefectModel
 import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
@@ -31,8 +33,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
 
     companion object {
         const val KEY_EQUIPMENT_LIST = "equipment_list_defect_detail_fragment"
-
-        //const val KEY_DETAIL_DEFECT = "current_equipment_select_list_fragment"
+        const val KEY_DETAIL_DEFECT = "defect_model_defect_detail_fragment"
         const val KEY_DETOUR_ID = "detour_id_defect_detail_fragment"
     }
 
@@ -55,7 +56,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
         )
     }
 
-    private val defectDetailViewModel: DefectDetailViewModel by sharedViewModel()
+    private val defectDetailViewModel: DefectDetailViewModel by viewModel()
     private val cameraViewModel: CameraViewModel by sharedViewModel()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -63,6 +64,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
 
         defectDetailViewModel.setEquipments(this.arguments?.getSerializable(DefectDetailFragment.KEY_EQUIPMENT_LIST) as? List<EquipmentModel>)
         defectDetailViewModel.setDetourId(this.arguments?.getString(DefectDetailFragment.KEY_DETOUR_ID))
+        defectDetailViewModel.setDefect(this.arguments?.getSerializable(DefectDetailFragment.KEY_DETAIL_DEFECT) as? DefectModel)
         arguments?.let {
             setupEditDefect()
         } ?: run {
@@ -96,6 +98,10 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
             progressView.changeVisibility(it)
         })
 
+        defectDetailViewModel.descriptionObserver.observe(viewLifecycleOwner, Observer {
+            etDescription.editText?.setText(it)
+        })
+
         defectDetailViewModel.disableEquipmentField.observe(viewLifecycleOwner, EventObserver {
             layoutDropDownDevice.isEnabled = false
             layoutDropDownDevice.endIconMode = TextInputLayout.END_ICON_NONE
@@ -106,6 +112,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
             layoutDropDownTypeDefect.isEnabled = false
             layoutDropDownTypeDefect.endIconMode = TextInputLayout.END_ICON_NONE
             dropDownTypeDefect.setTextColor(colors[R.color.black50])
+            dropDownTypeDefect.setText(it)
         })
     }
 
@@ -148,7 +155,6 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
         // клик по полю ввода
         dropDownDevice.setOnClickListener { toDeviceSelect() }
 
-
         layoutDropDownDevice.setEndIconOnClickListener { toDeviceSelect() }
 
         // клик по кнопке сохранения дефекта
@@ -178,9 +184,9 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
     }
 
     private fun setupDefectDevice() {
-        defectDetailViewModel.device.observe(viewLifecycleOwner, Observer { equipments ->
-            equipments?.let {
-                dropDownDevice.setText(it.name, false)
+        defectDetailViewModel.deviceName.observe(viewLifecycleOwner, Observer { equipment ->
+            equipment?.let {
+                dropDownDevice.setText(it, false)
             }
         })
     }
@@ -197,8 +203,8 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
 
     private fun toDeviceSelect() {
         findNavController().navigate(R.id.action_defectDetailFragment_to_deviceSelectListFragment, bundleOf(
-                EquipmentSelectListFragment.KEY_CURRENT_EQUIPMENT to defectDetailViewModel.device.value,
-                EquipmentSelectListFragment.KEY_EQUIPMENT_LIST to defectDetailViewModel.equipmentList
+                EquipmentSelectListFragment.KEY_CURRENT_EQUIPMENT to defectDetailViewModel.currentDeviceModel,
+                EquipmentSelectListFragment.KEY_EQUIPMENT_LIST to defectDetailViewModel.equipmentModelList
 
         ))
     }

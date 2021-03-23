@@ -7,8 +7,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
 import ru.madbrains.domain.interactor.RoutesInteractor
 import ru.madbrains.domain.model.DefectModel
+import ru.madbrains.domain.model.DetourModel
 import ru.madbrains.domain.model.FileModel
 import ru.madbrains.inspection.base.BaseViewModel
+import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.DefectListUiModel
 import ru.madbrains.inspection.ui.delegates.MediaDefectUiModel
@@ -22,10 +24,17 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
     private var deviceIds: List<String>? = null
     val defectList: LiveData<List<DiffItem>> = _defectList
 
-    private val defectListModels = mutableListOf<DefectModel>()
+    val defectListModels = mutableListOf<DefectModel>()
 
     private val _progressVisibility = MutableLiveData<Boolean>()
     val progressVisibility: LiveData<Boolean> = _progressVisibility
+
+    private val _navigateToDefect = MutableLiveData<Event<DefectModel>>()
+    val navigateToDefect: LiveData<Event<DefectModel>> = _navigateToDefect
+
+    fun defectClick(defect: DefectModel?) {
+        defect?.let {  _navigateToDefect.value = Event(it) }
+    }
 
     fun getDefectList(device: List<String>?) {
         deviceIds = device

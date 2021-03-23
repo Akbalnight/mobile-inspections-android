@@ -8,6 +8,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
 import ru.madbrains.data.utils.FileUtil
 import ru.madbrains.domain.interactor.RoutesInteractor
+import ru.madbrains.domain.model.DefectModel
 import ru.madbrains.domain.model.DefectTypicalModel
 import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.inspection.base.BaseViewModel
@@ -21,17 +22,18 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
                             private val fileUtil: FileUtil) :
         BaseViewModel() {
 
+    private var descriptionDefect: String = ""
+    private var defect: DefectModel? = null
+
+    //Add new defect
+    var currentDeviceModel: EquipmentModel? = null
+    var equipmentModelList: List<EquipmentModel>? = null
     private val defectTypicalModels = mutableListOf<DefectTypicalModel>()
     private val mediaModels = mutableListOf<MediaDefectUiModel>()
     private var currentTypical: DefectTypicalUiModel? = null
-    private var description: String = ""
-
-
     private var detourId: String? = null
 
     //Models Input Data
-
-    var equipmentList: List<EquipmentModel>? = null
 
     private val _progressVisibility = MutableLiveData<Boolean>()
     val progressVisibility: LiveData<Boolean> = _progressVisibility
@@ -39,11 +41,14 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
     private val _defectTypicalList = MutableLiveData<List<DefectTypicalUiModel>>()
     val defectTypicalList: LiveData<List<DefectTypicalUiModel>> = _defectTypicalList
 
-    private val _device = MutableLiveData<EquipmentModel?>()
-    val device: LiveData<EquipmentModel?> = _device
+    private val _deviceName = MutableLiveData<String?>()
+    val deviceName: LiveData<String?> = _deviceName
 
     private val _mediaList = MutableLiveData<List<DiffItem>>()
     val mediaList: LiveData<List<DiffItem>> = _mediaList
+/*
+    private val _mediaList = MutableLiveData<List<DiffItem>>()
+    val mediaList: LiveData<List<DiffItem>> = _mediaList*/
 
     //Events
     private val _navigateToCamera = MutableLiveData<Event<Unit>>()
@@ -61,8 +66,12 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
     private val _disableEquipmentField = MutableLiveData<Event<Unit>>()
     val disableEquipmentField: LiveData<Event<Unit>> = _disableEquipmentField
 
-    private val _disableTypicalDefectField = MutableLiveData<Event<Unit>>()
-    val disableTypicalDefectField: LiveData<Event<Unit>> = _disableTypicalDefectField
+    private val _disableTypicalDefectField = MutableLiveData<Event<String>>()
+    val disableTypicalDefectField: LiveData<Event<String>> = _disableTypicalDefectField
+
+    private val _descriptionObserver = MutableLiveData<String>()
+    val descriptionObserver: LiveData<String> = _descriptionObserver
+
 
     fun getDefectTypicalList() {
         routesInteractor.getDefectTypical()
@@ -81,10 +90,65 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
         detourId = id
     }
 
+    fun setDefect(item: DefectModel?) {
+        if (defect == null) {
+            defect = item
+            updateDefect()
+        }
+    }
+
+    private fun updateDefect(){
+        defect?.let { defect ->
+            defect.apply {
+                equipmentName?.let {
+                    _deviceName.value = it
+                    _disableEquipmentField.value = Event(Unit)
+                }
+                defectName?.let {
+                    _disableTypicalDefectField.value = Event(it)
+                }
+                description?.let {
+                    descriptionDefect = it
+                    _descriptionObserver.value = it
+                }
+                files?.let {
+                    it.map { fileModel ->
+                        when (fileModel.extension) {
+                            "png" -> { // если в файле изображение добавляем в список
+                                mediaModels.add(MediaDefectUiModel(
+                                        id = fileModel.id.orEmpty(),
+                                        isEditing = false,
+                                        url = "https://mobinspect.dias-dev.ru${fileModel.url.orEmpty()}" //todo change to constant
+                                        //todo isImage если видео
+                                        //todo image если видео
+                                ))
+                            }
+                            "mpeg" -> {
+                                //todo preview video
+                            }
+                            else -> {
+                                //todo delete when extension all files
+                                mediaModels.add(MediaDefectUiModel(
+                                        id = fileModel.id.orEmpty(),
+                                        isEditing = false,
+                                        url = "https://mobinspect.dias-dev.ru${fileModel.url.orEmpty()}" //todo change to constant
+                                        //todo isImage если видео
+                                        //todo image если видео
+                                ))
+                            }
+                        }
+                    }
+                }
+                updateMediaList()
+            }
+
+        }
+    }
+
     fun setEquipments(equipments: List<EquipmentModel>?){
-        equipmentList = equipments
-        if (equipmentList?.size == 1){
-            changeCurrentDefectDevice(equipmentList!!.get(index = 0))
+        equipmentModelList = equipments
+        if (equipmentModelList?.size == 1){
+            changeCurrentDefectDevice(equipmentModelList!!.get(index = 0))
             _disableEquipmentField.value = Event(Unit)
         }
     }
@@ -93,39 +157,33 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
         currentTypical = model
     }
 
-
     fun changeCurrentDefectDevice(model: EquipmentModel) {
-        _device.value = model
+        currentDeviceModel = model
+        _deviceName.value = model.name
     }
 
     fun clearData() {
         defectTypicalModels.clear()
         mediaModels.clear()
         currentTypical?.let { currentTypical = null }
-        description = ""
+        descriptionDefect = ""
         _defectTypicalList.value = emptyList()
-        _device.value = null
+        _deviceName.value = null
         _mediaList.value = emptyList()
         detourId = null
     }
 
     private fun checkIsNotEmptyFields(): Boolean {
-
         var isNotEmpty = true
-
         isNotEmpty = isNotEmpty && (currentTypical != null)
-
-        isNotEmpty = isNotEmpty && (description.isNotBlank())
-
+        isNotEmpty = isNotEmpty && (descriptionDefect.isNotBlank())
         isNotEmpty = isNotEmpty && (!mediaList.value.isNullOrEmpty())
-
         return isNotEmpty
     }
 
     private fun checkIsNoEmptyRequiredFields(): Boolean {
-
         var isNotEmpty = true
-        device.value?.let {
+        _deviceName.value?.let {
             isNotEmpty = isNotEmpty && true
         } ?: run {
             isNotEmpty = isNotEmpty && false
@@ -135,9 +193,9 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
 
     fun addDescription(text: CharSequence?) {
         text?.let {
-            description = it.toString()
+            descriptionDefect = it.toString()
         } ?: run {
-            description = ""
+            descriptionDefect = ""
         }
     }
 
@@ -161,7 +219,8 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
                 MediaDefectUiModel(
                         id = UUID.randomUUID().toString(),
                         imageBitmap = image,
-                        url = "https://s1.1zoom.ru/big3/984/Canada_Parks_Lake_Mountains_Forests_Scenery_Rocky_567540_3840x2400.jpg"
+                        isEditing = true,
+                        isNetworkImage = false
                 )
         )
         updateMediaList()
@@ -175,6 +234,7 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
 
     private fun updateMediaList() {
         val items = mutableListOf<MediaDefectUiModel>().apply {
+
             mediaModels.map { item ->
                 add(item)
             }
@@ -196,9 +256,9 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
         val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
         val timeStamp = format.format(Date())
         routesInteractor.saveDefect(detoursId = null,
-                equipmentId = _device.value?.id,
+                equipmentId = currentDeviceModel?.id,
                 defectTypicalId = currentTypical?.id,
-                description = description,
+                description = descriptionDefect,
                 dateDetectDefect = timeStamp
                 //files = listFiles
         )
