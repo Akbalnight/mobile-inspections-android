@@ -7,7 +7,6 @@ import kotlinx.android.synthetic.main.fragment_defect_find_equipment.*
 import kotlinx.android.synthetic.main.toolbar_with_back.view.*
 import kotlinx.android.synthetic.main.toolbar_with_menu.view.tvTitle
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
@@ -17,11 +16,6 @@ import ru.madbrains.inspection.ui.adapters.EquipmentSelectAdapter
 import ru.madbrains.inspection.ui.view.SearchToolbar
 
 class EquipmentSelectListFragment : BaseFragment(R.layout.fragment_defect_find_equipment) {
-
-    companion object {
-        const val KEY_CURRENT_EQUIPMENT = "current_equipment_select_list_fragment"
-        const val KEY_EQUIPMENT_LIST = "equipment_list_select_list_fragment"
-    }
 
     private val equipmentSelectViewModel: EquipmentSelectListViewModel by sharedViewModel()
 

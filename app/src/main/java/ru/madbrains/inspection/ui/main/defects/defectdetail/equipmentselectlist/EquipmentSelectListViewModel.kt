@@ -68,9 +68,7 @@ class EquipmentSelectListViewModel(private val routesInteractor: RoutesInteracto
                         it.printStackTrace()
                     })
                     .addTo(disposables)
-        } /*else {
-            updateDeviceList()
-        }*/
+        }
     }
 
     fun searchEquipments(query: String) {

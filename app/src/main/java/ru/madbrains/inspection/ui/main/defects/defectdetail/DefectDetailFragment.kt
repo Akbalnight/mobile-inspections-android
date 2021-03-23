@@ -124,12 +124,6 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
                 })
     }
 
-    override fun onDetach() {
-        super.onDetach()
-      //  defectDetailViewModel.clearData()
-    }
-
-
     private fun setupNewDefect() {
         toolbarLayout.apply {
             tvTitle.text = strings[R.string.fragment_defect_add_title]
