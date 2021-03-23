@@ -28,6 +28,7 @@ import ru.madbrains.inspection.ui.adapters.DefectMediaAdapter
 import ru.madbrains.inspection.ui.common.camera.CameraViewModel
 import ru.madbrains.inspection.ui.delegates.MediaDefectUiModel
 import ru.madbrains.inspection.ui.main.defects.defectdetail.equipmentselectlist.EquipmentSelectListFragment
+import ru.madbrains.inspection.ui.main.defects.defectdetail.equipmentselectlist.EquipmentSelectListViewModel
 
 class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
 
@@ -58,6 +59,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
 
     private val defectDetailViewModel: DefectDetailViewModel by viewModel()
     private val cameraViewModel: CameraViewModel by sharedViewModel()
+    private val equipmentSelectViewModel: EquipmentSelectListViewModel by sharedViewModel()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -114,11 +116,17 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
             dropDownTypeDefect.setTextColor(colors[R.color.black50])
             dropDownTypeDefect.setText(it)
         })
+
+        equipmentSelectViewModel.checkedDevice.observe(
+                viewLifecycleOwner,
+                EventObserver {
+                    defectDetailViewModel.changeCurrentDefectDevice(it)
+                })
     }
 
     override fun onDetach() {
         super.onDetach()
-        defectDetailViewModel.clearData()
+      //  defectDetailViewModel.clearData()
     }
 
 
@@ -202,11 +210,9 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
     }
 
     private fun toDeviceSelect() {
-        findNavController().navigate(R.id.action_defectDetailFragment_to_deviceSelectListFragment, bundleOf(
-                EquipmentSelectListFragment.KEY_CURRENT_EQUIPMENT to defectDetailViewModel.currentDeviceModel,
-                EquipmentSelectListFragment.KEY_EQUIPMENT_LIST to defectDetailViewModel.equipmentModelList
-
-        ))
+        equipmentSelectViewModel.setCurrentDevice(defectDetailViewModel.currentDeviceModel)
+        equipmentSelectViewModel.setEquipments(defectDetailViewModel.equipmentModelList)
+        findNavController().navigate(R.id.action_defectDetailFragment_to_deviceSelectListFragment)
     }
 
     private fun setupMediaList() {

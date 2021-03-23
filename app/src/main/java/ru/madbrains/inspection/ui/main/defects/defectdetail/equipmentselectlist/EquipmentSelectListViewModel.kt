@@ -25,12 +25,20 @@ class EquipmentSelectListViewModel(private val routesInteractor: RoutesInteracto
     private val _progressVisibility = MutableLiveData<Boolean>()
     val progressVisibility: LiveData<Boolean> = _progressVisibility
 
+    private val _checkedDevice = MutableLiveData<Event<EquipmentModel>>()
+    val checkedDevice: LiveData<Event<EquipmentModel>> = _checkedDevice
+
     private val _navigateToDefectDetail = MutableLiveData<Event<EquipmentModel>>()
     val navigateToDefectDetail: LiveData<Event<EquipmentModel>> = _navigateToDefectDetail
 
     fun deviceSelectClick(equipment: EquipmentModel?) {
         equipment?.let {
+            _checkedDevice.value = Event(it)
             _navigateToDefectDetail.value = Event(it)
+            deviceListModels.clear()
+            currentDevice = null
+            _deviceList.value = null
+
         }
     }
 
@@ -38,6 +46,7 @@ class EquipmentSelectListViewModel(private val routesInteractor: RoutesInteracto
         deviceListModels.clear()
         equipment?.let {
             deviceListModels.addAll(it)
+            updateDeviceList()
         }
     }
 
@@ -59,9 +68,9 @@ class EquipmentSelectListViewModel(private val routesInteractor: RoutesInteracto
                         it.printStackTrace()
                     })
                     .addTo(disposables)
-        } else {
+        } /*else {
             updateDeviceList()
-        }
+        }*/
     }
 
     fun searchEquipments(query: String) {
@@ -69,8 +78,9 @@ class EquipmentSelectListViewModel(private val routesInteractor: RoutesInteracto
                 .filter { it.name.orEmpty().contains(query) }
                 .map {
                     EquipmentSelectUiModel(
-                            id = it.id.orEmpty(),
-                            name = it.name.orEmpty()
+                            id = it.id,
+                            name = it.name.orEmpty(),
+                            isSelected = it.id == currentDevice?.id
                     )
                 }
         _deviceList.value = items

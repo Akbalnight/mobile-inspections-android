@@ -7,7 +7,6 @@ import kotlinx.android.synthetic.main.fragment_defect_find_equipment.*
 import kotlinx.android.synthetic.main.toolbar_with_back.view.*
 import kotlinx.android.synthetic.main.toolbar_with_menu.view.tvTitle
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
@@ -15,7 +14,6 @@ import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.extensions.drawables
 import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.adapters.EquipmentSelectAdapter
-import ru.madbrains.inspection.ui.main.defects.defectdetail.DefectDetailViewModel
 import ru.madbrains.inspection.ui.view.SearchToolbar
 
 class EquipmentSelectListFragment : BaseFragment(R.layout.fragment_defect_find_equipment) {
@@ -25,8 +23,7 @@ class EquipmentSelectListFragment : BaseFragment(R.layout.fragment_defect_find_e
         const val KEY_EQUIPMENT_LIST = "equipment_list_select_list_fragment"
     }
 
-    private val equipmentSelectViewModel: EquipmentSelectListViewModel by viewModel()
-    private val defectDetailViewModel: DefectDetailViewModel by sharedViewModel()
+    private val equipmentSelectViewModel: EquipmentSelectListViewModel by sharedViewModel()
 
     private val equipmentSelectAdapter by lazy {
         EquipmentSelectAdapter(
@@ -41,19 +38,11 @@ class EquipmentSelectListFragment : BaseFragment(R.layout.fragment_defect_find_e
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        setupToolBar()
-
-        equipmentSelectViewModel.setCurrentDevice(arguments?.getSerializable(EquipmentSelectListFragment.KEY_CURRENT_EQUIPMENT) as? EquipmentModel)
-        equipmentSelectViewModel.setEquipments(arguments?.getSerializable(EquipmentSelectListFragment.KEY_EQUIPMENT_LIST) as? List<EquipmentModel>)
-        /*
-        arguments?.let { it ->
-            equipmentSelectViewModel.setCurrentDevice(it.getSerializable(EquipmentSelectListFragment.KEY_CURRENT_EQUIPMENT) as? EquipmentModel)
-            equipmentSelectViewModel.setEquipments(it.getSerializable(EquipmentSelectListFragment.KEY_EQUIPMENT_LIST) as? List<EquipmentModel>)
-        }*/
-
         rvDeviceSelectList.adapter = equipmentSelectAdapter
 
         equipmentSelectViewModel.getEquipments()
+
+        setupToolBar()
 
         equipmentSelectViewModel.deviceList.observe(viewLifecycleOwner, Observer {
             equipmentSelectAdapter.items = it
@@ -66,7 +55,7 @@ class EquipmentSelectListFragment : BaseFragment(R.layout.fragment_defect_find_e
         equipmentSelectViewModel.navigateToDefectDetail.observe(
                 viewLifecycleOwner,
                 EventObserver {
-                    backToDefectDetailFragment(it)
+                    findNavController().popBackStack()
                 })
     }
 
@@ -80,11 +69,6 @@ class EquipmentSelectListFragment : BaseFragment(R.layout.fragment_defect_find_e
                     { equipmentSelectViewModel.searchEquipments(it) }
             )
         }
-    }
-
-    private fun backToDefectDetailFragment(equipment: EquipmentModel) {
-        defectDetailViewModel.changeCurrentDefectDevice(equipment)
-        findNavController().popBackStack()
     }
 
 }
