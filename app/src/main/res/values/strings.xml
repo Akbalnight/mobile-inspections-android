@@ -102,11 +102,18 @@
     <string name="equipment_specs_warranty_start">Начало гарантии:</string>
     <string name="equipment_specs_warranty_end">Окончание гарантии:</string>
 
+    <!-- EquipmentListFragment -->
+    <string name="fragment_equipment_list_title">Перечень оборудования</string>
+    <string name="fragment_equipment_list_type">Тип оборудования</string>
+    <string name="fragment_equipment_list_name">Наименование</string>
+
     <!-- common -->
     <string name="yes">Да</string>
     <string name="no">Нет</string>
     <string name="save">Сохранить</string>
     <string name="days">дней</string>
+    <string name="error">Ошибка</string>
+    <string name="ok">ОК</string>
 
     <string-array name="months">
         <item>Январь</item>

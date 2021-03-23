@@ -3,10 +3,9 @@ package ru.madbrains.data.network.api
 import io.reactivex.Completable
 import io.reactivex.Single
 import okhttp3.MultipartBody
-import retrofit2.http.Body
-import retrofit2.http.Multipart
-import retrofit2.http.POST
-import retrofit2.http.Part
+import okhttp3.ResponseBody
+import retrofit2.Response
+import retrofit2.http.*
 import ru.madbrains.data.network.request.*
 import ru.madbrains.data.network.response.*
 import ru.madbrains.domain.model.DetourModel
@@ -52,4 +51,8 @@ interface InspectionApi {
     @POST("/api/dynamicdq/data/flat/mobileEquipments")
     fun getEquipments(@Body request: GetEquipmentsReq): Single<List<GetEquipmentResp>>
     // endregion
+
+    @Streaming
+    @GET
+    fun downloadFile(@Url fileUrl:String): Single<Response<ResponseBody>>
 }

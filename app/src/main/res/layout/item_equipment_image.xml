@@ -5,8 +5,7 @@
     android:id="@+id/clContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:layout_height="150dp"
-    tools:layout_width="150dp">
+>
 
     <ImageView
         android:id="@+id/ivEquipment"
@@ -18,7 +17,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@tools:sample/backgrounds/scenic"
+        tools:src="@drawable/ic_item_media"
     />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

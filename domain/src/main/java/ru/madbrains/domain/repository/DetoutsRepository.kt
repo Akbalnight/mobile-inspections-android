@@ -2,6 +2,8 @@ package ru.madbrains.domain.repository
 
 import io.reactivex.Completable
 import io.reactivex.Single
+import okhttp3.ResponseBody
+import retrofit2.Response
 import ru.madbrains.domain.model.*
 import java.io.File
 
@@ -38,4 +40,6 @@ interface DetoutsRepository {
                    description: String?,
                    dateDetectDefect: String?
     ): Single<String>
+
+    fun downloadFile(fileUrl:String): Single<Response<ResponseBody>>
 }

@@ -5,6 +5,8 @@ import io.reactivex.Single
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.ResponseBody
+import retrofit2.Response
 import ru.madbrains.data.network.ApiData
 import ru.madbrains.data.network.mappers.*
 import ru.madbrains.data.network.request.*
@@ -134,6 +136,10 @@ class RoutesRepositoryImpl(
         }
 
         return ApiData.inspectionApi.saveDefect(request, multiParts)
+    }
+
+    override fun downloadFile(fileUrl: String): Single<Response<ResponseBody>> {
+        return ApiData.inspectionApi.downloadFile(fileUrl)
     }
 
 }

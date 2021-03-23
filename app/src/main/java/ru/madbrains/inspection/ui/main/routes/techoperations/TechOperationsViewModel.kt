@@ -32,6 +32,9 @@ class TechOperationsViewModel(private val routesInteractor: RoutesInteractor) :
     private val _navigateToEquipment = MutableLiveData<Event<EquipmentModel>>()
     val navigateToEquipment: LiveData<Event<EquipmentModel>> = _navigateToEquipment
 
+    private val _navigateToEquipmentList = MutableLiveData<Event<List<EquipmentModel>>>()
+    val navigateToEquipmentList: LiveData<Event<List<EquipmentModel>>> = _navigateToEquipmentList
+
     private val _completeTechMapEvent = MutableLiveData<Event<TechMapModel>>()
     val completeTechMapEvent: LiveData<Event<TechMapModel>> = _completeTechMapEvent
 
@@ -84,8 +87,10 @@ class TechOperationsViewModel(private val routesInteractor: RoutesInteractor) :
 
     fun toEquipmentFragment() {
         savedRouteData?.equipments?.let {
-            if(it.isNotEmpty()){
+            if(it.size == 1){
                 _navigateToEquipment.value = Event(it[0])
+            } else if(it.size > 1){
+                _navigateToEquipmentList.value = Event(it)
             }
         }
     }

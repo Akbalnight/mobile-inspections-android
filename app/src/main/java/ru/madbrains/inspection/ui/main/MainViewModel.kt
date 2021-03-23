@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
+import retrofit2.HttpException
 import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.domain.interactor.AuthInteractor
 import ru.madbrains.inspection.base.BaseViewModel
@@ -79,6 +80,11 @@ class MainViewModel(
                 preferenceStorage.clearData()
                 _navigateToAuthorization.postValue(Event(Unit))
             }, {
+                //TODO change to 401 when server is ready
+                if(it is HttpException && it.code() == 500){
+                    preferenceStorage.clearData()
+                    _navigateToAuthorization.postValue(Event(Unit))
+                }
                 it.printStackTrace()
             })
             .addTo(disposables)

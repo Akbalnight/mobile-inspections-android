@@ -21,8 +21,8 @@ import ru.madbrains.inspection.ui.adapters.TechOperationAdapter
 import ru.madbrains.inspection.ui.main.defects.defectdetail.DefectDetailFragment
 import ru.madbrains.inspection.ui.main.defects.defectlist.DefectListFragment
 import ru.madbrains.inspection.ui.main.equipment.EquipmentFragment
+import ru.madbrains.inspection.ui.main.equipmentList.EquipmentListFragment
 import ru.madbrains.inspection.ui.main.routes.DetoursViewModel
-import ru.madbrains.inspection.ui.main.routes.points.RoutePointsViewModel
 
 
 class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
@@ -36,9 +36,9 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
 
     private val techOperationsAdapter by lazy {
         TechOperationAdapter(
-                onDataInput = {
-                    techOperationsViewModel.onTechDataInput(it.id, it.inputData)
-                }
+            onDataInput = {
+                techOperationsViewModel.onTechDataInput(it.id, it.inputData)
+            }
         )
     }
 
@@ -108,7 +108,13 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
 
         techOperationsViewModel.navigateToEquipment.observe(viewLifecycleOwner, EventObserver {
             findNavController().navigate(R.id.action_techOperationsFragment_to_equipmentFragment, bundleOf(
-                    EquipmentFragment.KEY_EQUIPMENT_DATA to it
+                EquipmentFragment.KEY_EQUIPMENT_DATA to it
+            ))
+        })
+
+        techOperationsViewModel.navigateToEquipmentList.observe(viewLifecycleOwner, EventObserver {
+            findNavController().navigate(R.id.action_techOperationsFragment_to_equipmentListFragment, bundleOf(
+                EquipmentListFragment.KEY_EQUIPMENT_LIST_DATA to it
             ))
         })
     }

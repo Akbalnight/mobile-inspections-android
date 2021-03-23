@@ -1,5 +1,7 @@
 package ru.madbrains.domain.model
 
+import java.io.Serializable
+
 data class TechOperationModel(
     val id: String,
     val name: String?,
@@ -12,4 +14,4 @@ data class TechOperationModel(
     val duration: Int?,
     val techMapId: String?,
     val position: Int?
-)
+): Serializable
