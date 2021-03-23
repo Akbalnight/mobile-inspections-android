@@ -20,15 +20,18 @@ import java.text.SimpleDateFormat
 class DefectListViewModel(private val routesInteractor: RoutesInteractor) : BaseViewModel() {
 
 
-    private val _defectList = MutableLiveData<List<DiffItem>>()
+    //Models
     private var deviceIds: List<String>? = null
-    val defectList: LiveData<List<DiffItem>> = _defectList
-
     val defectListModels = mutableListOf<DefectModel>()
+
+    //Live Data
+    private val _defectList = MutableLiveData<List<DiffItem>>()
+    val defectList: LiveData<List<DiffItem>> = _defectList
 
     private val _progressVisibility = MutableLiveData<Boolean>()
     val progressVisibility: LiveData<Boolean> = _progressVisibility
 
+    //Event
     private val _navigateToDefect = MutableLiveData<Event<DefectModel>>()
     val navigateToDefect: LiveData<Event<DefectModel>> = _navigateToDefect
 

@@ -86,7 +86,7 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
                 .addTo(disposables)
     }
 
-    fun setDetourId(id:String?){
+    fun setDetourId(id: String?) {
         detourId = id
     }
 
@@ -97,7 +97,7 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
         }
     }
 
-    private fun updateDefect(){
+    private fun updateDefect() {
         defect?.let { defect ->
             defect.apply {
                 equipmentName?.let {
@@ -145,9 +145,9 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
         }
     }
 
-    fun setEquipments(equipments: List<EquipmentModel>?){
+    fun setEquipments(equipments: List<EquipmentModel>?) {
         equipmentModelList = equipments
-        if (equipmentModelList?.size == 1){
+        if (equipmentModelList?.size == 1) {
             changeCurrentDefectDevice(equipmentModelList!!.get(index = 0))
             _disableEquipmentField.value = Event(Unit)
         }
@@ -160,17 +160,6 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
     fun changeCurrentDefectDevice(model: EquipmentModel) {
         currentDeviceModel = model
         _deviceName.value = model.name
-    }
-
-    fun clearData() {
-        defectTypicalModels.clear()
-        mediaModels.clear()
-        currentTypical?.let { currentTypical = null }
-        descriptionDefect = ""
-        _defectTypicalList.value = emptyList()
-        _deviceName.value = null
-        _mediaList.value = emptyList()
-        detourId = null
     }
 
     private fun checkIsNotEmptyFields(): Boolean {
@@ -234,7 +223,6 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
 
     private fun updateMediaList() {
         val items = mutableListOf<MediaDefectUiModel>().apply {
-
             mediaModels.map { item ->
                 add(item)
             }
@@ -243,14 +231,15 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
     }
 
     fun photoVideoClick() {
-        _navigateToCamera.value = Event(Unit)
+        if (mediaModels.size < 9)
+            _navigateToCamera.value = Event(Unit)
     }
 
     @SuppressLint("SimpleDateFormat")
     fun saveDefect() {
         //todo save defect
         val listFiles = mediaModels.map {
-        //    fileUtil.createFile(it.image, it.id)
+            //    fileUtil.createFile(it.image, it.id)
         }
 
         val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")

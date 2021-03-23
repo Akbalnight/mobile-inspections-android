@@ -193,6 +193,12 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
         })
     }
 
+    private fun toDeviceSelect() {
+        equipmentSelectViewModel.setCurrentDevice(defectDetailViewModel.currentDeviceModel)
+        equipmentSelectViewModel.setEquipments(defectDetailViewModel.equipmentModelList)
+        findNavController().navigate(R.id.action_defectDetailFragment_to_deviceSelectListFragment)
+    }
+
     private fun setupDialogs() {
         defectDetailViewModel.showDialogBlankFields.observe(viewLifecycleOwner, EventObserver {
             showDialogEmptyFields()
@@ -201,12 +207,6 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
         defectDetailViewModel.showDialogBlankRequiredFields.observe(viewLifecycleOwner, EventObserver {
             showDialogEmptyRequiredFields()
         })
-    }
-
-    private fun toDeviceSelect() {
-        equipmentSelectViewModel.setCurrentDevice(defectDetailViewModel.currentDeviceModel)
-        equipmentSelectViewModel.setEquipments(defectDetailViewModel.equipmentModelList)
-        findNavController().navigate(R.id.action_defectDetailFragment_to_deviceSelectListFragment)
     }
 
     private fun setupMediaList() {
