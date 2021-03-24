@@ -23,9 +23,9 @@
             android:layout_height="?android:attr/actionBarSize"
             android:background="@color/elementsBlue"
             app:tabGravity="fill"
+            app:tabIndicatorColor="@color/accidentYellow"
             app:tabMaxWidth="0dp"
             app:tabMode="fixed"
-            app:tabIndicatorColor="@color/accidentYellow"
             app:tabSelectedTextColor="@color/textWhite"
             app:tabTextColor="@color/white70" />
 
@@ -36,26 +36,16 @@
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-        <ScrollView
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/routesViewPager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/routesViewPager"
-                android:paddingBottom="67dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </ScrollView>
+            android:layout_height="match_parent" />
 
         <ru.madbrains.inspection.ui.view.ProgressView
             android:id="@+id/progressView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -98,7 +98,8 @@ fun mapGetEquipmentFileResp(resp: GetEquipmentFileResp): EquipmentFileModel {
             id = id,
             url = url,
             name = name,
-            extension = extension
+            extension = extension,
+            date = date
         )
     }
 }
