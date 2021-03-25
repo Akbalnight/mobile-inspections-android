@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
+import ru.madbrains.data.network.ApiData
 import ru.madbrains.data.utils.FileUtil
 import ru.madbrains.domain.interactor.RoutesInteractor
 import ru.madbrains.domain.model.DefectModel
@@ -74,16 +75,18 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
 
 
     fun getDefectTypicalList() {
-        routesInteractor.getDefectTypical()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ items ->
-                    defectTypicalModels.clear()
-                    defectTypicalModels.addAll(items)
-                    updateDefectTypicalList()
-                }, {
-                    it.printStackTrace()
-                })
-                .addTo(disposables)
+        if (defectTypicalModels.isNullOrEmpty()) {
+            routesInteractor.getDefectTypical()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ items ->
+                        defectTypicalModels.clear()
+                        defectTypicalModels.addAll(items)
+                        updateDefectTypicalList()
+                    }, {
+                        it.printStackTrace()
+                    })
+                    .addTo(disposables)
+        }
     }
 
     fun setDetourId(id: String?) {
@@ -118,7 +121,7 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
                                 mediaModels.add(MediaDefectUiModel(
                                         id = fileModel.id.orEmpty(),
                                         isEditing = false,
-                                        url = "https://mobinspect.dias-dev.ru${fileModel.url.orEmpty()}" //todo change to constant
+                                        url = ApiData.apiUrl + fileModel.url.orEmpty()
                                         //todo isImage если видео
                                         //todo image если видео
                                 ))
@@ -131,7 +134,7 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
                                 mediaModels.add(MediaDefectUiModel(
                                         id = fileModel.id.orEmpty(),
                                         isEditing = false,
-                                        url = "https://mobinspect.dias-dev.ru${fileModel.url.orEmpty()}" //todo change to constant
+                                        url = ApiData.apiUrl + fileModel.url.orEmpty()
                                         //todo isImage если видео
                                         //todo image если видео
                                 ))

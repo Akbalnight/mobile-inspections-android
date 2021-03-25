@@ -4,7 +4,6 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import androidx.core.os.bundleOf
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -27,7 +26,6 @@ import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.adapters.DefectMediaAdapter
 import ru.madbrains.inspection.ui.common.camera.CameraViewModel
 import ru.madbrains.inspection.ui.delegates.MediaDefectUiModel
-import ru.madbrains.inspection.ui.main.defects.defectdetail.equipmentselectlist.EquipmentSelectListFragment
 import ru.madbrains.inspection.ui.main.defects.defectdetail.equipmentselectlist.EquipmentSelectListViewModel
 
 class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
@@ -36,14 +34,6 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
         const val KEY_EQUIPMENT_LIST = "equipment_list_defect_detail_fragment"
         const val KEY_DETAIL_DEFECT = "defect_model_defect_detail_fragment"
         const val KEY_DETOUR_ID = "detour_id_defect_detail_fragment"
-    }
-
-    private val defectTypicalAdapter by lazy {
-        DefectTypicalListAdapter(
-                context = context,
-                layoutResource = R.layout.item_defect_typical,
-                textViewResourceId = R.id.tvName
-        )
     }
 
     private val defectMediaAdapter by lazy {
@@ -172,14 +162,16 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
     private fun setupDefectTypical() {
         defectDetailViewModel.getDefectTypicalList()
 
-        dropDownTypeDefect.setAdapter(defectTypicalAdapter)
-
         defectDetailViewModel.defectTypicalList.observe(viewLifecycleOwner, Observer {
-            defectTypicalAdapter.addItems(it)
+        dropDownTypeDefect.setAdapter(DefectTypicalListAdapter(
+                context = context,
+                layoutResource = R.layout.item_defect_typical,
+                textViewResourceId = R.id.tvName,
+                values = it))
         })
 
         dropDownTypeDefect.setOnItemClickListener { _, _, position, _ ->
-            val item = defectTypicalAdapter.getItem(position)
+            val item = dropDownTypeDefect.adapter.getItem(position) as DefectTypicalUiModel
             defectDetailViewModel.changeCurrentDefectTypical(item)
             dropDownTypeDefect.setText(item.name, false)
         }
