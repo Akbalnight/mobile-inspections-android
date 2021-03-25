@@ -11,16 +11,20 @@ import android.view.View
 import android.view.WindowManager
 import androidx.camera.core.*
 import androidx.camera.core.CameraX.LensFacing
+import androidx.core.view.isInvisible
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_camera.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
+import ru.madbrains.inspection.base.EventObserver
+import timber.log.Timber
+import java.io.File
 
 @SuppressLint("RestrictedApi")
 class CameraFragment : BaseFragment(R.layout.fragment_camera) {
     companion object {
-        private const val CAMERA_PERMISSION_REQUEST_CODE = 1
+        private const val CAMERA_PERMISSIONS_REQUEST_CODE = 1
     }
 
     private val cameraViewModel: CameraViewModel by sharedViewModel()
@@ -49,7 +53,15 @@ class CameraFragment : BaseFragment(R.layout.fragment_camera) {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        requestCameraPermission()
+        requestCameraPermissions()
+
+        llPhoto.setOnClickListener {
+            cameraViewModel.changeCameraState(CameraViewModel.CameraState.PHOTO)
+        }
+
+        llVideo.setOnClickListener {
+            cameraViewModel.changeCameraState(CameraViewModel.CameraState.VIDEO)
+        }
 
         ivBack.setOnClickListener {
             findNavController().popBackStack()
@@ -64,6 +76,50 @@ class CameraFragment : BaseFragment(R.layout.fragment_camera) {
         ivChangeCamera.setOnClickListener {
             changeFacing()
         }
+        ivStartRecord.setOnClickListener {
+            ivStartRecord.isInvisible = true
+            ivStopRecord.isInvisible = false
+            val videoFile = File(
+                requireContext().externalMediaDirs.first(),
+                "${System.currentTimeMillis()}.mp4"
+            )
+            videoCapture.startRecording(videoFile, object : VideoCapture.OnVideoSavedListener {
+                override fun onVideoSaved(file: File?) {
+                    file?.let { cameraViewModel.setVideo(it) }
+                }
+
+                override fun onError(
+                    useCaseError: VideoCapture.UseCaseError?,
+                    message: String?,
+                    cause: Throwable?
+                ) {
+                    Timber.tag("CameraLog").d(message)
+                }
+            })
+        }
+        ivStopRecord.setOnClickListener {
+            ivStopRecord.isInvisible = true
+            ivStartRecord.isInvisible = false
+            videoCapture.stopRecording()
+        }
+        cameraViewModel.cameraState.observe(viewLifecycleOwner, EventObserver {
+            when (it) {
+                CameraViewModel.CameraState.PHOTO -> {
+                    ivShot.isInvisible = false
+                    ivStartRecord.isInvisible = true
+                    ivStopRecord.isInvisible = true
+                    llPhoto.isInvisible = true
+                    llVideo.isInvisible = false
+                }
+                CameraViewModel.CameraState.VIDEO -> {
+                    ivShot.isInvisible = true
+                    ivStartRecord.isInvisible = false
+                    ivStopRecord.isInvisible = true
+                    llPhoto.isInvisible = false
+                    llVideo.isInvisible = true
+                }
+            }
+        })
     }
 
     override fun onRequestPermissionsResult(
@@ -72,11 +128,11 @@ class CameraFragment : BaseFragment(R.layout.fragment_camera) {
         grantResults: IntArray
     ) {
         when (requestCode) {
-            CAMERA_PERMISSION_REQUEST_CODE -> {
+            CAMERA_PERMISSIONS_REQUEST_CODE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     showCamera()
                 } else {
-                    requestCameraPermission()
+                    requestCameraPermissions()
                 }
             }
         }
@@ -92,10 +148,10 @@ class CameraFragment : BaseFragment(R.layout.fragment_camera) {
         }
     }
 
-    private fun requestCameraPermission() {
+    private fun requestCameraPermissions() {
         requestPermissions(
-            arrayOf(Manifest.permission.CAMERA),
-            CAMERA_PERMISSION_REQUEST_CODE
+            arrayOf(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO),
+            CAMERA_PERMISSIONS_REQUEST_CODE
         )
     }
 
