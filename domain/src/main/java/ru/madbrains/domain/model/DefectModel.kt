@@ -15,4 +15,6 @@ data class DefectModel(
         val equipmentName: String?,
         val statusProcessId: String?,
         val extraData: List<ExtraDataModel>?
-) : Serializable
+) : Serializable {
+    var shipped: Boolean = false
+}

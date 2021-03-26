@@ -24,18 +24,19 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
         BaseViewModel() {
 
     private var descriptionDefect: String = ""
+
     private var defect: DefectModel? = null
 
     //Add new defect
-    var currentDeviceModel: EquipmentModel? = null
-    var equipmentModelList: List<EquipmentModel>? = null
-    private val defectTypicalModels = mutableListOf<DefectTypicalModel>()
-    private val mediaModels = mutableListOf<MediaDefectUiModel>()
+    private var currentDeviceModel: EquipmentModel? = null
     private var currentTypical: DefectTypicalUiModel? = null
     private var detourId: String? = null
 
-    //Models Input Data
+    private val defectTypicalModels = mutableListOf<DefectTypicalModel>()
+    var equipmentModelList: List<EquipmentModel>? = null
+    private val mediaModels = mutableListOf<MediaDefectUiModel>()
 
+    //Models LiveData
     private val _progressVisibility = MutableLiveData<Boolean>()
     val progressVisibility: LiveData<Boolean> = _progressVisibility
 
@@ -44,6 +45,9 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
 
     private val _deviceName = MutableLiveData<String?>()
     val deviceName: LiveData<String?> = _deviceName
+
+    private val _descriptionObserver = MutableLiveData<String>()
+    val descriptionObserver: LiveData<String> = _descriptionObserver
 
     private val _mediaList = MutableLiveData<List<DiffItem>>()
     val mediaList: LiveData<List<DiffItem>> = _mediaList
@@ -70,9 +74,9 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
     private val _disableTypicalDefectField = MutableLiveData<Event<String>>()
     val disableTypicalDefectField: LiveData<Event<String>> = _disableTypicalDefectField
 
-    private val _descriptionObserver = MutableLiveData<String>()
-    val descriptionObserver: LiveData<String> = _descriptionObserver
-
+    fun getCurrentDevice (): EquipmentModel? {
+        return currentDeviceModel
+    }
 
     fun getDefectTypicalList() {
         if (defectTypicalModels.isNullOrEmpty()) {

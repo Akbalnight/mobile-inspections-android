@@ -162,7 +162,7 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
     private fun toDefectListFragment() {
         findNavController().navigate(R.id.graph_defects, bundleOf(
                 DefectListFragment.KEY_EQUIPMENTS_IDS_DEFECT_LIST to getEquipmentNames(),
-                DefectListFragment.KEY_IS_FILTER_DEFECT_LIST to true
+                DefectListFragment.KEY_IS_CONFIRM_DEFECT_LIST to true
         ))
     }
 }

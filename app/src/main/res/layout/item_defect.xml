@@ -165,13 +165,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/ivIconDetour"
                 app:layout_constraintTop_toBottomOf="@+id/tvTypeDefectData"
                 app:layout_constraintVertical_bias="1.0">
+
 
                 <TextView
                     android:id="@+id/tvDescriptionData"
@@ -201,34 +202,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnActionRight"
-                    style="@style/inspection_button_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
-                    android:text="@string/fragment_btn_label_delete"
-                    android:textSize="12sp"
-                    android:visibility="visible"
-                    app:iconPadding="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/rvDefectMedia" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnActionLeft"
-                    style="@style/inspection_button_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
-                    android:text="@string/fragment_btn_label_edit"
-                    android:textSize="12sp"
-                    android:visibility="visible"
-                    app:iconPadding="8dp"
-                    app:layout_constraintEnd_toStartOf="@id/btnActionRight"
-                    app:layout_constraintTop_toBottomOf="@+id/rvDefectMedia" />
-
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvDefectMedia"
                     android:layout_width="0dp"
@@ -241,6 +214,86 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tvDescriptionData"
                     tools:listitem="@layout/item_media" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/btnEditContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/rvDefectMedia">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnDelete"
+                        style="@style/inspection_button_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="@string/fragment_btn_label_delete"
+                        android:textSize="12sp"
+                        android:visibility="visible"
+                        app:iconPadding="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnEdit"
+                        style="@style/inspection_button_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="@string/fragment_btn_label_edit"
+                        android:textSize="12sp"
+                        android:visibility="visible"
+                        app:iconPadding="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/btnDelete"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/btnConfirmContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/rvDefectMedia">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnEliminated"
+                        style="@style/inspection_button_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="@string/fragment_btn_label_eliminated"
+                        android:textSize="12sp"
+                        android:visibility="visible"
+                        app:iconPadding="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnConfirm"
+                        style="@style/inspection_button_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="@string/fragment_btn_label_confirm"
+                        android:textSize="12sp"
+                        android:visibility="visible"
+                        app:iconPadding="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/btnEliminated"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

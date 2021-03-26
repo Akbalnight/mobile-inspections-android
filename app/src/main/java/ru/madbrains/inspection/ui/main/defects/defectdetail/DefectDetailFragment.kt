@@ -78,13 +78,8 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
         // настройка диалоговых окон
         setupDialogs()
 
-        defectDetailViewModel.navigateToCamera.observe(viewLifecycleOwner, EventObserver {
-            findNavController().navigate(R.id.action_defectDetailFragment_to_cameraFragment)
-        })
+        setupNavigation()
 
-        defectDetailViewModel.popNavigation.observe(viewLifecycleOwner, EventObserver {
-            findNavController().popBackStack()
-        })
 
         defectDetailViewModel.progressVisibility.observe(viewLifecycleOwner, Observer {
             progressView.changeVisibility(it)
@@ -94,24 +89,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
             etDescription.editText?.setText(it)
         })
 
-        defectDetailViewModel.disableEquipmentField.observe(viewLifecycleOwner, EventObserver {
-            layoutDropDownDevice.isEnabled = false
-            layoutDropDownDevice.endIconMode = TextInputLayout.END_ICON_NONE
-            dropDownDevice.setTextColor(colors[R.color.black50])
-        })
 
-        defectDetailViewModel.disableTypicalDefectField.observe(viewLifecycleOwner, EventObserver {
-            layoutDropDownTypeDefect.isEnabled = false
-            layoutDropDownTypeDefect.endIconMode = TextInputLayout.END_ICON_NONE
-            dropDownTypeDefect.setTextColor(colors[R.color.black50])
-            dropDownTypeDefect.setText(it)
-        })
-
-        equipmentSelectViewModel.checkedDevice.observe(
-                viewLifecycleOwner,
-                EventObserver {
-                    defectDetailViewModel.changeCurrentDefectDevice(it)
-                })
     }
 
     private fun setupNewDefect() {
@@ -130,6 +108,16 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
                 findNavController().popBackStack()
             }
         }
+    }
+
+    private fun setupNavigation() {
+        defectDetailViewModel.navigateToCamera.observe(viewLifecycleOwner, EventObserver {
+            findNavController().navigate(R.id.action_defectDetailFragment_to_cameraFragment)
+        })
+
+        defectDetailViewModel.popNavigation.observe(viewLifecycleOwner, EventObserver {
+            findNavController().popBackStack()
+        })
     }
 
     private fun setupClickListeners() {
@@ -163,11 +151,11 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
         defectDetailViewModel.getDefectTypicalList()
 
         defectDetailViewModel.defectTypicalList.observe(viewLifecycleOwner, Observer {
-        dropDownTypeDefect.setAdapter(DefectTypicalListAdapter(
-                context = context,
-                layoutResource = R.layout.item_defect_typical,
-                textViewResourceId = R.id.tvName,
-                values = it))
+            dropDownTypeDefect.setAdapter(DefectTypicalListAdapter(
+                    context = context,
+                    layoutResource = R.layout.item_defect_typical,
+                    textViewResourceId = R.id.tvName,
+                    values = it))
         })
 
         dropDownTypeDefect.setOnItemClickListener { _, _, position, _ ->
@@ -175,6 +163,13 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
             defectDetailViewModel.changeCurrentDefectTypical(item)
             dropDownTypeDefect.setText(item.name, false)
         }
+
+        defectDetailViewModel.disableTypicalDefectField.observe(viewLifecycleOwner, EventObserver {
+            layoutDropDownTypeDefect.isEnabled = false
+            layoutDropDownTypeDefect.endIconMode = TextInputLayout.END_ICON_NONE
+            dropDownTypeDefect.setTextColor(colors[R.color.black50])
+            dropDownTypeDefect.setText(it)
+        })
     }
 
     private fun setupDefectDevice() {
@@ -183,10 +178,22 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
                 dropDownDevice.setText(it, false)
             }
         })
+
+        defectDetailViewModel.disableEquipmentField.observe(viewLifecycleOwner, EventObserver {
+            layoutDropDownDevice.isEnabled = false
+            layoutDropDownDevice.endIconMode = TextInputLayout.END_ICON_NONE
+            dropDownDevice.setTextColor(colors[R.color.black50])
+        })
+
+        equipmentSelectViewModel.checkedDevice.observe(
+                viewLifecycleOwner,
+                EventObserver {
+                    defectDetailViewModel.changeCurrentDefectDevice(it)
+                })
     }
 
     private fun toDeviceSelect() {
-        equipmentSelectViewModel.setCurrentDevice(defectDetailViewModel.currentDeviceModel)
+        equipmentSelectViewModel.setCurrentDevice(defectDetailViewModel.getCurrentDevice())
         equipmentSelectViewModel.setEquipments(defectDetailViewModel.equipmentModelList)
         findNavController().navigate(R.id.action_defectDetailFragment_to_deviceSelectListFragment)
     }

@@ -18,13 +18,12 @@ import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.adapters.DefectListAdapter
 import ru.madbrains.inspection.ui.main.MainViewModel
 import ru.madbrains.inspection.ui.main.defects.defectdetail.DefectDetailFragment
-import ru.madbrains.inspection.ui.main.routes.points.RoutePointsFragment
 
 class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
 
     companion object {
         const val KEY_EQUIPMENTS_IDS_DEFECT_LIST = "device_id_defect_list_fragment"
-        const val KEY_IS_FILTER_DEFECT_LIST = "is_filter_defect_list_fragment"
+        const val KEY_IS_CONFIRM_DEFECT_LIST = "is_filter_defect_list_fragment"
     }
 
     private val mainViewModel: MainViewModel by sharedViewModel()
@@ -32,15 +31,22 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
 
     private val defectsAdapter by lazy {
         DefectListAdapter(
-                onLeftActionClick = {
+                onEditClick = {
                     val defect = defectListViewModel.defectListModels.find { detourModel ->
                         detourModel.id == it.id
                     }
                     defectListViewModel.defectClick(defect)
                 },
-                onRightActionClick = {
+                onDeleteClick = {
+
+                },
+                onConfirmClick = {
+
+                },
+                onEliminatedClick = {
 
                 }
+
         )
     }
 
@@ -48,8 +54,9 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
         super.onActivityCreated(savedInstanceState)
 
         val deviceIds = arguments?.getStringArrayList(DefectListFragment.KEY_EQUIPMENTS_IDS_DEFECT_LIST)
-        val isFilterList = arguments?.getBoolean(DefectListFragment.KEY_IS_FILTER_DEFECT_LIST, false)
-        isFilterList?.let {
+        val isConfirmList = arguments?.getBoolean(DefectListFragment.KEY_IS_CONFIRM_DEFECT_LIST, false)
+        isConfirmList?.let {
+            defectListViewModel.setConfirmList(it)
             if (it) {
                 setupViewingDefects()
             } else {
@@ -73,8 +80,6 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
             )
             findNavController().navigate(R.id.action_defectListFragment_to_detailFragment, args)
         })
-
-        setupClickListener()
     }
 
     private fun setupRegisterDefects() {
@@ -108,9 +113,5 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
         defectListViewModel.defectList.observe(viewLifecycleOwner, Observer {
             defectsAdapter.items = it
         })
-    }
-
-    private fun setupClickListener() {
-
     }
 }

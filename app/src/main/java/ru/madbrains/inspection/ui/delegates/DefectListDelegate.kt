@@ -11,8 +11,10 @@ import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.adapters.DefectMediaAdapter
 
 fun defectListDelegate(
-        clickActionLeft: (DefectListUiModel) -> Unit,
-        clickActionRight: (DefectListUiModel) -> Unit
+        clickEdit: (DefectListUiModel) -> Unit,
+        clickDelete: (DefectListUiModel) -> Unit,
+        clickConfirm: (DefectListUiModel) -> Unit,
+        clickEliminated: (DefectListUiModel) -> Unit
 ) =
         adapterDelegateLayoutContainer<DefectListUiModel, DiffItem>(R.layout.item_defect) {
 
@@ -28,18 +30,17 @@ fun defectListDelegate(
                     }
 
                     //setting new card
-                    if(item.hideDetail){
+                    if (item.hideDetail) {
                         unfoldingContainer.visibility = View.GONE
                         ivUnfoldStatus.setImageResource(R.drawable.ic_defect_card_close)
                         ivIconMedia.visibility = visibleIvMedia(item.images)
-                    }
-                    else{
+                    } else {
                         unfoldingContainer.visibility = View.VISIBLE
                         ivUnfoldStatus.setImageResource(R.drawable.ic_defect_card_open)
                         ivIconMedia.visibility = View.GONE
                     }
 
-                    tvPopupLinkDetour.visibility = if(item.hideLinkDetour){
+                    tvPopupLinkDetour.visibility = if (item.hideLinkDetour) {
                         View.GONE
                     } else {
                         View.VISIBLE
@@ -87,20 +88,29 @@ fun defectListDelegate(
                         }
                     }
 
-                    btnActionLeft.setOnClickListener {
-                        clickActionLeft.invoke(item)
+                    btnDelete.setOnClickListener {
+                        clickDelete.invoke(item)
                     }
 
-                    btnActionRight.setOnClickListener {
-                        clickActionRight.invoke(item)
+                    btnEdit.setOnClickListener {
+                        clickEdit.invoke(item)
                     }
 
-                    if (item.isCommonList) {
-                        btnActionLeft.text = resources?.getText(R.string.fragment_btn_label_edit)
-                        btnActionRight.text = resources?.getText(R.string.fragment_btn_label_delete)
+                    btnConfirm.setOnClickListener {
+                        clickConfirm.invoke(item)
+                    }
+
+                    btnEliminated.setOnClickListener {
+                        clickEliminated.invoke(item)
+                    }
+
+                    if (item.isConfirmList) {
+                        btnConfirmContainer.visibility = View.VISIBLE
+                        btnEditContainer.visibility = View.GONE
                     } else {
-                        btnActionLeft.text = resources?.getText(R.string.fragment_btn_label_confirm)
-                        btnActionRight.text = resources?.getText(R.string.fragment_btn_label_fixed)
+                        btnConfirmContainer.visibility = View.GONE
+                        if (!item.shipped)
+                            btnEditContainer.visibility = View.VISIBLE
                     }
 
                     val mediaAdapter = DefectMediaAdapter(
@@ -131,10 +141,11 @@ data class DefectListUiModel(
         val device: String,
         val type: String,
         val description: String,
-        val isCommonList: Boolean,
+        val isConfirmList: Boolean,
         val images: List<MediaDefectUiModel>?,
         var hideDetail: Boolean = true,
-        var hideLinkDetour: Boolean = true
+        var hideLinkDetour: Boolean = true,
+        val shipped: Boolean
 
 ) : DiffItem {
 
