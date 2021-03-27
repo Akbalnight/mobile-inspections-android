@@ -1,7 +1,9 @@
 package ru.madbrains.inspection.ui.main.defects.defectlist
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -11,6 +13,7 @@ import kotlinx.android.synthetic.main.fragment_defect_list.progressView
 import kotlinx.android.synthetic.main.toolbar_with_menu.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.madbrains.domain.model.DefectModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
@@ -32,19 +35,25 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
     private val defectsAdapter by lazy {
         DefectListAdapter(
                 onEditClick = {
-                    val defect = defectListViewModel.defectListModels.find { detourModel ->
-                        detourModel.id == it.id
+                    val defect = defectListViewModel.defectListModels.find { defectModel ->
+                        defectModel.id == it.id
                     }
                     defectListViewModel.defectClick(defect)
                 },
                 onDeleteClick = {
-
+                    val defect = defectListViewModel.defectListModels.find { defectModel ->
+                        defectModel.id == it.id
+                    }
+                    showDialogDeleteDefect(defect)
                 },
                 onConfirmClick = {
 
                 },
                 onEliminatedClick = {
-
+                    val defect = defectListViewModel.defectListModels.find { defectModel ->
+                        defectModel.id == it.id
+                    }
+                    showDialogEliminatedDefect(defect)
                 }
 
         )
@@ -80,6 +89,7 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
             )
             findNavController().navigate(R.id.action_defectListFragment_to_detailFragment, args)
         })
+
     }
 
     private fun setupRegisterDefects() {
@@ -113,5 +123,44 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
         defectListViewModel.defectList.observe(viewLifecycleOwner, Observer {
             defectsAdapter.items = it
         })
+    }
+
+    private fun showDialogDeleteDefect(item: DefectModel?) {
+        val alertDialog: AlertDialog? = activity?.let {
+            val builder = AlertDialog.Builder(it)
+            builder.apply {
+                setMessage(strings[R.string.fragment_defect_dialog_delete_defect_subtitle])
+                setPositiveButton(strings[R.string.fragment_add_defect_dialog_btn_delete],
+                        DialogInterface.OnClickListener { _, _ ->
+                            defectListViewModel.deleteDefect(item)
+                        })
+                setNegativeButton(strings[R.string.fragment_add_defect_dialog_btn_cancel],
+                        DialogInterface.OnClickListener { _, _ ->
+                        })
+            }
+            builder.create()
+        }
+        alertDialog?.show()
+    }
+
+
+    private fun showDialogEliminatedDefect(item: DefectModel?) {
+        val alertDialog: AlertDialog? = activity?.let {
+            val builder = AlertDialog.Builder(it)
+            builder.apply {
+                setTitle(strings[R.string.fragment_defect_dialog_eliminated_defect_title])
+                setMessage(strings[R.string.fragment_defect_dialog_eliminated_defect_subtitle])
+                setPositiveButton(strings[R.string.fragment_add_defect_dialog_btn_save],
+                        DialogInterface.OnClickListener { _, _ ->
+                            // todo delete defect
+                            defectListViewModel.eliminatedDefect(item)
+                        })
+                setNegativeButton(strings[R.string.fragment_add_defect_dialog_btn_cancel],
+                        DialogInterface.OnClickListener { _, _ ->
+                        })
+            }
+            builder.create()
+        }
+        alertDialog?.show()
     }
 }

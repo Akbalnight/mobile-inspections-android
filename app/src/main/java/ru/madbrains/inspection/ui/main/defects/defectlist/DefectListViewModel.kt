@@ -70,6 +70,15 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
         return emptyList()
     }
 
+    fun deleteDefect(deleteItem: DefectModel?){
+        //todo offline delete
+    }
+
+    fun eliminatedDefect(deleteItem: DefectModel?){
+        //todo http
+
+    }
+
     @SuppressLint("SimpleDateFormat")
     private fun updateDefectList() {
         val defects = mutableListOf<DiffItem>().apply {

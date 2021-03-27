@@ -58,6 +58,9 @@
     <string name="fragment_defect_edit_title">Просмотр дефектов</string>
     <string name="fragment_defect_card_link_detour">Плановой обход</string>
     <string name="fragment_defect_card_no_link_detour">Вне планового обхода</string>
+    <string name="fragment_defect_dialog_delete_defect_subtitle">Вы действительно хотите удалить выявленный дефект?</string>
+    <string name="fragment_defect_dialog_eliminated_defect_title">Вы подтвердили устранение выявленного дефекта</string>
+    <string name="fragment_defect_dialog_eliminated_defect_subtitle">Хотите сохранить изменения?</string>
 
     <!-- GroupListFragment -->
     <string name="fragment_group_list_title">Группа</string>
