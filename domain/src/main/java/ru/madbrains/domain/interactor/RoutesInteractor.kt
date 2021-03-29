@@ -19,13 +19,13 @@ class RoutesInteractor(
 
     fun saveDetour(detour: DetourModel): Completable {
         return routesRepository.saveDetour(detour)
-            .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
     }
 
     fun freezeDetours(detourIds: List<String>): Completable {
         return if (detourIds.isEmpty()) Completable.complete() else {
             routesRepository.freezeDetours(detourIds)
-                .subscribeOn(Schedulers.io())
+                    .subscribeOn(Schedulers.io())
         }
     }
 
@@ -49,7 +49,7 @@ class RoutesInteractor(
                 .subscribeOn(Schedulers.io())
     }
 
-    fun downloadFile(fileUrl:String): Single<Response<ResponseBody>> {
+    fun downloadFile(fileUrl: String): Single<Response<ResponseBody>> {
         return routesRepository.downloadFile(fileUrl)
                 .subscribeOn(Schedulers.io())
     }
@@ -75,5 +75,16 @@ class RoutesInteractor(
                    dateDetectDefect: String? = null): Single<String> {
 
         return routesRepository.saveDefect(files, detoursId, equipmentId, staffDetectId, defectTypicalId, description, dateDetectDefect).subscribeOn(Schedulers.io())
+    }
+
+    fun updateDefect(files: List<File>? = null,
+                     id: String? = null,
+                     statusProcessId: String? = null,
+                     dateDetectDefect: String? = null,
+                     staffDetectId: String? = null,
+                     description: String? = null,
+                     detoursId: String? = null): Single<String> {
+
+        return routesRepository.updateDefect(files, id, statusProcessId, dateDetectDefect, staffDetectId, description, detoursId).subscribeOn(Schedulers.io())
     }
 }

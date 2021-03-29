@@ -16,12 +16,12 @@ import ru.madbrains.domain.repository.DetoutsRepository
 import java.io.File
 
 class RoutesRepositoryImpl(
-    private val preferenceStorage: PreferenceStorage
+        private val preferenceStorage: PreferenceStorage
 ) : DetoutsRepository {
 
     override fun getDetours(): Single<List<DetourModel>> {
         val request = GetDetoursReq(
-            staffIds = listOf(preferenceStorage.userId.orEmpty())
+                staffIds = listOf(preferenceStorage.userId.orEmpty())
         )
         return ApiData.inspectionApi.getDetours(request).map { resp ->
             resp.map { mapGetDetoursResp(it) }
@@ -34,14 +34,14 @@ class RoutesRepositoryImpl(
 
     override fun freezeDetours(detourIds: List<String>): Completable {
         val request = FreezeDetoursReq(
-            detourIds = detourIds
+                detourIds = detourIds
         )
         return ApiData.inspectionApi.freezeDetours(request)
     }
 
     override fun getRoutePoints(routeId: String): Single<List<RoutePointModel>> {
         val request = GetRoutePointsReq(
-            routeId = routeId
+                routeId = routeId
         )
         return ApiData.inspectionApi.getRoutePoints(request).map { resp ->
             resp.map { mapGetRoutePointsResp(it) }
@@ -50,7 +50,7 @@ class RoutesRepositoryImpl(
 
     override fun getPlanTechOperations(dataId: String): Single<List<PlanTechOperationsModel>> {
         val request = GetPlanTechOperationsReq(
-            dataId = dataId
+                dataId = dataId
         )
         return ApiData.inspectionApi.getPlanTechOperations(request).map { resp ->
             resp.map { mapGetPlanTechOperationsResp(it) }
@@ -65,8 +65,8 @@ class RoutesRepositoryImpl(
     }
 
     override fun getEquipments(
-        names: List<String>,
-        uuid: List<String>
+            names: List<String>,
+            uuid: List<String>
     ): Single<List<EquipmentModel>> {
         val request = GetEquipmentsReq(names = names, controlPointIds = uuid)
         return ApiData.inspectionApi.getEquipments(request).map { resp ->
@@ -75,24 +75,24 @@ class RoutesRepositoryImpl(
     }
 
     override fun getDefects(
-        id: String?,
-        codes: List<String>?,
-        dateDetectStart: String?,
-        dateDetectEnd: String?,
-        detourIds: List<String>?,
-        defectNames: List<String>?,
-        equipmentNames: List<String>?,
-        statusProcessId: String?
+            id: String?,
+            codes: List<String>?,
+            dateDetectStart: String?,
+            dateDetectEnd: String?,
+            detourIds: List<String>?,
+            defectNames: List<String>?,
+            equipmentNames: List<String>?,
+            statusProcessId: String?
     ): Single<List<DefectModel>> {
         val request = GetDefectsReq(
-            id = id,
-            codes = codes,
-            dateDetectStart = dateDetectStart,
-            dateDetectEnd = dateDetectEnd,
-            detourIds = detourIds,
-            defectNames = defectNames,
-            equipmentNames = equipmentNames,
-            statusProcessId = statusProcessId
+                id = id,
+                codes = codes,
+                dateDetectStart = dateDetectStart,
+                dateDetectEnd = dateDetectEnd,
+                detourIds = detourIds,
+                defectNames = defectNames,
+                equipmentNames = equipmentNames,
+                statusProcessId = statusProcessId
         )
         return ApiData.inspectionApi.getDefects(request).map { resp ->
             resp.map { mapGetDefectsResp(it) }
@@ -101,21 +101,21 @@ class RoutesRepositoryImpl(
     }
 
     override fun saveDefect(
-        files: List<File>?,
-        detoursId: String?,
-        equipmentId: String?,
-        staffDetectId: String?,
-        defectTypicalId: String?,
-        description: String?,
-        dateDetectDefect: String?
+            files: List<File>?,
+            detoursId: String?,
+            equipmentId: String?,
+            staffDetectId: String?,
+            defectTypicalId: String?,
+            description: String?,
+            dateDetectDefect: String?
     ): Single<String> {
         val request = CreateDefectReq(
-            detoursId = detoursId,
-            equipmentId = equipmentId,
-            staffDetectId = staffDetectId,
-            defectTypicalId = defectTypicalId,
-            description = description,
-            dateDetectDefect = dateDetectDefect
+                detoursId = detoursId,
+                equipmentId = equipmentId,
+                staffDetectId = staffDetectId,
+                defectTypicalId = defectTypicalId,
+                description = description,
+                dateDetectDefect = dateDetectDefect
         )
 
         var multiParts: List<MultipartBody.Part>? = null
@@ -124,9 +124,9 @@ class RoutesRepositoryImpl(
                 val body = MultipartBody.Builder().apply {
                     list.forEach { item ->
                         addFormDataPart(
-                            name = "files",
-                            filename = item.name,
-                            body = item.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                                name = "files",
+                                filename = "${item.name}.jpg",
+                                body = item.asRequestBody("multipart/form-data".toMediaTypeOrNull())
                         )
                     }
 
@@ -136,6 +136,34 @@ class RoutesRepositoryImpl(
         }
 
         return ApiData.inspectionApi.saveDefect(request, multiParts)
+    }
+
+    override fun updateDefect(files: List<File>?, id: String?, statusProcessId: String?, dateDetectDefect: String?, staffDetectId: String?, description: String?, detoursId: String?): Single<String> {
+        val request = UpdateDefectReq(
+                id = id,
+                statusProcessId = statusProcessId,
+                extraData = UpdateExtraDefectReq(dateDetectDefect = dateDetectDefect,
+                        staffDetectId = staffDetectId, description = description, detoursId = detoursId)
+        )
+
+        var multiParts: List<MultipartBody.Part>? = null
+        files?.let { list ->
+            if (list.isNotEmpty()) {
+                val body = MultipartBody.Builder().apply {
+                    list.forEach { item ->
+                        addFormDataPart(
+                                name = "files",
+                                filename = "${item.name}.jpg",
+                                body = item.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                        )
+                    }
+
+                }.build()
+                multiParts = body.parts
+            }
+        }
+
+        return ApiData.inspectionApi.updateDefect(request, multiParts)
     }
 
     override fun downloadFile(fileUrl: String): Single<Response<ResponseBody>> {

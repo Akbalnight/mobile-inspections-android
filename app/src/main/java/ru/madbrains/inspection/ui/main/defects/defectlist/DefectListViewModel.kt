@@ -1,13 +1,20 @@
 package ru.madbrains.inspection.ui.main.defects.defectlist
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import ru.madbrains.data.network.ApiData
+import ru.madbrains.data.network.request.CreateDefectReq
 import ru.madbrains.domain.interactor.RoutesInteractor
 import ru.madbrains.domain.model.DefectModel
+import ru.madbrains.domain.model.DefectStatus
 import ru.madbrains.domain.model.DetourModel
 import ru.madbrains.domain.model.FileModel
 import ru.madbrains.inspection.base.BaseViewModel
@@ -15,8 +22,10 @@ import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.DefectListUiModel
 import ru.madbrains.inspection.ui.delegates.MediaDefectUiModel
+import java.io.File
 import java.text.ParseException
 import java.text.SimpleDateFormat
+import java.util.*
 
 class DefectListViewModel(private val routesInteractor: RoutesInteractor) : BaseViewModel() {
 
@@ -74,11 +83,6 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
         //todo offline delete
     }
 
-    fun eliminatedDefect(deleteItem: DefectModel?){
-        //todo http
-
-    }
-
     @SuppressLint("SimpleDateFormat")
     private fun updateDefectList() {
         val defects = mutableListOf<DiffItem>().apply {
@@ -118,7 +122,6 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
     }
 
     private fun getMediaListItem(files: List<FileModel>?): List<MediaDefectUiModel> {
-
         val list: MutableList<MediaDefectUiModel> = mutableListOf()
         files?.let {
             files.map { fileModel ->
@@ -150,4 +153,20 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
         }
         return list
     }
+
+    fun eliminatedDefect(deleteItem: DefectModel?){
+        deleteItem?.let {
+            routesInteractor.updateDefect(id = it.id,
+                    statusProcessId = DefectStatus.ELIMINATED.id
+                    //files = listFiles
+            )
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ items ->
+                    }, {
+                        it.printStackTrace()
+                    })
+                    .addTo(disposables)
+        }
+    }
+
 }

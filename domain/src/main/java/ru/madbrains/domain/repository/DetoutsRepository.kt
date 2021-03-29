@@ -41,5 +41,14 @@ interface DetoutsRepository {
                    dateDetectDefect: String?
     ): Single<String>
 
-    fun downloadFile(fileUrl:String): Single<Response<ResponseBody>>
+    fun updateDefect(files: List<File>?,
+                     id: String?,
+                     statusProcessId: String?,
+                     dateDetectDefect: String?,
+                     staffDetectId: String?,
+                     description: String?,
+                     detoursId: String?
+    ): Single<String>
+
+    fun downloadFile(fileUrl: String): Single<Response<ResponseBody>>
 }

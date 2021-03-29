@@ -43,6 +43,13 @@ interface InspectionApi {
         @Part files: List<MultipartBody.Part>?
     ): Single<String>
 
+    @Multipart
+    @POST("/api/dynamicdq/mobile/updateDefects")
+    fun updateDefect(
+            @Part("defectObject") defectObject: UpdateDefectReq,
+            @Part files: List<MultipartBody.Part>?
+    ): Single<String>
+
     @POST("/api/dynamicdq/data/flat/mobileDefectTypical")
     fun getDefectTypical(@Body request: GetDefectTypicalReq): Single<List<GetDefectTypicalResp>>
     // endregion
