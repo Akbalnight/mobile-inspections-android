@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.toolbar_with_menu.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.madbrains.domain.model.DefectModel
+import ru.madbrains.domain.model.DefectStatus
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
@@ -38,7 +39,7 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
                     val defect = defectListViewModel.defectListModels.find { defectModel ->
                         defectModel.id == it.id
                     }
-                    defectListViewModel.defectClick(defect)
+                    defectListViewModel.editDefect(defect)
                 },
                 onDeleteClick = {
                     val defect = defectListViewModel.defectListModels.find { defectModel ->
@@ -47,7 +48,10 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
                     showDialogDeleteDefect(defect)
                 },
                 onConfirmClick = {
-
+                    val defect = defectListViewModel.defectListModels.find { defectModel ->
+                        defectModel.id == it.id
+                    }
+                    defectListViewModel.confirmDefect(defect)
                 },
                 onEliminatedClick = {
                     val defect = defectListViewModel.defectListModels.find { defectModel ->
@@ -83,9 +87,17 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
             progressView.changeVisibility(it)
         })
 
-        defectListViewModel.navigateToDefect.observe(viewLifecycleOwner, EventObserver {
+        defectListViewModel.navigateToEditDefect.observe(viewLifecycleOwner, EventObserver {
             val args = bundleOf(
                     DefectDetailFragment.KEY_DETAIL_DEFECT to it
+            )
+            findNavController().navigate(R.id.action_defectListFragment_to_detailFragment, args)
+        })
+
+        defectListViewModel.navigateToConfirmDefect.observe(viewLifecycleOwner, EventObserver {
+            val args = bundleOf(
+                    DefectDetailFragment.KEY_DETAIL_DEFECT to it,
+                    DefectDetailFragment.KEY_DEFECT_TARGET_STATUS to DefectStatus.CONFIRMED
             )
             findNavController().navigate(R.id.action_defectListFragment_to_detailFragment, args)
         })
@@ -152,7 +164,6 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
                 setMessage(strings[R.string.fragment_defect_dialog_eliminated_defect_subtitle])
                 setPositiveButton(strings[R.string.fragment_add_defect_dialog_btn_save],
                         DialogInterface.OnClickListener { _, _ ->
-                            // todo delete defect
                             defectListViewModel.eliminatedDefect(item)
                         })
                 setNegativeButton(strings[R.string.fragment_add_defect_dialog_btn_cancel],

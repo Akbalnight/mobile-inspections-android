@@ -2,6 +2,7 @@ package ru.madbrains.inspection.ui.main.defects.defectdetail
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -10,6 +11,7 @@ import ru.madbrains.data.network.ApiData
 import ru.madbrains.data.utils.FileUtil
 import ru.madbrains.domain.interactor.RoutesInteractor
 import ru.madbrains.domain.model.DefectModel
+import ru.madbrains.domain.model.DefectStatus
 import ru.madbrains.domain.model.DefectTypicalModel
 import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.inspection.base.BaseViewModel
@@ -26,6 +28,8 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
     private var descriptionDefect: String = ""
 
     private var defect: DefectModel? = null
+
+    private var targetDefectStatus: DefectStatus? = null
 
     //Add new defect
     private var currentDeviceModel: EquipmentModel? = null
@@ -51,9 +55,6 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
 
     private val _mediaList = MutableLiveData<List<DiffItem>>()
     val mediaList: LiveData<List<DiffItem>> = _mediaList
-/*
-    private val _mediaList = MutableLiveData<List<DiffItem>>()
-    val mediaList: LiveData<List<DiffItem>> = _mediaList*/
 
     //Events
     private val _navigateToCamera = MutableLiveData<Event<Unit>>()
@@ -74,7 +75,7 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
     private val _disableTypicalDefectField = MutableLiveData<Event<String>>()
     val disableTypicalDefectField: LiveData<Event<String>> = _disableTypicalDefectField
 
-    fun getCurrentDevice (): EquipmentModel? {
+    fun getCurrentDevice(): EquipmentModel? {
         return currentDeviceModel
     }
 
@@ -104,6 +105,11 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
         }
     }
 
+    fun setDefectStatus(status: DefectStatus?) {
+        targetDefectStatus = status
+        Log.d("TAG", "targetDefectStatus " + targetDefectStatus.toString())
+    }
+
     private fun updateDefect() {
         defect?.let { defect ->
             defect.apply {
@@ -124,24 +130,14 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
                             "jpg" -> { // если в файле изображение добавляем в список
                                 mediaModels.add(MediaDefectUiModel(
                                         id = fileModel.id.orEmpty(),
-                                        isEditing = false,
+                                        isEditing = !fileModel.shipped,
                                         url = ApiData.apiUrl + fileModel.url.orEmpty()
-                                        //todo isImage если видео
-                                        //todo image если видео
                                 ))
                             }
                             "mpeg" -> {
                                 //todo preview video
                             }
                             else -> {
-                                //todo delete when extension all files
-                                mediaModels.add(MediaDefectUiModel(
-                                        id = fileModel.id.orEmpty(),
-                                        isEditing = false,
-                                        url = ApiData.apiUrl + fileModel.url.orEmpty()
-                                        //todo isImage если видео
-                                        //todo image если видео
-                                ))
                             }
                         }
                     }
@@ -244,19 +240,18 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
 
     @SuppressLint("SimpleDateFormat")
     fun saveDefect() {
-        //todo save defect
-        val listFiles = mediaModels.map {
-            //    fileUtil.createFile(it.image, it.id)
+        val listFiles = mediaModels.filter {
+            it.isEditing && (it.imageBitmap != null)
+        }.map { media ->
+            fileUtil.createFile(media.imageBitmap!!, media.id)
         }
-
-        val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
-        val timeStamp = format.format(Date())
+        val timeStamp = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX").format(Date())
         routesInteractor.saveDefect(detoursId = null,
                 equipmentId = currentDeviceModel?.id,
                 defectTypicalId = currentTypical?.id,
                 description = descriptionDefect,
-                dateDetectDefect = timeStamp
-                //files = listFiles
+                dateDetectDefect = timeStamp,
+                files = listFiles
         )
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { _progressVisibility.postValue(true) }

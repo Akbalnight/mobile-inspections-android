@@ -112,7 +112,7 @@ class RoutesRepositoryImpl(
         val request = CreateDefectReq(
                 detoursId = detoursId,
                 equipmentId = equipmentId,
-                staffDetectId = staffDetectId,
+                staffDetectId = preferenceStorage.userId.orEmpty(),
                 defectTypicalId = defectTypicalId,
                 description = description,
                 dateDetectDefect = dateDetectDefect
@@ -143,7 +143,7 @@ class RoutesRepositoryImpl(
                 id = id,
                 statusProcessId = statusProcessId,
                 extraData = UpdateExtraDefectReq(dateDetectDefect = dateDetectDefect,
-                        staffDetectId = staffDetectId, description = description, detoursId = detoursId)
+                        staffDetectId = preferenceStorage.userId.orEmpty(), description = description, detoursId = detoursId)
         )
 
         var multiParts: List<MultipartBody.Part>? = null

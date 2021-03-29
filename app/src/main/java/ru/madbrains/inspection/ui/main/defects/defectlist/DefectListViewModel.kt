@@ -1,34 +1,25 @@
 package ru.madbrains.inspection.ui.main.defects.defectlist
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
 import ru.madbrains.data.network.ApiData
-import ru.madbrains.data.network.request.CreateDefectReq
 import ru.madbrains.domain.interactor.RoutesInteractor
 import ru.madbrains.domain.model.DefectModel
 import ru.madbrains.domain.model.DefectStatus
-import ru.madbrains.domain.model.DetourModel
 import ru.madbrains.domain.model.FileModel
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.DefectListUiModel
 import ru.madbrains.inspection.ui.delegates.MediaDefectUiModel
-import java.io.File
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
 class DefectListViewModel(private val routesInteractor: RoutesInteractor) : BaseViewModel() {
-
 
     //Models
     private var deviceIds: List<String>? = null
@@ -44,11 +35,18 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
     val progressVisibility: LiveData<Boolean> = _progressVisibility
 
     //Event
-    private val _navigateToDefect = MutableLiveData<Event<DefectModel>>()
-    val navigateToDefect: LiveData<Event<DefectModel>> = _navigateToDefect
+    private val _navigateToEditDefect = MutableLiveData<Event<DefectModel>>()
+    val navigateToEditDefect: LiveData<Event<DefectModel>> = _navigateToEditDefect
 
-    fun defectClick(defect: DefectModel?) {
-        defect?.let {  _navigateToDefect.value = Event(it) }
+    private val _navigateToConfirmDefect = MutableLiveData<Event<DefectModel>>()
+    val navigateToConfirmDefect: LiveData<Event<DefectModel>> = _navigateToConfirmDefect
+
+    fun editDefect(defect: DefectModel?) {
+        defect?.let { _navigateToEditDefect.value = Event(it) }
+    }
+
+    fun confirmDefect(defect: DefectModel?) {
+        defect?.let { _navigateToConfirmDefect.value = Event(it) }
     }
 
     fun getDefectList(device: List<String>?) {
@@ -68,7 +66,7 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
 
     }
 
-    fun setConfirmList(isConfirm: Boolean){
+    fun setConfirmList(isConfirm: Boolean) {
         isConfirmList = isConfirm
     }
 
@@ -79,7 +77,7 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
         return emptyList()
     }
 
-    fun deleteDefect(deleteItem: DefectModel?){
+    fun deleteDefect(deleteItem: DefectModel?) {
         //todo offline delete
     }
 
@@ -90,14 +88,12 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
                 var date = ""
                 var time = ""
                 defect.dateDetectDefect?.let {
-                    val formatInput = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
-                    val formatDate = SimpleDateFormat("dd.MM.yyyy")
-                    val formatTime = SimpleDateFormat("HH:mm")
                     try {
-                        val dateInput = formatInput.parse(it)
-                        date = formatDate.format(dateInput)
-                        time = formatTime.format(dateInput)
-
+                        val dateInput = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX").parse(it)
+                        dateInput?.let { input ->
+                            date = SimpleDateFormat("dd.MM.yyyy").format(input)
+                            time = SimpleDateFormat("HH:mm").format(input)
+                        }
                     } catch (e: ParseException) {
                         e.printStackTrace()
                     }
@@ -126,27 +122,17 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
         files?.let {
             files.map { fileModel ->
                 when (fileModel.extension) {
-                    "png" -> { // если в файле изображение добавляем в список
+                    "jpg" -> { // если в файле изображение добавляем в список
                         list.add(MediaDefectUiModel(
                                 id = fileModel.id.orEmpty(),
                                 isEditing = false,
                                 url = ApiData.apiUrl + fileModel.url.orEmpty()
-                                //todo isImage если видео
-                                //todo image если видео
                         ))
                     }
                     "mpeg" -> {
                         //todo preview video
                     }
                     else -> {
-                        //todo delete when extension all files
-                        list.add(MediaDefectUiModel(
-                                id = fileModel.id.orEmpty(),
-                                isEditing = false,
-                                url = ApiData.apiUrl + fileModel.url.orEmpty()
-                                //todo isImage если видео
-                                //todo image если видео
-                        ))
                     }
                 }
             }
@@ -154,11 +140,13 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
         return list
     }
 
-    fun eliminatedDefect(deleteItem: DefectModel?){
+    @SuppressLint("SimpleDateFormat")
+    fun eliminatedDefect(deleteItem: DefectModel?) {
         deleteItem?.let {
+            val timeStamp = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX").format(Date())
             routesInteractor.updateDefect(id = it.id,
-                    statusProcessId = DefectStatus.ELIMINATED.id
-                    //files = listFiles
+                    statusProcessId = DefectStatus.ELIMINATED.id,
+                    dateDetectDefect = timeStamp
             )
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ items ->

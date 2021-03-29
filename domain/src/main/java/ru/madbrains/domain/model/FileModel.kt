@@ -7,4 +7,6 @@ data class FileModel(
         val url: String?,
         val name: String?,
         val extension: String?
-) : Serializable
+) : Serializable {
+    var shipped: Boolean = true
+}

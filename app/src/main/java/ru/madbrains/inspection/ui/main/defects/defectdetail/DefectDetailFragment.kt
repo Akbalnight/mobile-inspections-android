@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.toolbar_with_menu.view.tvTitle
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.madbrains.domain.model.DefectModel
+import ru.madbrains.domain.model.DefectStatus
 import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
@@ -34,6 +35,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
         const val KEY_EQUIPMENT_LIST = "equipment_list_defect_detail_fragment"
         const val KEY_DETAIL_DEFECT = "defect_model_defect_detail_fragment"
         const val KEY_DETOUR_ID = "detour_id_defect_detail_fragment"
+        const val KEY_DEFECT_TARGET_STATUS = "target_status_defect_detail_fragment"
     }
 
     private val defectMediaAdapter by lazy {
@@ -57,6 +59,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
         defectDetailViewModel.setEquipments(this.arguments?.getSerializable(DefectDetailFragment.KEY_EQUIPMENT_LIST) as? List<EquipmentModel>)
         defectDetailViewModel.setDetourId(this.arguments?.getString(DefectDetailFragment.KEY_DETOUR_ID))
         defectDetailViewModel.setDefect(this.arguments?.getSerializable(DefectDetailFragment.KEY_DETAIL_DEFECT) as? DefectModel)
+        defectDetailViewModel.setDefectStatus(this.arguments?.getSerializable(DefectDetailFragment.KEY_DEFECT_TARGET_STATUS) as? DefectStatus)
         arguments?.let {
             setupEditDefect()
         } ?: run {
