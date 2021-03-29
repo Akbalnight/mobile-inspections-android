@@ -91,15 +91,14 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
         defectDetailViewModel.descriptionObserver.observe(viewLifecycleOwner, Observer {
             etDescription.editText?.setText(it)
         })
-
-
     }
 
     private fun setupNewDefect() {
         toolbarLayout.apply {
             tvTitle.text = strings[R.string.fragment_defect_add_title]
             btnLeading.setOnClickListener {
-                findNavController().popBackStack()
+                defectDetailViewModel.checkPopBack()
+               // findNavController().popBackStack()
             }
         }
     }
@@ -108,7 +107,8 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
         toolbarLayout.apply {
             tvTitle.text = strings[R.string.fragment_defect_edit_title]
             btnLeading.setOnClickListener {
-                findNavController().popBackStack()
+               // findNavController().popBackStack()
+                defectDetailViewModel.checkPopBack()
             }
         }
     }
@@ -146,7 +146,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
         }
 
         etAddDefectDescription.doOnTextChanged { text, _, _, _ ->
-            defectDetailViewModel.addDescription(text)
+            defectDetailViewModel.changeDescription(text)
         }
     }
 
@@ -208,6 +208,10 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
 
         defectDetailViewModel.showDialogBlankRequiredFields.observe(viewLifecycleOwner, EventObserver {
             showDialogEmptyRequiredFields()
+        })
+
+        defectDetailViewModel.showDialogChangedFields.observe(viewLifecycleOwner, EventObserver {
+            showDialogChangedFields()
         })
     }
 
@@ -279,6 +283,24 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
                 setPositiveButton(strings[R.string.fragment_add_defect_dialog_btn_ok],
                         DialogInterface.OnClickListener { _, _ ->
 
+                        })
+            }
+            builder.create()
+        }
+        alertDialog?.show()
+    }
+
+    private fun showDialogChangedFields() {
+        val alertDialog: AlertDialog? = activity?.let {
+            val builder = AlertDialog.Builder(it)
+            builder.apply {
+                setMessage(strings[R.string.fragment_add_defect_dialog_changed_fields])
+                setPositiveButton(strings[R.string.fragment_add_defect_dialog_btn_exit],
+                        DialogInterface.OnClickListener { _, _ ->
+                            findNavController().popBackStack()
+                        })
+                setNegativeButton(strings[R.string.fragment_add_defect_dialog_btn_cancel],
+                        DialogInterface.OnClickListener { _, _ ->
                         })
             }
             builder.create()

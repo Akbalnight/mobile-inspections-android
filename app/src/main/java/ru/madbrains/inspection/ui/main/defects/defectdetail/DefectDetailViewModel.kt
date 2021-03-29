@@ -2,7 +2,6 @@ package ru.madbrains.inspection.ui.main.defects.defectdetail
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -25,11 +24,13 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
                             private val fileUtil: FileUtil) :
         BaseViewModel() {
 
-    private var descriptionDefect: String = ""
+    private var descriptionDefect: String? = null
 
     private var defect: DefectModel? = null
 
     private var targetDefectStatus: DefectStatus? = null
+
+    private var isChangedDefect: Boolean = false
 
     //Add new defect
     private var currentDeviceModel: EquipmentModel? = null
@@ -65,6 +66,9 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
 
     private val _showDialogBlankRequiredFields = MutableLiveData<Event<Unit>>()
     val showDialogBlankRequiredFields: LiveData<Event<Unit>> = _showDialogBlankRequiredFields
+
+    private val _showDialogChangedFields = MutableLiveData<Event<Unit>>()
+    val showDialogChangedFields: LiveData<Event<Unit>> = _showDialogChangedFields
 
     private val _popNavigation = MutableLiveData<Event<Unit>>()
     val popNavigation: LiveData<Event<Unit>> = _popNavigation
@@ -107,7 +111,52 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
 
     fun setDefectStatus(status: DefectStatus?) {
         targetDefectStatus = status
-        Log.d("TAG", "targetDefectStatus " + targetDefectStatus.toString())
+    }
+
+
+
+    fun setEquipments(equipments: List<EquipmentModel>?) {
+        equipmentModelList = equipments
+        if (equipmentModelList?.size == 1) {
+            currentDeviceModel = equipmentModelList!!.get(index = 0)
+            _deviceName.value = equipmentModelList!!.get(index = 0).name
+            _disableEquipmentField.value = Event(Unit)
+        }
+    }
+
+    fun changeCurrentDefectTypical(model: DefectTypicalUiModel) {
+        currentTypical = model
+        isChangedDefect = true
+    }
+
+    fun changeCurrentDefectDevice(model: EquipmentModel) {
+        currentDeviceModel = model
+        _deviceName.value = model.name
+        isChangedDefect = true
+    }
+
+    fun changeDescription(text: CharSequence?) {
+        text?.let {
+            descriptionDefect = it.toString()
+        } ?: run {
+            descriptionDefect = null
+        }
+        isChangedDefect = true
+    }
+
+    private fun updateDefectTypicalList() {
+        val items = mutableListOf<DefectTypicalUiModel>().apply {
+            defectTypicalModels.map { item ->
+                add(
+                        DefectTypicalUiModel(
+                                id = item.id,
+                                name = item.name.orEmpty(),
+                                code = item.code
+                        )
+                )
+            }
+        }
+        _defectTypicalList.value = items
     }
 
     private fun updateDefect() {
@@ -121,8 +170,10 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
                     _disableTypicalDefectField.value = Event(it)
                 }
                 description?.let {
-                    descriptionDefect = it
-                    _descriptionObserver.value = it
+                    if (descriptionDefect != null) {
+                        descriptionDefect = it
+                        _descriptionObserver.value = it
+                    }
                 }
                 files?.let {
                     it.map { fileModel ->
@@ -148,62 +199,13 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
         }
     }
 
-    fun setEquipments(equipments: List<EquipmentModel>?) {
-        equipmentModelList = equipments
-        if (equipmentModelList?.size == 1) {
-            changeCurrentDefectDevice(equipmentModelList!!.get(index = 0))
-            _disableEquipmentField.value = Event(Unit)
-        }
-    }
-
-    fun changeCurrentDefectTypical(model: DefectTypicalUiModel) {
-        currentTypical = model
-    }
-
-    fun changeCurrentDefectDevice(model: EquipmentModel) {
-        currentDeviceModel = model
-        _deviceName.value = model.name
-    }
-
-    private fun checkIsNotEmptyFields(): Boolean {
-        var isNotEmpty = true
-        isNotEmpty = isNotEmpty && (currentTypical != null)
-        isNotEmpty = isNotEmpty && (descriptionDefect.isNotBlank())
-        isNotEmpty = isNotEmpty && (!mediaList.value.isNullOrEmpty())
-        return isNotEmpty
-    }
-
-    private fun checkIsNoEmptyRequiredFields(): Boolean {
-        var isNotEmpty = true
-        _deviceName.value?.let {
-            isNotEmpty = isNotEmpty && true
-        } ?: run {
-            isNotEmpty = isNotEmpty && false
-        }
-        return isNotEmpty
-    }
-
-    fun addDescription(text: CharSequence?) {
-        text?.let {
-            descriptionDefect = it.toString()
-        } ?: run {
-            descriptionDefect = ""
-        }
-    }
-
-    private fun updateDefectTypicalList() {
-        val items = mutableListOf<DefectTypicalUiModel>().apply {
-            defectTypicalModels.map { item ->
-                add(
-                        DefectTypicalUiModel(
-                                id = item.id,
-                                name = item.name.orEmpty(),
-                                code = item.code
-                        )
-                )
+    private fun updateMediaList() {
+        val items = mutableListOf<MediaDefectUiModel>().apply {
+            mediaModels.map { item ->
+                add(item)
             }
         }
-        _defectTypicalList.value = items
+        _mediaList.value = items
     }
 
     fun addImage(image: Bitmap) {
@@ -215,22 +217,15 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
                         isNetworkImage = false
                 )
         )
+        isChangedDefect = true
         updateMediaList()
     }
 
     fun deleteMedia(deleteItem: MediaDefectUiModel) {
         if (mediaModels.remove(deleteItem)) {
+            isChangedDefect = true
             updateMediaList()
         }
-    }
-
-    private fun updateMediaList() {
-        val items = mutableListOf<MediaDefectUiModel>().apply {
-            mediaModels.map { item ->
-                add(item)
-            }
-        }
-        _mediaList.value = items
     }
 
     fun photoVideoClick() {
@@ -249,7 +244,7 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
         routesInteractor.saveDefect(detoursId = null,
                 equipmentId = currentDeviceModel?.id,
                 defectTypicalId = currentTypical?.id,
-                description = descriptionDefect,
+                description = descriptionDefect.orEmpty(),
                 dateDetectDefect = timeStamp,
                 files = listFiles
         )
@@ -277,5 +272,31 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
 
     }
 
+    private fun checkIsNotEmptyFields(): Boolean {
+        var isNotEmpty = true
+        isNotEmpty = isNotEmpty && (currentTypical != null)
+        isNotEmpty = isNotEmpty && (!descriptionDefect.isNullOrEmpty())
+        isNotEmpty = isNotEmpty && (!mediaList.value.isNullOrEmpty())
+        return isNotEmpty
+    }
+
+    private fun checkIsNoEmptyRequiredFields(): Boolean {
+        var isNotEmpty = true
+        _deviceName.value?.let {
+            isNotEmpty = isNotEmpty && true
+        } ?: run {
+            isNotEmpty = isNotEmpty && false
+        }
+        return isNotEmpty
+    }
+
+    fun checkPopBack() {
+        if(isChangedDefect) {
+            _showDialogChangedFields.value = Event(Unit)
+        } else {
+            _popNavigation.value = Event(Unit)
+        }
+
+    }
 
 }
