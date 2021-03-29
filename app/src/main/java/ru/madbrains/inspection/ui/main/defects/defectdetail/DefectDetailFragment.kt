@@ -164,11 +164,11 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
             dropDownTypeDefect.setText(item.name, false)
         }
 
-        defectDetailViewModel.disableTypicalDefectField.observe(viewLifecycleOwner, EventObserver {
+        defectDetailViewModel.disableTypicalDefectField.observe(viewLifecycleOwner, Observer {
             layoutDropDownTypeDefect.isEnabled = false
             layoutDropDownTypeDefect.endIconMode = TextInputLayout.END_ICON_NONE
             dropDownTypeDefect.setTextColor(colors[R.color.black50])
-            dropDownTypeDefect.setText(it)
+            dropDownTypeDefect.setText(it.peekContent())
         })
     }
 
@@ -179,7 +179,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
             }
         })
 
-        defectDetailViewModel.disableEquipmentField.observe(viewLifecycleOwner, EventObserver {
+        defectDetailViewModel.disableEquipmentField.observe(viewLifecycleOwner, Observer {
             layoutDropDownDevice.isEnabled = false
             layoutDropDownDevice.endIconMode = TextInputLayout.END_ICON_NONE
             dropDownDevice.setTextColor(colors[R.color.black50])

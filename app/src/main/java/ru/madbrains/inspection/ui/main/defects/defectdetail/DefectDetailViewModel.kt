@@ -121,7 +121,7 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
                 files?.let {
                     it.map { fileModel ->
                         when (fileModel.extension) {
-                            "png" -> { // если в файле изображение добавляем в список
+                            "jpg" -> { // если в файле изображение добавляем в список
                                 mediaModels.add(MediaDefectUiModel(
                                         id = fileModel.id.orEmpty(),
                                         isEditing = false,
