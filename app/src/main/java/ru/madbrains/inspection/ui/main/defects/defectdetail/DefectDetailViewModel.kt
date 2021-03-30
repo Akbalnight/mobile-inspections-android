@@ -17,6 +17,7 @@ import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.MediaDefectUiModel
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -25,11 +26,8 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
         BaseViewModel() {
 
     private var descriptionDefect: String? = null
-
     private var defect: DefectModel? = null
-
     private var targetDefectStatus: DefectStatus? = null
-
     private var isChangedDefect: Boolean = false
 
     //Add new defect
@@ -66,6 +64,9 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
 
     private val _showDialogBlankRequiredFields = MutableLiveData<Event<Unit>>()
     val showDialogBlankRequiredFields: LiveData<Event<Unit>> = _showDialogBlankRequiredFields
+
+    private val _showDialogConfirmChangedFields = MutableLiveData<Event<Unit>>()
+    val showDialogConfirmChangedFields: LiveData<Event<Unit>> = _showDialogConfirmChangedFields
 
     private val _showDialogChangedFields = MutableLiveData<Event<Unit>>()
     val showDialogChangedFields: LiveData<Event<Unit>> = _showDialogChangedFields
@@ -112,8 +113,6 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
     fun setDefectStatus(status: DefectStatus?) {
         targetDefectStatus = status
     }
-
-
 
     fun setEquipments(equipments: List<EquipmentModel>?) {
         equipmentModelList = equipments
@@ -235,18 +234,12 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
 
     @SuppressLint("SimpleDateFormat")
     fun saveDefect() {
-        val listFiles = mediaModels.filter {
-            it.isEditing && (it.imageBitmap != null)
-        }.map { media ->
-            fileUtil.createFile(media.imageBitmap!!, media.id)
-        }
-        val timeStamp = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX").format(Date())
         routesInteractor.saveDefect(detoursId = null,
                 equipmentId = currentDeviceModel?.id,
                 defectTypicalId = currentTypical?.id,
                 description = descriptionDefect.orEmpty(),
-                dateDetectDefect = timeStamp,
-                files = listFiles
+                dateDetectDefect = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX").format(Date()),
+                files = getFilesToSend()
         )
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { _progressVisibility.postValue(true) }
@@ -259,17 +252,61 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
                 .addTo(disposables)
     }
 
-    fun checkAndSave() {
-        if (checkIsNoEmptyRequiredFields()) {
-            if (checkIsNotEmptyFields()) {
-                saveDefect()
-            } else {
-                _showDialogBlankFields.value = Event(Unit)
-            }
-        } else {
-            _showDialogBlankRequiredFields.value = Event(Unit)
+    @SuppressLint("SimpleDateFormat")
+    fun sendUpdateDefect() {
+        defect?.let { defectModel ->
+            routesInteractor.updateDefect(detoursId = defectModel.detourId,
+                    id = defectModel.id,
+                    statusProcessId = targetDefectStatus?.id.orEmpty(),
+                    description = descriptionDefect.orEmpty(),
+                    dateDetectDefect = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX").format(Date()),
+                    files = getFilesToSend()
+            )
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe { _progressVisibility.postValue(true) }
+                    .doAfterTerminate { _progressVisibility.postValue(false) }
+                    .subscribe({ items ->
+                        _popNavigation.value = Event(Unit)
+                    }, {
+                        it.printStackTrace()
+                    })
+                    .addTo(disposables)
         }
 
+    }
+
+    private fun getFilesToSend(): List<File> {
+        return mediaModels.filter {
+            it.isEditing && (it.imageBitmap != null)
+        }.map { media ->
+            fileUtil.createFile(media.imageBitmap!!, media.id)
+        }
+    }
+
+
+    fun checkAndSave() {
+        targetDefectStatus?.let {
+            sendUpdateDefect()
+            if (isChangedDefect) {
+                _showDialogConfirmChangedFields.value = Event(Unit)
+            } else {
+                sendUpdateDefect()
+            }
+        } ?: run {
+            defect?.let {
+                //todo edit offline db
+            } ?: run {
+                if (checkIsNoEmptyRequiredFields()) {
+                    if (checkIsNotEmptyFields()) {
+                        saveDefect()
+                    } else {
+                        _showDialogBlankFields.value = Event(Unit)
+                    }
+                } else {
+                    _showDialogBlankRequiredFields.value = Event(Unit)
+                }
+            }
+        }
     }
 
     private fun checkIsNotEmptyFields(): Boolean {
@@ -291,12 +328,11 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
     }
 
     fun checkPopBack() {
-        if(isChangedDefect) {
+        if (isChangedDefect) {
             _showDialogChangedFields.value = Event(Unit)
         } else {
             _popNavigation.value = Event(Unit)
         }
-
     }
 
 }

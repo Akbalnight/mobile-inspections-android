@@ -212,6 +212,10 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
         defectDetailViewModel.showDialogChangedFields.observe(viewLifecycleOwner, EventObserver {
             showDialogChangedFields()
         })
+
+        defectDetailViewModel.showDialogConfirmChangedFields.observe(viewLifecycleOwner, EventObserver {
+            showDialogConfirmDefect()
+        })
     }
 
     private fun setupMediaList() {
@@ -297,6 +301,25 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
                 setPositiveButton(strings[R.string.fragment_add_defect_dialog_btn_exit],
                         DialogInterface.OnClickListener { _, _ ->
                             findNavController().popBackStack()
+                        })
+                setNegativeButton(strings[R.string.fragment_add_defect_dialog_btn_cancel],
+                        DialogInterface.OnClickListener { _, _ ->
+                        })
+            }
+            builder.create()
+        }
+        alertDialog?.show()
+    }
+
+    private fun showDialogConfirmDefect() {
+        val alertDialog: AlertDialog? = activity?.let {
+            val builder = AlertDialog.Builder(it)
+            builder.apply {
+                setTitle(strings[R.string.fragment_defect_dialog_confirmed_defect_title])
+                setMessage(strings[R.string.fragment_defect_dialog_confirmed_defect_subtitle])
+                setPositiveButton(strings[R.string.fragment_add_defect_dialog_btn_save],
+                        DialogInterface.OnClickListener { _, _ ->
+                            defectDetailViewModel.sendUpdateDefect()
                         })
                 setNegativeButton(strings[R.string.fragment_add_defect_dialog_btn_cancel],
                         DialogInterface.OnClickListener { _, _ ->
