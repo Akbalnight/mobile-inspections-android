@@ -242,7 +242,7 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
 
     @SuppressLint("SimpleDateFormat")
     fun saveDefect() {
-        routesInteractor.saveDefect(detoursId = null,
+        routesInteractor.saveDefect(detoursId = detourId,
                 equipmentId = currentDeviceModel?.id,
                 defectTypicalId = currentTypical?.id,
                 description = descriptionDefect.orEmpty(),
@@ -317,21 +317,15 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
     }
 
     private fun checkIsNotEmptyFields(): Boolean {
-        var isNotEmpty = true
-        isNotEmpty = isNotEmpty && (currentTypical != null)
-        isNotEmpty = isNotEmpty && (!descriptionDefect.isNullOrEmpty())
-        isNotEmpty = isNotEmpty && (!mediaList.value.isNullOrEmpty())
-        return isNotEmpty
+        return (currentTypical != null) && (!descriptionDefect.isNullOrEmpty()) && (!mediaList.value.isNullOrEmpty())
     }
 
     private fun checkIsNoEmptyRequiredFields(): Boolean {
-        var isNotEmpty = true
         _deviceName.value?.let {
-            isNotEmpty = isNotEmpty && true
+            return true
         } ?: run {
-            isNotEmpty = isNotEmpty && false
+            return false
         }
-        return isNotEmpty
     }
 
     fun checkPopBack() {

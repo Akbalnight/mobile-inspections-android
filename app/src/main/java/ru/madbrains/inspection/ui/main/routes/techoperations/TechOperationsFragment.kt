@@ -144,7 +144,7 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
 
     private fun getDetourId(): String? {
         techOperationsViewModel.savedRouteData?.routeId?.let { routeId ->
-            val detourId = detoursViewModel.detourModels.find { it.id == routeId }
+            val detourId = detoursViewModel.detourModels.find { it.routeId == routeId }
             detourId?.let {
                 return it.id
             }
