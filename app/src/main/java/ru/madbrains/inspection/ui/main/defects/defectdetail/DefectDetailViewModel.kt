@@ -137,10 +137,18 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
     fun changeDescription(text: CharSequence?) {
         text?.let {
             descriptionDefect = it.toString()
+
         } ?: run {
             descriptionDefect = null
         }
-        isChangedDefect = true
+
+        defect?.let { defectModel ->
+            if (defectModel.description != descriptionDefect) {
+                isChangedDefect = true
+            }
+        } ?: run {
+            isChangedDefect = true
+        }
     }
 
     private fun updateDefectTypicalList() {
@@ -169,7 +177,7 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
                     _disableTypicalDefectField.value = Event(it)
                 }
                 description?.let {
-                    if (descriptionDefect != null) {
+                    if (descriptionDefect == null) {
                         descriptionDefect = it
                         _descriptionObserver.value = it
                     }
@@ -228,7 +236,7 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
     }
 
     fun photoVideoClick() {
-        if (mediaModels.size < 9)
+        if (mediaModels.size < 8)
             _navigateToCamera.value = Event(Unit)
     }
 
@@ -286,7 +294,6 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
 
     fun checkAndSave() {
         targetDefectStatus?.let {
-            sendUpdateDefect()
             if (isChangedDefect) {
                 _showDialogConfirmChangedFields.value = Event(Unit)
             } else {
