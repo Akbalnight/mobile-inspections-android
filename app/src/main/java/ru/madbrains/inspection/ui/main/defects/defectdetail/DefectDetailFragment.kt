@@ -56,14 +56,24 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        defectDetailViewModel.setEquipments(this.arguments?.getSerializable(DefectDetailFragment.KEY_EQUIPMENT_LIST) as? List<EquipmentModel>)
-        defectDetailViewModel.setDetourId(this.arguments?.getString(DefectDetailFragment.KEY_DETOUR_ID))
-        defectDetailViewModel.setDefect(this.arguments?.getSerializable(DefectDetailFragment.KEY_DETAIL_DEFECT) as? DefectModel)
-        defectDetailViewModel.setDefectStatus(this.arguments?.getSerializable(DefectDetailFragment.KEY_DEFECT_TARGET_STATUS) as? DefectStatus)
         arguments?.let {
-            setupEditDefect()
+            defectDetailViewModel.setEquipments(it.getSerializable(DefectDetailFragment.KEY_EQUIPMENT_LIST) as? List<EquipmentModel>)
+            defectDetailViewModel.setDetourId(it.getString(DefectDetailFragment.KEY_DETOUR_ID))
+            val currentDefect = it.getSerializable(DefectDetailFragment.KEY_DETAIL_DEFECT) as? DefectModel
+            defectDetailViewModel.setDefect(currentDefect)
+            val currentStatus = it.getSerializable(DefectDetailFragment.KEY_DEFECT_TARGET_STATUS) as? DefectStatus
+            defectDetailViewModel.setDefectStatus(currentStatus)
+            currentDefect?.let {
+                currentStatus?.let {
+                    setupToolbar(strings[R.string.fragment_add_defect_toolbar_confirm])
+                } ?: run {
+                    setupToolbar(strings[R.string.fragment_add_defect_toolbar_edit])
+                }
+            } ?: run {
+                setupToolbar(strings[R.string.fragment_add_defect_toolbar_create])
+            }
         } ?: run {
-            setupNewDefect() //todo
+            setupToolbar(strings[R.string.fragment_add_defect_toolbar_create])
         }
 
         // настройка поля выбора типа дефекта
@@ -93,21 +103,10 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
         })
     }
 
-    private fun setupNewDefect() {
+    private fun setupToolbar(title: String) {
         toolbarLayout.apply {
-            tvTitle.text = strings[R.string.fragment_defect_add_title]
+            tvTitle.text = title
             btnLeading.setOnClickListener {
-                defectDetailViewModel.checkPopBack()
-               // findNavController().popBackStack()
-            }
-        }
-    }
-
-    private fun setupEditDefect() {
-        toolbarLayout.apply {
-            tvTitle.text = strings[R.string.fragment_defect_edit_title]
-            btnLeading.setOnClickListener {
-               // findNavController().popBackStack()
                 defectDetailViewModel.checkPopBack()
             }
         }
