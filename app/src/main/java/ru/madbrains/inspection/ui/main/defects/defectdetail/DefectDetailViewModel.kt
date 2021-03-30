@@ -242,9 +242,10 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
 
     @SuppressLint("SimpleDateFormat")
     fun saveDefect() {
-        routesInteractor.saveDefect(detoursId = detourId,
+        routesInteractor.saveDefect(detourId = detourId,
                 equipmentId = currentDeviceModel?.id,
                 defectTypicalId = currentTypical?.id,
+                statusProcessId = DefectStatus.NEW.id,
                 description = descriptionDefect.orEmpty(),
                 dateDetectDefect = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX").format(Date()),
                 files = getFilesToSend()

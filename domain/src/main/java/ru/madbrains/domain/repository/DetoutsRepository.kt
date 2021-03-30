@@ -33,12 +33,13 @@ interface DetoutsRepository {
 
 
     fun saveDefect(files: List<File>?,
-                   detoursId: String?,
+                   detourId: String?,
                    equipmentId: String?,
                    staffDetectId: String?,
                    defectTypicalId: String?,
                    description: String?,
-                   dateDetectDefect: String?
+                   dateDetectDefect: String?,
+                   statusProcessId: String?
     ): Single<String>
 
     fun updateDefect(files: List<File>?,

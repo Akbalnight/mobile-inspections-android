@@ -67,14 +67,15 @@ class RoutesInteractor(
     }
 
     fun saveDefect(files: List<File>? = null,
-                   detoursId: String? = null,
+                   detourId: String? = null,
                    equipmentId: String? = null,
                    staffDetectId: String? = null,
                    defectTypicalId: String? = null,
                    description: String? = null,
-                   dateDetectDefect: String? = null): Single<String> {
+                   dateDetectDefect: String? = null,
+                   statusProcessId: String? = null): Single<String> {
 
-        return routesRepository.saveDefect(files, detoursId, equipmentId, staffDetectId, defectTypicalId, description, dateDetectDefect).subscribeOn(Schedulers.io())
+        return routesRepository.saveDefect(files, detourId, equipmentId, staffDetectId, defectTypicalId, description, dateDetectDefect, statusProcessId).subscribeOn(Schedulers.io())
     }
 
     fun updateDefect(files: List<File>? = null,

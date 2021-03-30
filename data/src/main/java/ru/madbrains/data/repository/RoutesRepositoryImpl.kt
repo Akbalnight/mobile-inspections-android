@@ -102,20 +102,22 @@ class RoutesRepositoryImpl(
 
     override fun saveDefect(
             files: List<File>?,
-            detoursId: String?,
+            detourId: String?,
             equipmentId: String?,
             staffDetectId: String?,
             defectTypicalId: String?,
             description: String?,
-            dateDetectDefect: String?
+            dateDetectDefect: String?,
+            statusProcessId: String?
     ): Single<String> {
         val request = CreateDefectReq(
-                detoursId = detoursId,
+                detourId = detourId,
                 equipmentId = equipmentId,
                 staffDetectId = preferenceStorage.userId.orEmpty(),
                 defectTypicalId = defectTypicalId,
                 description = description,
-                dateDetectDefect = dateDetectDefect
+                dateDetectDefect = dateDetectDefect,
+                statusProcessId = statusProcessId
         )
 
         var multiParts: List<MultipartBody.Part>? = null
