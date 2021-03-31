@@ -128,6 +128,7 @@
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:layout_gravity="center_horizontal"
+                android:visibility="visible"
                 app:layout_constraintEnd_toStartOf="@+id/llPhoto"
                 app:layout_constraintStart_toEndOf="@+id/llGallery"
                 app:srcCompat="@drawable/ic_shot"
@@ -143,6 +144,7 @@
             android:layout_marginBottom="16dp"
             android:gravity="center_horizontal"
             android:orientation="vertical"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
@@ -159,6 +161,42 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="ФОТО"
+                android:textAllCaps="true"
+                android:textColor="@color/textWhite"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@+id/tvPointNumber"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/tvPointNumber"
+                app:layout_constraintTop_toTopOf="@+id/tvPointNumber" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llVideo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="16dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:srcCompat="@drawable/ic_solid_video" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="ВИДЕО"
                 android:textAllCaps="true"
                 android:textColor="@color/textWhite"
                 android:textSize="14sp"

@@ -7,5 +7,6 @@ data class EquipmentFileModel(
     val id: String,
     val url: String,
     val name: String,
-    val extension: String
+    val extension: String,
+    val date: Date?
 ): Serializable

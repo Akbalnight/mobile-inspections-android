@@ -85,7 +85,8 @@ data class GetEquipmentFileResp(
     @field:Json(name = "id") val id: String,
     @field:Json(name = "url") val url: String,
     @field:Json(name = "name") val name: String,
-    @field:Json(name = "extension") val extension: String
+    @field:Json(name = "extension") val extension: String,
+    @field:Json(name = "ts") val date: Date?
 )
 
 @JsonClass(generateAdapter = true)

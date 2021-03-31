@@ -97,7 +97,7 @@ class EquipmentViewModel(private val routesInteractor: RoutesInteractor) : BaseV
                     url = it.url,
                     name = it.name,
                     extension = it.extension,
-                    date = Date().toHHmmYYYYMMDD()
+                    date = it.date?.toHHmmYYYYMMDD()?:"-"
                 )
             }
         }
