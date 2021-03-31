@@ -137,10 +137,11 @@
                 android:id="@+id/ivIconMedia"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvTypeDefectTitle"
                 app:srcCompat="@drawable/ic_defect_card_media" />
 
             <TextView

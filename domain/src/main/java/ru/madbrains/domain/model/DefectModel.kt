@@ -1,6 +1,7 @@
 package ru.madbrains.domain.model
 
 import java.io.Serializable
+import java.util.*
 
 data class DefectModel(
         val id: String,
@@ -8,7 +9,7 @@ data class DefectModel(
         val staffDetectId: String?,
         val defectTypicalId: String?,
         val description: String?,
-        val dateDetectDefect: String?,
+        val dateDetectDefect: Date?,
         val detourId: String?,
         val files: List<FileModel>?,
         val defectName: String?,

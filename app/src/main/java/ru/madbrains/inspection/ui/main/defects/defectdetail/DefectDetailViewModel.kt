@@ -1,11 +1,11 @@
 package ru.madbrains.inspection.ui.main.defects.defectdetail
 
-import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
+import ru.madbrains.data.extensions.toyyyyMMddTHHmmssXXX
 import ru.madbrains.data.network.ApiData
 import ru.madbrains.data.utils.FileUtil
 import ru.madbrains.domain.interactor.RoutesInteractor
@@ -18,7 +18,6 @@ import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.MediaDefectUiModel
 import java.io.File
-import java.text.SimpleDateFormat
 import java.util.*
 
 class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
@@ -240,14 +239,13 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
             _navigateToCamera.value = Event(Unit)
     }
 
-    @SuppressLint("SimpleDateFormat")
     fun saveDefect() {
         routesInteractor.saveDefect(detourId = detourId,
                 equipmentId = currentDeviceModel?.id,
                 defectTypicalId = currentTypical?.id,
                 statusProcessId = DefectStatus.NEW.id,
                 description = descriptionDefect.orEmpty(),
-                dateDetectDefect = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX").format(Date()),
+                dateDetectDefect = Date().toyyyyMMddTHHmmssXXX(),
                 files = getFilesToSend()
         )
                 .observeOn(AndroidSchedulers.mainThread())
@@ -261,14 +259,13 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
                 .addTo(disposables)
     }
 
-    @SuppressLint("SimpleDateFormat")
     fun sendUpdateDefect() {
         defect?.let { defectModel ->
             routesInteractor.updateDefect(detoursId = defectModel.detourId,
                     id = defectModel.id,
                     statusProcessId = targetDefectStatus?.id.orEmpty(),
                     description = descriptionDefect.orEmpty(),
-                    dateDetectDefect = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX").format(Date()),
+                    dateDetectDefect = Date().toyyyyMMddTHHmmssXXX(),
                     files = getFilesToSend()
             )
                     .observeOn(AndroidSchedulers.mainThread())

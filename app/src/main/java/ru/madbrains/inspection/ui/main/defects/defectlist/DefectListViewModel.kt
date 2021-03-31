@@ -1,10 +1,12 @@
 package ru.madbrains.inspection.ui.main.defects.defectlist
 
-import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
+import ru.madbrains.data.extensions.toDDMMYYYY
+import ru.madbrains.data.extensions.toHHmm
+import ru.madbrains.data.extensions.toyyyyMMddTHHmmssXXX
 import ru.madbrains.data.network.ApiData
 import ru.madbrains.domain.interactor.RoutesInteractor
 import ru.madbrains.domain.model.DefectModel
@@ -15,8 +17,6 @@ import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.DefectListUiModel
 import ru.madbrains.inspection.ui.delegates.MediaDefectUiModel
-import java.text.ParseException
-import java.text.SimpleDateFormat
 import java.util.*
 
 class DefectListViewModel(private val routesInteractor: RoutesInteractor) : BaseViewModel() {
@@ -81,29 +81,15 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
         //todo offline delete
     }
 
-    @SuppressLint("SimpleDateFormat")
     private fun updateDefectList() {
         val defects = mutableListOf<DiffItem>().apply {
             defectListModels.map { defect ->
-                var date = ""
-                var time = ""
-                defect.dateDetectDefect?.let {
-                    try {
-                        val dateInput = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX").parse(it)
-                        dateInput?.let { input ->
-                            date = SimpleDateFormat("dd.MM.yyyy").format(input)
-                            time = SimpleDateFormat("HH:mm").format(input)
-                        }
-                    } catch (e: ParseException) {
-                        e.printStackTrace()
-                    }
-                }
                 add(
                         DefectListUiModel(
                                 id = defect.id,
                                 detour = defect.detourId.orEmpty(),
-                                date = date,
-                                time = time,
+                                date = defect.dateDetectDefect?.toDDMMYYYY().orEmpty(),
+                                time = defect.dateDetectDefect?.toHHmm().orEmpty(),
                                 device = defect.equipmentName.orEmpty(),
                                 type = defect.defectName.orEmpty(),
                                 description = defect.description.orEmpty(),
@@ -140,13 +126,11 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
         return list
     }
 
-    @SuppressLint("SimpleDateFormat")
     fun eliminatedDefect(deleteItem: DefectModel?) {
         deleteItem?.let {
-            val timeStamp = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX").format(Date())
             routesInteractor.updateDefect(id = it.id,
                     statusProcessId = DefectStatus.ELIMINATED.id,
-                    dateDetectDefect = timeStamp
+                    dateDetectDefect = Date().toyyyyMMddTHHmmssXXX()
             )
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ items ->
