@@ -102,7 +102,6 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
 
         defectDetailViewModel.descriptionObserver.observe(viewLifecycleOwner, Observer {
             etAddDefectDescription.setText(it)
-            // etDescription.editText?.setText(it)
         })
     }
 
