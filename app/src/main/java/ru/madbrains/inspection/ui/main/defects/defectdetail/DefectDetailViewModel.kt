@@ -82,6 +82,9 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
     private val _disableTypicalDefectField = MutableLiveData<Event<String>>()
     val disableTypicalDefectField: LiveData<Event<String>> = _disableTypicalDefectField
 
+    private val _showSnackBar = MutableLiveData<Event<Unit>>()
+    val showSnackBar: LiveData<Event<Unit>> = _showSnackBar
+
     fun getCurrentDevice(): EquipmentModel? {
         return currentDeviceModel
     }
@@ -254,7 +257,8 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { _progressVisibility.postValue(true) }
                 .doAfterTerminate { _progressVisibility.postValue(false) }
-                .subscribe({ items ->
+                .subscribe({ item ->
+                    _showSnackBar.value = Event(Unit)
                     _popNavigation.value = Event(Unit)
                 }, {
                     it.printStackTrace()
@@ -274,7 +278,7 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnSubscribe { _progressVisibility.postValue(true) }
                     .doAfterTerminate { _progressVisibility.postValue(false) }
-                    .subscribe({ items ->
+                    .subscribe({ item ->
                         _popNavigation.value = Event(Unit)
                     }, {
                         it.printStackTrace()

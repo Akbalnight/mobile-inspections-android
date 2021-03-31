@@ -27,6 +27,7 @@ import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.adapters.DefectMediaAdapter
 import ru.madbrains.inspection.ui.common.camera.CameraViewModel
 import ru.madbrains.inspection.ui.delegates.MediaDefectUiModel
+import ru.madbrains.inspection.ui.main.MainViewModel
 import ru.madbrains.inspection.ui.main.defects.defectdetail.equipmentselectlist.EquipmentSelectListViewModel
 
 class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
@@ -52,6 +53,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
     private val defectDetailViewModel: DefectDetailViewModel by viewModel()
     private val cameraViewModel: CameraViewModel by sharedViewModel()
     private val equipmentSelectViewModel: EquipmentSelectListViewModel by sharedViewModel()
+    private val mainViewModel: MainViewModel by sharedViewModel()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -220,6 +222,10 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
 
         defectDetailViewModel.showDialogSaveNoLinkedDetour.observe(viewLifecycleOwner, EventObserver {
             showDialogSaveNoLinkedDetour()
+        })
+
+        defectDetailViewModel.showSnackBar.observe(viewLifecycleOwner, EventObserver {
+            mainViewModel.openSnackBar(strings[R.string.fragment_add_defect_snackbar_text_save])
         })
     }
 

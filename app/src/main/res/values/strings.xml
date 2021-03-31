@@ -53,6 +53,8 @@
     <string name="fragment_add_defect_dialog_btn_fix">Зафиксировать</string>
     <string name="fragment_add_defect_dialog_delete_subtitle">Вы действительно хотите удалить фото?</string>
     <string name="fragment_add_defect_dialog_empty_fields_title">Не все поля заполнены</string>
+    <string name="fragment_add_defect_snackbar_button">Продолжить</string>
+    <string name="fragment_add_defect_snackbar_text_save">Дефект успешно сохранен</string>
     <string name="fragment_add_defect_dialog_empty_fields_no_detour_title">Не все поля по выявленному дефекту вне планового обхода заполнены</string>
     <string name="fragment_add_defect_dialog_empty_fields_subtitle">Вы хотите сохранить изменения?</string>
     <string name="fragment_add_defect_dialog_empty_fields_no_detour_subtitle">Хотите зафискировать дефект?</string>

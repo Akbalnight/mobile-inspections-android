@@ -42,6 +42,9 @@ class MainViewModel(
     private val _navigateToAuthorization = MutableLiveData<Event<Unit>>()
     val navigateToAuthorization: LiveData<Event<Unit>> = _navigateToAuthorization
 
+    private val _showSnackBar = MutableLiveData<Event<String>>()
+    val showSnackBar: LiveData<Event<String>> = _showSnackBar
+
     fun menuClick() {
         _navigateToMenu.value = Event(Unit)
     }
@@ -64,6 +67,10 @@ class MainViewModel(
 
     fun settingsClick() {
         _navigateToSettings.value = Event(Unit)
+    }
+
+    fun openSnackBar(text: String) {
+        _showSnackBar.value = Event(text)
     }
 
     fun logoutClick() {
