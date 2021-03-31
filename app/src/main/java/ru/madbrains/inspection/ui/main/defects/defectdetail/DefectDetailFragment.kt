@@ -100,7 +100,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
 
         defectDetailViewModel.descriptionObserver.observe(viewLifecycleOwner, Observer {
             etAddDefectDescription.setText(it)
-           // etDescription.editText?.setText(it)
+            // etDescription.editText?.setText(it)
         })
     }
 
@@ -203,7 +203,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
 
     private fun setupDialogs() {
         defectDetailViewModel.showDialogBlankFields.observe(viewLifecycleOwner, EventObserver {
-            showDialogEmptyFields()
+            showDialogEmptyFields(!it)
         })
 
         defectDetailViewModel.showDialogBlankRequiredFields.observe(viewLifecycleOwner, EventObserver {
@@ -215,7 +215,11 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
         })
 
         defectDetailViewModel.showDialogConfirmChangedFields.observe(viewLifecycleOwner, EventObserver {
-            showDialogConfirmDefect()
+            showDialogConfirmDefect(it)
+        })
+
+        defectDetailViewModel.showDialogSaveNoLinkedDetour.observe(viewLifecycleOwner, EventObserver {
+            showDialogSaveNoLinkedDetour()
         })
     }
 
@@ -260,15 +264,15 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
         alertDialog?.show()
     }
 
-    private fun showDialogEmptyFields() {
+    private fun showDialogEmptyFields(isLinkedDetour: Boolean) {
         val alertDialog: AlertDialog? = activity?.let {
             val builder = AlertDialog.Builder(it)
             builder.apply {
-                setTitle(strings[R.string.fragment_add_defect_dialog_empty_fields_title])
-                setMessage(strings[R.string.fragment_add_defect_dialog_empty_fields_subtitle])
-                setPositiveButton(strings[R.string.fragment_add_defect_dialog_btn_save],
+                setTitle(if (isLinkedDetour) strings[R.string.fragment_add_defect_dialog_empty_fields_title] else strings[R.string.fragment_add_defect_dialog_empty_fields_no_detour_title])
+                setMessage(if (isLinkedDetour) strings[R.string.fragment_add_defect_dialog_empty_fields_subtitle] else strings[R.string.fragment_add_defect_dialog_empty_fields_no_detour_subtitle])
+                setPositiveButton(if (isLinkedDetour) strings[R.string.fragment_add_defect_dialog_btn_save] else strings[R.string.fragment_add_defect_dialog_btn_fix],
                         DialogInterface.OnClickListener { _, _ ->
-                            defectDetailViewModel.saveDefect()
+                            defectDetailViewModel.sendSaveDefect()
                         })
                 setNegativeButton(strings[R.string.fragment_add_defect_dialog_btn_cancel],
                         DialogInterface.OnClickListener { _, _ ->
@@ -312,7 +316,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
         alertDialog?.show()
     }
 
-    private fun showDialogConfirmDefect() {
+    private fun showDialogConfirmDefect(isConfirm: Boolean) {
         val alertDialog: AlertDialog? = activity?.let {
             val builder = AlertDialog.Builder(it)
             builder.apply {
@@ -320,7 +324,30 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
                 setMessage(strings[R.string.fragment_defect_dialog_confirmed_defect_subtitle])
                 setPositiveButton(strings[R.string.fragment_add_defect_dialog_btn_save],
                         DialogInterface.OnClickListener { _, _ ->
-                            defectDetailViewModel.sendUpdateDefect()
+                            if (isConfirm) {
+                                defectDetailViewModel.sendUpdateDefect()
+                            } else {
+                                defectDetailViewModel.localEditDefect()
+                            }
+                        })
+                setNegativeButton(strings[R.string.fragment_add_defect_dialog_btn_cancel],
+                        DialogInterface.OnClickListener { _, _ ->
+                        })
+            }
+            builder.create()
+        }
+        alertDialog?.show()
+    }
+
+    private fun showDialogSaveNoLinkedDetour() {
+        val alertDialog: AlertDialog? = activity?.let {
+            val builder = AlertDialog.Builder(it)
+            builder.apply {
+                setTitle(strings[R.string.fragment_add_defect_dialog_save_no_detour_title])
+                setMessage(strings[R.string.fragment_add_defect_dialog_empty_fields_no_detour_subtitle])
+                setPositiveButton(strings[R.string.fragment_add_defect_dialog_btn_fix],
+                        DialogInterface.OnClickListener { _, _ ->
+                            defectDetailViewModel.sendSaveDefect()
                         })
                 setNegativeButton(strings[R.string.fragment_add_defect_dialog_btn_cancel],
                         DialogInterface.OnClickListener { _, _ ->

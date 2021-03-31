@@ -58,14 +58,17 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
     private val _navigateToCamera = MutableLiveData<Event<Unit>>()
     val navigateToCamera: LiveData<Event<Unit>> = _navigateToCamera
 
-    private val _showDialogBlankFields = MutableLiveData<Event<Unit>>()
-    val showDialogBlankFields: LiveData<Event<Unit>> = _showDialogBlankFields
+    private val _showDialogBlankFields = MutableLiveData<Event<Boolean>>()
+    val showDialogBlankFields: LiveData<Event<Boolean>> = _showDialogBlankFields
+
+    private val _showDialogSaveNoLinkedDetour = MutableLiveData<Event<Unit>>()
+    val showDialogSaveNoLinkedDetour: LiveData<Event<Unit>> = _showDialogSaveNoLinkedDetour
 
     private val _showDialogBlankRequiredFields = MutableLiveData<Event<Unit>>()
     val showDialogBlankRequiredFields: LiveData<Event<Unit>> = _showDialogBlankRequiredFields
 
-    private val _showDialogConfirmChangedFields = MutableLiveData<Event<Unit>>()
-    val showDialogConfirmChangedFields: LiveData<Event<Unit>> = _showDialogConfirmChangedFields
+    private val _showDialogConfirmChangedFields = MutableLiveData<Event<Boolean>>()
+    val showDialogConfirmChangedFields: LiveData<Event<Boolean>> = _showDialogConfirmChangedFields
 
     private val _showDialogChangedFields = MutableLiveData<Event<Unit>>()
     val showDialogChangedFields: LiveData<Event<Unit>> = _showDialogChangedFields
@@ -239,7 +242,7 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
             _navigateToCamera.value = Event(Unit)
     }
 
-    fun saveDefect() {
+    fun sendSaveDefect() {
         routesInteractor.saveDefect(detourId = detourId,
                 equipmentId = currentDeviceModel?.id,
                 defectTypicalId = currentTypical?.id,
@@ -281,6 +284,10 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
 
     }
 
+    fun localEditDefect() {
+        //todo db offline
+    }
+
     private fun getFilesToSend(): List<File> {
         return mediaModels.filter {
             it.isEditing && (it.imageBitmap != null)
@@ -293,19 +300,23 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
     fun checkAndSave() {
         targetDefectStatus?.let {
             if (isChangedDefect) {
-                _showDialogConfirmChangedFields.value = Event(Unit)
+                _showDialogConfirmChangedFields.value = Event(true)
             } else {
                 sendUpdateDefect()
             }
         } ?: run {
             defect?.let {
-                //todo edit offline db
+                _showDialogConfirmChangedFields.value = Event(false)
             } ?: run {
                 if (checkIsNoEmptyRequiredFields()) {
                     if (checkIsNotEmptyFields()) {
-                        saveDefect()
+                        if (detourId.isNullOrEmpty()){
+                            _showDialogSaveNoLinkedDetour.value = Event(Unit)
+                        } else {
+                            sendSaveDefect()
+                        }
                     } else {
-                        _showDialogBlankFields.value = Event(Unit)
+                        _showDialogBlankFields.value = Event(detourId.isNullOrEmpty())
                     }
                 } else {
                     _showDialogBlankRequiredFields.value = Event(Unit)

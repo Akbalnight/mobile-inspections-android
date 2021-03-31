@@ -50,11 +50,15 @@
     <string name="fragment_add_defect_dialog_btn_cancel">Отмена</string>
     <string name="fragment_add_defect_dialog_btn_exit">Выйти</string>
     <string name="fragment_add_defect_dialog_btn_ok">Ок</string>
+    <string name="fragment_add_defect_dialog_btn_fix">Зафиксировать</string>
     <string name="fragment_add_defect_dialog_delete_subtitle">Вы действительно хотите удалить фото?</string>
     <string name="fragment_add_defect_dialog_empty_fields_title">Не все поля заполнены</string>
+    <string name="fragment_add_defect_dialog_empty_fields_no_detour_title">Не все поля по выявленному дефекту вне планового обхода заполнены</string>
     <string name="fragment_add_defect_dialog_empty_fields_subtitle">Вы хотите сохранить изменения?</string>
+    <string name="fragment_add_defect_dialog_empty_fields_no_detour_subtitle">Хотите зафискировать дефект?</string>
     <string name="fragment_add_defect_dialog_empty_required_fields_subtitle">Не заполнены обязательные поля</string>
     <string name="fragment_add_defect_dialog_changed_fields">Вы действительно хотите выйти без сохранения изменений?</string>
+    <string name="fragment_add_defect_dialog_save_no_detour_title">Вы внесли данные по выявленному дефекту вне планового обхода</string>
     <string name="fragment_add_defect_media_list_title">Фото и видео: %s из 8</string>
     <string name="fragment_add_defect_search">Поиск</string>
 

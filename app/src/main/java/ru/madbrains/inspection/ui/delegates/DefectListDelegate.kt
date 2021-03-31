@@ -54,6 +54,7 @@ fun defectListDelegate(
                     tvTypeDefectData.text = item.type
                     tvDescriptionData.text = item.description
                     rvDefectMedia.visibility = visibleIvMedia(item.images)
+                    tvDateConfirmData.text = item.dateConfirm
 
                     //show popup link detour
                     ivIconDetour.setOnClickListener {
@@ -139,6 +140,7 @@ data class DefectListUiModel(
         val date: String,
         val time: String,
         val device: String,
+        val dateConfirm: String,
         val type: String,
         val description: String,
         val isConfirmList: Boolean,

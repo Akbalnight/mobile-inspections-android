@@ -18,4 +18,16 @@ data class DefectModel(
         val extraData: List<ExtraDataModel>?
 ) : Serializable {
     var shipped: Boolean = false
+
+    fun getLastDateConfirm(): Date? {
+        extraData?.let { extraList ->
+            val sortList = extraList.sortedBy {
+                it.dateDetectDefect
+            }
+            if (!sortList.isNullOrEmpty()) {
+                return sortList.last().dateDetectDefect
+            }
+        }
+        return null
+    }
 }

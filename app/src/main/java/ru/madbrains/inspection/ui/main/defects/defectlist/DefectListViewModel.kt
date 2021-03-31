@@ -4,9 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
-import ru.madbrains.data.extensions.toDDMMYYYY
-import ru.madbrains.data.extensions.toHHmm
-import ru.madbrains.data.extensions.toyyyyMMddTHHmmssXXX
+import ru.madbrains.data.extensions.*
 import ru.madbrains.data.network.ApiData
 import ru.madbrains.domain.interactor.RoutesInteractor
 import ru.madbrains.domain.model.DefectModel
@@ -95,7 +93,8 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
                                 description = defect.description.orEmpty(),
                                 isConfirmList = isConfirmList,
                                 images = getMediaListItem(defect.files),
-                                shipped = defect.shipped
+                                shipped = defect.shipped,
+                                dateConfirm = defect.getLastDateConfirm()?.toddMMyyyyHHmm().orEmpty()
                         )
                 )
             }
