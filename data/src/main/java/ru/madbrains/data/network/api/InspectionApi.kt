@@ -33,7 +33,7 @@ interface InspectionApi {
 
     // region defects
 
-    @POST("/api/dynamicdq/data/flat/mobileDefects")
+    @POST("/api/dynamicdq/data/flat/mobileDefects?page=0&size=${Int.MAX_VALUE}")
     fun getDefects(@Body request: GetDefectsReq): Single<List<GetDefectsResp>>
 
     @Multipart

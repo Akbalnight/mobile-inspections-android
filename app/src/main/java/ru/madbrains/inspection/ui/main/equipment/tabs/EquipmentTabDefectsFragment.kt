@@ -56,7 +56,7 @@ class EquipmentTabDefectsFragment : BaseFragment(R.layout.fragment_equipment_tab
         setupRVList()
 
         equipmentViewModel.savedEquipmentData?.let {
-            defectListViewModel.getDefectList(listOf(it.name.orEmpty()))
+            defectListViewModel.getDefectList(listOf(it.id))
         } ?: run {
             defectListViewModel.getDefectList(null)
         }
