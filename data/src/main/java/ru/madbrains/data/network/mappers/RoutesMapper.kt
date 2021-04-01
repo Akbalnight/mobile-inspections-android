@@ -41,7 +41,8 @@ fun mapGetRouteResp(resp: GetRouteResp): RouteModel {
             name = name,
             code = code,
             duration = duration,
-            routesData = routesData.map { mapGetRoutesDataResp(it) }
+            routesData = routesData.map { mapGetRoutesDataResp(it) },
+            routeMaps = routeMaps?.map { mapGetRoutesMapsResp(it) }
         )
     }
 }
@@ -60,6 +61,17 @@ fun mapGetRoutesDataResp(resp: GetRouteDataResp): RouteDataModel {
             position = position,
             equipments = equipments?.map { mapGetEquipmentResp(it) },
             techMap = techMap?.let { mapTechMapResp(it) }
+        )
+    }
+}
+
+fun mapGetRoutesMapsResp(resp: GetRouteMapsResp): RouteMapModel {
+    return with(resp) {
+        RouteMapModel(
+                id = id,
+                routeId = routeId,
+                fileId = fileId,
+                position = position
         )
     }
 }

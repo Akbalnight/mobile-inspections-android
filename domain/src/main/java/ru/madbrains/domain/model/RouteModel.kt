@@ -7,5 +7,6 @@ data class RouteModel(
     val name: String,
     val code: Int?,
     val duration: Int?,
-    val routesData: List<RouteDataModel>
+    val routesData: List<RouteDataModel>,
+    val routeMaps: List<RouteMapModel>?
 ) : Serializable

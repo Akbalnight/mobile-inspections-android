@@ -38,7 +38,8 @@ data class GetRouteResp(
     @field:Json(name = "name") val name: String,
     @field:Json(name = "code") val code: Int?,
     @field:Json(name = "duration") val duration: Int?,
-    @field:Json(name = "routesData") val routesData: List<GetRouteDataResp>
+    @field:Json(name = "routesData") val routesData: List<GetRouteDataResp>,
+    @field:Json(name = "routeMaps") val routeMaps: List<GetRouteMapsResp>?
 )
 
 @JsonClass(generateAdapter = true)
@@ -114,4 +115,12 @@ data class GetTechOperationResp(
     @field:Json(name = "duration") val duration: Int?,
     @field:Json(name = "techMapId") val techMapId: String?,
     @field:Json(name = "position") val position: Int?
+)
+
+@JsonClass(generateAdapter = true)
+data class GetRouteMapsResp(
+        @field:Json(name = "id") val id: String,
+        @field:Json(name = "routeId") val routeId: String?,
+        @field:Json(name = "fileId") val fileId: String?,
+        @field:Json(name = "position") val position: Int?
 )
