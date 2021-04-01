@@ -70,7 +70,7 @@ class EquipmentTabDefectsFragment : BaseFragment(R.layout.fragment_equipment_tab
                     DefectDetailFragment.KEY_DETAIL_DEFECT to it,
                     DefectDetailFragment.KEY_DEFECT_TARGET_STATUS to DefectStatus.CONFIRMED
             )
-            findNavController().navigate(R.id.action_defectListFragment_to_detailFragment, args)
+            findNavController().navigate(R.id.action_equipmentFragment_to_detailFragment, args)
         })
     }
 
