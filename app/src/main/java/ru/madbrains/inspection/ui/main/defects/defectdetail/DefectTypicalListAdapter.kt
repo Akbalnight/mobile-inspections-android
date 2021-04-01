@@ -15,7 +15,7 @@ class DefectTypicalListAdapter(context: Context,
                                @LayoutRes private val layoutResource: Int,
                                @IdRes private val textViewResourceId: Int = 0,
                                private var values: List<DefectTypicalUiModel> = emptyList()) :
-        ArrayAdapter<DefectTypicalUiModel>(context, layoutResource) {
+        ArrayAdapter<DefectTypicalUiModel>(context, layoutResource, values) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view = createViewFromResource(convertView, parent, layoutResource)
@@ -24,12 +24,6 @@ class DefectTypicalListAdapter(context: Context,
     }
 
     override fun getItem(position: Int): DefectTypicalUiModel = values[position]
-
-    fun addItems(items: List<DefectTypicalUiModel>) {
-        values = items;
-        super.clear()
-        super.addAll(items)
-    }
 
     private fun createViewFromResource(convertView: View?, parent: ViewGroup, layoutResource: Int): View {
         val context = parent.context

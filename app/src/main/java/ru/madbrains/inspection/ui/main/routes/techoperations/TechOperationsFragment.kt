@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.fragment_tech_operations.toolbarLayout
 import kotlinx.android.synthetic.main.toolbar_with_back.view.*
 import kotlinx.android.synthetic.main.toolbar_with_close.view.tvTitle
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.domain.model.RouteDataModel
 import ru.madbrains.inspection.R
 
@@ -17,8 +18,11 @@ import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.adapters.TechOperationAdapter
+import ru.madbrains.inspection.ui.main.defects.defectdetail.DefectDetailFragment
+import ru.madbrains.inspection.ui.main.defects.defectlist.DefectListFragment
 import ru.madbrains.inspection.ui.main.equipment.EquipmentFragment
 import ru.madbrains.inspection.ui.main.equipmentList.EquipmentListFragment
+import ru.madbrains.inspection.ui.main.routes.DetoursViewModel
 
 
 class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
@@ -28,6 +32,7 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
     }
 
     private val techOperationsViewModel: TechOperationsViewModel by sharedViewModel()
+    private val detoursViewModel: DetoursViewModel by sharedViewModel()
 
     private val techOperationsAdapter by lazy {
         TechOperationAdapter(
@@ -89,20 +94,17 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
 
     private fun setupOnClickListener() {
 
-        layoutBottomButtonAddDefect.setOnClickListener {
-            techOperationsViewModel.toAddDefect()
-        }
+        layoutBottomButtonAddDefect.setOnClickListener { toDefectDetailFragment() }
 
+        layoutBottomButtonDefect.setOnClickListener {
+            toDefectListFragment()
+        }
         layoutBottomButtonDevice.setOnClickListener {
             techOperationsViewModel.toEquipmentFragment()
         }
     }
 
     private fun setupNavigation() {
-
-        techOperationsViewModel.navigateToAddDefect.observe(viewLifecycleOwner, EventObserver {
-            findNavController().navigate(R.id.action_techOperationsFragment_to_addDefectFragment)
-        })
 
         techOperationsViewModel.navigateToEquipment.observe(viewLifecycleOwner, EventObserver {
             findNavController().navigate(R.id.action_techOperationsFragment_to_equipmentFragment, bundleOf(
@@ -115,5 +117,52 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
                 EquipmentListFragment.KEY_EQUIPMENT_LIST_DATA to it
             ))
         })
+    }
+
+
+    private fun getEquipmentNames(): ArrayList<String>? {
+        techOperationsViewModel.savedRouteData?.equipments?.let {
+            if (!it.isNullOrEmpty()) {
+                return arrayListOf<String>().apply {
+                    it.map { equipmentModel ->
+                        equipmentModel.name?.let { name ->
+                            add(name)
+                        }
+                    }
+                }
+            }
+        }
+        return null
+    }
+
+    private fun getEquipments(): List<EquipmentModel>? {
+        techOperationsViewModel.savedRouteData?.equipments?.let {
+            return it
+        }
+        return null
+    }
+
+    private fun getDetourId(): String? {
+        techOperationsViewModel.savedRouteData?.routeId?.let { routeId ->
+            val detourId = detoursViewModel.detourModels.find { it.routeId == routeId }
+            detourId?.let {
+                return it.id
+            }
+        }
+        return null
+    }
+
+    private fun toDefectDetailFragment() {
+        findNavController().navigate(R.id.action_techOperationsFragment_to_addDefectFragment, bundleOf(
+                DefectDetailFragment.KEY_EQUIPMENT_LIST to getEquipments(),
+                DefectDetailFragment.KEY_DETOUR_ID to getDetourId()
+        ))
+    }
+
+    private fun toDefectListFragment() {
+        findNavController().navigate(R.id.graph_defects, bundleOf(
+                DefectListFragment.KEY_EQUIPMENTS_IDS_DEFECT_LIST to getEquipmentNames(),
+                DefectListFragment.KEY_IS_CONFIRM_DEFECT_LIST to true
+        ))
     }
 }

@@ -9,6 +9,7 @@ import java.io.Serializable
 @JsonClass(generateAdapter = true)
 data class GetFileResp(
         @field:Json(name = "id") val id: String?,
-        @field:Json(name = "someIdDef") val someIdDef: String?,
-        @field:Json(name = "fileId") val fileId: String?
+        @field:Json(name = "url") val url: String?,
+        @field:Json(name = "name") val name: String?,
+        @field:Json(name = "extension") val extension: String?
 )

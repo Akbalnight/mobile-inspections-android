@@ -84,9 +84,6 @@ class TechOperationsViewModel(private val routesInteractor: RoutesInteractor) :
         _techOperations.value = operations
     }
 
-    fun toAddDefect() {
-        _navigateToAddDefect.value = Event(Unit)
-    }
 
     fun toEquipmentFragment() {
         savedRouteData?.equipments?.let {

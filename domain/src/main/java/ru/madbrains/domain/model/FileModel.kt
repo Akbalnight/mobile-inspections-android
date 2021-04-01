@@ -4,6 +4,9 @@ import java.io.Serializable
 
 data class FileModel(
         val id: String?,
-        val someIdDef: String?,
-        val fileId: String?
-) : Serializable
+        val url: String?,
+        val name: String?,
+        val extension: String?
+) : Serializable {
+    var shipped: Boolean = true
+}

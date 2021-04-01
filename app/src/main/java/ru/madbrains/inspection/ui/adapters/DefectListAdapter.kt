@@ -7,11 +7,14 @@ import ru.madbrains.inspection.ui.delegates.DefectListUiModel
 import ru.madbrains.inspection.ui.delegates.defectListDelegate
 
 class DefectListAdapter(
-        onDefectClick: (DefectListUiModel) -> Unit
+        onEditClick: (DefectListUiModel) -> Unit,
+        onDeleteClick: (DefectListUiModel) -> Unit,
+        onConfirmClick: (DefectListUiModel) -> Unit,
+        onEliminatedClick: (DefectListUiModel) -> Unit
 ) : AsyncListDifferDelegationAdapter<DiffItem>(BaseDiffCallback()) {
 
     init {
         delegatesManager
-                .addDelegate(defectListDelegate(onDefectClick))
+                .addDelegate(defectListDelegate(onEditClick, onDeleteClick, onConfirmClick, onEliminatedClick))
     }
 }
