@@ -49,7 +49,7 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
 
     fun getDefectList(device: List<String>?) {
         deviceIds = device
-        routesInteractor.getDefects(equipmentNames = getDeviceIdsList())
+        routesInteractor.getDefects(equipmentIds = getDeviceIdsList())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { _progressVisibility.postValue(true) }
                 .doAfterTerminate { _progressVisibility.postValue(false) }

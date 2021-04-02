@@ -82,6 +82,7 @@ class RoutesRepositoryImpl(
             detourIds: List<String>?,
             defectNames: List<String>?,
             equipmentNames: List<String>?,
+            equipmentIds: List<String>?,
             statusProcessId: String?
     ): Single<List<DefectModel>> {
         val request = GetDefectsReq(
@@ -92,6 +93,7 @@ class RoutesRepositoryImpl(
                 detourIds = detourIds,
                 defectNames = defectNames,
                 equipmentNames = equipmentNames,
+                equipmentIds = equipmentIds,
                 statusProcessId = statusProcessId
         )
         return ApiData.inspectionApi.getDefects(request).map { resp ->

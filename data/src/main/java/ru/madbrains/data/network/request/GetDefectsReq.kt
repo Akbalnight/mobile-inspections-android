@@ -12,5 +12,6 @@ data class GetDefectsReq(
         @field:Json(name = "detourIds") val detourIds: List<String>? = null,
         @field:Json(name = "defectNames") val defectNames: List<String>? = null,
         @field:Json(name = "equipmentNames") val equipmentNames: List<String>? = null,
+        @field:Json(name = "equipmentIds") val equipmentIds: List<String>? = null,
         @field:Json(name = "statusProcessId") val statusProcessId: String? = null
 )

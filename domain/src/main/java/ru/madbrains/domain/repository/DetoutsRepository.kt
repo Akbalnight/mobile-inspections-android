@@ -29,6 +29,7 @@ interface DetoutsRepository {
                    detourIds: List<String>?,
                    defectNames: List<String>?,
                    equipmentNames: List<String>?,
+                   equipmentIds: List<String>?,
                    statusProcessId: String?): Single<List<DefectModel>>
 
 

@@ -61,8 +61,9 @@ class RoutesInteractor(
                    detourIds: List<String>? = null,
                    defectNames: List<String>? = null,
                    equipmentNames: List<String>? = null,
+                   equipmentIds: List<String>? = null,
                    statusProcessId: String? = null): Single<List<DefectModel>> {
-        return routesRepository.getDefects(id, codes, dateDetectStart, dateDetectEnd, detourIds, defectNames, equipmentNames, statusProcessId)
+        return routesRepository.getDefects(id, codes, dateDetectStart, dateDetectEnd, detourIds, defectNames, equipmentNames, equipmentIds, statusProcessId)
                 .subscribeOn(Schedulers.io())
     }
 
