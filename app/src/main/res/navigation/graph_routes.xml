@@ -79,6 +79,9 @@
         <action
             android:id="@+id/action_routePointsFragment_to_routePointsCloseDialog"
             app:destination="@id/routePointsCloseDialog" />
+        <action
+            android:id="@+id/action_routePointsFragment_to_mapsLevelListFragment"
+            app:destination="@id/mapsLevelListFragment" />
     </fragment>
 
     <fragment
@@ -137,4 +140,9 @@
         android:name="ru.madbrains.inspection.ui.main.routes.points.RoutePointsCloseDialog"
         tools:layout="@layout/fragment_route_points_close_dialog"
         android:label="RoutePointsCloseDialog" />
+    <dialog
+        android:id="@+id/mapsLevelListFragment"
+        android:name="ru.madbrains.inspection.ui.main.routes.points.map.mapLevelsList.MapsLevelListFragment"
+        android:label="maps_level_list_fragment"
+        tools:layout="@layout/maps_level_list_fragment" />
 </navigation>

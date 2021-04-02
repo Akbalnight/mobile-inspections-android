@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit
 object ApiData {
 
     var apiUrl = "https://mobinspect.dias-dev.ru"
+    var apiDownloadFileUrl = "$apiUrl/api/dynamicdq/data/file/mobileFiles/"
 
     lateinit var inspectionApi: InspectionApi
 

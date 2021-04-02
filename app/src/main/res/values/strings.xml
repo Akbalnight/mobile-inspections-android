@@ -68,6 +68,10 @@
     <string name="fragment_route_points_list">Список</string>
     <string name="fragment_route_points_map">Карта</string>
 
+    <!-- RoutePointsMapFragment -->
+    <string name="fragment_route_map_error">Ошибка загрузки карты</string>
+    <string name="fragment_route_map_dialog">Маршрутные карты</string>
+
     <!-- RoutePointsListFragment -->
     <string name="factOrderFlag">Учитывать порядок обхода:</string>
 
