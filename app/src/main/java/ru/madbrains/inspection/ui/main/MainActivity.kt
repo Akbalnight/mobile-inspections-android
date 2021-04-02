@@ -3,16 +3,22 @@ package ru.madbrains.inspection.ui.main
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.progressView
+import kotlinx.android.synthetic.main.fragment_route_points.*
 import kotlinx.android.synthetic.main.menu_navigation_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseActivity
 import ru.madbrains.inspection.base.EventObserver
+import ru.madbrains.inspection.extensions.colors
+import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.auth.AuthorizationActivity
 
 class MainActivity : BaseActivity(R.layout.activity_main) {
@@ -58,6 +64,9 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         })
         mainViewModel.navigateToAuthorization.observe(this, EventObserver {
             startAuthActivity()
+        })
+        mainViewModel.showSnackBar.observe(this, EventObserver {
+            showSnackBar(it)
         })
     }
 
@@ -113,6 +122,19 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         navController.popBackStack(navController.graph.startDestination, false)
         navController.navigate(R.id.grapg_settings)
         mainDrawer.closeDrawer(GravityCompat.START)
+    }
+
+    private fun showSnackBar(text: String) {
+
+        val snackBar = Snackbar
+                .make(coordinatorLayoutMain, text, Snackbar.LENGTH_SHORT)
+                .setAction(strings[R.string.fragment_add_defect_snackbar_button], View.OnClickListener {
+
+                })
+        snackBar.setTextColor(colors[R.color.textWhite])
+        snackBar.setActionTextColor(colors[R.color.accidentDark])
+        snackBar.setBackgroundTint(colors[R.color.colorPrimaryDark])
+        snackBar.show()
     }
 
     private fun startAuthActivity() {

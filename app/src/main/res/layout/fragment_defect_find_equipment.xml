@@ -36,7 +36,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/item_device_select">
+            tools:listitem="@layout/item_equipment_select">
 
         </androidx.recyclerview.widget.RecyclerView>
 

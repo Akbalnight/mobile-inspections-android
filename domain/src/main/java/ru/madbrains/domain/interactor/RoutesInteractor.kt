@@ -19,13 +19,13 @@ class RoutesInteractor(
 
     fun saveDetour(detour: DetourModel): Completable {
         return routesRepository.saveDetour(detour)
-            .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
     }
 
     fun freezeDetours(detourIds: List<String>): Completable {
         return if (detourIds.isEmpty()) Completable.complete() else {
             routesRepository.freezeDetours(detourIds)
-                .subscribeOn(Schedulers.io())
+                    .subscribeOn(Schedulers.io())
         }
     }
 
@@ -44,12 +44,12 @@ class RoutesInteractor(
                 .subscribeOn(Schedulers.io())
     }
 
-    fun getEquipments(names: List<String>, uuid: List<String>): Single<List<EquipmentsModel>> {
+    fun getEquipments(names: List<String>, uuid: List<String>): Single<List<EquipmentModel>> {
         return routesRepository.getEquipments(names, uuid)
                 .subscribeOn(Schedulers.io())
     }
 
-    fun downloadFile(fileUrl:String): Single<Response<ResponseBody>> {
+    fun downloadFile(fileUrl: String): Single<Response<ResponseBody>> {
         return routesRepository.downloadFile(fileUrl)
                 .subscribeOn(Schedulers.io())
     }
@@ -61,19 +61,32 @@ class RoutesInteractor(
                    detourIds: List<String>? = null,
                    defectNames: List<String>? = null,
                    equipmentNames: List<String>? = null,
+                   equipmentIds: List<String>? = null,
                    statusProcessId: String? = null): Single<List<DefectModel>> {
-        return routesRepository.getDefects(id, codes, dateDetectStart, dateDetectEnd, detourIds, defectNames, equipmentNames, statusProcessId)
+        return routesRepository.getDefects(id, codes, dateDetectStart, dateDetectEnd, detourIds, defectNames, equipmentNames, equipmentIds, statusProcessId)
                 .subscribeOn(Schedulers.io())
     }
 
     fun saveDefect(files: List<File>? = null,
-                   detoursId: String? = null,
+                   detourId: String? = null,
                    equipmentId: String? = null,
                    staffDetectId: String? = null,
                    defectTypicalId: String? = null,
                    description: String? = null,
-                   dateDetectDefect: String? = null): Single<String> {
+                   dateDetectDefect: String? = null,
+                   statusProcessId: String? = null): Single<String> {
 
-        return routesRepository.saveDefect(files, detoursId, equipmentId, staffDetectId, defectTypicalId, description, dateDetectDefect).subscribeOn(Schedulers.io())
+        return routesRepository.saveDefect(files, detourId, equipmentId, staffDetectId, defectTypicalId, description, dateDetectDefect, statusProcessId).subscribeOn(Schedulers.io())
+    }
+
+    fun updateDefect(files: List<File>? = null,
+                     id: String? = null,
+                     statusProcessId: String? = null,
+                     dateDetectDefect: String? = null,
+                     staffDetectId: String? = null,
+                     description: String? = null,
+                     detoursId: String? = null): Single<String> {
+
+        return routesRepository.updateDefect(files, id, statusProcessId, dateDetectDefect, staffDetectId, description, detoursId).subscribeOn(Schedulers.io())
     }
 }

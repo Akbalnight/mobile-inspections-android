@@ -25,6 +25,7 @@ buildscript {
         glideVersion = '4.11.0'
         adapterdelegatesVersion = '4.3.0'
         cameraxVersion = '1.0.0-alpha02'
+        glide_version = '4.11.0'
     }
 
     repositories {

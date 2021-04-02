@@ -5,12 +5,12 @@ import ru.madbrains.inspection.base.BaseDiffCallback
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.*
 
-class DeviceSelectAdapter(
-    onDeviceSelectClick: (DeviceSelectUiModel) -> Unit
+class EquipmentSelectAdapter(
+    onDeviceSelectClick: (EquipmentSelectUiModel) -> Unit
 ) : AsyncListDifferDelegationAdapter<DiffItem>(BaseDiffCallback()) {
 
     init {
         delegatesManager
-            .addDelegate(deviceSelectDelegate(onDeviceSelectClick))
+            .addDelegate(equipmentSelectDelegate(onDeviceSelectClick))
     }
 }

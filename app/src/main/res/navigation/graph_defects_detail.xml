@@ -14,7 +14,7 @@
 
         <action
             android:id="@+id/action_defectDetailFragment_to_deviceSelectListFragment"
-            app:destination="@id/deviceSelectListFragment"
+            app:destination="@id/equipmentSelectListFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
@@ -31,10 +31,10 @@
     </fragment>
 
     <fragment
-        android:id="@+id/deviceSelectListFragment"
-        android:name="ru.madbrains.inspection.ui.main.defects.defectdetail.deviceSelectList.DeviceSelectListFragment"
-        android:label="DeviceSelectListFragment"
-        tools:layout="@layout/fragment_defect_find_device" />
+        android:id="@+id/equipmentSelectListFragment"
+        android:name="ru.madbrains.inspection.ui.main.defects.defectdetail.equipmentselectlist.EquipmentSelectListFragment"
+        android:label="EquipmentSelectListFragment"
+        tools:layout="@layout/fragment_defect_find_equipment" />
 
     <fragment
         android:id="@+id/cameraFragment"
