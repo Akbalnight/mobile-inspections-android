@@ -20,13 +20,14 @@ fun mapLevelDelegate(clickListener: (MapLevelUiModel) -> Unit) =
                     } else {
                         ivSelected.visibility = View.INVISIBLE
                     }
-                    tvLabel.text = item.id
+                    tvLabel.text = item.name
                 }
             }
         }
 
 data class MapLevelUiModel(
         val id: String,
+        val name: String?,
         val isActive: Boolean
 ) : DiffItem {
 

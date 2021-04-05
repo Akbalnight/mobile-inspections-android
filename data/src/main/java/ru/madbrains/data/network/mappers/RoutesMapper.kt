@@ -69,8 +69,9 @@ fun mapGetRoutesMapsResp(resp: GetRouteMapsResp): RouteMapModel {
     return with(resp) {
         RouteMapModel(
                 id = id,
-                routeId = routeId,
-                fileId = fileId,
+                url = url,
+                name = name,
+                extension = extension,
                 position = position
         )
     }

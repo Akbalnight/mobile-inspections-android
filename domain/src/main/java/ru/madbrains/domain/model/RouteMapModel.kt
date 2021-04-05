@@ -4,7 +4,8 @@ import java.io.Serializable
 
 data class RouteMapModel(
         val id: String,
-        val routeId: String?,
-        val fileId: String?,
-        val position: Int?
+        val url: String,
+        val name: String?,
+        val extension: String,
+        val position: Int
 ): Serializable
