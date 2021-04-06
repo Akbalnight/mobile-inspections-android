@@ -21,14 +21,14 @@ class RoutePointsMapViewModel : BaseViewModel() {
 
     fun setData(detour: DetourModel) {
         _mapLevels.value = detour.route.routeMaps?.mapIndexed { i, map ->
-            MapLevelUiModel(map.id, map.name, i == 0)
+            MapLevelUiModel(map.id, map.name, map.url, i == 0)
         }
         _mapPoints.value = detour.route.routesData
     }
 
     fun setActiveMap(map: MapLevelUiModel) {
         _mapLevels.value = _mapLevels.value?.map {
-            MapLevelUiModel(it.id, it.name,map.id == it.id)
+            MapLevelUiModel(it.id, it.name, it.url, map.id == it.id)
         }
     }
 

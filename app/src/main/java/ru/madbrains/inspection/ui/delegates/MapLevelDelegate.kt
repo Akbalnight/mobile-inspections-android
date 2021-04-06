@@ -28,6 +28,7 @@ fun mapLevelDelegate(clickListener: (MapLevelUiModel) -> Unit) =
 data class MapLevelUiModel(
         val id: String,
         val name: String?,
+        val url: String,
         val isActive: Boolean
 ) : DiffItem {
 

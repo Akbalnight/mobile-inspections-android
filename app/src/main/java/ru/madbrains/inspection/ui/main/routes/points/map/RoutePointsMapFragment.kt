@@ -1,23 +1,20 @@
 package ru.madbrains.inspection.ui.main.routes.points.map
 
 import android.graphics.Bitmap
-import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.widget.FrameLayout
-import androidx.core.graphics.toRect
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import kotlinx.android.synthetic.main.fragment_route_points_map.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import ru.madbrains.data.network.ApiData.apiDownloadFileUrl
+import ru.madbrains.data.network.ApiData.apiUrl
 import ru.madbrains.domain.model.RouteDataModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
@@ -42,7 +39,7 @@ class RoutePointsMapFragment : BaseFragment(R.layout.fragment_route_points_map) 
         }
         routePointsMapViewModel.mapLevels.observe(viewLifecycleOwner) { list ->
             list.find { it.isActive }?.let { item ->
-                loadImage(item.id)
+                loadImage(item.url)
             }
         }
         routePointsMapViewModel.navigateToTechOperations.observe(
@@ -105,12 +102,11 @@ class RoutePointsMapFragment : BaseFragment(R.layout.fragment_route_points_map) 
         }
     }
 
-    private fun loadImage(id: String) {
-        val url = apiDownloadFileUrl + id
+    private fun loadImage(url: String) {
         Glide
                 .with(requireContext())
                 .asBitmap()
-                .load(url)
+                .load(apiUrl + url)
                 .into(object : SimpleTarget<Bitmap>() {
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                         bitmap = resource
