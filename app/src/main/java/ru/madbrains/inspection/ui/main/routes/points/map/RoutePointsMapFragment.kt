@@ -4,6 +4,8 @@ import android.graphics.Bitmap
 import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.FrameLayout
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -78,6 +80,11 @@ class RoutePointsMapFragment : BaseFragment(R.layout.fragment_route_points_map) 
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        imageScale = 1f
+    }
+
     private fun calculatePoints(rectF: RectF) {
         val image = bitmap ?: return
         val pointSize = 160
@@ -114,9 +121,12 @@ class RoutePointsMapFragment : BaseFragment(R.layout.fragment_route_points_map) 
                         progressView.changeVisibility(false)
                         mapIV.apply {
                             setImageBitmap(resource)
-                            displayRect?.let {
-                                calculatePoints(it)
-                            }
+
+                            Handler(Looper.getMainLooper()).postDelayed({ //hack for not showing points after other screen
+                                displayRect?.let {
+                                    calculatePoints(it)
+                                }
+                            }, 100)
                         }
                     }
 
