@@ -10,10 +10,7 @@ import ru.madbrains.data.extensions.toyyyyMMddTHHmmssXXX
 import ru.madbrains.data.network.ApiData
 import ru.madbrains.data.utils.FileUtil
 import ru.madbrains.domain.interactor.RoutesInteractor
-import ru.madbrains.domain.model.DefectModel
-import ru.madbrains.domain.model.DefectStatus
-import ru.madbrains.domain.model.DefectTypicalModel
-import ru.madbrains.domain.model.EquipmentModel
+import ru.madbrains.domain.model.*
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
@@ -204,7 +201,7 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
                                         imageBitmap = BitmapFactory.decodeFile(fileModel.localFile?.path)
                                 ))
                             }
-                            "mpeg" -> {
+                            "mp4" -> {
                                 mediaModels.add(MediaDefectUiModel(
                                         id = fileModel.id.orEmpty(),
                                         isImage = false,
@@ -322,11 +319,17 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
         //todo db offline
     }
 
-    private fun getFilesToSend(): List<File> {
+    private fun getFilesToSend(): List<MediaModel> {
         return mediaModels.filter {
-            !it.isNetwork && (it.imageBitmap != null)
+            !it.isNetwork
         }.map { media ->
-            fileUtil.createFile(media.imageBitmap!!, media.id)
+            //fileUtil.createFile(media.imageBitmap!!, media.id)
+            if (media.isImage){
+                MediaModel(extension = "jpg", file = fileUtil.createFile(media.imageBitmap!!, media.id))
+
+            } else {
+                MediaModel(extension = "mp4", file = media.fileVideo!!)
+            }
         }
     }
 

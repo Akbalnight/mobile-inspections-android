@@ -121,7 +121,7 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
                                 imageBitmap = BitmapFactory.decodeFile(fileModel.localFile?.path)
                         ))
                     }
-                    "mpeg" -> {
+                    "mp4" -> {
                         list.add(MediaDefectUiModel(
                                 id = fileModel.id.orEmpty(),
                                 isImage = false,
