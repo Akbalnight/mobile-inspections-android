@@ -13,7 +13,7 @@ import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.TechOperationUiModel
 
 class TechOperationsViewModel(private val routesInteractor: RoutesInteractor) :
-    BaseViewModel() {
+        BaseViewModel() {
 
     private val _progressVisibility = MutableLiveData<Boolean>()
     val progressVisibility: LiveData<Boolean> = _progressVisibility
@@ -38,10 +38,31 @@ class TechOperationsViewModel(private val routesInteractor: RoutesInteractor) :
     private val _completeTechMapEvent = MutableLiveData<Event<TechMapModel>>()
     val completeTechMapEvent: LiveData<Event<TechMapModel>> = _completeTechMapEvent
 
+    private val _navigatePop = MutableLiveData<Event<Unit>>()
+    val navigatePop: LiveData<Event<Unit>> = _navigatePop
+
+    private val _showDialogBlankFields = MutableLiveData<Event<Unit>>()
+    val showDialogBlankFields: LiveData<Event<Unit>> = _showDialogBlankFields
+
     var savedRouteData: RouteDataModel? = null
 
     fun finishTechMap() {
         savedRouteData?.techMap?.let { _completeTechMapEvent.value = Event(it) }
+        _navigatePop.value = Event(Unit)
+    }
+
+    fun checkAvailableFinishTechMap() {
+        savedRouteData?.let { routeData ->
+            routeData.techMap?.techOperations?.filter {
+                (it.needInputData == true) && it.valueInputData.isNullOrEmpty()
+            }?.let { filterList ->
+                if (filterList.isNullOrEmpty()) {
+                    finishTechMap()
+                } else {
+                    _showDialogBlankFields.value = Event(Unit)
+                }
+            }
+        }
     }
 
     fun setRouteData(routeDataModel: RouteDataModel) {
@@ -59,7 +80,7 @@ class TechOperationsViewModel(private val routesInteractor: RoutesInteractor) :
     }
 
     fun onTechDataInput(techOperationId: String, dataValue: String) {
-        savedRouteData?.let { routeData->
+        savedRouteData?.let { routeData ->
             routeData.techMap?.techOperations?.find { it.id == techOperationId }?.let { techOperation ->
                 techOperation.valueInputData = dataValue
             }
@@ -70,14 +91,14 @@ class TechOperationsViewModel(private val routesInteractor: RoutesInteractor) :
         val operations = mutableListOf<DiffItem>().apply {
             operationsModels.map { operation ->
                 add(
-                    TechOperationUiModel(
-                        id = operation.id,
-                        name = operation.name.orEmpty(),
-                        labelInputData = operation.labelInputData.orEmpty(),
-                        valueInputData = operation.valueInputData.orEmpty(),
-                        needInputData = operation.needInputData,
-                        position = operation.position
-                    )
+                        TechOperationUiModel(
+                                id = operation.id,
+                                name = operation.name.orEmpty(),
+                                labelInputData = operation.labelInputData.orEmpty(),
+                                valueInputData = operation.valueInputData.orEmpty(),
+                                needInputData = operation.needInputData,
+                                position = operation.position
+                        )
                 )
             }
         }
@@ -87,9 +108,9 @@ class TechOperationsViewModel(private val routesInteractor: RoutesInteractor) :
 
     fun toEquipmentFragment() {
         savedRouteData?.equipments?.let {
-            if(it.size == 1){
+            if (it.size == 1) {
                 _navigateToEquipment.value = Event(it[0])
-            } else if(it.size > 1){
+            } else if (it.size > 1) {
                 _navigateToEquipmentList.value = Event(it)
             }
         }
