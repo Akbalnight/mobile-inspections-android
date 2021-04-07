@@ -2,6 +2,7 @@ package ru.madbrains.inspection.ui.main.routes.routelist
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -28,6 +29,12 @@ class RouteListFragment : BaseFragment(R.layout.fragment_route_list) {
 
     private val routeListViewModel: RouteListViewModel by viewModel()
     private val detoursViewModel: DetoursViewModel by sharedViewModel()
+    private val handler = Handler()
+    private var scanIsOn = false
+    private val rPower = RfidPower(RfidPower.PDATYPE.ZoomSmart)
+    private val reader = Reader()
+
+    private lateinit var runnable: Runnable
 
     private val routesAdapter by lazy {
         DetourAdapter(
@@ -44,36 +51,45 @@ class RouteListFragment : BaseFragment(R.layout.fragment_route_list) {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val rPower = RfidPower(RfidPower.PDATYPE.ZoomSmart)
-        val reader = Reader()
+        runnable = Runnable {
+            Timber.d("RFID ${rPower.GetDevPath()}")
+
+            reader.InitReader_Notype("/dev/ttyHSL3", 1)
+
+            val ants = IntArray(1)
+            ants[0] = 1
+            val tagcnt = IntArray(1)
+            tagcnt[0] = 0
+
+            var er = reader.TagInventory_Raw(ants, ants.size, 500, tagcnt)
+
+            if (er == READER_ERR.MT_OK_ERR) {
+                val tagInfo = reader.TAGINFO()
+                er = reader.GetNextTag(tagInfo)
+                if (er == READER_ERR.MT_OK_ERR) {
+                    Timber.d("RFID ...info= ${Reader.bytes_Hexstr(tagInfo.EpcId)}")
+                }
+            }
+            if(scanIsOn) {
+                handler.postDelayed(this.runnable, 0)
+            }
+        }
 
         startScan.setOnClickListener {
-
-            Executors.newSingleThreadExecutor().execute {
-
+            if(!scanIsOn){
+                scanIsOn = true
+                rPower.PowerDown()
                 rPower.PowerUp()
-
-                Log.d("RFID", rPower.GetDevPath())
-
-                reader.InitReader_Notype("/dev/ttyHSL3", 1)
-
-                val ants = IntArray(1)
-                val tagcnt = IntArray(1)
-
-                var er = reader.TagInventory_Raw(ants, ants.size, 50, tagcnt)
-
-                if (er == READER_ERR.MT_OK_ERR) {
-                    val tagInfo = reader.TAGINFO()
-                    er = reader.GetNextTag(tagInfo)
-                    if (er == READER_ERR.MT_OK_ERR) {
-                        Log.d("RFID", "...info=" + Reader.bytes_Hexstr(tagInfo.EpcId))
-                    }
+                Executors.newSingleThreadExecutor().execute {
+                    handler.post(this.runnable)
                 }
             }
         }
 
         stopScan.setOnClickListener {
+            scanIsOn = false
             rPower.PowerDown()
+            handler.removeCallbacks(runnable)
         }
 
         rvRoutes.adapter = routesAdapter
