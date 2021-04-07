@@ -88,4 +88,5 @@
             android:id="@+id/action_routePointsFragment_to_mapsLevelListFragment"
             app:destination="@id/mapsLevelListFragment" />
     </fragment>
+    <include app:graph="@navigation/graph_defects" />
 </navigation>
