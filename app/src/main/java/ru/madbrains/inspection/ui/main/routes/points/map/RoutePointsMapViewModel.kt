@@ -43,7 +43,15 @@ class RoutePointsMapViewModel : BaseViewModel() {
         _mapPoints.value = detourModel.route.routesData.filter { it.routeMapId == map.id }
     }
 
-    fun routePointClick(routeData: RouteDataModel?) {
-        routeData?.let { _navigateToTechOperations.value = Event(it) }
+    fun routePointClick(routeData: RouteDataModel) {
+        val routes = detourModel.route.routesData.sortedBy { it.position }
+        val clickedIndex = routes.indexOf(routeData)
+        val prevWasCompleted = if (clickedIndex > 0) routes[clickedIndex - 1].completed else false
+        val preserveOrder = detourModel.saveOrderControlPoints == true
+
+        if (!preserveOrder || routeData.completed || clickedIndex == 0 || prevWasCompleted) {
+            routeData.techMap?.pointNumber = routeData.position
+            _navigateToTechOperations.value = Event(routeData)
+        }
     }
 }
