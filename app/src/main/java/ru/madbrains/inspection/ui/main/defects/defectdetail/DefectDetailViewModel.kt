@@ -1,6 +1,7 @@
 package ru.madbrains.inspection.ui.main.defects.defectdetail
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -193,12 +194,28 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
                             "jpg" -> { // если в файле изображение добавляем в список
                                 mediaModels.add(MediaDefectUiModel(
                                         id = fileModel.id.orEmpty(),
-                                        isEditing = !fileModel.shipped,
-                                        url = ApiData.apiUrl + fileModel.url.orEmpty()
+                                        isImage = true,
+                                        isNetwork = fileModel.shipped,
+                                        url = if (fileModel.shipped) {
+                                            ApiData.apiUrl + fileModel.url.orEmpty()
+                                        } else {
+                                            ""
+                                        },
+                                        imageBitmap = BitmapFactory.decodeFile(fileModel.localFile?.path)
                                 ))
                             }
                             "mpeg" -> {
-                                //todo preview video
+                                mediaModels.add(MediaDefectUiModel(
+                                        id = fileModel.id.orEmpty(),
+                                        isImage = false,
+                                        isNetwork = fileModel.shipped,
+                                        url = if (fileModel.shipped) {
+                                            ApiData.apiUrl + fileModel.url.orEmpty()
+                                        } else {
+                                            ""
+                                        },
+                                        fileVideo = fileModel.localFile
+                                ))
                             }
                             else -> {
                             }
@@ -225,8 +242,21 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
                 MediaDefectUiModel(
                         id = UUID.randomUUID().toString(),
                         imageBitmap = image,
-                        isEditing = true,
-                        isNetworkImage = false
+                        isNetwork = false,
+                        isImage = true
+                )
+        )
+        isChangedDefect = true
+        updateMediaList()
+    }
+
+    fun addVideo(videoFile: File) {
+        mediaModels.add(
+                MediaDefectUiModel(
+                        id = UUID.randomUUID().toString(),
+                        isImage = false,
+                        isNetwork = false,
+                        fileVideo = videoFile
                 )
         )
         isChangedDefect = true
@@ -294,7 +324,7 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
 
     private fun getFilesToSend(): List<File> {
         return mediaModels.filter {
-            it.isEditing && (it.imageBitmap != null)
+            !it.isNetwork && (it.imageBitmap != null)
         }.map { media ->
             fileUtil.createFile(media.imageBitmap!!, media.id)
         }
