@@ -1,7 +1,6 @@
 package ru.madbrains.inspection.ui.main.routes.dateroutelist
 
 import android.os.Bundle
-import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_route_list_date.*
@@ -15,7 +14,7 @@ import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.ui.adapters.DetourAdapter
 import ru.madbrains.inspection.ui.delegates.DetourUiModel
 import ru.madbrains.inspection.ui.main.routes.DetoursViewModel
-import ru.madbrains.inspection.ui.main.routes.points.RoutePointsFragment
+import ru.madbrains.inspection.ui.main.routes.points.RoutePointsActivity
 
 class DateRouteListFragment : BaseFragment(R.layout.fragment_route_list_date) {
 
@@ -67,9 +66,6 @@ class DateRouteListFragment : BaseFragment(R.layout.fragment_route_list_date) {
     }
 
     private fun openRoutePointsFragment(detour: DetourModel) {
-        val args = bundleOf(
-            RoutePointsFragment.KEY_DETOUR to detour
-        )
-        findNavController().navigate(R.id.action_dateRouteListFragment_to_routePointsFragment, args)
+        RoutePointsActivity.start(this.context, detour)
     }
 }
