@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.GravityCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -72,6 +73,10 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
     private fun setupMenu() {
         tvUsername.text = mainViewModel.username
+        mainViewModel.isAdmin.let {
+            llMarks.isVisible = it
+            llSettings.isVisible = it
+        }
         navView.apply {
             llRouteList.setOnClickListener {
                 mainViewModel.routesClick()
