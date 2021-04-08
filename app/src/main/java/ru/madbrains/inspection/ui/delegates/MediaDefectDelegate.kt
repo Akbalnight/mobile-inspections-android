@@ -69,7 +69,7 @@ data class MediaDefectUiModel(
         val id: String,
         val isImage: Boolean = true, // признак изображение или видео
         val isNetwork: Boolean = true, // признак онлайн медиа или локально
-        val imageBitmap: Bitmap? = null, // изображение для оффлайн изобржений (либо превью видео)
+        val imageBitmap: Bitmap? = null, // изображение для оффлайн изобржений
         val fileVideo: File? = null, // видео
         val url: String = "" // адрес для онлайн медиа
 ) : DiffItem {
