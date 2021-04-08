@@ -1,5 +1,6 @@
 package ru.madbrains.inspection.ui.main.defects.defectlist
 
+import android.graphics.BitmapFactory
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -110,12 +111,28 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
                     "jpg" -> { // если в файле изображение добавляем в список
                         list.add(MediaDefectUiModel(
                                 id = fileModel.id.orEmpty(),
-                                isEditing = false,
-                                url = ApiData.apiUrl + fileModel.url.orEmpty()
+                                isImage = true,
+                                isNetwork = fileModel.shipped,
+                                url = if (fileModel.shipped) {
+                                    ApiData.apiUrl + fileModel.url.orEmpty()
+                                } else {
+                                    ""
+                                },
+                                imageBitmap = BitmapFactory.decodeFile(fileModel.localFile?.path)
                         ))
                     }
-                    "mpeg" -> {
-                        //todo preview video
+                    "mp4" -> {
+                        list.add(MediaDefectUiModel(
+                                id = fileModel.id.orEmpty(),
+                                isImage = false,
+                                isNetwork = fileModel.shipped,
+                                url = if (fileModel.shipped) {
+                                    ApiData.apiUrl + fileModel.url.orEmpty()
+                                } else {
+                                    ""
+                                },
+                                fileVideo = fileModel.localFile
+                        ))
                     }
                     else -> {
                     }

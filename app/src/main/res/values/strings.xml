@@ -27,6 +27,10 @@
     <string name="fragment_tech_operations_defect">Дефекты</string>
     <string name="fragment_tech_operations_device">Оборудование</string>
     <string name="fragment_tech_operations_app_bar">Контрольная точка №</string>
+    <string name="fragment_tech_operations_dialog_empty_fields_title">Не введены контрольные параметры</string>
+    <string name="fragment_tech_operations_dialog_empty_fields_message">Вы действительно хотите завершить обход контрольной точки?</string>
+    <string name="fragment_tech_operations_dialog_empty_fields_button_complete">Завершить</string>
+    <string name="fragment_tech_operations_dialog_empty_fields_button_cancel">Отмена</string>
 
     <!-- AddDefect -->
     <string name="fragment_add_defect_toolbar_create">Фиксация дефекта</string>

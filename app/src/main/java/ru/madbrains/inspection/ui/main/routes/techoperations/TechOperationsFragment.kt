@@ -1,6 +1,8 @@
 package ru.madbrains.inspection.ui.main.routes.techoperations
 
+import android.content.DialogInterface
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -56,8 +58,7 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
         }
 
         fabTechOperationsSave.setOnClickListener {
-            techOperationsViewModel.finishTechMap()
-            findNavController().popBackStack()
+            techOperationsViewModel.checkAvailableFinishTechMap()
         }
 
         rvTechOperations.adapter = techOperationsAdapter
@@ -68,6 +69,14 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
 
         techOperationsViewModel.techOperations.observe(viewLifecycleOwner, Observer {
             techOperationsAdapter.items = it
+        })
+
+        techOperationsViewModel.navigatePop.observe(viewLifecycleOwner, EventObserver {
+            findNavController().popBackStack()
+        })
+
+        techOperationsViewModel.showDialogBlankFields.observe(viewLifecycleOwner, EventObserver {
+            showDialogBlankFields()
         })
 
         setupOnClickListener()
@@ -150,5 +159,24 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
                 DefectListFragment.KEY_EQUIPMENTS_IDS_DEFECT_LIST to getEquipmentIds(),
                 DefectListFragment.KEY_IS_CONFIRM_DEFECT_LIST to true
         ))
+    }
+
+    private fun showDialogBlankFields() {
+        val alertDialog: AlertDialog? = activity?.let {
+            val builder = AlertDialog.Builder(it)
+            builder.apply {
+                setTitle(strings[R.string.fragment_tech_operations_dialog_empty_fields_title])
+                setMessage(strings[R.string.fragment_tech_operations_dialog_empty_fields_message])
+                setPositiveButton(strings[R.string.fragment_tech_operations_dialog_empty_fields_button_complete],
+                        DialogInterface.OnClickListener { _, _ ->
+                            techOperationsViewModel.finishTechMap()
+                        })
+                setNegativeButton(strings[R.string.fragment_tech_operations_dialog_empty_fields_button_cancel],
+                        DialogInterface.OnClickListener { _, _ ->
+                        })
+            }
+            builder.create()
+        }
+        alertDialog?.show()
     }
 }

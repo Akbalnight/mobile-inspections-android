@@ -1,6 +1,7 @@
 package ru.madbrains.inspection.ui.main.defects.defectdetail
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -9,10 +10,7 @@ import ru.madbrains.data.extensions.toyyyyMMddTHHmmssXXX
 import ru.madbrains.data.network.ApiData
 import ru.madbrains.data.utils.FileUtil
 import ru.madbrains.domain.interactor.RoutesInteractor
-import ru.madbrains.domain.model.DefectModel
-import ru.madbrains.domain.model.DefectStatus
-import ru.madbrains.domain.model.DefectTypicalModel
-import ru.madbrains.domain.model.EquipmentModel
+import ru.madbrains.domain.model.*
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
@@ -193,12 +191,28 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
                             "jpg" -> { // если в файле изображение добавляем в список
                                 mediaModels.add(MediaDefectUiModel(
                                         id = fileModel.id.orEmpty(),
-                                        isEditing = !fileModel.shipped,
-                                        url = ApiData.apiUrl + fileModel.url.orEmpty()
+                                        isImage = true,
+                                        isNetwork = fileModel.shipped,
+                                        url = if (fileModel.shipped) {
+                                            ApiData.apiUrl + fileModel.url.orEmpty()
+                                        } else {
+                                            ""
+                                        },
+                                        imageBitmap = BitmapFactory.decodeFile(fileModel.localFile?.path)
                                 ))
                             }
-                            "mpeg" -> {
-                                //todo preview video
+                            "mp4" -> {
+                                mediaModels.add(MediaDefectUiModel(
+                                        id = fileModel.id.orEmpty(),
+                                        isImage = false,
+                                        isNetwork = fileModel.shipped,
+                                        url = if (fileModel.shipped) {
+                                            ApiData.apiUrl + fileModel.url.orEmpty()
+                                        } else {
+                                            ""
+                                        },
+                                        fileVideo = fileModel.localFile
+                                ))
                             }
                             else -> {
                             }
@@ -225,8 +239,21 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
                 MediaDefectUiModel(
                         id = UUID.randomUUID().toString(),
                         imageBitmap = image,
-                        isEditing = true,
-                        isNetworkImage = false
+                        isNetwork = false,
+                        isImage = true
+                )
+        )
+        isChangedDefect = true
+        updateMediaList()
+    }
+
+    fun addVideo(videoFile: File) {
+        mediaModels.add(
+                MediaDefectUiModel(
+                        id = UUID.randomUUID().toString(),
+                        isImage = false,
+                        isNetwork = false,
+                        fileVideo = videoFile
                 )
         )
         isChangedDefect = true
@@ -292,11 +319,17 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
         //todo db offline
     }
 
-    private fun getFilesToSend(): List<File> {
+    private fun getFilesToSend(): List<MediaModel> {
         return mediaModels.filter {
-            it.isEditing && (it.imageBitmap != null)
+            !it.isNetwork
         }.map { media ->
-            fileUtil.createFile(media.imageBitmap!!, media.id)
+            //fileUtil.createFile(media.imageBitmap!!, media.id)
+            if (media.isImage){
+                MediaModel(extension = "jpg", file = fileUtil.createFile(media.imageBitmap!!, media.id))
+
+            } else {
+                MediaModel(extension = "mp4", file = media.fileVideo!!)
+            }
         }
     }
 
