@@ -37,11 +37,12 @@ fun mapGetDetoursResp(resp: GetDetoursResp): DetourModel {
 fun mapGetRouteResp(resp: GetRouteResp): RouteModel {
     return with(resp) {
         RouteModel(
-                id = id,
-                name = name,
-                code = code,
-                duration = duration,
-                routesData = routesData.map { mapGetRoutesDataResp(it) }
+            id = id,
+            name = name,
+            code = code,
+            duration = duration,
+            routesData = routesData.map { mapGetRoutesDataResp(it) },
+            routeMaps = routeMaps?.map { mapGetRoutesMapsResp(it) }
         )
     }
 }
@@ -60,6 +61,18 @@ fun mapGetRoutesDataResp(resp: GetRouteDataResp): RouteDataModel {
                 position = position,
                 equipments = equipments?.map { mapGetEquipmentResp(it) },
                 techMap = techMap?.let { mapTechMapResp(it) }
+        )
+    }
+}
+
+fun mapGetRoutesMapsResp(resp: GetRouteMapsResp): RouteMapModel {
+    return with(resp) {
+        RouteMapModel(
+                id = id,
+                url = url,
+                name = name,
+                extension = extension,
+                position = position
         )
     }
 }

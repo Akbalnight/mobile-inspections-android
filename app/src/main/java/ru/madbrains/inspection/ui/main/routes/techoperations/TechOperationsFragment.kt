@@ -13,7 +13,6 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.domain.model.RouteDataModel
 import ru.madbrains.inspection.R
-
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.extensions.strings
@@ -22,8 +21,7 @@ import ru.madbrains.inspection.ui.main.defects.defectdetail.DefectDetailFragment
 import ru.madbrains.inspection.ui.main.defects.defectlist.DefectListFragment
 import ru.madbrains.inspection.ui.main.equipment.EquipmentFragment
 import ru.madbrains.inspection.ui.main.equipmentList.EquipmentListFragment
-import ru.madbrains.inspection.ui.main.routes.DetoursViewModel
-
+import ru.madbrains.inspection.ui.main.routes.points.RoutePointsViewModel
 
 class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
 
@@ -32,7 +30,7 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
     }
 
     private val techOperationsViewModel: TechOperationsViewModel by sharedViewModel()
-    private val detoursViewModel: DetoursViewModel by sharedViewModel()
+    private val routePointsViewModel: RoutePointsViewModel by sharedViewModel()
 
     private val techOperationsAdapter by lazy {
         TechOperationAdapter(
@@ -140,20 +138,10 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
         return null
     }
 
-    private fun getDetourId(): String? {
-        techOperationsViewModel.savedRouteData?.routeId?.let { routeId ->
-            val detourId = detoursViewModel.detourModels.find { it.routeId == routeId }
-            detourId?.let {
-                return it.id
-            }
-        }
-        return null
-    }
-
     private fun toDefectDetailFragment() {
         findNavController().navigate(R.id.action_techOperationsFragment_to_addDefectFragment, bundleOf(
                 DefectDetailFragment.KEY_EQUIPMENT_LIST to getEquipments(),
-                DefectDetailFragment.KEY_DETOUR_ID to getDetourId()
+                DefectDetailFragment.KEY_DETOUR_ID to routePointsViewModel.detourModel?.id
         ))
     }
 
