@@ -18,6 +18,9 @@ class MainViewModel(
     val username: String
         get() = preferenceStorage.username.orEmpty()
 
+    val isAdmin: Boolean
+        get() = preferenceStorage.isAdmin
+
     private val _progressVisibility = MutableLiveData<Boolean>()
     val progressVisibility: LiveData<Boolean> = _progressVisibility
 
