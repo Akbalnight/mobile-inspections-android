@@ -99,6 +99,7 @@
 
     <!-- RoutePointsListFragment -->
     <string name="factOrderFlag">Учитывать порядок обхода:</string>
+    <string name="orderDuration">Длительность обхода:</string>
 
     <!-- SettingsFragment -->
     <string name="saveInfoDuration">Сохранять информацию на устройстве</string>

@@ -3,8 +3,11 @@ package ru.madbrains.inspection.ui.main.routes.points
 import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.addTo
+import io.reactivex.schedulers.Schedulers
 import ru.madbrains.domain.interactor.RoutesInteractor
 import ru.madbrains.domain.model.DetourModel
 import ru.madbrains.domain.model.DetourStatus
@@ -16,6 +19,7 @@ import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.RoutePointUiModel
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class RoutePointsViewModel(
     private val routesInteractor: RoutesInteractor
@@ -39,8 +43,11 @@ class RoutePointsViewModel(
     private val _routeStatus = MutableLiveData<Event<RouteStatus>>()
     val routeStatus: LiveData<Event<RouteStatus>> = _routeStatus
 
-    var detourModel: DetourModel? = null
+    private var _durationTimer = MutableLiveData<Long?>(null)
+    val durationTimer: LiveData<Long?> = _durationTimer
 
+    var detourModel: DetourModel? = null
+    lateinit var timerDispose: Disposable
     val routeDataModels = mutableListOf<RouteDataModel>()
 
     private var startTime: Long? = null
@@ -52,6 +59,7 @@ class RoutePointsViewModel(
 
     @SuppressLint("SimpleDateFormat")
     fun finishDetour(statusId: String) {
+        stopTimer()
         detourModel?.let { detour ->
 
             val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
@@ -100,6 +108,7 @@ class RoutePointsViewModel(
 
     fun startRoute() {
         detourModel?.startTime = Date()
+        startTimer()
         val route = routeDataModels.firstOrNull() { !it.completed }
         route?.let { _navigateToNextRoute.value = Event(route) }
     }
@@ -149,6 +158,28 @@ class RoutePointsViewModel(
                 Event(RouteStatus.IN_PROGRESS)
             }
         }
+    }
+
+    private fun startTimer() {
+        timerDispose = Observable.timer(1, TimeUnit.SECONDS)
+            .subscribeOn(Schedulers.io())
+            .repeat()
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe {
+                _durationTimer.value = 0L
+            }
+            .doOnDispose {
+                _durationTimer.value = null
+            }
+            .subscribe({
+                _durationTimer.value = _durationTimer.value?.plus(1L)
+            }, {
+                it.printStackTrace()
+            })
+    }
+
+    private fun stopTimer() {
+        timerDispose.dispose()
     }
 
     enum class RouteStatus {
