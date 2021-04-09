@@ -25,7 +25,7 @@ class RoutePointsMapViewModel : BaseViewModel() {
         val levels = detour.route.routeMaps?.mapIndexed { i, map ->
             MapLevelUiModel(map.id, map.name, map.url, i == 0)
         }.also {
-            _mapLevels.value = it
+            if(it != null) _mapLevels.value = it
         }
         filterMapPoints(levels?.find { it.isActive })
     }

@@ -46,6 +46,11 @@ class DetoursFragment : BaseFragment(R.layout.fragment_detours) {
         })
     }
 
+    override fun onResume() {
+        super.onResume()
+        detoursViewModel.getDetours()
+    }
+
     private fun setupToolbar() {
         toolbarLayout.tvTitle.text = strings[R.string.fragment_routes_title]
         toolbarLayout.btnMenu.setOnClickListener {

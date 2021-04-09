@@ -74,7 +74,6 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
             }
         })
         routePointsViewModel.navigateToBack.observe(viewLifecycleOwner, EventObserver {
-            detoursViewModel.getDetours()
             requireActivity().finish()
         })
         routePointsViewModel.navigateToCloseDialog.observe(viewLifecycleOwner, EventObserver {
