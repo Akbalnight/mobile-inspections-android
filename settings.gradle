@@ -1,4 +1,3 @@
-include ':Module_Android_Power'
 include ':domain'
 include ':data'
 include ':app'

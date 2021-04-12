@@ -36,7 +36,7 @@ val appModule = module {
     viewModel { MainViewModel(get(), get()) }
     viewModel { DetoursViewModel(get()) }
     viewModel { RouteFiltersViewModel() }
-    viewModel { RouteListViewModel() }
+    viewModel { RouteListViewModel(get()) }
     viewModel { RouteCalendarViewModel() }
     viewModel { DateRouteListViewModel() }
     viewModel { RoutePointsViewModel(get()) }
