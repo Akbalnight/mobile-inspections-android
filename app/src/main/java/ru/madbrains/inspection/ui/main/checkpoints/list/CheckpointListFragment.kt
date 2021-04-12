@@ -1,7 +1,7 @@
-package ru.madbrains.inspection.ui.main.marks.grouplist
+package ru.madbrains.inspection.ui.main.checkpoints.list
 
 import android.os.Bundle
-import kotlinx.android.synthetic.main.fragment_group_list.*
+import kotlinx.android.synthetic.main.fragment_checkpoint_list.*
 import kotlinx.android.synthetic.main.toolbar_with_search.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -12,10 +12,10 @@ import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.main.MainViewModel
 import ru.madbrains.inspection.ui.view.SearchToolbar
 
-class GroupListFragment : BaseFragment(R.layout.fragment_group_list) {
+class CheckpointListFragment : BaseFragment(R.layout.fragment_checkpoint_list) {
 
     private val mainViewModel: MainViewModel by sharedViewModel()
-    private val groupListViewModel: GroupListViewModel by viewModel()
+    private val checkpointListViewModel: CheckpointListViewModel by viewModel()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

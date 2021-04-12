@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/graph_marks"
-    app:startDestination="@id/groupListFragment">
+    app:startDestination="@id/checkpointGroupListFragment">
 
     <fragment
-        android:id="@+id/groupListFragment"
-        android:name="ru.madbrains.inspection.ui.main.marks.grouplist.GroupListFragment"
-        android:label="GroupListFragment"
-        tools:layout="@layout/fragment_group_list" />
+        android:id="@+id/checkpointGroupListFragment"
+        android:name="ru.madbrains.inspection.ui.main.checkpoints.grouplist.CheckpointGroupListFragment"
+        android:label="CheckpointGroupListFragment"
+        tools:layout="@layout/fragment_checkpoint_group_list" />
 
 </navigation>
