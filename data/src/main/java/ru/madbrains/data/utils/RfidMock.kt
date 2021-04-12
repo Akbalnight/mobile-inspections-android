@@ -12,6 +12,7 @@ class RfidMock: RfidDevice {
 
         handler.postDelayed({
             dataListener?.invoke("test_id_1")
+            stopScan()
         }, 1000);
     }
 
