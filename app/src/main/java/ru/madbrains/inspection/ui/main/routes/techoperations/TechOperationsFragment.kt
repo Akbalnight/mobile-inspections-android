@@ -77,10 +77,6 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
             tvTitleTechOperations.text = it
         })
 
-        techOperationsViewModel.popBack.observe(viewLifecycleOwner, EventObserver {
-            findNavController().popBackStack()
-        })
-
         techOperationsViewModel.techOperations.observe(viewLifecycleOwner, Observer {
             techOperationsAdapter.items = it
         })
@@ -113,7 +109,6 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
                     setTitle(strings[it])
                     setMessage("")
                     setPositiveButton(strings[R.string.ok]) { _, _ -> }
-                    setNegativeButton(strings[R.string.fragment_dialog_btn_cancel]) { _, _ -> }
                 }
                 builder.create()
             }

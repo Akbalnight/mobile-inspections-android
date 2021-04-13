@@ -32,9 +32,6 @@ class TechOperationsViewModel(
 
     private val operationsModels = mutableListOf<TechOperationModel>()
 
-    private val _popBack = MutableLiveData<Event<Unit>>()
-    val popBack: LiveData<Event<Unit>> = _popBack
-
     private val _navigateToEquipment = MutableLiveData<Event<EquipmentModel>>()
     val navigateToEquipment: LiveData<Event<EquipmentModel>> = _navigateToEquipment
 
@@ -61,7 +58,6 @@ class TechOperationsViewModel(
 
 
     fun finishTechMap() {
-        Timber.d("debug_dmm finish")
         savedRouteData?.techMap?.let { _completeTechMapEvent.value = Event(it) }
         _navigatePop.value = Event(Unit)
     }
@@ -127,7 +123,6 @@ class TechOperationsViewModel(
             savedRouteData?.rfidCode?.let { code->
                 if(scannedCode == code){
                     finishTechMap()
-                    _popBack.value = Event(Unit)
                 } else{
                     _showDialog.value = Event(R.string.fragment_tech_mark_is_different)
                 }
