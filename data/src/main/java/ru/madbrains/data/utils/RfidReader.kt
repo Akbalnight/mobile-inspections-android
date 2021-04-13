@@ -31,7 +31,7 @@ class RfidReader: RfidDevice {
         private const val rType = 1
         private val ants: IntArray = intArrayOf(1)
         private val tagCnt: IntArray = intArrayOf(0)
-        private const val timeout: Short = 50
+        private const val timeout: Short = 500
     }
 
     private fun scan(){
@@ -41,9 +41,8 @@ class RfidReader: RfidDevice {
             val tagInfo = reader.TAGINFO()
             if (reader.GetNextTag(tagInfo) == Reader.READER_ERR.MT_OK_ERR) {
                 onDataReceived(Reader.bytes_Hexstr(tagInfo.EpcId))
-                stopScan()
             } else if (scanIsOn) {
-                handler.postDelayed(this.scanRunnable, 1000)
+                handler.postDelayed(this.scanRunnable, 0)
             }
         }
     }
@@ -85,6 +84,7 @@ class RfidReader: RfidDevice {
         Timber.d("debug_dmm RFID ...info= $id")
         mainThreadHandler.post {
             dataListener?.invoke(id)
+            stopScan()
         }
     }
 

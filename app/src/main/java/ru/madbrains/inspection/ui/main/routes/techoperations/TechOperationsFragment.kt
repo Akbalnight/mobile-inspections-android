@@ -3,7 +3,6 @@ package ru.madbrains.inspection.ui.main.routes.techoperations
 import android.content.DialogInterface
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
