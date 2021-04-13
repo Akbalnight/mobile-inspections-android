@@ -23,15 +23,15 @@ class CheckpointDetailViewModel(
     private val rfidDevice: RfidDevice
     ) : BaseViewModel() {
 
-
-    private var isChanged: Boolean = false
+    private val _isChanged = MutableLiveData<Boolean>()
+    val isChanged: LiveData<Boolean> = _isChanged
 
     private var _checkpointRawData: CheckpointModel? = null
     private val mediaModels = mutableListOf<MediaUiModel>()
 
     //Models LiveData
-    private val _progressVisibility = MutableLiveData<Boolean>()
-    val progressVisibility: LiveData<Boolean> = _progressVisibility
+    private val _rfidProgress = MutableLiveData<Boolean>()
+    val rfidProgress: LiveData<Boolean> = _rfidProgress
 
     private val _descriptionObserver = MutableLiveData<String>()
     val descriptionObserver: LiveData<String> = _descriptionObserver
@@ -43,8 +43,8 @@ class CheckpointDetailViewModel(
     private val _navigateToCamera = MutableLiveData<Event<Unit>>()
     val navigateToCamera: LiveData<Event<Unit>> = _navigateToCamera
 
-    private val _navigateBack = MutableLiveData<Event<Unit>>()
-    val navigateBack: LiveData<Event<Unit>> = _navigateBack
+    private val _popAndRefresh = MutableLiveData<Event<Unit>>()
+    val popAndRefresh: LiveData<Event<Unit>> = _popAndRefresh
 
     private val _showDialogConfirmChangedFields = MutableLiveData<Event<Unit>>()
     val showDialogConfirmChangedFields: LiveData<Event<Unit>> = _showDialogConfirmChangedFields
@@ -75,7 +75,7 @@ class CheckpointDetailViewModel(
 
     fun changeDescription(text: CharSequence?) {
         _descriptionText = text?.toString()
-        isChanged = true
+        _isChanged.value = true
     }
 
     private fun updateMediaList() {
@@ -96,13 +96,13 @@ class CheckpointDetailViewModel(
                         isNetworkImage = false
                 )
         )
-        isChanged = true
+        _isChanged.value = true
         updateMediaList()
     }
 
     fun deleteMedia(deleteItem: MediaUiModel) {
         if (mediaModels.remove(deleteItem)) {
-            isChanged = true
+            _isChanged.value = true
             updateMediaList()
         }
     }
@@ -117,11 +117,11 @@ class CheckpointDetailViewModel(
             _rfidCode?.let { rfid->
                 routesInteractor.updateCheckpoint(model.id, rfid)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .doOnSubscribe { _progressVisibility.postValue(true) }
-                    .doAfterTerminate { _progressVisibility.postValue(false) }
+                    .doOnSubscribe { _rfidProgress.postValue(true) }
+                    .doAfterTerminate { _rfidProgress.postValue(false) }
                     .subscribe({
                         _showSnackBar.value = Event(R.string.fragment_checkpoint_detail_saved_success)
-                        _navigateBack.value = Event(Unit)
+                        _popAndRefresh.value = Event(Unit)
                     }, {
                         it.printStackTrace()
                         _showError.value = Event(it)
@@ -142,15 +142,13 @@ class CheckpointDetailViewModel(
 
 
     fun checkAndSave() {
-        if (isChanged) {
+        if (_isChanged.value == true) {
             _showDialogConfirmChangedFields.value = Event(Unit)
-        } else {
-            sendUpdate()
         }
     }
 
     fun checkPopBack() {
-        if (isChanged) {
+        if (_isChanged.value == true) {
             _showDialogChangedFields.value = Event(Unit)
         } else {
             _popNavigation.value = Event(Unit)
@@ -158,13 +156,13 @@ class CheckpointDetailViewModel(
     }
 
     fun startRfidScan(){
-        _progressVisibility.value = true
+        _rfidProgress.value = true
         rfidDevice.startScan({
-            _progressVisibility.value = it
+            _rfidProgress.value = it
         }) {
             _rfidDataReceiver.value = Event(it)
             _rfidCode = it
-            isChanged = true
+            _isChanged.value = true
         }
     }
 

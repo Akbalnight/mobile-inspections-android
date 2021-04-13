@@ -1,10 +1,10 @@
 package ru.madbrains.inspection.ui.main.checkpoints.detail
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -23,6 +23,7 @@ import ru.madbrains.inspection.ui.adapters.MediaAdapter
 import ru.madbrains.inspection.ui.common.camera.CameraViewModel
 import ru.madbrains.inspection.ui.delegates.MediaUiModel
 import ru.madbrains.inspection.ui.main.MainViewModel
+import ru.madbrains.inspection.ui.main.checkpoints.list.CheckpointListViewModel
 
 class CheckpointDetailFragment : BaseFragment(R.layout.fragment_checkpoint_detail) {
 
@@ -42,6 +43,7 @@ class CheckpointDetailFragment : BaseFragment(R.layout.fragment_checkpoint_detai
     }
 
     private val checkpointDetailViewModel: CheckpointDetailViewModel by viewModel()
+    private val checkpointListViewModel: CheckpointListViewModel by sharedViewModel()
     private val cameraViewModel: CameraViewModel by sharedViewModel()
     private val mainViewModel: MainViewModel by sharedViewModel()
 
@@ -67,8 +69,13 @@ class CheckpointDetailFragment : BaseFragment(R.layout.fragment_checkpoint_detai
 
         setupNavigation()
 
-        checkpointDetailViewModel.progressVisibility.observe(viewLifecycleOwner, Observer {
+        progressView.setTextButton(strings[R.string.stop]){
+            checkpointDetailViewModel.stopRfidScan()
+        }
+
+        checkpointDetailViewModel.rfidProgress.observe(viewLifecycleOwner, Observer {
             progressView.changeVisibility(it)
+            progressView.changeTextVisibility(it)
         })
 
         checkpointDetailViewModel.descriptionObserver.observe(viewLifecycleOwner, Observer {
@@ -81,6 +88,9 @@ class CheckpointDetailFragment : BaseFragment(R.layout.fragment_checkpoint_detai
 
         checkpointDetailViewModel.showError.observe(viewLifecycleOwner, EventObserver {
             showErrorToast()
+        })
+        checkpointDetailViewModel.isChanged.observe(viewLifecycleOwner, Observer {
+            fabCheckpointSave.isVisible = it
         })
     }
 
@@ -112,13 +122,18 @@ class CheckpointDetailFragment : BaseFragment(R.layout.fragment_checkpoint_detai
         checkpointDetailViewModel.popNavigation.observe(viewLifecycleOwner, EventObserver {
             findNavController().popBackStack()
         })
+
+        checkpointDetailViewModel.popAndRefresh.observe(viewLifecycleOwner, EventObserver {
+            findNavController().popBackStack()
+            checkpointListViewModel.getCheckpoints()
+        })
     }
 
     private fun setupClickListeners() {
 
         // кнопка фото/видео нижнее меню
         llBottomPhotoVideo.setOnClickListener {
-            checkpointDetailViewModel.photoVideoClick()
+            //checkpointDetailViewModel.photoVideoClick()
         }
 
         // кнопка сканировать нижнее меню

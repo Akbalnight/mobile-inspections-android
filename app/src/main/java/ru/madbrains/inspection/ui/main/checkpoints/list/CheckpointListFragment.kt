@@ -35,7 +35,8 @@ class CheckpointListFragment : BaseFragment(R.layout.fragment_checkpoint_list) {
         checkpointListViewModel.selectedGroupUi.observe(viewLifecycleOwner, Observer { group->
             checkpointAdapter.items = group.points.map { CheckpointUiModel(
                 id = it.id,
-                name = it.name
+                name = it.name,
+                hasRfid = it.rfidCode!=null
             ) }
             setupToolbar(group.parentName)
         })

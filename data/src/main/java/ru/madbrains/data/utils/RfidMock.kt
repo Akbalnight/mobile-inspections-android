@@ -1,6 +1,7 @@
 package ru.madbrains.data.utils
 
 import android.os.Handler
+import java.util.*
 
 class RfidMock: RfidDevice {
 
@@ -8,15 +9,15 @@ class RfidMock: RfidDevice {
     private var mProgressListener: RfidProgressListener? = null
     private val handler = Handler()
 
-    override fun startScan(progressListener:RfidProgressListener, listener: RfidListener) {
+    override fun startScan(progressListener: RfidProgressListener, listener: RfidListener) {
         dataListener = listener
         mProgressListener = progressListener
 
         mProgressListener?.invoke(true)
         handler.postDelayed({
-            dataListener?.invoke("test_id_1")
+            dataListener?.invoke("test_id_${Random().nextInt(61)}")
             stopScan()
-        }, 1000);
+        }, 10000);
     }
 
 

@@ -125,6 +125,7 @@
     <string name="ok">ОК</string>
 
     <string name="fragment_scan">Сканировать</string>
+    <string name="stop">Остановить</string>
     <string name="fragment_photo_video">Фото/Видео</string>
     <string name="fragment_media">Фото и видео: 0 из 8</string>
     <string name="fragment_not_media">Нет прикрепленных медиафайлов. Для добавления нажмите на кнопку &#171;фото/видео&#187;</string>
