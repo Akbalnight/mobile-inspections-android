@@ -17,7 +17,7 @@ class CheckpointListViewModel : BaseViewModel() {
     private val _navigateToNextRoute = MutableLiveData<Event<CheckpointModel>>()
     val navigateToNextRoute: LiveData<Event<CheckpointModel>> = _navigateToNextRoute
 
-    fun setRouteData(it: CheckpointGroupModel) {
+    fun setRawData(it: CheckpointGroupModel) {
         _checkpointRawData = it
 
         _checkPointList.value = it.points.map { CheckpointUiModel(

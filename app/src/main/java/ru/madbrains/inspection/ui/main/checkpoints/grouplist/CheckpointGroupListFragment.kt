@@ -61,7 +61,7 @@ class CheckpointGroupListFragment : BaseFragment(R.layout.fragment_checkpoint_gr
 
     private fun setupToolbar() {
         (toolbarLayout as SearchToolbar).apply {
-            tvTitle.text = strings[R.string.fragment_group_list_title]
+            tvTitle.text = strings[R.string.fragment_checkpoint_group_list_title]
             btnLeading.setOnClickListener {
                 mainViewModel.menuClick()
             }

@@ -5,11 +5,14 @@ import android.os.Handler
 class RfidMock: RfidDevice {
 
     private var dataListener: RfidListener? = null
+    private var mProgressListener: RfidProgressListener? = null
     private val handler = Handler()
 
-    override fun startScan(listener: RfidListener) {
+    override fun startScan(progressListener:RfidProgressListener, listener: RfidListener) {
         dataListener = listener
+        mProgressListener = progressListener
 
+        mProgressListener?.invoke(true)
         handler.postDelayed({
             dataListener?.invoke("test_id_1")
             stopScan()
@@ -19,6 +22,8 @@ class RfidMock: RfidDevice {
 
 
     override fun stopScan() {
+        mProgressListener?.invoke(false)
         dataListener = null
+        mProgressListener = null
     }
 }

@@ -14,7 +14,7 @@ import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.DefectListUiModel
-import ru.madbrains.inspection.ui.delegates.MediaDefectUiModel
+import ru.madbrains.inspection.ui.delegates.MediaUiModel
 import java.util.*
 
 class DefectListViewModel(private val routesInteractor: RoutesInteractor) : BaseViewModel() {
@@ -102,13 +102,13 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
         _defectList.value = defects
     }
 
-    private fun getMediaListItem(files: List<FileModel>?): List<MediaDefectUiModel> {
-        val list: MutableList<MediaDefectUiModel> = mutableListOf()
+    private fun getMediaListItem(files: List<FileModel>?): List<MediaUiModel> {
+        val list: MutableList<MediaUiModel> = mutableListOf()
         files?.let {
             files.map { fileModel ->
                 when (fileModel.extension) {
                     "jpg" -> { // если в файле изображение добавляем в список
-                        list.add(MediaDefectUiModel(
+                        list.add(MediaUiModel(
                                 id = fileModel.id.orEmpty(),
                                 isEditing = false,
                                 url = ApiData.apiUrl + fileModel.url.orEmpty()

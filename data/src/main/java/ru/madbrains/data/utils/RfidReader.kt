@@ -16,6 +16,7 @@ class RfidReader: RfidDevice {
     private val rPower = RfidPower(RfidPower.PDATYPE.ZoomSmart)
     private val reader = Reader()
     private var dataListener: RfidListener? = null
+    private var mProgressListener: RfidProgressListener? = null
 
     private val scanRunnable = Runnable {
         executorService.execute {
@@ -47,11 +48,14 @@ class RfidReader: RfidDevice {
         }
     }
 
-    override fun startScan(listener: RfidListener) {
+    override fun startScan(progressListener:RfidProgressListener, listener: RfidListener) {
+        dataListener = listener
+        mProgressListener = progressListener
+
         handler.postDelayed({
             executorService.execute {
-                dataListener = listener
                 if (!scanIsOn) {
+                    mProgressListener?.invoke(true)
                     scanIsOn = true
                     Timber.d("debug_dmm RFID ${rPower.GetDevPath()}")
                     rPower.PowerDown()
@@ -66,7 +70,9 @@ class RfidReader: RfidDevice {
 
 
     override fun stopScan() {
+        mProgressListener?.invoke(false)
         dataListener = null
+        mProgressListener = null
         scanIsOn = false
         executorService.execute {
             reader.AsyncStopReading()

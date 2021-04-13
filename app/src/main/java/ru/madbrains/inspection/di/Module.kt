@@ -8,6 +8,7 @@ import ru.madbrains.inspection.ui.common.camera.CameraViewModel
 import ru.madbrains.inspection.ui.common.web.WebViewViewModel
 import ru.madbrains.inspection.ui.launcher.LauncherViewModel
 import ru.madbrains.inspection.ui.main.MainViewModel
+import ru.madbrains.inspection.ui.main.checkpoints.detail.CheckpointDetailViewModel
 import ru.madbrains.inspection.ui.main.checkpoints.grouplist.CheckpointGroupListViewModel
 import ru.madbrains.inspection.ui.main.checkpoints.list.CheckpointListViewModel
 import ru.madbrains.inspection.ui.main.defects.defectdetail.DefectDetailViewModel
@@ -38,7 +39,7 @@ val appModule = module {
     viewModel { MainViewModel(get(), get()) }
     viewModel { DetoursViewModel(get()) }
     viewModel { RouteFiltersViewModel() }
-    viewModel { RouteListViewModel(get()) }
+    viewModel { RouteListViewModel() }
     viewModel { RouteCalendarViewModel() }
     viewModel { DateRouteListViewModel() }
     viewModel { RoutePointsViewModel(get()) }
@@ -55,4 +56,5 @@ val appModule = module {
     viewModel { SettingsViewModel(get()) }
     viewModel { CheckpointListViewModel() }
     viewModel { CheckpointGroupListViewModel(get()) }
+    viewModel { CheckpointDetailViewModel(get(), get(), get()) }
 }

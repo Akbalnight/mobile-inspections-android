@@ -8,26 +8,12 @@ import ru.madbrains.domain.model.DetourModel
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 
-class RouteListViewModel(
-    private val rfidDevice: RfidDevice
-) : BaseViewModel() {
+class RouteListViewModel() : BaseViewModel() {
 
     private val _navigateToRoutePoints = MutableLiveData<Event<DetourModel>>()
     val navigateToRoutePoints: LiveData<Event<DetourModel>> = _navigateToRoutePoints
-    private val _rfidDataReceiver = MutableLiveData<Event<String>>()
-    val rfidDataReceiver: LiveData<Event<String>> = _rfidDataReceiver
 
     fun routeClick(route: DetourModel?) {
         route?.let {  _navigateToRoutePoints.value = Event(it) }
-    }
-
-    fun startScan(){
-        rfidDevice.startScan {
-            _rfidDataReceiver.value = Event(it)
-        }
-    }
-
-    fun stopScan(){
-        rfidDevice.stopScan()
     }
 }

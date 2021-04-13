@@ -16,7 +16,7 @@ import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
-import ru.madbrains.inspection.ui.delegates.MediaDefectUiModel
+import ru.madbrains.inspection.ui.delegates.MediaUiModel
 import java.io.File
 import java.util.*
 
@@ -36,7 +36,7 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
 
     private val defectTypicalModels = mutableListOf<DefectTypicalModel>()
     var equipmentModelList: List<EquipmentModel>? = null
-    private val mediaModels = mutableListOf<MediaDefectUiModel>()
+    private val mediaModels = mutableListOf<MediaUiModel>()
 
     //Models LiveData
     private val _progressVisibility = MutableLiveData<Boolean>()
@@ -191,7 +191,7 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
                     it.map { fileModel ->
                         when (fileModel.extension) {
                             "jpg" -> { // если в файле изображение добавляем в список
-                                mediaModels.add(MediaDefectUiModel(
+                                mediaModels.add(MediaUiModel(
                                         id = fileModel.id.orEmpty(),
                                         isEditing = !fileModel.shipped,
                                         url = ApiData.apiUrl + fileModel.url.orEmpty()
@@ -212,7 +212,7 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
     }
 
     private fun updateMediaList() {
-        val items = mutableListOf<MediaDefectUiModel>().apply {
+        val items = mutableListOf<MediaUiModel>().apply {
             mediaModels.map { item ->
                 add(item)
             }
@@ -222,7 +222,7 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
 
     fun addImage(image: Bitmap) {
         mediaModels.add(
-                MediaDefectUiModel(
+                MediaUiModel(
                         id = UUID.randomUUID().toString(),
                         imageBitmap = image,
                         isEditing = true,
@@ -233,7 +233,7 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
         updateMediaList()
     }
 
-    fun deleteMedia(deleteItem: MediaDefectUiModel) {
+    fun deleteMedia(deleteItem: MediaUiModel) {
         if (mediaModels.remove(deleteItem)) {
             isChangedDefect = true
             updateMediaList()

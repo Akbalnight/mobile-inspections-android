@@ -11,11 +11,11 @@ import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.extensions.drawables
 
-fun mediaDefectDelegate(
-    clickImageListener: (MediaDefectUiModel) -> Unit,
-    clickDeleteListener: (MediaDefectUiModel) -> Unit
+fun mediaDelegate(
+    clickImageListener: (MediaUiModel) -> Unit,
+    clickDeleteListener: (MediaUiModel) -> Unit
 ) =
-    adapterDelegateLayoutContainer<MediaDefectUiModel, DiffItem>(R.layout.item_media) {
+    adapterDelegateLayoutContainer<MediaUiModel, DiffItem>(R.layout.item_media) {
 
         bind {
             itemView.apply {
@@ -53,7 +53,7 @@ fun mediaDefectDelegate(
 
     }
 
-data class MediaDefectUiModel(
+data class MediaUiModel(
     val id: String,
     val isImage: Boolean = true, // признак изображение или видео
     val isNetworkImage: Boolean = true, // признак онлайн медиа или локально
@@ -63,7 +63,7 @@ data class MediaDefectUiModel(
 ) : DiffItem {
 
     override fun areItemsTheSame(newItem: DiffItem): Boolean =
-        newItem is MediaDefectUiModel && id == newItem.id
+        newItem is MediaUiModel && id == newItem.id
 
     override fun areContentsTheSame(newItem: DiffItem): Boolean = this == newItem
 }

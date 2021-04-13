@@ -1,6 +1,7 @@
 package ru.madbrains.inspection.ui.main.checkpoints.list
 
 import android.os.Bundle
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_checkpoint_list.rvList
@@ -15,6 +16,7 @@ import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.extensions.drawables
 import ru.madbrains.inspection.ui.adapters.CheckpointAdapter
 import ru.madbrains.inspection.ui.main.MainViewModel
+import ru.madbrains.inspection.ui.main.checkpoints.detail.CheckpointDetailFragment.Companion.KEY_CHECKPOINT_DETAIL_DATA
 import ru.madbrains.inspection.ui.view.SearchToolbar
 
 class CheckpointListFragment : BaseFragment(R.layout.fragment_checkpoint_list) {
@@ -43,19 +45,19 @@ class CheckpointListFragment : BaseFragment(R.layout.fragment_checkpoint_list) {
         checkpointListViewModel.navigateToNextRoute.observe(
             viewLifecycleOwner,
             EventObserver { data ->
-//                val args = bundleOf(
-//                    KEY_CHECKPOINT_DATA to data
-//                )
-//                findNavController().navigate(
-//                    R.id.action_checkpointGroupListFragment_to_checkpointListFragment,
-//                    args
-//                )
+                val args = bundleOf(
+                    KEY_CHECKPOINT_DETAIL_DATA to data
+                )
+                findNavController().navigate(
+                    R.id.action_checkpointListFragment_to_checkpointDetailFragment,
+                    args
+                )
             })
 
         requireNotNull(arguments).run {
             val routeDataModel = (getSerializable(KEY_CHECKPOINT_DATA) as? CheckpointGroupModel)
             routeDataModel?.let {
-                checkpointListViewModel.setRouteData(it)
+                checkpointListViewModel.setRawData(it)
                 setupToolbar(it.parentName)
             }
         }
