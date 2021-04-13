@@ -55,9 +55,9 @@ class RfidReader: RfidDevice {
         handler.postDelayed({
             executorService.execute {
                 if (!scanIsOn) {
-                    mProgressListener?.invoke(true)
-                    scanIsOn = true
                     Timber.d("debug_dmm RFID ${rPower.GetDevPath()}")
+                    onProgressChanged(true)
+                    scanIsOn = true
                     rPower.PowerDown()
                     rPower.PowerUp()
                     reader.InitReader_Notype(deviceSource, rType)
@@ -70,9 +70,8 @@ class RfidReader: RfidDevice {
 
 
     override fun stopScan() {
-        mProgressListener?.invoke(false)
+        onProgressChanged(active = false, clean = true)
         dataListener = null
-        mProgressListener = null
         scanIsOn = false
         executorService.execute {
             reader.AsyncStopReading()
@@ -86,6 +85,15 @@ class RfidReader: RfidDevice {
         Timber.d("debug_dmm RFID ...info= $id")
         mainThreadHandler.post {
             dataListener?.invoke(id)
+        }
+    }
+
+    private fun onProgressChanged(active: Boolean, clean:Boolean = false) {
+        mainThreadHandler.post {
+            mProgressListener?.invoke(active)
+            if(clean){
+                mProgressListener = null
+            }
         }
     }
 }

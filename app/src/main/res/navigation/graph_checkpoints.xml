@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/checkpointGroupListFragment"
-        android:name="ru.madbrains.inspection.ui.main.checkpoints.grouplist.CheckpointGroupListFragment"
+        android:name="ru.madbrains.inspection.ui.main.checkpoints.list.CheckpointGroupListFragment"
         android:label="CheckpointGroupListFragment"
         tools:layout="@layout/fragment_checkpoint_group_list" >
         <action
@@ -44,7 +44,7 @@
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
-    
+
     <fragment
         android:id="@+id/cameraFragment"
         android:name="ru.madbrains.inspection.ui.common.camera.CameraFragment"
