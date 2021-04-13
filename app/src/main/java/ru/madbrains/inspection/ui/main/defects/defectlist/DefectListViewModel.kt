@@ -122,7 +122,7 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
                         ))
                     }
                     "mp4" -> {
-                        list.add(MediaDefectUiModel(
+                        list.add(MediaUiModel(
                                 id = fileModel.id.orEmpty(),
                                 isImage = false,
                                 isNetwork = fileModel.shipped,

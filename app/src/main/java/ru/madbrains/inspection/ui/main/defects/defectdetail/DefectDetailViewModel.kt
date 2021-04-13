@@ -202,7 +202,7 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
                                 ))
                             }
                             "mp4" -> {
-                                mediaModels.add(MediaDefectUiModel(
+                                mediaModels.add(MediaUiModel(
                                         id = fileModel.id.orEmpty(),
                                         isImage = false,
                                         isNetwork = fileModel.shipped,
@@ -249,7 +249,7 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
 
     fun addVideo(videoFile: File) {
         mediaModels.add(
-                MediaDefectUiModel(
+                MediaUiModel(
                         id = UUID.randomUUID().toString(),
                         isImage = false,
                         isNetwork = false,

@@ -92,8 +92,8 @@ class CheckpointDetailViewModel(
                 MediaUiModel(
                         id = UUID.randomUUID().toString(),
                         imageBitmap = image,
-                        isEditing = true,
-                        isNetworkImage = false
+                        isNetwork = false,
+                        isImage = true
                 )
         )
         _isChanged.value = true
@@ -131,15 +131,6 @@ class CheckpointDetailViewModel(
 
         }
     }
-
-    private fun getFilesToSend(): List<File> {
-        return mediaModels.filter {
-            it.isEditing && (it.imageBitmap != null)
-        }.map { media ->
-            fileUtil.createFile(media.imageBitmap!!, media.id)
-        }
-    }
-
 
     fun checkAndSave() {
         if (_isChanged.value == true) {
