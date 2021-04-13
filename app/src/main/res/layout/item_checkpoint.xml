@@ -17,13 +17,13 @@
         android:layout_marginEnd="16dp"
         android:textColor="@color/textMain"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/ivSelectedStatus"
+        app:layout_constraintEnd_toStartOf="@+id/ivRfid"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Контрольная точка" />
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/ivSelectedStatus"
+        android:id="@+id/ivRfid"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_gravity="center_vertical"

@@ -65,7 +65,7 @@ class RouteListFragment : BaseFragment(R.layout.fragment_route_list) {
             openRoutePointsFragment(it)
         })
         routeListViewModel.rfidDataReceiver.observe(viewLifecycleOwner, EventObserver {
-            Timber.d("debug_dmm right!! $it")
+            Timber.d("debug_dmm found: $it")
         })
     }
 

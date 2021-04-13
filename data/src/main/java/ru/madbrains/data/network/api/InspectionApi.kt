@@ -36,6 +36,9 @@ interface InspectionApi {
     @POST("/api/dynamicdq/data/flat/mobileDefects?page=0&size=${Int.MAX_VALUE}&sort=dateDetectDefect,desc")
     fun getDefects(@Body request: GetDefectsReq): Single<List<GetDefectsResp>>
 
+    @POST("/api/dynamicdq/data/flat/mobileControlPoints")
+    fun getCheckpoints(@Body request: Any): Single<List<GetCheckpointResp>>
+
     @Multipart
     @POST("/api/dynamicdq/mobile/saveDefects")
     fun saveDefect(

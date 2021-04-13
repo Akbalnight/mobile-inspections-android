@@ -22,6 +22,8 @@ interface DetoutsRepository {
 
     fun getEquipments(names: List<String>, uuid: List<String>): Single<List<EquipmentModel>>
 
+    fun getCheckpoints(): Single<List<CheckpointGroupModel>>
+
     fun getDefects(id: String?,
                    codes: List<String>?,
                    dateDetectStart: String?,

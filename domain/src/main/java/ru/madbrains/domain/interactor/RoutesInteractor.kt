@@ -16,6 +16,10 @@ class RoutesInteractor(
         return routesRepository.getDetours()
                 .subscribeOn(Schedulers.io())
     }
+    fun getCheckpoints(): Single<List<CheckpointGroupModel>> {
+        return routesRepository.getCheckpoints()
+                .subscribeOn(Schedulers.io())
+    }
 
     fun saveDetour(detour: DetourModel): Completable {
         return routesRepository.saveDetour(detour)

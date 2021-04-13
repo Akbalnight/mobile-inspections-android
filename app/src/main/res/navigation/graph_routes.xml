@@ -38,7 +38,7 @@
 
     <include app:graph="@navigation/graph_defects" />
 
-    <include app:graph="@navigation/graph_marks" />
+    <include app:graph="@navigation/graph_checkpoints" />
 
     <include app:graph="@navigation/grapg_sync" />
 

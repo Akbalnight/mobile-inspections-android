@@ -74,6 +74,12 @@ class RoutesRepositoryImpl(
         }
     }
 
+    override fun getCheckpoints(): Single<List<CheckpointGroupModel>> {
+        return ApiData.inspectionApi.getCheckpoints(Object()).flatMap {
+            Single.just(mapGetCheckpointResp(it))
+        }
+    }
+
     override fun getDefects(
             id: String?,
             codes: List<String>?,
