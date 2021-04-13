@@ -47,6 +47,7 @@ data class GetRouteDataResp(
     @field:Json(name = "id") val id: String?,
     @field:Json(name = "techMapId") val techMapId: String?,
     @field:Json(name = "controlPointId") val controlPointId: String?,
+    @field:Json(name = "rfidCode") val rfidCode: String?,
     @field:Json(name = "routeMapId") val routeMapId: String?,
     @field:Json(name = "routeId") val routeId: String?,
     @field:Json(name = "duration") val duration: Int?,

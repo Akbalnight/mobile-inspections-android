@@ -2,17 +2,23 @@ package ru.madbrains.inspection.ui.main.routes.techoperations
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import ru.madbrains.data.utils.RfidDevice
 import ru.madbrains.domain.interactor.RoutesInteractor
 import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.domain.model.RouteDataModel
 import ru.madbrains.domain.model.TechMapModel
 import ru.madbrains.domain.model.TechOperationModel
+import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.TechOperationUiModel
+import timber.log.Timber
 
-class TechOperationsViewModel(private val routesInteractor: RoutesInteractor) :
+class TechOperationsViewModel(
+    private val routesInteractor: RoutesInteractor,
+    private val rfidDevice: RfidDevice
+) :
         BaseViewModel() {
 
     private val _progressVisibility = MutableLiveData<Boolean>()
@@ -25,9 +31,6 @@ class TechOperationsViewModel(private val routesInteractor: RoutesInteractor) :
     val techOperations: LiveData<List<DiffItem>> = _techOperations
 
     private val operationsModels = mutableListOf<TechOperationModel>()
-
-    private val _navigateToAddDefect = MutableLiveData<Event<Unit>>()
-    val navigateToAddDefect: LiveData<Event<Unit>> = _navigateToAddDefect
 
     private val _navigateToEquipment = MutableLiveData<Event<EquipmentModel>>()
     val navigateToEquipment: LiveData<Event<EquipmentModel>> = _navigateToEquipment
@@ -45,6 +48,14 @@ class TechOperationsViewModel(private val routesInteractor: RoutesInteractor) :
     val showDialogBlankFields: LiveData<Event<Unit>> = _showDialogBlankFields
 
     var savedRouteData: RouteDataModel? = null
+
+    //Models LiveData
+    private val _rfidProgress = MutableLiveData<Boolean>()
+    val rfidProgress: LiveData<Boolean> = _rfidProgress
+
+    private val _showDialog = MutableLiveData<Event<Int>>()
+    val showDialog: LiveData<Event<Int>> = _showDialog
+
 
     fun finishTechMap() {
         savedRouteData?.techMap?.let { _completeTechMapEvent.value = Event(it) }
@@ -105,6 +116,23 @@ class TechOperationsViewModel(private val routesInteractor: RoutesInteractor) :
         _techOperations.value = operations
     }
 
+    fun checkRfidAndFinish(){
+        rfidDevice.startScan({
+            _rfidProgress.value = it
+        }) { scannedCode->
+            savedRouteData?.rfidCode?.let { code->
+                if(scannedCode == code){
+                    finishTechMap()
+                } else{
+                    _showDialog.value = Event(R.string.fragment_tech_mark_is_different)
+                }
+            }
+        }
+    }
+
+    fun stopRfidScan(){
+        rfidDevice.stopScan()
+    }
 
     fun toEquipmentFragment() {
         savedRouteData?.equipments?.let {

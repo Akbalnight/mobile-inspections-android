@@ -147,7 +147,6 @@ class CheckpointDetailViewModel(
     }
 
     fun startRfidScan(){
-        _rfidProgress.value = true
         rfidDevice.startScan({
             _rfidProgress.value = it
         }) {
