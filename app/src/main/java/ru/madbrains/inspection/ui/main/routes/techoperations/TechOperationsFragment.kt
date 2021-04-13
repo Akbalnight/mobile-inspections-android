@@ -106,11 +106,18 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
             progressView.changeTextVisibility(it)
         })
 
-        techOperationsViewModel.showToast.observe(viewLifecycleOwner, EventObserver {
-            Toast.makeText(
-                activity, strings[it],
-                Toast.LENGTH_LONG
-            ).show()
+        techOperationsViewModel.showDialog.observe(viewLifecycleOwner, EventObserver {
+            val alertDialog: AlertDialog? = activity?.let {activity->
+                val builder = AlertDialog.Builder(activity)
+                builder.apply {
+                    setTitle(strings[it])
+                    setMessage("")
+                    setPositiveButton(strings[R.string.ok]) { _, _ -> }
+                    setNegativeButton(strings[R.string.fragment_dialog_btn_cancel]) { _, _ -> }
+                }
+                builder.create()
+            }
+            alertDialog?.show()
         })
     }
 

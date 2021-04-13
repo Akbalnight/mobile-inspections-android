@@ -56,8 +56,8 @@ class TechOperationsViewModel(
     private val _rfidProgress = MutableLiveData<Boolean>()
     val rfidProgress: LiveData<Boolean> = _rfidProgress
 
-    private val _showToast = MutableLiveData<Event<Int>>()
-    val showToast: LiveData<Event<Int>> = _showToast
+    private val _showDialog = MutableLiveData<Event<Int>>()
+    val showDialog: LiveData<Event<Int>> = _showDialog
 
 
     fun finishTechMap() {
@@ -129,7 +129,7 @@ class TechOperationsViewModel(
                     finishTechMap()
                     _popBack.value = Event(Unit)
                 } else{
-                    _showToast.value = Event(R.string.fragment_tech_mark_is_different)
+                    _showDialog.value = Event(R.string.fragment_tech_mark_is_different)
                 }
             }
         }
