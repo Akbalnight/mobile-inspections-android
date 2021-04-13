@@ -80,6 +80,10 @@ class RoutesRepositoryImpl(
         }
     }
 
+    override fun updateCheckpoint(id: String, rfidCode: String): Single<Any> {
+        return ApiData.inspectionApi.updateCheckpoint(CheckpointUpdateReq(id, rfidCode))
+    }
+
     override fun getDefects(
             id: String?,
             codes: List<String>?,

@@ -3,10 +3,13 @@ package ru.madbrains.inspection.ui.main.checkpoints.detail
 import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.addTo
 import ru.madbrains.data.utils.FileUtil
 import ru.madbrains.data.utils.RfidDevice
 import ru.madbrains.domain.interactor.RoutesInteractor
 import ru.madbrains.domain.model.CheckpointModel
+import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
@@ -40,6 +43,9 @@ class CheckpointDetailViewModel(
     private val _navigateToCamera = MutableLiveData<Event<Unit>>()
     val navigateToCamera: LiveData<Event<Unit>> = _navigateToCamera
 
+    private val _navigateBack = MutableLiveData<Event<Unit>>()
+    val navigateBack: LiveData<Event<Unit>> = _navigateBack
+
     private val _showDialogConfirmChangedFields = MutableLiveData<Event<Unit>>()
     val showDialogConfirmChangedFields: LiveData<Event<Unit>> = _showDialogConfirmChangedFields
 
@@ -52,16 +58,19 @@ class CheckpointDetailViewModel(
     private val _showSnackBar = MutableLiveData<Event<Int>>()
     val showSnackBar: LiveData<Event<Int>> = _showSnackBar
 
+    private val _showError = MutableLiveData<Event<Throwable>>()
+    val showError: LiveData<Event<Throwable>> = _showError
+
     private val _rfidDataReceiver = MutableLiveData<Event<String>>()
     val rfidDataReceiver: LiveData<Event<String>> = _rfidDataReceiver
 
     private var _descriptionText: String? = null
-    private var _rfidId: String? = null
+    private var _rfidCode: String? = null
 
     fun setRawData(data: CheckpointModel?) {
         _checkpointRawData = data
         _rfidDataReceiver.value = Event(data?.rfidCode?:"-")
-        _rfidId = data?.rfidCode
+        _rfidCode = data?.rfidCode
     }
 
     fun changeDescription(text: CharSequence?) {
@@ -104,7 +113,23 @@ class CheckpointDetailViewModel(
     }
 
     fun sendUpdate() {
+        _checkpointRawData?.let { model->
+            _rfidCode?.let { rfid->
+                routesInteractor.updateCheckpoint(model.id, rfid)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe { _progressVisibility.postValue(true) }
+                    .doAfterTerminate { _progressVisibility.postValue(false) }
+                    .subscribe({
+                        _showSnackBar.value = Event(R.string.fragment_checkpoint_detail_saved_success)
+                        _navigateBack.value = Event(Unit)
+                    }, {
+                        it.printStackTrace()
+                        _showError.value = Event(it)
+                    })
+                    .addTo(disposables)
+            }
 
+        }
     }
 
     private fun getFilesToSend(): List<File> {
@@ -138,7 +163,7 @@ class CheckpointDetailViewModel(
             _progressVisibility.value = it
         }) {
             _rfidDataReceiver.value = Event(it)
-            _rfidId = it
+            _rfidCode = it
             isChanged = true
         }
     }

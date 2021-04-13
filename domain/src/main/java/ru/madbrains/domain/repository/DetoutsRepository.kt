@@ -24,6 +24,8 @@ interface DetoutsRepository {
 
     fun getCheckpoints(): Single<List<CheckpointGroupModel>>
 
+    fun updateCheckpoint(id:String, rfidCode: String): Single<Any>
+
     fun getDefects(id: String?,
                    codes: List<String>?,
                    dateDetectStart: String?,

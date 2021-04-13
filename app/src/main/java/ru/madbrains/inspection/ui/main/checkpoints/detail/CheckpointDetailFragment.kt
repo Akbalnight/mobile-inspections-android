@@ -3,6 +3,7 @@ package ru.madbrains.inspection.ui.main.checkpoints.detail
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Observer
@@ -73,9 +74,21 @@ class CheckpointDetailFragment : BaseFragment(R.layout.fragment_checkpoint_detai
         checkpointDetailViewModel.descriptionObserver.observe(viewLifecycleOwner, Observer {
             etCheckpointDescription.setText(it)
         })
+
         checkpointDetailViewModel.rfidDataReceiver.observe(viewLifecycleOwner, EventObserver {
             tvRFID.text = resources.getString(R.string.rfid_s, it)
         })
+
+        checkpointDetailViewModel.showError.observe(viewLifecycleOwner, EventObserver {
+            showErrorToast()
+        })
+    }
+
+    private fun showErrorToast() {
+        Toast.makeText(
+            activity, strings[R.string.error],
+            Toast.LENGTH_LONG
+        ).show()
     }
 
     private fun setupData(model: CheckpointModel) {

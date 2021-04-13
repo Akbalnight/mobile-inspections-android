@@ -39,6 +39,9 @@ interface InspectionApi {
     @POST("/api/dynamicdq/data/flat/mobileControlPoints")
     fun getCheckpoints(@Body request: Any): Single<List<GetCheckpointResp>>
 
+    @POST("/api/dynamicdq/data/flat/mobileControlPointsSave")
+    fun updateCheckpoint(@Body request: CheckpointUpdateReq): Single<Any>
+
     @Multipart
     @POST("/api/dynamicdq/mobile/saveDefects")
     fun saveDefect(
