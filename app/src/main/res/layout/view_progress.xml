@@ -35,7 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="8dp"
         tools:text="Остановить"
         app:layout_constraintTop_toBottomOf="@+id/progress"
         app:layout_constraintEnd_toEndOf="parent"

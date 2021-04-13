@@ -53,6 +53,7 @@ fun mapGetRoutesDataResp(resp: GetRouteDataResp): RouteDataModel {
                 id = id,
                 techMapId = techMapId,
                 controlPointId = controlPointId,
+                rfidCode = rfidCode,
                 routeMapId = routeMapId,
                 routeId = routeId,
                 duration = duration,

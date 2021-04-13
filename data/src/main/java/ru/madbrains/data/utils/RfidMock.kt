@@ -1,7 +1,6 @@
 package ru.madbrains.data.utils
 
 import android.os.Handler
-import java.util.*
 
 class RfidMock: RfidDevice {
 
@@ -15,9 +14,9 @@ class RfidMock: RfidDevice {
 
         mProgressListener?.invoke(true)
         handler.postDelayed({
-            dataListener?.invoke("test_id_${Random().nextInt(61)}")
+            dataListener?.invoke("test_id_1")
             stopScan()
-        }, 10000);
+        }, 5000);
     }
 
 

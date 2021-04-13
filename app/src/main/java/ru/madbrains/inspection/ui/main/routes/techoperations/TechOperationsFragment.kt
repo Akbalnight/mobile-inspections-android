@@ -3,7 +3,9 @@ package ru.madbrains.inspection.ui.main.routes.techoperations
 import android.content.DialogInterface
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
+import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_tech_operations.*
@@ -19,6 +21,7 @@ import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.adapters.TechOperationAdapter
+import ru.madbrains.inspection.ui.main.MainViewModel
 import ru.madbrains.inspection.ui.main.defects.defectdetail.DefectDetailFragment
 import ru.madbrains.inspection.ui.main.defects.defectlist.DefectListFragment
 import ru.madbrains.inspection.ui.main.equipment.EquipmentFragment
@@ -33,6 +36,7 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
 
     private val techOperationsViewModel: TechOperationsViewModel by sharedViewModel()
     private val routePointsViewModel: RoutePointsViewModel by sharedViewModel()
+    private val mainViewModel: MainViewModel by sharedViewModel()
 
     private val techOperationsAdapter by lazy {
         TechOperationAdapter(
@@ -54,7 +58,13 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
             routeDataModel?.let {
                 techOperationsViewModel.setRouteData(it)
                 setupToolbar(it.techMap?.pointNumber)
+                setupUI(it)
             }
+        }
+
+
+        fabTechOperationsScanRFID.setOnClickListener {
+            techOperationsViewModel.checkRfidAndFinish()
         }
 
         fabTechOperationsSave.setOnClickListener {
@@ -65,6 +75,10 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
 
         techOperationsViewModel.titleTechOperations.observe(viewLifecycleOwner, Observer {
             tvTitleTechOperations.text = it
+        })
+
+        techOperationsViewModel.popBack.observe(viewLifecycleOwner, EventObserver {
+            findNavController().popBackStack()
         })
 
         techOperationsViewModel.techOperations.observe(viewLifecycleOwner, Observer {
@@ -83,6 +97,27 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
 
         setupNavigation()
 
+        progressView.setTextButton(strings[R.string.stop]){
+            techOperationsViewModel.stopRfidScan()
+        }
+
+        techOperationsViewModel.rfidProgress.observe(viewLifecycleOwner, Observer {
+            progressView.changeVisibility(it)
+            progressView.changeTextVisibility(it)
+        })
+
+        techOperationsViewModel.showToast.observe(viewLifecycleOwner, EventObserver {
+            Toast.makeText(
+                activity, strings[it],
+                Toast.LENGTH_LONG
+            ).show()
+        })
+    }
+
+    private fun setupUI(routeDataModel: RouteDataModel) {
+        val rfidVisible = routeDataModel.rfidCode!=null
+        fabTechOperationsScanRFID.isVisible = rfidVisible
+        fabTechOperationsSave.isVisible = !rfidVisible
     }
 
     private fun setupToolbar(positionPoint: Int?) {
