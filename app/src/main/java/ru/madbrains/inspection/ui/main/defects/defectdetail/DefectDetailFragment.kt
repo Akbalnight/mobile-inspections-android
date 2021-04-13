@@ -249,6 +249,10 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
             defectDetailViewModel.addImage(it)
         })
 
+        cameraViewModel.capturedVideo.observe(viewLifecycleOwner, EventObserver {
+            defectDetailViewModel.addVideo(it)
+        })
+
     }
 
     private fun showDialogDeleteMedia(item: MediaUiModel) {

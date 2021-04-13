@@ -1,7 +1,9 @@
 package ru.madbrains.inspection.ui.main.routes.points.list
 
 import android.os.Bundle
+import android.text.format.DateUtils
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_route_points_list.*
@@ -43,6 +45,10 @@ class RoutePointsListFragment : BaseFragment(R.layout.fragment_route_points_list
             tvFactEndValue.text = dateFinishFact?.replace("T", " ")
             tvFactOrderValue.text = if(saveOrderControlPoints == true) strings[R.string.yes] else strings[R.string.no]
         }
+        routePointsViewModel.durationTimer.observe(viewLifecycleOwner, Observer {time ->
+            durationBlock.isVisible = time != null
+            time?.let { tvDurationValue.text = DateUtils.formatElapsedTime(it) }
+        })
 
         rvRoutePoints.adapter = routePointsAdapter
 

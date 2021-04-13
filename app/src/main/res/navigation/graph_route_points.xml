@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/graph_route_points"
+    app:startDestination="@id/routePointsFragment">
+
+    <fragment
+        android:id="@+id/techOperationsFragment"
+        android:name="ru.madbrains.inspection.ui.main.routes.techoperations.TechOperationsFragment"
+        tools:layout="@layout/fragment_tech_operations"
+        android:label="TechOperationsFragment">
+        <action
+            android:id="@+id/action_techOperationsFragment_to_addDefectFragment"
+            app:destination="@id/graph_defects_detail"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_techOperationsFragment_to_equipmentFragment"
+            app:destination="@id/equipmentFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_techOperationsFragment_to_equipmentListFragment"
+            app:destination="@id/equipmentListFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+    <include app:graph="@navigation/graph_defects_detail" />
+    <dialog
+        android:id="@+id/routePointsCloseDialog"
+        android:name="ru.madbrains.inspection.ui.main.routes.points.RoutePointsCloseDialog"
+        tools:layout="@layout/fragment_route_points_close_dialog"
+        android:label="RoutePointsCloseDialog" />
+    <dialog
+        android:id="@+id/mapsLevelListFragment"
+        android:name="ru.madbrains.inspection.ui.main.routes.points.map.mapLevelsList.MapsLevelListFragment"
+        tools:layout="@layout/maps_level_list_fragment"
+        android:label="maps_level_list_fragment" />
+    <fragment
+        android:id="@+id/equipmentFragment"
+        android:name="ru.madbrains.inspection.ui.main.equipment.EquipmentFragment"
+        tools:layout="@layout/fragment_equipment"
+        android:label="EquipmentFragment">
+        <action
+            android:id="@+id/action_equipmentFragment_to_detailFragment"
+            app:destination="@id/graph_defects_detail"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/equipmentListFragment"
+        android:name="ru.madbrains.inspection.ui.main.equipmentList.EquipmentListFragment"
+        tools:layout="@layout/fragment_equipment_list"
+        android:label="EquipmentListFragment">
+        <action
+            android:id="@+id/action_equipmentListFragment_to_equipmentFragment"
+            app:destination="@id/equipmentFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/routePointsFragment"
+        android:name="ru.madbrains.inspection.ui.main.routes.points.RoutePointsFragment"
+        tools:layout="@layout/fragment_route_points"
+        android:label="RoutePointsFragment">
+        <action
+            android:id="@+id/action_routePointsFragment_to_techOperationsFragment"
+            app:destination="@id/techOperationsFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_routePointsFragment_to_routePointsCloseDialog"
+            app:destination="@id/routePointsCloseDialog" />
+        <action
+            android:id="@+id/action_routePointsFragment_to_mapsLevelListFragment"
+            app:destination="@id/mapsLevelListFragment" />
+    </fragment>
+    <include app:graph="@navigation/graph_defects" />
+</navigation>

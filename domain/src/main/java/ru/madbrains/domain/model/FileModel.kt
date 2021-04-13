@@ -1,5 +1,6 @@
 package ru.madbrains.domain.model
 
+import java.io.File
 import java.io.Serializable
 
 data class FileModel(
@@ -9,4 +10,5 @@ data class FileModel(
         val extension: String?
 ) : Serializable {
     var shipped: Boolean = true
+    var localFile: File? = null
 }

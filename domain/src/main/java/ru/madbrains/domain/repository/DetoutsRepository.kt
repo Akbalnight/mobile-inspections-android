@@ -37,7 +37,7 @@ interface DetoutsRepository {
                    statusProcessId: String?): Single<List<DefectModel>>
 
 
-    fun saveDefect(files: List<File>?,
+    fun saveDefect(files: List<MediaModel>?,
                    detourId: String?,
                    equipmentId: String?,
                    staffDetectId: String?,
@@ -47,7 +47,7 @@ interface DetoutsRepository {
                    statusProcessId: String?
     ): Single<String>
 
-    fun updateDefect(files: List<File>?,
+    fun updateDefect(files: List<MediaModel>?,
                      id: String?,
                      statusProcessId: String?,
                      dateDetectDefect: String?,

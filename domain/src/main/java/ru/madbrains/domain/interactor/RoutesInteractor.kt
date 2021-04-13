@@ -75,7 +75,7 @@ class RoutesInteractor(
                 .subscribeOn(Schedulers.io())
     }
 
-    fun saveDefect(files: List<File>? = null,
+    fun saveDefect(files: List<MediaModel>? = null,
                    detourId: String? = null,
                    equipmentId: String? = null,
                    staffDetectId: String? = null,
@@ -87,7 +87,7 @@ class RoutesInteractor(
         return routesRepository.saveDefect(files, detourId, equipmentId, staffDetectId, defectTypicalId, description, dateDetectDefect, statusProcessId).subscribeOn(Schedulers.io())
     }
 
-    fun updateDefect(files: List<File>? = null,
+    fun updateDefect(files: List<MediaModel>? = null,
                      id: String? = null,
                      statusProcessId: String? = null,
                      dateDetectDefect: String? = null,

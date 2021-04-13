@@ -13,7 +13,6 @@ import ru.madbrains.data.network.request.*
 import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.domain.model.*
 import ru.madbrains.domain.repository.DetoutsRepository
-import java.io.File
 
 class RoutesRepositoryImpl(
         private val preferenceStorage: PreferenceStorage
@@ -113,7 +112,7 @@ class RoutesRepositoryImpl(
     }
 
     override fun saveDefect(
-            files: List<File>?,
+            files: List<MediaModel>?,
             detourId: String?,
             equipmentId: String?,
             staffDetectId: String?,
@@ -131,35 +130,31 @@ class RoutesRepositoryImpl(
                 dateDetectDefect = dateDetectDefect,
                 statusProcessId = statusProcessId
         )
-
         var multiParts: List<MultipartBody.Part>? = null
         files?.let { list ->
             if (list.isNotEmpty()) {
                 val body = MultipartBody.Builder().apply {
                     list.forEach { item ->
                         addFormDataPart(
-                                name = "files",
-                                filename = "${item.name}.jpg",
-                                body = item.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                                name = item.file.name,
+                                filename = "${item.file.name}.${item.extension}",
+                                body = item.file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
                         )
                     }
-
                 }.build()
                 multiParts = body.parts
             }
         }
-
         return ApiData.inspectionApi.saveDefect(request, multiParts)
     }
 
-    override fun updateDefect(files: List<File>?, id: String?, statusProcessId: String?, dateDetectDefect: String?, staffDetectId: String?, description: String?, detoursId: String?): Single<String> {
+    override fun updateDefect(files: List<MediaModel>?, id: String?, statusProcessId: String?, dateDetectDefect: String?, staffDetectId: String?, description: String?, detoursId: String?): Single<String> {
         val request = UpdateDefectReq(
                 id = id,
                 statusProcessId = statusProcessId,
                 extraData = UpdateExtraDefectReq(dateDetectDefect = dateDetectDefect,
                         staffDetectId = preferenceStorage.userId.orEmpty(), description = description, detoursId = detoursId)
         )
-
         var multiParts: List<MultipartBody.Part>? = null
         files?.let { list ->
             if (list.isNotEmpty()) {
@@ -167,16 +162,14 @@ class RoutesRepositoryImpl(
                     list.forEach { item ->
                         addFormDataPart(
                                 name = "files",
-                                filename = "${item.name}.jpg",
-                                body = item.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                                filename = "${item.file}.${item.extension}",
+                                body = item.file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
                         )
                     }
-
                 }.build()
                 multiParts = body.parts
             }
         }
-
         return ApiData.inspectionApi.updateDefect(request, multiParts)
     }
 
