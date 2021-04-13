@@ -6,17 +6,26 @@ import androidx.core.os.HandlerCompat
 import com.pow.api.cls.RfidPower
 import com.uhf.api.cls.Reader
 import timber.log.Timber
+import java.io.FileOutputStream
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 class RfidReader: RfidDevice {
-
     private val handler = Handler()
     private var scanIsOn = false
     private val rPower = RfidPower(RfidPower.PDATYPE.ZoomSmart)
     private val reader = Reader()
     private var dataListener: RfidListener? = null
     private var mProgressListener: RfidProgressListener? = null
+
+    init {
+        try {
+            FileOutputStream("/sys/class/bj_dev/func/uhf_en")
+            Timber.d("device found")
+        } catch (e: Throwable){
+            throw Throwable("device is not found")
+        }
+    }
 
     private val scanRunnable = Runnable {
         executorService.execute {
