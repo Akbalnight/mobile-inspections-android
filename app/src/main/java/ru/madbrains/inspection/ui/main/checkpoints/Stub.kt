@@ -1,0 +1,1 @@
+package ru.madbrains.inspection.ui.main.checkpoints

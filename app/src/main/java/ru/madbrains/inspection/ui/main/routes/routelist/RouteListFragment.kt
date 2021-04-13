@@ -1,5 +1,6 @@
 package ru.madbrains.inspection.ui.main.routes.routelist
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
@@ -30,6 +31,7 @@ class RouteListFragment : BaseFragment(R.layout.fragment_route_list) {
         )
     }
 
+    @SuppressLint("LogNotTimber")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 

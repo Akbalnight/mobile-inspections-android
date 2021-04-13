@@ -8,7 +8,7 @@ import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.extensions.drawables
 import ru.madbrains.inspection.extensions.strings
-import ru.madbrains.inspection.ui.adapters.DefectMediaAdapter
+import ru.madbrains.inspection.ui.adapters.MediaAdapter
 
 fun defectListDelegate(
         clickEdit: (DefectListUiModel) -> Unit,
@@ -114,7 +114,7 @@ fun defectListDelegate(
                             btnEditContainer.visibility = View.VISIBLE
                     }
 
-                    val mediaAdapter = DefectMediaAdapter(
+                    val mediaAdapter = MediaAdapter(
                             onMediaDeleteClick = {},
                             onMediaImageClick = {})
                     if (!item.images.isNullOrEmpty()) {
@@ -126,7 +126,7 @@ fun defectListDelegate(
             }
         }
 
-fun visibleIvMedia(images: List<MediaDefectUiModel>?): Int {
+fun visibleIvMedia(images: List<MediaUiModel>?): Int {
     return if (images.isNullOrEmpty()) {
         View.GONE
     } else {
@@ -135,19 +135,19 @@ fun visibleIvMedia(images: List<MediaDefectUiModel>?): Int {
 }
 
 data class DefectListUiModel(
-        val id: String,
-        val detour: String,
-        val date: String,
-        val time: String,
-        val device: String,
-        val dateConfirm: String,
-        val type: String,
-        val description: String,
-        val isConfirmList: Boolean,
-        val images: List<MediaDefectUiModel>?,
-        var hideDetail: Boolean = true,
-        var hideLinkDetour: Boolean = true,
-        val shipped: Boolean
+    val id: String,
+    val detour: String,
+    val date: String,
+    val time: String,
+    val device: String,
+    val dateConfirm: String,
+    val type: String,
+    val description: String,
+    val isConfirmList: Boolean,
+    val images: List<MediaUiModel>?,
+    var hideDetail: Boolean = true,
+    var hideLinkDetour: Boolean = true,
+    val shipped: Boolean
 
 ) : DiffItem {
 

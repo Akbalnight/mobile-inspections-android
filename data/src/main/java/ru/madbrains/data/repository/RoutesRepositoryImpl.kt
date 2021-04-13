@@ -73,6 +73,16 @@ class RoutesRepositoryImpl(
         }
     }
 
+    override fun getCheckpoints(): Single<List<CheckpointGroupModel>> {
+        return ApiData.inspectionApi.getCheckpoints(Object()).flatMap {
+            Single.just(mapGetCheckpointResp(it))
+        }
+    }
+
+    override fun updateCheckpoint(id: String, rfidCode: String): Single<Any> {
+        return ApiData.inspectionApi.updateCheckpoint(CheckpointUpdateReq(id, rfidCode))
+    }
+
     override fun getDefects(
             id: String?,
             codes: List<String>?,

@@ -23,4 +23,13 @@ class ProgressView @JvmOverloads constructor(
         viewLockContent.isVisible = visibility
         progress.isVisible = visibility
     }
+
+    fun changeTextVisibility(visibility: Boolean) {
+        progressText.isVisible = visibility
+    }
+
+    fun setTextButton(text: String, call:()->Unit) {
+        progressText.text = text
+        progressText.setOnClickListener { call() }
+    }
 }

@@ -142,11 +142,11 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
             val builder = AlertDialog.Builder(it)
             builder.apply {
                 setMessage(strings[R.string.fragment_defect_dialog_delete_defect_subtitle])
-                setPositiveButton(strings[R.string.fragment_add_defect_dialog_btn_delete],
+                setPositiveButton(strings[R.string.fragment_add_dialog_btn_delete],
                         DialogInterface.OnClickListener { _, _ ->
                             defectListViewModel.deleteDefect(item)
                         })
-                setNegativeButton(strings[R.string.fragment_add_defect_dialog_btn_cancel],
+                setNegativeButton(strings[R.string.fragment_dialog_btn_cancel],
                         DialogInterface.OnClickListener { _, _ ->
                         })
             }
@@ -162,11 +162,11 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
             builder.apply {
                 setTitle(strings[R.string.fragment_defect_dialog_eliminated_defect_title])
                 setMessage(strings[R.string.fragment_defect_dialog_eliminated_defect_subtitle])
-                setPositiveButton(strings[R.string.fragment_add_defect_dialog_btn_save],
+                setPositiveButton(strings[R.string.fragment_dialog_btn_save],
                         DialogInterface.OnClickListener { _, _ ->
                             defectListViewModel.eliminatedDefect(item)
                         })
-                setNegativeButton(strings[R.string.fragment_add_defect_dialog_btn_cancel],
+                setNegativeButton(strings[R.string.fragment_dialog_btn_cancel],
                         DialogInterface.OnClickListener { _, _ ->
                         })
             }

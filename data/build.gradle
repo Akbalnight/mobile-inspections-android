@@ -15,6 +15,10 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+
+        ndk {
+            abiFilters 'armeabi', 'x86'
+        }
     }
 
     compileOptions {
@@ -66,4 +70,10 @@ dependencies {
     implementation "org.koin:koin-androidx-scope:$rootProject.koin_version"
     implementation "org.koin:koin-androidx-viewmodel:$rootProject.koin_version"
     testImplementation "org.koin:koin-test:$rootProject.koin_version"
+
+    //RFID
+    compile files('libs/Module_Android_Power.jar')
+
+    // Timber
+    implementation "com.jakewharton.timber:timber:$rootProject.timberVersion"
 }

@@ -24,9 +24,9 @@ import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.extensions.colors
 import ru.madbrains.inspection.extensions.formattedStrings
 import ru.madbrains.inspection.extensions.strings
-import ru.madbrains.inspection.ui.adapters.DefectMediaAdapter
+import ru.madbrains.inspection.ui.adapters.MediaAdapter
 import ru.madbrains.inspection.ui.common.camera.CameraViewModel
-import ru.madbrains.inspection.ui.delegates.MediaDefectUiModel
+import ru.madbrains.inspection.ui.delegates.MediaUiModel
 import ru.madbrains.inspection.ui.main.MainViewModel
 import ru.madbrains.inspection.ui.main.defects.defectdetail.equipmentselectlist.EquipmentSelectListViewModel
 
@@ -40,7 +40,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
     }
 
     private val defectMediaAdapter by lazy {
-        DefectMediaAdapter(
+        MediaAdapter(
                 onMediaImageClick = {
                     // todo show image preview
                 },
@@ -236,11 +236,11 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
             if (it.isNotEmpty()) {
                 rvAddDefectMedia.visibility = View.VISIBLE
                 tvMediaListNoData.visibility = View.GONE
-                tvMediaList.text = formattedStrings[R.string.fragment_add_defect_media_list_title].invoke(values = *arrayOf(it.size))
+                tvMediaList.text = formattedStrings[R.string.fragment_media_list_title].invoke(values = *arrayOf(it.size))
             } else {
                 tvMediaListNoData.visibility = View.VISIBLE
                 rvAddDefectMedia.visibility = View.GONE
-                tvMediaList.text = formattedStrings[R.string.fragment_add_defect_media_list_title].invoke(values = *arrayOf("0"))
+                tvMediaList.text = formattedStrings[R.string.fragment_media_list_title].invoke(values = *arrayOf("0"))
             }
             defectMediaAdapter.items = it
         })
@@ -255,16 +255,16 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
 
     }
 
-    private fun showDialogDeleteMedia(item: MediaDefectUiModel) {
+    private fun showDialogDeleteMedia(item: MediaUiModel) {
         val alertDialog: AlertDialog? = activity?.let {
             val builder = AlertDialog.Builder(it)
             builder.apply {
-                setMessage(strings[R.string.fragment_add_defect_dialog_delete_subtitle])
-                setPositiveButton(strings[R.string.fragment_add_defect_dialog_btn_delete],
+                setMessage(strings[R.string.fragment_dialog_delete_subtitle])
+                setPositiveButton(strings[R.string.fragment_add_dialog_btn_delete],
                         DialogInterface.OnClickListener { _, _ ->
                             defectDetailViewModel.deleteMedia(item)
                         })
-                setNegativeButton(strings[R.string.fragment_add_defect_dialog_btn_cancel],
+                setNegativeButton(strings[R.string.fragment_dialog_btn_cancel],
                         DialogInterface.OnClickListener { _, _ ->
                         })
             }
@@ -279,11 +279,11 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
             builder.apply {
                 setTitle(if (isLinkedDetour) strings[R.string.fragment_add_defect_dialog_empty_fields_title] else strings[R.string.fragment_add_defect_dialog_empty_fields_no_detour_title])
                 setMessage(if (isLinkedDetour) strings[R.string.fragment_add_defect_dialog_empty_fields_subtitle] else strings[R.string.fragment_add_defect_dialog_empty_fields_no_detour_subtitle])
-                setPositiveButton(if (isLinkedDetour) strings[R.string.fragment_add_defect_dialog_btn_save] else strings[R.string.fragment_add_defect_dialog_btn_fix],
+                setPositiveButton(if (isLinkedDetour) strings[R.string.fragment_dialog_btn_save] else strings[R.string.fragment_add_defect_dialog_btn_fix],
                         DialogInterface.OnClickListener { _, _ ->
                             defectDetailViewModel.sendSaveDefect()
                         })
-                setNegativeButton(strings[R.string.fragment_add_defect_dialog_btn_cancel],
+                setNegativeButton(strings[R.string.fragment_dialog_btn_cancel],
                         DialogInterface.OnClickListener { _, _ ->
                         })
             }
@@ -311,12 +311,12 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
         val alertDialog: AlertDialog? = activity?.let {
             val builder = AlertDialog.Builder(it)
             builder.apply {
-                setMessage(strings[R.string.fragment_add_defect_dialog_changed_fields])
-                setPositiveButton(strings[R.string.fragment_add_defect_dialog_btn_exit],
+                setMessage(strings[R.string.fragment_dialog_changed_fields])
+                setPositiveButton(strings[R.string.fragment_dialog_btn_exit],
                         DialogInterface.OnClickListener { _, _ ->
                             findNavController().popBackStack()
                         })
-                setNegativeButton(strings[R.string.fragment_add_defect_dialog_btn_cancel],
+                setNegativeButton(strings[R.string.fragment_dialog_btn_cancel],
                         DialogInterface.OnClickListener { _, _ ->
                         })
             }
@@ -330,8 +330,8 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
             val builder = AlertDialog.Builder(it)
             builder.apply {
                 setTitle(strings[R.string.fragment_defect_dialog_confirmed_defect_title])
-                setMessage(strings[R.string.fragment_defect_dialog_confirmed_defect_subtitle])
-                setPositiveButton(strings[R.string.fragment_add_defect_dialog_btn_save],
+                setMessage(strings[R.string.fragment_dialog_confirmed_subtitle])
+                setPositiveButton(strings[R.string.fragment_dialog_btn_save],
                         DialogInterface.OnClickListener { _, _ ->
                             if (isConfirm) {
                                 defectDetailViewModel.sendUpdateDefect()
@@ -339,7 +339,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
                                 defectDetailViewModel.localEditDefect()
                             }
                         })
-                setNegativeButton(strings[R.string.fragment_add_defect_dialog_btn_cancel],
+                setNegativeButton(strings[R.string.fragment_dialog_btn_cancel],
                         DialogInterface.OnClickListener { _, _ ->
                         })
             }
@@ -358,7 +358,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
                         DialogInterface.OnClickListener { _, _ ->
                             defectDetailViewModel.sendSaveDefect()
                         })
-                setNegativeButton(strings[R.string.fragment_add_defect_dialog_btn_cancel],
+                setNegativeButton(strings[R.string.fragment_dialog_btn_cancel],
                         DialogInterface.OnClickListener { _, _ ->
                         })
             }

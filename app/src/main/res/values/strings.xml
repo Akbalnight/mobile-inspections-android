@@ -36,26 +36,17 @@
     <string name="fragment_add_defect_toolbar_create">Фиксация дефекта</string>
     <string name="fragment_add_defect_toolbar_edit">Редактирование дефекта</string>
     <string name="fragment_add_defect_toolbar_confirm">Подтверждение дефекта</string>
-    <string name="fragment_add_defect_scan">Сканировать</string>
-    <string name="fragment_add_defect_photo_video">Фото/Видео</string>
     <string name="fragment_add_defect_drop_down_hint_device">Оборудование</string>
     <string name="fragment_add_defect_drop_down_hint_type_defect">Тип дефекта</string>
     <string name="fragment_add_defect_hint_date_confirm">Дата подтверждения</string>
     <string name="fragment_add_defect_drop_down_hint_description">Описание</string>
-    <string name="fragment_add_defect_media">Фото и видео: 0 из 8</string>
-    <string name="fragment_add_defect_not_media">Нет прикрепленных медиафайлов. Для добавления нажмите на кнопку &#171;фото/видео&#187;</string>
     <string name="fragment_btn_label_delete">Удалить</string>
     <string name="fragment_btn_label_edit">Редактировать</string>
     <string name="fragment_btn_label_confirm">Подтвердить дефект</string>
     <string name="fragment_btn_label_eliminated">Дефект устранен</string>
     <string name="fragment_title_select_device">Оборудование</string>
-    <string name="fragment_add_defect_dialog_btn_delete">Удалить</string>
-    <string name="fragment_add_defect_dialog_btn_save">Сохранить</string>
-    <string name="fragment_add_defect_dialog_btn_cancel">Отмена</string>
-    <string name="fragment_add_defect_dialog_btn_exit">Выйти</string>
     <string name="fragment_add_defect_dialog_btn_ok">Ок</string>
     <string name="fragment_add_defect_dialog_btn_fix">Зафиксировать</string>
-    <string name="fragment_add_defect_dialog_delete_subtitle">Вы действительно хотите удалить фото?</string>
     <string name="fragment_add_defect_dialog_empty_fields_title">Не все поля заполнены</string>
     <string name="fragment_add_defect_snackbar_button">Продолжить</string>
     <string name="fragment_add_defect_snackbar_text_save">Дефект успешно сохранен</string>
@@ -63,9 +54,7 @@
     <string name="fragment_add_defect_dialog_empty_fields_subtitle">Вы хотите сохранить изменения?</string>
     <string name="fragment_add_defect_dialog_empty_fields_no_detour_subtitle">Хотите зафискировать дефект?</string>
     <string name="fragment_add_defect_dialog_empty_required_fields_subtitle">Не заполнены обязательные поля</string>
-    <string name="fragment_add_defect_dialog_changed_fields">Вы действительно хотите выйти без сохранения изменений?</string>
     <string name="fragment_add_defect_dialog_save_no_detour_title">Вы внесли данные по выявленному дефекту вне планового обхода</string>
-    <string name="fragment_add_defect_media_list_title">Фото и видео: %s из 8</string>
     <string name="fragment_add_defect_search">Поиск</string>
 
     <!-- DefectListFragment -->
@@ -75,13 +64,16 @@
     <string name="fragment_defect_card_link_detour">Плановой обход</string>
     <string name="fragment_defect_card_no_link_detour">Вне планового обхода</string>
     <string name="fragment_defect_dialog_delete_defect_subtitle">Вы действительно хотите удалить выявленный дефект?</string>
-    <string name="fragment_defect_dialog_eliminated_defect_title">Вы подтвердили устранение выявленного дефекта</string>
     <string name="fragment_defect_dialog_confirmed_defect_title">Вы внесли изменения в выявленный дефект</string>
+    <string name="fragment_defect_dialog_eliminated_defect_title">Вы подтвердили устранение выявленного дефекта</string>
     <string name="fragment_defect_dialog_eliminated_defect_subtitle">Хотите сохранить изменения?</string>
-    <string name="fragment_defect_dialog_confirmed_defect_subtitle">Хотите сохранить изменения?</string>
 
-    <!-- GroupListFragment -->
-    <string name="fragment_group_list_title">Группа</string>
+    <!-- CheckpointGroupListFragment -->
+    <string name="fragment_checkpoint_group_list_title">Группа</string>
+
+    <!-- CheckpointDetailFragment -->
+    <string name="fragment_checkpoint_detail_commentary">Комментарий</string>
+    <string name="fragment_checkpoint_detail_saved_success">Метка успешно сохранена</string>
 
     <!-- SyncFragment -->
     <string name="fragment_sync_title">Синхронизация</string>
@@ -140,6 +132,22 @@
     <string name="days">дней</string>
     <string name="error">Ошибка</string>
     <string name="ok">ОК</string>
+
+    <string name="fragment_scan">Сканировать</string>
+    <string name="stop">Остановить</string>
+    <string name="fragment_photo_video">Фото/Видео</string>
+    <string name="fragment_media">Фото и видео: 0 из 8</string>
+    <string name="fragment_not_media">Нет прикрепленных медиафайлов. Для добавления нажмите на кнопку &#171;фото/видео&#187;</string>
+    <string name="fragment_dialog_changed_fields">Вы действительно хотите выйти без сохранения изменений?</string>
+    <string name="fragment_media_list_title">Фото и видео: %s из 8</string>
+    <string name="fragment_add_dialog_btn_delete">Удалить</string>
+    <string name="fragment_dialog_btn_save">Сохранить</string>
+    <string name="fragment_dialog_btn_cancel">Отмена</string>
+    <string name="fragment_dialog_btn_exit">Выйти</string>
+    <string name="fragment_dialog_delete_subtitle">Вы действительно хотите удалить фото?</string>
+    <string name="fragment_dialog_confirmed_subtitle">Хотите сохранить изменения?</string>
+    <string name="fragment_dialog_confirmed_title">Вы внесли изменения</string>
+    <string name="rfid_s">RFID: %s</string>
 
     <string-array name="months">
         <item>Январь</item>

@@ -16,6 +16,14 @@ class RoutesInteractor(
         return routesRepository.getDetours()
                 .subscribeOn(Schedulers.io())
     }
+    fun getCheckpoints(): Single<List<CheckpointGroupModel>> {
+        return routesRepository.getCheckpoints()
+                .subscribeOn(Schedulers.io())
+    }
+    fun updateCheckpoint(id: String, rfidCode: String): Single<Any> {
+        return routesRepository.updateCheckpoint(id, rfidCode)
+                .subscribeOn(Schedulers.io())
+    }
 
     fun saveDetour(detour: DetourModel): Completable {
         return routesRepository.saveDetour(detour)
