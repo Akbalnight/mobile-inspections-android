@@ -179,7 +179,9 @@ class RoutePointsViewModel(
     }
 
     private fun stopTimer() {
-        timerDispose.dispose()
+        if(_durationTimer.value != null){
+            timerDispose.dispose()
+        }
     }
 
     enum class RouteStatus {
