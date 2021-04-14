@@ -74,7 +74,7 @@ class RoutesRepositoryImpl(
     }
 
     override fun getCheckpoints(): Single<List<CheckpointGroupModel>> {
-        return ApiData.inspectionApi.getCheckpoints(Object()).flatMap {
+        return ApiData.inspectionApi.getCheckpoints(Object(), 0, 1).flatMap {
             Single.just(mapGetCheckpointResp(it))
         }
     }

@@ -37,7 +37,7 @@ interface InspectionApi {
     fun getDefects(@Body request: GetDefectsReq): Single<List<GetDefectsResp>>
 
     @POST("/api/dynamicdq/data/flat/mobileControlPoints")
-    fun getCheckpoints(@Body request: Any): Single<List<GetCheckpointResp>>
+    fun getCheckpoints(@Body request: Any, @Query("page") page: Int, @Query("size") size: Int): Single<List<GetCheckpointResp>>
 
     @POST("/api/dynamicdq/data/save/mobileControlPointsSave")
     fun updateCheckpoint(@Body request: CheckpointUpdateReq): Single<Any>
