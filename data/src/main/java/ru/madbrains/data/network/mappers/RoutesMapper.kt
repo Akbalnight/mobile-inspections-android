@@ -118,31 +118,15 @@ fun mapGetEquipmentFileResp(resp: GetEquipmentFileResp): EquipmentFileModel {
     }
 }
 
-fun mapGetCheckpointResp(resp: List<GetCheckpointResp>): List<CheckpointGroupModel> {
-    val map: MutableMap<String?, CheckpointGroupModel> = mutableMapOf()
-    for(item in resp){
-        if(map[item.parentId] == null){
-            map[item.parentId] = CheckpointGroupModel(
-                parentId = item.parentId,
-                parentName = item.parentName,
-                points = mutableListOf()
-            )
-        }
-        map[item.parentId]?.points?.let {
-            (it as MutableList).add(
-                with(item){
-                    CheckpointModel(
-                        id = id,
-                        code = code,
-                        name = name,
-                        rfidCode =  rfidCode
-                    )
-                }
-            )
-        }
+fun mapGetCheckpointResp(resp: GetCheckpointResp): CheckpointModel {
+    return with(resp) {
+        CheckpointModel(
+            id = id,
+            code = code,
+            name = name,
+            rfidCode =  rfidCode
+        )
     }
-    return map.values.toList()
-
 }
 
 fun mapTechMapResp(resp: GetTechMapResp): TechMapModel {

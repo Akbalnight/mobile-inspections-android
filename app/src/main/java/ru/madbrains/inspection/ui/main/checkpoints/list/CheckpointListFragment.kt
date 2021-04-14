@@ -11,6 +11,7 @@ import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.extensions.drawables
+import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.adapters.CheckpointAdapter
 import ru.madbrains.inspection.ui.delegates.CheckpointUiModel
 import ru.madbrains.inspection.ui.main.MainViewModel
@@ -30,15 +31,13 @@ class CheckpointListFragment : BaseFragment(R.layout.fragment_checkpoint_list) {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        checkpointListViewModel.getCheckpoints()
+
         rvList.adapter = checkpointAdapter
 
-        checkpointListViewModel.selectedGroupUi.observe(viewLifecycleOwner, Observer { group->
-            checkpointAdapter.items = group.points.map { CheckpointUiModel(
-                id = it.id,
-                name = it.name,
-                hasRfid = it.rfidCode!=null
-            ) }
-            setupToolbar(group.parentName)
+        checkpointListViewModel.checkPointList.observe(viewLifecycleOwner, Observer { list->
+            checkpointAdapter.items = list
+            setupToolbar(strings[R.string.fragment_checkpoint_title])
         })
 
         checkpointListViewModel.progressVisibility.observe(viewLifecycleOwner, Observer {

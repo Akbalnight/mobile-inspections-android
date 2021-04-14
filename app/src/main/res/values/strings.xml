@@ -75,6 +75,7 @@
     <!-- CheckpointDetailFragment -->
     <string name="fragment_checkpoint_detail_commentary">Комментарий</string>
     <string name="fragment_checkpoint_detail_saved_success">Метка успешно сохранена</string>
+    <string name="fragment_checkpoint_title">Контрольные точки</string>
 
     <!-- SyncFragment -->
     <string name="fragment_sync_title">Синхронизация</string>

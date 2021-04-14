@@ -22,7 +22,7 @@ interface DetoutsRepository {
 
     fun getEquipments(names: List<String>, uuid: List<String>): Single<List<EquipmentModel>>
 
-    fun getCheckpoints(): Single<List<CheckpointGroupModel>>
+    fun getCheckpoints(): Single<List<CheckpointModel>>
 
     fun updateCheckpoint(id:String, rfidCode: String): Single<Any>
 
