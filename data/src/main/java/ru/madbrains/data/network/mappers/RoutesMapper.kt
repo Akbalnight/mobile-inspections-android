@@ -61,7 +61,8 @@ fun mapGetRoutesDataResp(resp: GetRouteDataResp): RouteDataModel {
                 yLocation = yLocation,
                 position = position,
                 equipments = equipments?.map { mapGetEquipmentResp(it) },
-                techMap = techMap?.let { mapTechMapResp(it) }
+                techMap = techMap?.let { mapTechMapResp(it) },
+                completed = completed
         )
     }
 }
