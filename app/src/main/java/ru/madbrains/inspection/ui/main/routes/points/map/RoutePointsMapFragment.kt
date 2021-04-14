@@ -87,7 +87,7 @@ class RoutePointsMapFragment : BaseFragment(R.layout.fragment_route_points_map) 
 
     private fun calculatePoints(rectF: RectF) {
         val image = bitmap ?: return
-        val pointSize = 176
+        val pointSize = 100
         val scaleFactor: Double = rectF.width() / image.width.toDouble()
         pointsContainer.removeAllViews()
 

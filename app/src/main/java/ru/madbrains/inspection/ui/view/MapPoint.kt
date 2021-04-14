@@ -40,11 +40,14 @@ class MapPoint @JvmOverloads constructor(
     }
 
     private fun setStyle(value:Boolean){
+        container.layoutParams.height = 100
+        container.layoutParams.width = 100
+
         if(value){
-            container.background = ResourcesCompat.getDrawable(context.resources, R.drawable.ic_point_completed, null)
+            ivBackground.setImageResource(R.drawable.ic_point_completed)
             tvLabel.setTextColor(ResourcesCompat.getColor(context.resources, R.color.textWhite, null))
         } else {
-            container.background = ResourcesCompat.getDrawable(context.resources, R.drawable.ic_point, null)
+            ivBackground.setImageResource(R.drawable.ic_point)
             tvLabel.setTextColor(ResourcesCompat.getColor(context.resources, R.color.textMain, null))
         }
     }
