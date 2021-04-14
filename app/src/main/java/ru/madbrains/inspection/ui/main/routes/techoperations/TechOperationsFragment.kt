@@ -39,6 +39,7 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
 
     private val techOperationsAdapter by lazy {
         TechOperationAdapter(
+            routePointsViewModel.detourModel?.isDataEditable,
             onDataInput = {
                 techOperationsViewModel.onTechDataInput(it.id, it.inputData)
             }
@@ -61,6 +62,9 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
             }
         }
 
+        routePointsViewModel.detourModel?.isDataEditable?.let {
+            fabTechOperationsSave.isVisible = it
+        }
 
         fabTechOperationsScanRFID.setOnClickListener {
             techOperationsViewModel.checkRfidAndFinish()

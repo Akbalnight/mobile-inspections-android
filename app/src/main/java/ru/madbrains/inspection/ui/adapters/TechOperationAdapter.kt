@@ -7,11 +7,12 @@ import ru.madbrains.inspection.ui.delegates.TechOperationUiModel
 import ru.madbrains.inspection.ui.delegates.techOperationDelegate
 
 class TechOperationAdapter(
-    onDataInput: (TechOperationUiModel) -> Unit
+        isDataEditable: Boolean?,
+        onDataInput: (TechOperationUiModel) -> Unit
 ) : AsyncListDifferDelegationAdapter<DiffItem>(BaseDiffCallback()) {
 
     init {
         delegatesManager
-            .addDelegate(techOperationDelegate(onDataInput))
+            .addDelegate(techOperationDelegate(isDataEditable, onDataInput))
     }
 }
