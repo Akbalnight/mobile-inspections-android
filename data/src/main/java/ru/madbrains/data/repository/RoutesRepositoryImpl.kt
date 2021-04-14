@@ -136,7 +136,7 @@ class RoutesRepositoryImpl(
                 val body = MultipartBody.Builder().apply {
                     list.forEach { item ->
                         addFormDataPart(
-                                name = item.file.name,
+                                name = "files",
                                 filename = "${item.file.name}.${item.extension}",
                                 body = item.file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
                         )

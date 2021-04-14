@@ -17,7 +17,7 @@ data class DefectModel(
         val statusProcessId: String?,
         val extraData: List<ExtraDataModel>?
 ) : Serializable {
-    var shipped: Boolean = false
+    var shipped: Boolean = true // если оффлайн при записи в бд ставить false, влияет на отображение кнопок редактировать/удалить
 
     fun getLastDateConfirm(): Date? {
         extraData?.let { extraList ->
