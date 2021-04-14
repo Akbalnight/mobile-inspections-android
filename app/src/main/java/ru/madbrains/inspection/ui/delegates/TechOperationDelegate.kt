@@ -26,7 +26,7 @@ fun techOperationDelegate(
                             tvInputData.visibility = View.VISIBLE
                             tvInputData.text = label
                             etInputData.visibility = View.VISIBLE
-                            etInputData.inputType = if(isDataEditable == true) InputType.TYPE_TEXT_VARIATION_NORMAL else InputType.TYPE_NULL
+                            etInputData.inputType = if(isDataEditable == true) InputType.TYPE_CLASS_TEXT else InputType.TYPE_NULL
                             etInputData.setText(item.valueInputData)
                             etInputData.doAfterTextChanged { inputData ->
                                 item.inputData = inputData.toString()
