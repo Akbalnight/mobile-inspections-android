@@ -34,6 +34,7 @@ class WebViewViewModel(
                     userId = it.userId
                     codeChallenge = it.codeChallenge
                     isAdmin = it.isAdmin
+                    isCreator = it.isCreator
                 }
                 _navigateToMain.value = Event(Unit)
             }, {
