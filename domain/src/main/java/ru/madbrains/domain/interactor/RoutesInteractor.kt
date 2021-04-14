@@ -16,7 +16,7 @@ class RoutesInteractor(
         return routesRepository.getDetours()
                 .subscribeOn(Schedulers.io())
     }
-    fun getCheckpoints(): Single<List<CheckpointGroupModel>> {
+    fun getCheckpoints(): Single<List<CheckpointModel>> {
         return routesRepository.getCheckpoints()
                 .subscribeOn(Schedulers.io())
     }
