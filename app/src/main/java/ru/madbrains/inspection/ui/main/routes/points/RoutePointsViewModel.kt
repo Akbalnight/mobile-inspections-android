@@ -37,6 +37,9 @@ class RoutePointsViewModel(
     private val _navigateToCloseDialog = MutableLiveData<Event<Unit>>()
     val navigateToCloseDialog: LiveData<Event<Unit>> = _navigateToCloseDialog
 
+    private val _navigateToFinishDialog = MutableLiveData<Event<Unit>>()
+    val navigateToFinishDialog: LiveData<Event<Unit>> = _navigateToFinishDialog
+
     private val _routePoints = MutableLiveData<List<DiffItem>>()
     val routePoints: LiveData<List<DiffItem>> = _routePoints
 
@@ -55,6 +58,10 @@ class RoutePointsViewModel(
     fun completeTechMap(techMap: TechMapModel) {
         routeDataModels.find { it.techMap == techMap }?.completed = true
         updateData()
+
+        if(routeDataModels.all { it.completed }) {
+            _navigateToFinishDialog.value = Event(Unit)
+        }
     }
 
     @SuppressLint("SimpleDateFormat")

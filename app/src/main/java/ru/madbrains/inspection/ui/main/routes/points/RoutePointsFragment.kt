@@ -78,6 +78,9 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
         routePointsViewModel.navigateToCloseDialog.observe(viewLifecycleOwner, EventObserver {
             openCloseDialog()
         })
+        routePointsViewModel.navigateToFinishDialog.observe(viewLifecycleOwner, EventObserver {
+            openFinishDialog()
+        })
     }
 
     private fun setupToolbar(title: String?) {
@@ -108,6 +111,10 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
             }
             routePointsViewPager.setCurrentItem(tab.position, true)
         }.attach()
+    }
+
+    private fun openFinishDialog() {
+        findNavController().navigate(R.id.action_routePointsFragment_to_routePointsFinishDialog)
     }
 
     private fun openCloseDialog() {

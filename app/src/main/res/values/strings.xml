@@ -149,6 +149,8 @@
     <string name="fragment_dialog_delete_subtitle">Вы действительно хотите удалить фото?</string>
     <string name="fragment_dialog_confirmed_subtitle">Хотите сохранить изменения?</string>
     <string name="fragment_dialog_confirmed_title">Вы внесли изменения</string>
+    <string name="fragment_dialog_point_completed_title">Все контрольные точки пройдены</string>
+    <string name="fragment_dialog_points_completed_description">Вы уверены, что хотите сохранить обход и перейти в "Реестр обходов", или хотите внести правки?</string>
     <string name="rfid_s">RFID: %s</string>
 
     <string-array name="months">

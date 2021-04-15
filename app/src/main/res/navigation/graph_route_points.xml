@@ -87,6 +87,13 @@
         <action
             android:id="@+id/action_routePointsFragment_to_mapsLevelListFragment"
             app:destination="@id/mapsLevelListFragment" />
+        <action
+            android:id="@+id/action_routePointsFragment_to_routePointsFinishDialog"
+            app:destination="@id/routePointsFinishDialog" />
     </fragment>
     <include app:graph="@navigation/graph_defects" />
+    <dialog
+        android:id="@+id/routePointsFinishDialog"
+        android:name="ru.madbrains.inspection.ui.main.routes.points.RoutePointsFinishDialog"
+        android:label="RoutePointsFinishDialog" />
 </navigation>
