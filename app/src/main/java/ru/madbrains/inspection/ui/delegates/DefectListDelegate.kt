@@ -110,8 +110,11 @@ fun defectListDelegate(
                         btnEditContainer.visibility = View.GONE
                     } else {
                         btnConfirmContainer.visibility = View.GONE
-                        if (!item.shipped)
+                        if (item.shipped)
+                            btnEditContainer.visibility = View.GONE
+                        else {
                             btnEditContainer.visibility = View.VISIBLE
+                        }
                     }
 
                     val mediaAdapter = MediaAdapter(
