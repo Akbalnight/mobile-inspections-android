@@ -61,14 +61,14 @@
                     android:textColor="@color/textMain" />
 
                 <RadioButton
-                    android:id="@+id/rbPending"
+                    android:id="@+id/rbNew"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:buttonTint="@color/elementsBlue"
                     android:clickable="true"
                     android:focusable="true"
-                    android:text="В ожидании"
+                    android:text="Новый"
                     android:textColor="@color/textMain" />
 
                 <RadioButton

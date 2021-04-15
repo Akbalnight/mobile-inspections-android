@@ -16,7 +16,7 @@ fun detourDelegate(clickListener: (DetourUiModel) -> Unit) =
                 }
                 tvName.text = item.name
                 val detourImageStatus = when (item.status) {
-                    DetourStatus.PENDING -> R.drawable.ic_detour_pending
+                    DetourStatus.NEW -> R.drawable.ic_detour_new
                     DetourStatus.COMPLETED -> R.drawable.ic_detour_completed
                     DetourStatus.NOT_COMPLETED -> R.drawable.ic_detour_not_completed
                     DetourStatus.IN_PROGRESS -> R.drawable.ic_detour_in_progress
