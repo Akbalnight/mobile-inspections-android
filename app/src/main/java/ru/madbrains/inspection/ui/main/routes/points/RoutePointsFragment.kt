@@ -30,7 +30,6 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
 
     private val routePointsViewModel: RoutePointsViewModel by sharedViewModel()
     private val techOperationsViewModel: TechOperationsViewModel by sharedViewModel()
-    private val detoursViewModel: DetoursViewModel by sharedViewModel()
 
     private val stateFabs = mutableListOf<ExtendedFloatingActionButton>()
 

@@ -1,5 +1,6 @@
 package ru.madbrains.inspection.ui.delegates
 
+import android.text.InputType
 import android.view.View
 import androidx.core.widget.doAfterTextChanged
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
@@ -7,8 +8,10 @@ import kotlinx.android.synthetic.main.item_tech_operations.view.*
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.model.DiffItem
 
-fun techOperationDelegate(onDataInput: (TechOperationUiModel) -> Unit) =
-    adapterDelegateLayoutContainer<TechOperationUiModel, DiffItem>(R.layout.item_tech_operations) {
+fun techOperationDelegate(
+        isDataEditable: Boolean?,
+        onDataInput: (TechOperationUiModel) -> Unit
+) = adapterDelegateLayoutContainer<TechOperationUiModel, DiffItem>(R.layout.item_tech_operations) {
 
         bind {
             itemView.apply {
@@ -23,6 +26,7 @@ fun techOperationDelegate(onDataInput: (TechOperationUiModel) -> Unit) =
                             tvInputData.visibility = View.VISIBLE
                             tvInputData.text = label
                             etInputData.visibility = View.VISIBLE
+                            etInputData.inputType = if(isDataEditable == true) InputType.TYPE_CLASS_TEXT else InputType.TYPE_NULL
                             etInputData.setText(item.valueInputData)
                             etInputData.doAfterTextChanged { inputData ->
                                 item.inputData = inputData.toString()

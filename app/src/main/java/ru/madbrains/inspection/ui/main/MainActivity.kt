@@ -73,10 +73,10 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
     private fun setupMenu() {
         tvUsername.text = mainViewModel.username
-        mainViewModel.isAdmin.let {
-            llMarks.isVisible = it
-            llSettings.isVisible = it
-        }
+
+        llMarks.isVisible = mainViewModel.isAdmin || mainViewModel.isCreator
+        llSettings.isVisible = mainViewModel.isAdmin
+
         navView.apply {
             llRouteList.setOnClickListener {
                 mainViewModel.routesClick()

@@ -17,6 +17,7 @@ interface PreferenceStorage {
     var codeChallenge: String?
     var saveInfoDuration: Int
     var isAdmin: Boolean
+    var isCreator: Boolean
     fun clearData()
 }
 
@@ -37,6 +38,7 @@ class SharedPreferenceStorage(
         const val PREF_CODE_CHALLENGE = "pref_code_challenge"
         const val PREF_SAVE_INFO_DURATION = "PREF_SAVE_INFO_DURATION"
         const val PREF_IS_ADMIN = "PREF_IS_ADMIN"
+        const val PREF_IS_CREATOR = "PREF_IS_CREATOR"
     }
 
     private val prefs = context.applicationContext.getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
@@ -49,6 +51,7 @@ class SharedPreferenceStorage(
     override var codeChallenge by StringPreference(prefs, PREF_CODE_CHALLENGE, "")
     override var saveInfoDuration by IntPreference(prefs, PREF_SAVE_INFO_DURATION, 5)
     override var isAdmin by BooleanPreference(prefs, PREF_IS_ADMIN, false)
+    override var isCreator by BooleanPreference(prefs, PREF_IS_CREATOR, false)
 
     override fun clearData() {
         prefs.edit { clear() }
