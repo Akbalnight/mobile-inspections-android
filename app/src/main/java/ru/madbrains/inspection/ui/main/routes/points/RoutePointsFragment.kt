@@ -30,16 +30,19 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
 
     private val routePointsViewModel: RoutePointsViewModel by sharedViewModel()
     private val techOperationsViewModel: TechOperationsViewModel by sharedViewModel()
+    private val detoursViewModel: DetoursViewModel by sharedViewModel()
 
     private val stateFabs = mutableListOf<ExtendedFloatingActionButton>()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val detour = requireActivity().intent.getSerializableExtra(KEY_DETOUR) as? DetourModel
-        detour?.let {
-            setupToolbar(it.name)
-            routePointsViewModel.setDetour(it)
+        requireNotNull(arguments).run {
+            val detour = getSerializable(KEY_DETOUR) as? DetourModel
+            detour?.let {
+                setupToolbar(it.name)
+                routePointsViewModel.setDetour(it)
+            }
         }
 
         stateFabs.add(fabStart)
@@ -73,7 +76,8 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
             }
         })
         routePointsViewModel.navigateToBack.observe(viewLifecycleOwner, EventObserver {
-            requireActivity().finish()
+            detoursViewModel.getDetours()
+            findNavController().popBackStack()
         })
         routePointsViewModel.navigateToCloseDialog.observe(viewLifecycleOwner, EventObserver {
             openCloseDialog()
