@@ -12,11 +12,11 @@ import ru.madbrains.data.network.mappers.*
 import ru.madbrains.data.network.request.*
 import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.domain.model.*
-import ru.madbrains.domain.repository.DetoutsRepository
+import ru.madbrains.domain.repository.DetoursRepository
 
 class RoutesRepositoryImpl(
         private val preferenceStorage: PreferenceStorage
-) : DetoutsRepository {
+) : DetoursRepository {
 
     override fun getDetours(): Single<List<DetourModel>> {
         val request = GetDetoursReq(
@@ -24,6 +24,12 @@ class RoutesRepositoryImpl(
         )
         return ApiData.inspectionApi.getDetours(request).map { resp ->
             resp.map { mapGetDetoursResp(it) }
+        }
+    }
+
+    override fun getDetoursStatuses(): Single<List<DetourStatus>> {
+        return ApiData.inspectionApi.getDetoursStatuses(Object()).map { resp ->
+            resp.map { mapGetDefectStatusResp(it) }
         }
     }
 

@@ -204,6 +204,16 @@ fun mapGetDefectTypicalResp(resp: GetDefectTypicalResp): DefectTypicalModel {
     }
 }
 
+fun mapGetDefectStatusResp(resp: GetDetourStatusResp): DetourStatus {
+    return with(resp) {
+        DetourStatus(
+                id = id,
+                name = name,
+                code = code
+        )
+    }
+}
+
 fun mapGetDefectsResp(resp: GetDefectsResp): DefectModel {
     return with(resp) {
         DefectModel(

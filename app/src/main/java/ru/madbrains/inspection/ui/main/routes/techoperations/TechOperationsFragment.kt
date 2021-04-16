@@ -39,7 +39,7 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
 
     private val techOperationsAdapter by lazy {
         TechOperationAdapter(
-            routePointsViewModel.detourModel?.isDataEditable,
+            routePointsViewModel.isDetourEditable(),
             onDataInput = {
                 techOperationsViewModel.onTechDataInput(it.id, it.inputData)
             }
@@ -62,7 +62,7 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
             }
         }
 
-        routePointsViewModel.detourModel?.isDataEditable?.let {
+        routePointsViewModel.isDetourEditable().let {
             fabTechOperationsSave.isVisible = it
         }
 

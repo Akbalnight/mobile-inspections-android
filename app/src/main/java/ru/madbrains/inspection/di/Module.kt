@@ -35,13 +35,13 @@ val appModule = module {
             get()
         )
     }
-    viewModel { MainViewModel(get(), get()) }
-    viewModel { DetoursViewModel(get()) }
-    viewModel { RouteFiltersViewModel() }
+    viewModel { MainViewModel(get(), get(), get()) }
+    viewModel { DetoursViewModel(get(), get()) }
+    viewModel { RouteFiltersViewModel(get()) }
     viewModel { RouteListViewModel() }
     viewModel { RouteCalendarViewModel() }
     viewModel { DateRouteListViewModel() }
-    viewModel { RoutePointsViewModel(get()) }
+    viewModel { RoutePointsViewModel(get(), get()) }
     viewModel { RoutePointsListViewModel() }
     viewModel { RoutePointsMapViewModel() }
     viewModel { TechOperationsViewModel(get(), get()) }

@@ -1,10 +1,52 @@
 package ru.madbrains.domain.model
 
-enum class DetourStatus(val id: String) {
-    COMPLETED("a0299bf4-de93-40ab-9950-37392e3fd0a5"),
-    NOT_COMPLETED("09b0ccca-3041-4cdd-b968-c621ae2ca758"),
-    IN_PROGRESS("d13b8bbd-f08f-4e3f-93ac-7355c67333c1"),
-    COMPLETED_AHEAD("7381f248-825b-4734-a45c-02603b0e8a25"),
-    PAUSED("8bacd61b-d789-4cbd-8703-318510095047"),
-    NEW("23782817-aa16-447a-ad65-bf3bf47ac3b7")
+import java.io.Serializable
+
+data class DetourStatus(
+        val id: String?,
+        val name: String?,
+        val code: Int?
+) : Serializable{
+        val type: DetourStatusType get(): DetourStatusType{
+                return when (code) {
+                        1 -> DetourStatusType.PENDING
+                        2 -> DetourStatusType.IN_PROGRESS
+                        3 -> DetourStatusType.NOT_COMPLETED
+                        4 -> DetourStatusType.COMPLETED
+                        5 -> DetourStatusType.COMPLETED_AHEAD
+                        6 -> DetourStatusType.PAUSED
+                        7 -> DetourStatusType.NEW
+                        else -> DetourStatusType.UNKNOWN
+                }
+        }
+}
+
+data class DetourStatusHolder(
+        val statuses: List<DetourStatus>
+) : Serializable{
+        fun getStatusById(id:String?): DetourStatus?{
+                return statuses.find {
+                        it.id == id
+                }
+        }
+        fun getStatusByType(type:DetourStatusType?): DetourStatus?{
+                return statuses.find {
+                        it.type == type
+                }
+        }
+        fun isEditable(id:String?):Boolean{
+                val type = getStatusById(id)?.type
+                return DetourStatusType.COMPLETED == type || DetourStatusType.COMPLETED_AHEAD == type
+        }
+}
+
+enum class DetourStatusType {
+        PENDING,
+        COMPLETED,
+        NOT_COMPLETED,
+        IN_PROGRESS,
+        COMPLETED_AHEAD,
+        PAUSED,
+        NEW,
+        UNKNOWN,
 }

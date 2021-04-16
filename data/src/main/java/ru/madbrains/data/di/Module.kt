@@ -9,8 +9,7 @@ import ru.madbrains.data.repository.AuthRepositoryImpl
 import ru.madbrains.data.repository.RoutesRepositoryImpl
 import ru.madbrains.data.utils.FileUtil
 import ru.madbrains.domain.repository.AuthRepository
-import ru.madbrains.domain.repository.DetoutsRepository
-import com.uhf.api.cls.Reader
+import ru.madbrains.domain.repository.DetoursRepository
 import ru.madbrains.data.utils.RfidDevice
 import ru.madbrains.data.utils.RfidMock
 import ru.madbrains.data.utils.RfidReader
@@ -32,7 +31,7 @@ private fun getAuthRepository(): AuthRepository {
     return AuthRepositoryImpl()
 }
 
-private fun getDetoursRepository(preferenceStorage: PreferenceStorage): DetoutsRepository {
+private fun getDetoursRepository(preferenceStorage: PreferenceStorage): DetoursRepository {
     return RoutesRepositoryImpl(preferenceStorage)
 }
 
