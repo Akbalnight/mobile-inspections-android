@@ -31,7 +31,7 @@ class RouteFiltersFragment : DialogFragment() {
 
         rbs.apply {
             add(rbAll)
-            add(rbPending)
+            add(rbNew)
             add(rbCompleted)
             add(rbNotCompleted)
             add(rbInProgress)
@@ -45,10 +45,10 @@ class RouteFiltersFragment : DialogFragment() {
             rbAll.isChecked = true
             routeFiltersViewModel.setFilter(null)
         }
-        rbPending.setOnClickListener {
+        rbNew.setOnClickListener {
             rbs.map { it.isChecked = false }
-            rbPending.isChecked = true
-            routeFiltersViewModel.setFilter(DetourStatus.PENDING)
+            rbNew.isChecked = true
+            routeFiltersViewModel.setFilter(DetourStatus.NEW)
         }
         rbCompleted.setOnClickListener {
             rbs.map { it.isChecked = false }
@@ -82,9 +82,9 @@ class RouteFiltersFragment : DialogFragment() {
 
         routeFiltersViewModel.selectedFilter.observe(viewLifecycleOwner, Observer { status ->
             when (status) {
-                DetourStatus.PENDING -> {
+                DetourStatus.NEW -> {
                     rbs.map { it.isChecked = false }
-                    rbPending.isChecked = true
+                    rbNew.isChecked = true
                 }
                 DetourStatus.COMPLETED -> {
                     rbs.map { it.isChecked = false }
