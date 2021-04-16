@@ -11,10 +11,17 @@ class RouteFiltersViewModel(
     val preferenceStorage: PreferenceStorage
 ) : BaseViewModel() {
 
-    private val _selectedFilter = MutableLiveData<DetourStatus>()
-    val selectedFilter: LiveData<DetourStatus> = _selectedFilter
+    private val _selectedFilter = MutableLiveData<DetourStatus?>()
+    val selectedFilter: LiveData<DetourStatus?> = _selectedFilter
+
+    private val _availableStatuses = MutableLiveData<List<DetourStatus>>()
+    val availableStatuses: LiveData<List<DetourStatus>> = _availableStatuses
 
     var currentFilter: DetourStatus? = null
+
+    init {
+        _availableStatuses.value = preferenceStorage.detourStatuses?.statuses
+    }
 
     fun setFilter(type: DetourStatusType?) {
         currentFilter = preferenceStorage.detourStatuses?.getStatusByType(type)
