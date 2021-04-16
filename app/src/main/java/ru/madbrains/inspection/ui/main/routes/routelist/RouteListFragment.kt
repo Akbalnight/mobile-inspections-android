@@ -2,8 +2,10 @@ package ru.madbrains.inspection.ui.main.routes.routelist
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_route_list.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -13,7 +15,7 @@ import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.ui.adapters.DetourAdapter
 import ru.madbrains.inspection.ui.main.routes.DetoursViewModel
-import ru.madbrains.inspection.ui.main.routes.points.RoutePointsActivity
+import ru.madbrains.inspection.ui.main.routes.points.RoutePointsFragment
 
 class RouteListFragment : BaseFragment(R.layout.fragment_route_list) {
 
@@ -52,6 +54,9 @@ class RouteListFragment : BaseFragment(R.layout.fragment_route_list) {
     }
 
     private fun openRoutePointsFragment(route: DetourModel) {
-        RoutePointsActivity.start(this.context, route)
+        val args = bundleOf(
+            RoutePointsFragment.KEY_DETOUR to route
+        )
+        findNavController().navigate(R.id.action_routesFragment_to_routePointsFragment, args)
     }
 }
