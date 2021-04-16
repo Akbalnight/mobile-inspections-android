@@ -11,6 +11,7 @@ import ru.madbrains.domain.model.DetourStatus
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.DetourUiModel
+import timber.log.Timber
 
 class DetoursViewModel(
     private val routesInteractor: RoutesInteractor,
@@ -24,6 +25,7 @@ class DetoursViewModel(
     val detours: LiveData<List<DiffItem>> = _detours
 
     val detourModels = mutableListOf<DetourModel>()
+    var savedStatus: DetourStatus? = null
 
     fun getDetours() {
         routesInteractor.getDetours()
@@ -51,10 +53,10 @@ class DetoursViewModel(
             .addTo(disposables)
     }
 
-    fun updateData(status: DetourStatus? = null) {
+    fun updateData() {
         val detours = mutableListOf<DiffItem>().apply {
             val models = detourModels
-            status?.let {
+            savedStatus?.let { status->
                 val filteredModels = status.let { models.filter { it.statusId == status.id } }
                 filteredModels.map { detour ->
                     add(
@@ -80,5 +82,9 @@ class DetoursViewModel(
             }
         }
         _detours.postValue(detours)
+    }
+
+    fun savedFilter(status: DetourStatus?) {
+        savedStatus = status
     }
 }
