@@ -27,7 +27,7 @@ class RoutesRepositoryImpl(
         }
     }
 
-    override fun getDetoursStatuses(): Single<List<DetourStatus2>> {
+    override fun getDetoursStatuses(): Single<List<DetourStatus>> {
         return ApiData.inspectionApi.getDetoursStatuses(Object()).map { resp ->
             resp.map { mapGetDefectStatusResp(it) }
         }

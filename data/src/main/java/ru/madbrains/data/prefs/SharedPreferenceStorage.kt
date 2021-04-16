@@ -8,9 +8,6 @@ import androidx.core.content.edit
 import com.google.gson.Gson
 import com.google.gson.JsonIOException
 import com.google.gson.JsonSyntaxException
-import com.google.gson.reflect.TypeToken
-import com.squareup.moshi.Moshi
-import ru.madbrains.domain.model.DetourStatus2
 import ru.madbrains.domain.model.DetourStatusHolder
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty

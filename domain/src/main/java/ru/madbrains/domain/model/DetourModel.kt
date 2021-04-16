@@ -30,9 +30,4 @@ data class DetourModel(
     var route: RouteModel
 ) : Serializable {
     @Transient var startTime: Date? = null
-
-    var isDataEditable: Boolean = !arrayOf(
-            DetourStatus.COMPLETED.id,
-            DetourStatus.COMPLETED_AHEAD.id
-    ).contains(statusId)
 }

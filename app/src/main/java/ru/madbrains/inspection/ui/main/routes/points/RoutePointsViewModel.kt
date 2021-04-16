@@ -1,6 +1,8 @@
 package ru.madbrains.inspection.ui.main.routes.points
 
 import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.Observable
@@ -8,9 +10,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
+import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.domain.interactor.RoutesInteractor
 import ru.madbrains.domain.model.DetourModel
-import ru.madbrains.domain.model.DetourStatus
+import ru.madbrains.domain.model.DetourStatusType
 import ru.madbrains.domain.model.RouteDataModel
 import ru.madbrains.domain.model.TechMapModel
 import ru.madbrains.inspection.base.BaseViewModel
@@ -20,9 +23,11 @@ import ru.madbrains.inspection.ui.delegates.RoutePointUiModel
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import java.util.prefs.Preferences
 
 class RoutePointsViewModel(
-    private val routesInteractor: RoutesInteractor
+    private val routesInteractor: RoutesInteractor,
+    private val preferenceStorage: PreferenceStorage
 ) : BaseViewModel() {
 
     private val _progressVisibility = MutableLiveData<Boolean>()
@@ -52,24 +57,27 @@ class RoutePointsViewModel(
 
     private var startTime: Long? = null
 
+    fun isDetourEditable():Boolean{
+        return preferenceStorage.detourStatuses?.isEditable(detourModel?.statusId) == true
+    }
+
     fun completeTechMap(techMap: TechMapModel) {
         routeDataModels.find { it.techMap == techMap }?.completed = true
         updateData()
     }
 
     @SuppressLint("SimpleDateFormat")
-    fun finishDetour(statusId: String) {
+    fun finishDetour(type: DetourStatusType) {
         stopTimer()
         detourModel?.let { detour ->
 
             val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
-
             val startTime = detour.startTime?.let { format.format(it) }
             val finishTime = format.format(Date())
 
             detour.dateStartFact = startTime
             detour.dateFinishFact = finishTime
-            detour.statusId = statusId
+            detour.statusId = preferenceStorage.detourStatuses?.getStatusByType(type)?.id
 
             routesInteractor.saveDetour(detour)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -90,7 +98,7 @@ class RoutePointsViewModel(
 
     fun closeClick() {
         if (routeDataModels.all { it.completed } ||
-            detourModel?.statusId == DetourStatus.COMPLETED.id ||
+            preferenceStorage.detourStatuses?.getStatusById(detourModel?.statusId)?.type == DetourStatusType.COMPLETED ||
             detourModel?.startTime == null) {
             onBack()
         } else {
@@ -142,9 +150,8 @@ class RoutePointsViewModel(
     }
 
     private fun setRouteStatus() {
-        if (detourModel?.statusId == DetourStatus.COMPLETED.id ||
-            detourModel?.statusId == DetourStatus.COMPLETED_AHEAD.id
-        ) return
+        val type = preferenceStorage.detourStatuses?.getStatusById(detourModel?.statusId)?.type
+        if (type == DetourStatusType.COMPLETED || type == DetourStatusType.COMPLETED_AHEAD) return
         val completedPoints = routeDataModels.filter { it.completed }.count()
         val allPoints = routeDataModels.count()
         _routeStatus.value = when {

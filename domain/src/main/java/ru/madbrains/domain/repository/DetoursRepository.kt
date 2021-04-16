@@ -5,7 +5,6 @@ import io.reactivex.Single
 import okhttp3.ResponseBody
 import retrofit2.Response
 import ru.madbrains.domain.model.*
-import java.io.File
 
 interface DetoursRepository {
     fun getDetours(): Single<List<DetourModel>>
@@ -58,5 +57,5 @@ interface DetoursRepository {
 
     fun downloadFile(fileUrl: String): Single<Response<ResponseBody>>
 
-    fun getDetoursStatuses(): Single<List<DetourStatus2>>
+    fun getDetoursStatuses(): Single<List<DetourStatus>>
 }

@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.fragment_route_points.*
 import kotlinx.android.synthetic.main.toolbar_with_close.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import ru.madbrains.domain.model.DetourModel
-import ru.madbrains.domain.model.DetourStatus
+import ru.madbrains.domain.model.DetourStatusType
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
@@ -55,7 +55,7 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
             routePointsViewModel.startNextRoute()
         }
         fabFinish.setOnClickListener {
-            routePointsViewModel.finishDetour(DetourStatus.COMPLETED.id)
+            routePointsViewModel.finishDetour(DetourStatusType.COMPLETED)
         }
 
         routePointsViewModel.progressVisibility.observe(viewLifecycleOwner, Observer {

@@ -15,7 +15,7 @@ class RoutesInteractor(
         return routesRepository.getDetours()
                 .subscribeOn(Schedulers.io())
     }
-    fun getDetoursStatuses(): Single<List<DetourStatus2>> {
+    fun getDetoursStatuses(): Single<List<DetourStatus>> {
         return routesRepository.getDetoursStatuses()
                 .subscribeOn(Schedulers.io())
     }

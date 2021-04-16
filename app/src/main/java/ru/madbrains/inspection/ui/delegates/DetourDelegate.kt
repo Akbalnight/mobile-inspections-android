@@ -3,6 +3,7 @@ package ru.madbrains.inspection.ui.delegates
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
 import kotlinx.android.synthetic.main.item_detour.view.*
 import ru.madbrains.domain.model.DetourStatus
+import ru.madbrains.domain.model.DetourStatusType
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.model.DiffItem
 
@@ -15,17 +16,8 @@ fun detourDelegate(clickListener: (DetourUiModel) -> Unit) =
                     clickListener.invoke(item)
                 }
                 tvName.text = item.name
-                val detourImageStatus = when (item.status) {
-                    DetourStatus.PENDING -> R.drawable.ic_detour_pending
-                    DetourStatus.COMPLETED -> R.drawable.ic_detour_completed
-                    DetourStatus.NOT_COMPLETED -> R.drawable.ic_detour_not_completed
-                    DetourStatus.IN_PROGRESS -> R.drawable.ic_detour_in_progress
-                    DetourStatus.COMPLETED_AHEAD -> R.drawable.ic_detour_completed
-                    DetourStatus.PAUSED -> R.drawable.ic_detour_paused
-                    else -> null
-                }
-                detourImageStatus?.let {
-                    ivDetourStatus.setImageResource(detourImageStatus)
+                item.status?.type?.icon()?.let {
+                    ivDetourStatus.setImageResource(it)
                 }
                 tvDate.text = item.date.replace("T", " ")
             }
@@ -43,4 +35,18 @@ data class DetourUiModel(
         newItem is DetourUiModel && id == newItem.id
 
     override fun areContentsTheSame(newItem: DiffItem): Boolean = this == newItem
+}
+
+fun DetourStatusType.icon(): Int{
+    return when(this){
+        DetourStatusType.PENDING -> R.drawable.ic_detour_pending
+        DetourStatusType.COMPLETED -> R.drawable.ic_detour_completed
+        DetourStatusType.NOT_COMPLETED -> R.drawable.ic_detour_not_completed
+        DetourStatusType.IN_PROGRESS -> R.drawable.ic_detour_in_progress
+        DetourStatusType.COMPLETED_AHEAD -> R.drawable.ic_detour_completed
+        DetourStatusType.PAUSED -> R.drawable.ic_detour_paused
+        //TODO: add icons
+        DetourStatusType.NEW -> R.drawable.ic_defect_card_media
+        DetourStatusType.UNKNOWN -> R.drawable.ic_defect_card_media
+    }
 }

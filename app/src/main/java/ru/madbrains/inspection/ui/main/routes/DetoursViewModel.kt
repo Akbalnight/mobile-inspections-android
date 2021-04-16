@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
+import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.domain.interactor.RoutesInteractor
 import ru.madbrains.domain.model.DetourModel
 import ru.madbrains.domain.model.DetourStatus
@@ -12,7 +13,8 @@ import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.DetourUiModel
 
 class DetoursViewModel(
-    private val routesInteractor: RoutesInteractor
+    private val routesInteractor: RoutesInteractor,
+    private val preferenceStorage: PreferenceStorage
 ) : BaseViewModel() {
 
     private val _progressVisibility = MutableLiveData<Boolean>()
@@ -59,7 +61,7 @@ class DetoursViewModel(
                         DetourUiModel(
                             id = detour.id,
                             name = detour.name.orEmpty(),
-                            status = DetourStatus.values().find { it.id == detour.statusId },
+                            status = preferenceStorage.detourStatuses?.getStatusById(detour.statusId),
                             date = detour.dateStartPlan.orEmpty()
                         )
                     )
@@ -70,7 +72,7 @@ class DetoursViewModel(
                         DetourUiModel(
                             id = detour.id,
                             name = detour.name.orEmpty(),
-                            status = DetourStatus.values().find { it.id == detour.statusId },
+                            status = preferenceStorage.detourStatuses?.getStatusById(detour.statusId),
                             date = detour.dateStartPlan.orEmpty()
                         )
                     )
