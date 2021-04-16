@@ -51,6 +51,9 @@ class MainViewModel(
     private val _showSnackBar = MutableLiveData<Event<String>>()
     val showSnackBar: LiveData<Event<String>> = _showSnackBar
 
+    private val _showExitDialog = MutableLiveData<Event<Unit>>()
+    val showExitDialog: LiveData<Event<Unit>> = _showExitDialog
+
     fun menuClick() {
         _navigateToMenu.value = Event(Unit)
     }
@@ -80,11 +83,12 @@ class MainViewModel(
     }
 
     fun logoutClick() {
-        val accessToken = preferenceStorage.token.orEmpty()
-        logout(accessToken)
+        _showExitDialog.value = Event(Unit)
     }
 
-    private fun logout(accessToken: String) {
+    fun logout() {
+        val accessToken = preferenceStorage.token.orEmpty()
+
         authInteractor.logout(accessToken)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { _progressVisibility.postValue(true) }

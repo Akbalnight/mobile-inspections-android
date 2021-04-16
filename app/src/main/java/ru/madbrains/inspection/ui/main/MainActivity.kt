@@ -4,11 +4,13 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.progressView
@@ -69,6 +71,9 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         mainViewModel.showSnackBar.observe(this, EventObserver {
             showSnackBar(it)
         })
+        mainViewModel.showExitDialog.observe(this, EventObserver {
+            showExitDialog()
+        })
     }
 
     private fun setupMenu() {
@@ -127,6 +132,23 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         navController.popBackStack(navController.graph.startDestination, false)
         navController.navigate(R.id.grapg_settings)
         mainDrawer.closeDrawer(GravityCompat.START)
+    }
+
+    private fun showExitDialog() {
+        val alertDialog = AlertDialog.Builder(this)
+        alertDialog.apply {
+            setMessage(strings[R.string.fragment_dialog_changed_fields])
+            setPositiveButton(strings[R.string.fragment_dialog_btn_exit]
+            ) { _, _ ->
+                mainDrawer.closeDrawer(GravityCompat.START)
+                mainViewModel.logout()
+            }
+            setNegativeButton(strings[R.string.fragment_dialog_btn_cancel]) { _, _ ->
+                mainDrawer.closeDrawer(GravityCompat.START)
+            }
+        }
+        alertDialog.create()
+        alertDialog.show()
     }
 
     private fun showSnackBar(text: String) {
