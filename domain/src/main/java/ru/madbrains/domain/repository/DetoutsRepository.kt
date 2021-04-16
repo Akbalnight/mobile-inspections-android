@@ -7,6 +7,7 @@ import retrofit2.Response
 import ru.madbrains.domain.model.*
 import java.io.File
 
+//TODO: fix ren
 interface DetoutsRepository {
     fun getDetours(): Single<List<DetourModel>>
 
@@ -57,4 +58,6 @@ interface DetoutsRepository {
     ): Single<String>
 
     fun downloadFile(fileUrl: String): Single<Response<ResponseBody>>
+
+    fun getDetoursStatuses(): Single<List<DetourStatus2>>
 }

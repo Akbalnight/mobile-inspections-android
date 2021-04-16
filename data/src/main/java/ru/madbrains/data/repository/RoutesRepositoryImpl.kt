@@ -27,6 +27,12 @@ class RoutesRepositoryImpl(
         }
     }
 
+    override fun getDetoursStatuses(): Single<List<DetourStatus2>> {
+        return ApiData.inspectionApi.getDetoursStatuses(Object()).map { resp ->
+            resp.map { mapGetDefectStatusResp(it) }
+        }
+    }
+
     override fun saveDetour(detour: DetourModel): Completable {
         return ApiData.inspectionApi.saveDetour(detour)
     }

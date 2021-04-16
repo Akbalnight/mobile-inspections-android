@@ -7,12 +7,15 @@ import io.reactivex.rxkotlin.addTo
 import retrofit2.HttpException
 import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.domain.interactor.AuthInteractor
+import ru.madbrains.domain.interactor.RoutesInteractor
+import ru.madbrains.domain.model.DetourStatusHolder
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 
 class MainViewModel(
     private val preferenceStorage: PreferenceStorage,
-    private val authInteractor: AuthInteractor
+    private val authInteractor: AuthInteractor,
+    private val routesInteractor: RoutesInteractor
 ) : BaseViewModel() {
 
     val username: String
@@ -82,6 +85,17 @@ class MainViewModel(
     fun logoutClick() {
         val accessToken = preferenceStorage.token.orEmpty()
         logout(accessToken)
+    }
+
+    fun refreshInitialData() {
+        routesInteractor.getDetoursStatuses()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                preferenceStorage.detourStatuses = DetourStatusHolder(it)
+            }, {
+                it.printStackTrace()
+            })
+            .addTo(disposables)
     }
 
     private fun logout(accessToken: String) {

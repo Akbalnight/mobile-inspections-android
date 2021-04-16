@@ -7,13 +7,16 @@ import okhttp3.ResponseBody
 import retrofit2.Response
 import ru.madbrains.domain.model.*
 import ru.madbrains.domain.repository.DetoutsRepository
-import java.io.File
 
 class RoutesInteractor(
         private val routesRepository: DetoutsRepository
 ) {
     fun getDetours(): Single<List<DetourModel>> {
         return routesRepository.getDetours()
+                .subscribeOn(Schedulers.io())
+    }
+    fun getDetoursStatuses(): Single<List<DetourStatus2>> {
+        return routesRepository.getDetoursStatuses()
                 .subscribeOn(Schedulers.io())
     }
     fun getCheckpoints(): Single<List<CheckpointModel>> {

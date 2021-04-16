@@ -16,6 +16,9 @@ interface InspectionApi {
     @POST("/api/dynamicdq/data/flat/mobileDetours")
     fun getDetours(@Body request: GetDetoursReq): Single<List<GetDetoursResp>>
 
+    @POST("/api/dynamicdq/data/flat/mobileDetoursStatuses")
+    fun getDetoursStatuses(@Body request: Any): Single<List<GetDetourStatusResp>>
+
     @POST("/api/dynamicdq/data/flat/mobileDetoursPlanData")
     fun getRoutePoints(@Body request: GetRoutePointsReq): Single<List<GetRoutePointResp>>
 

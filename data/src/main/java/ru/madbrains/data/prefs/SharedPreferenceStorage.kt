@@ -5,8 +5,17 @@ import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import androidx.annotation.WorkerThread
 import androidx.core.content.edit
+import com.google.gson.Gson
+import com.google.gson.JsonIOException
+import com.google.gson.JsonSyntaxException
+import com.google.gson.reflect.TypeToken
+import com.squareup.moshi.Moshi
+import ru.madbrains.domain.model.DetourStatus2
+import ru.madbrains.domain.model.DetourStatusHolder
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
+import java.io.Serializable
+import java.lang.reflect.Type
 
 interface PreferenceStorage {
     var token: String?
@@ -18,6 +27,7 @@ interface PreferenceStorage {
     var saveInfoDuration: Int
     var isAdmin: Boolean
     var isCreator: Boolean
+    var detourStatuses: DetourStatusHolder?
     fun clearData()
 }
 
@@ -39,6 +49,7 @@ class SharedPreferenceStorage(
         const val PREF_SAVE_INFO_DURATION = "PREF_SAVE_INFO_DURATION"
         const val PREF_IS_ADMIN = "PREF_IS_ADMIN"
         const val PREF_IS_CREATOR = "PREF_IS_CREATOR"
+        const val PREF_DETOUR_STATUSES = "PREF_DETOUR_STATUSES"
     }
 
     private val prefs = context.applicationContext.getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
@@ -52,6 +63,7 @@ class SharedPreferenceStorage(
     override var saveInfoDuration by IntPreference(prefs, PREF_SAVE_INFO_DURATION, 5)
     override var isAdmin by BooleanPreference(prefs, PREF_IS_ADMIN, false)
     override var isCreator by BooleanPreference(prefs, PREF_IS_CREATOR, false)
+    override var detourStatuses by SerializablePreference<DetourStatusHolder>(prefs, PREF_DETOUR_STATUSES, DetourStatusHolder::class.java)
 
     override fun clearData() {
         prefs.edit { clear() }
@@ -71,6 +83,32 @@ class BooleanPreference(
 
     override fun setValue(thisRef: Any, property: KProperty<*>, value: Boolean) {
         preferences.edit { putBoolean(name, value) }
+    }
+}
+
+@Throws(JsonIOException::class)
+fun Serializable.toJson(): String {
+    return Gson().toJson(this)
+}
+
+@Throws(JsonSyntaxException::class)
+fun <T> String.to(type: Type): T where T : Serializable {
+    return Gson().fromJson(this, type)
+}
+
+class SerializablePreference<T : Serializable>(
+    private val preferences: SharedPreferences,
+    private val name: String,
+    private val type: Type
+) : ReadWriteProperty<Any, T?> {
+
+    @WorkerThread
+    override fun getValue(thisRef: Any, property: KProperty<*>): T? {
+        return preferences.getString(name, null)?.to(type)
+    }
+
+    override fun setValue(thisRef: Any, property: KProperty<*>, value: T?) {
+        preferences.edit { putString(name, value?.toJson()) }
     }
 }
 
