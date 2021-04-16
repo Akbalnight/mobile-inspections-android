@@ -42,7 +42,8 @@ class DetoursFragment : BaseFragment(R.layout.fragment_detours) {
             progressView.changeVisibility(it)
         })
         routeFiltersViewModel.selectedFilter.observe(viewLifecycleOwner, Observer {
-            detoursViewModel.updateData(it)
+            detoursViewModel.savedFilter(it)
+            detoursViewModel.updateData()
         })
     }
 
