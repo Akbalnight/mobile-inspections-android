@@ -6,10 +6,10 @@ import io.reactivex.schedulers.Schedulers
 import okhttp3.ResponseBody
 import retrofit2.Response
 import ru.madbrains.domain.model.*
-import ru.madbrains.domain.repository.DetoutsRepository
+import ru.madbrains.domain.repository.DetoursRepository
 
 class RoutesInteractor(
-        private val routesRepository: DetoutsRepository
+        private val routesRepository: DetoursRepository
 ) {
     fun getDetours(): Single<List<DetourModel>> {
         return routesRepository.getDetours()

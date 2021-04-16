@@ -7,8 +7,7 @@ import retrofit2.Response
 import ru.madbrains.domain.model.*
 import java.io.File
 
-//TODO: fix ren
-interface DetoutsRepository {
+interface DetoursRepository {
     fun getDetours(): Single<List<DetourModel>>
 
     fun saveDetour(detour: DetourModel): Completable
