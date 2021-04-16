@@ -26,6 +26,7 @@ buildscript {
         adapterdelegatesVersion = '4.3.0'
         cameraxVersion = '1.0.0-alpha02'
         glide_version = '4.11.0'
+        joda_version = '2.10.10'
     }
 
     repositories {

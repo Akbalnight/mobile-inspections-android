@@ -145,4 +145,7 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:$rootProject.glide_version"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     annotationProcessor "com.github.bumptech.glide:compiler:$rootProject.glide_version"
+
+    // Joda time
+    implementation "joda-time:joda-time:$joda_version"
 }
