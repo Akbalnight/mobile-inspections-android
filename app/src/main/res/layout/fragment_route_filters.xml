@@ -42,78 +42,23 @@
                 app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
             <LinearLayout
+                android:id="@+id/radiosWrap"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/separate">
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/separate">
-
-                <RadioButton
-                    android:id="@+id/rbAll"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:buttonTint="@color/elementsBlue"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:text="Все обходы"
-                    android:textColor="@color/textMain" />
-
-                <RadioButton
-                    android:id="@+id/rbNew"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:buttonTint="@color/elementsBlue"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:text="Новый"
-                    android:textColor="@color/textMain" />
-
-                <RadioButton
-                    android:id="@+id/rbCompleted"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:buttonTint="@color/elementsBlue"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:text="Завершен"
-                    android:textColor="@color/textMain" />
-
-                <RadioButton
-                    android:id="@+id/rbNotCompleted"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:buttonTint="@color/elementsBlue"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:text="Не завершен"
-                    android:textColor="@color/textMain" />
-
-                <RadioButton
-                    android:id="@+id/rbInProgress"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:buttonTint="@color/elementsBlue"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:text="В процессе"
-                    android:textColor="@color/textMain" />
-
-                <RadioButton
-                    android:id="@+id/rbCompletedAhead"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:buttonTint="@color/elementsBlue"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:text="Завершен (досрочно)"
-                    android:textColor="@color/textMain" />
+                app:layout_constraintTop_toBottomOf="@id/radiosWrap">
 
                 <View
                     android:id="@+id/separate2"

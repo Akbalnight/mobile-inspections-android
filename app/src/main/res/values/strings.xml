@@ -135,6 +135,7 @@
     <string name="days">дней</string>
     <string name="error">Ошибка</string>
     <string name="ok">ОК</string>
+    <string name="all_detours">Все обходы</string>
 
     <string name="fragment_scan">Сканировать</string>
     <string name="stop">Остановить</string>

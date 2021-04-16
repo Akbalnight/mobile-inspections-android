@@ -14,7 +14,6 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.progressView
-import kotlinx.android.synthetic.main.fragment_route_points.*
 import kotlinx.android.synthetic.main.menu_navigation_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.madbrains.inspection.R
@@ -74,6 +73,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         mainViewModel.showExitDialog.observe(this, EventObserver {
             showExitDialog()
         })
+
+        mainViewModel.refreshInitialData()
     }
 
     private fun setupMenu() {
