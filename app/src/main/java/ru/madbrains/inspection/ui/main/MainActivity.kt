@@ -138,7 +138,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     private fun showExitDialog() {
         val alertDialog = AlertDialog.Builder(this)
         alertDialog.apply {
-            setMessage(strings[R.string.fragment_dialog_changed_fields])
+            setMessage(strings[R.string.fragment_dialog_exit_app])
             setPositiveButton(strings[R.string.fragment_dialog_btn_exit]
             ) { _, _ ->
                 mainDrawer.closeDrawer(GravityCompat.START)

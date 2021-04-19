@@ -149,6 +149,7 @@
     <string name="fragment_dialog_btn_cancel">Отмена</string>
     <string name="fragment_dialog_btn_exit">Выйти</string>
     <string name="fragment_dialog_delete_subtitle">Вы действительно хотите удалить фото?</string>
+    <string name="fragment_dialog_exit_app">Вы действительно хотите выйти из приложения?</string>
     <string name="fragment_dialog_confirmed_subtitle">Хотите сохранить изменения?</string>
     <string name="fragment_dialog_confirmed_title">Вы внесли изменения</string>
     <string name="fragment_dialog_point_completed_title">Все контрольные точки пройдены</string>
