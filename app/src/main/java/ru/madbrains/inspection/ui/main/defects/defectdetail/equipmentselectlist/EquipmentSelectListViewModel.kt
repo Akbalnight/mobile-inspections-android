@@ -73,7 +73,7 @@ class EquipmentSelectListViewModel(private val routesInteractor: RoutesInteracto
 
     fun searchEquipments(query: String) {
         val items = deviceListModels
-                .filter { it.name.orEmpty().contains(query) }
+                .filter { it.name.orEmpty().contains(query, true) }
                 .map {
                     EquipmentSelectUiModel(
                             id = it.id,
