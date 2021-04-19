@@ -4,16 +4,15 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.webkit.CookieManager
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main.progressView
 import kotlinx.android.synthetic.main.menu_navigation_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.madbrains.inspection.R
@@ -138,11 +137,12 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     private fun showExitDialog() {
         val alertDialog = AlertDialog.Builder(this)
         alertDialog.apply {
-            setMessage(strings[R.string.fragment_dialog_changed_fields])
+            setMessage(strings[R.string.fragment_dialog_exit_app])
             setPositiveButton(strings[R.string.fragment_dialog_btn_exit]
             ) { _, _ ->
                 mainDrawer.closeDrawer(GravityCompat.START)
                 mainViewModel.logout()
+                CookieManager.getInstance().removeAllCookies(null) // fix autologin
             }
             setNegativeButton(strings[R.string.fragment_dialog_btn_cancel]) { _, _ ->
                 mainDrawer.closeDrawer(GravityCompat.START)
