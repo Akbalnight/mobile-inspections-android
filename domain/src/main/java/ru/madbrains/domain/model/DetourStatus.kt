@@ -36,7 +36,8 @@ data class DetourStatusHolder(
         }
         fun isEditable(id:String?):Boolean{
                 val type = getStatusById(id)?.type
-                return DetourStatusType.COMPLETED == type || DetourStatusType.COMPLETED_AHEAD == type
+                val completedStatuses = arrayOf(DetourStatusType.COMPLETED_AHEAD, DetourStatusType.COMPLETED)
+                return type !in completedStatuses
         }
 }
 

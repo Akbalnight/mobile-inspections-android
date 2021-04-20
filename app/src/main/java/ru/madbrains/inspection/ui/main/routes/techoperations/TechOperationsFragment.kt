@@ -62,10 +62,6 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
             }
         }
 
-        routePointsViewModel.isDetourEditable().let {
-            fabTechOperationsSave.isVisible = it
-        }
-
         fabTechOperationsScanRFID.setOnClickListener {
             techOperationsViewModel.checkRfidAndFinish()
         }
@@ -121,8 +117,9 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
 
     private fun setupUI(routeDataModel: RouteDataModel) {
         val rfidVisible = routeDataModel.rfidCode!=null
-        fabTechOperationsScanRFID.isVisible = rfidVisible
-        fabTechOperationsSave.isVisible = !rfidVisible
+        val isEditable = routePointsViewModel.isDetourEditable()
+        fabTechOperationsScanRFID.isVisible = rfidVisible && isEditable
+        fabTechOperationsSave.isVisible = !rfidVisible && isEditable
     }
 
     private fun setupToolbar(positionPoint: Int?) {
