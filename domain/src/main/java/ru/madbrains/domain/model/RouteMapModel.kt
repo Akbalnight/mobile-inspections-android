@@ -7,5 +7,5 @@ data class RouteMapModel(
         val url: String,
         val name: String?,
         val extension: String,
-        val position: Int
+        val position: Int?
 ): Serializable
