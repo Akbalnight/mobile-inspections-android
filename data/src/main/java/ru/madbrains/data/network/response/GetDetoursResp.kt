@@ -125,5 +125,5 @@ data class GetRouteMapsResp(
         @field:Json(name = "url") val url: String,
         @field:Json(name = "name") val name: String?,
         @field:Json(name = "extension") val extension: String,
-        @field:Json(name = "position") val position: Int
+        @field:Json(name = "position") val position: Int?
 )
