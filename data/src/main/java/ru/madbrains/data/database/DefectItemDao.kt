@@ -25,6 +25,6 @@ interface DefectItemDao {
     @Query("SELECT * FROM DefectItemDB WHERE changed = 1 OR isNew = 1")
     fun getChangedItems(): Single<List<DefectItemDB>>
 
-    @Query("DELETE FROM DefectItemDB")
+    @Query("DELETE FROM DefectItemDB WHERE changed = 0 AND isNew = 0")
     fun clean(): Completable
 }

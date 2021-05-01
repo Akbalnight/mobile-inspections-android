@@ -22,6 +22,6 @@ interface DetourItemDao {
     @Query("SELECT * FROM DetourItemDB WHERE changed = 1")
     fun getChangedItems(): Single<List<DetourItemDB>>
 
-    @Query("DELETE FROM DetourItemDB")
+    @Query("DELETE FROM DetourItemDB WHERE changed = 0")
     fun clean(): Completable
 }
