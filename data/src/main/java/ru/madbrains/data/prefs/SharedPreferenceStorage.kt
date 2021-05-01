@@ -9,10 +9,11 @@ import com.google.gson.Gson
 import com.google.gson.JsonIOException
 import com.google.gson.JsonSyntaxException
 import ru.madbrains.domain.model.DetourStatusHolder
-import kotlin.properties.ReadWriteProperty
-import kotlin.reflect.KProperty
+import ru.madbrains.domain.model.SyncInfo
 import java.io.Serializable
 import java.lang.reflect.Type
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 
 interface PreferenceStorage {
     var token: String?
@@ -25,6 +26,7 @@ interface PreferenceStorage {
     var isAdmin: Boolean
     var isCreator: Boolean
     var detourStatuses: DetourStatusHolder?
+    var syncInfo: SyncInfo
     fun clearData()
 }
 
@@ -47,6 +49,7 @@ class SharedPreferenceStorage(
         const val PREF_IS_ADMIN = "PREF_IS_ADMIN"
         const val PREF_IS_CREATOR = "PREF_IS_CREATOR"
         const val PREF_DETOUR_STATUSES = "PREF_DETOUR_STATUSES"
+        const val PREF_SYNC_INFO = "PREF_SYNC_INFO"
     }
 
     private val prefs = context.applicationContext.getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
@@ -60,7 +63,17 @@ class SharedPreferenceStorage(
     override var saveInfoDuration by IntPreference(prefs, PREF_SAVE_INFO_DURATION, 5)
     override var isAdmin by BooleanPreference(prefs, PREF_IS_ADMIN, false)
     override var isCreator by BooleanPreference(prefs, PREF_IS_CREATOR, false)
-    override var detourStatuses by SerializablePreference<DetourStatusHolder>(prefs, PREF_DETOUR_STATUSES, DetourStatusHolder::class.java)
+    override var detourStatuses by SerializablePreference<DetourStatusHolder>(
+        prefs,
+        PREF_DETOUR_STATUSES,
+        DetourStatusHolder::class.java
+    )
+    override var syncInfo by SerializablePreferenceNotNullable(
+        prefs,
+        PREF_SYNC_INFO,
+        SyncInfo::class.java,
+        SyncInfo()
+    )
 
     override fun clearData() {
         prefs.edit { clear() }
@@ -102,6 +115,23 @@ class SerializablePreference<T : Serializable>(
     @WorkerThread
     override fun getValue(thisRef: Any, property: KProperty<*>): T? {
         return preferences.getString(name, null)?.to(type)
+    }
+
+    override fun setValue(thisRef: Any, property: KProperty<*>, value: T?) {
+        preferences.edit { putString(name, value?.toJson()) }
+    }
+}
+
+class SerializablePreferenceNotNullable<T : Serializable>(
+    private val preferences: SharedPreferences,
+    private val name: String,
+    private val type: Type,
+    private val defValue: T
+) : ReadWriteProperty<Any, T?> {
+
+    @WorkerThread
+    override fun getValue(thisRef: Any, property: KProperty<*>): T {
+        return preferences.getString(name, null)?.to(type) ?: defValue
     }
 
     override fun setValue(thisRef: Any, property: KProperty<*>, value: T?) {

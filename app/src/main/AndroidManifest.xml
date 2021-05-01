@@ -28,6 +28,7 @@
         <activity
             android:name=".ui.auth.AuthorizationActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.file_provider"

@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/clContainer"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
->
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/ivEquipment"
@@ -17,7 +16,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/ic_item_media"
-    />
+        tools:src="@drawable/ic_item_media" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

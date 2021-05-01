@@ -9,38 +9,39 @@ import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.model.DiffItem
 
 fun techOperationDelegate(
-        isDataEditable: Boolean?,
-        onDataInput: (TechOperationUiModel) -> Unit
+    isDataEditable: Boolean?,
+    onDataInput: (TechOperationUiModel) -> Unit
 ) = adapterDelegateLayoutContainer<TechOperationUiModel, DiffItem>(R.layout.item_tech_operations) {
 
-        bind {
-            itemView.apply {
-                var name: String = item.name
-                item.position?.let {
-                    name = "$it. $name"
-                }
-                tvName.text = name
-                item.needInputData?.let {
-                    if (it) {
-                        item.labelInputData?.let { label ->
-                            tvInputData.visibility = View.VISIBLE
-                            tvInputData.text = label
-                            etInputData.visibility = View.VISIBLE
-                            etInputData.inputType = if(isDataEditable == true) InputType.TYPE_CLASS_TEXT else InputType.TYPE_NULL
-                            etInputData.setText(item.valueInputData)
-                            etInputData.doAfterTextChanged { inputData ->
-                                item.inputData = inputData.toString()
-                                onDataInput.invoke(item)
-                            }
+    bind {
+        itemView.apply {
+            var name: String = item.name
+            item.position?.let {
+                name = "$it. $name"
+            }
+            tvName.text = name
+            item.needInputData?.let {
+                if (it) {
+                    item.labelInputData?.let { label ->
+                        tvInputData.visibility = View.VISIBLE
+                        tvInputData.text = label
+                        etInputData.visibility = View.VISIBLE
+                        etInputData.inputType =
+                            if (isDataEditable == true) InputType.TYPE_CLASS_TEXT else InputType.TYPE_NULL
+                        etInputData.setText(item.valueInputData)
+                        etInputData.doAfterTextChanged { inputData ->
+                            item.inputData = inputData.toString()
+                            onDataInput.invoke(item)
                         }
-                    } else {
-                        tvInputData.visibility = View.GONE
-                        etInputData.visibility = View.GONE
                     }
+                } else {
+                    tvInputData.visibility = View.GONE
+                    etInputData.visibility = View.GONE
                 }
             }
         }
     }
+}
 
 data class TechOperationUiModel(
     val id: String,

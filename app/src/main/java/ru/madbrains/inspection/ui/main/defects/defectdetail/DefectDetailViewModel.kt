@@ -1,15 +1,12 @@
 package ru.madbrains.inspection.ui.main.defects.defectdetail
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
-import ru.madbrains.data.extensions.toyyyyMMddTHHmmssXXX
-import ru.madbrains.data.network.ApiData
 import ru.madbrains.data.utils.FileUtil
-import ru.madbrains.domain.interactor.RoutesInteractor
+import ru.madbrains.domain.interactor.DetoursInteractor
 import ru.madbrains.domain.model.*
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
@@ -18,9 +15,11 @@ import ru.madbrains.inspection.ui.delegates.MediaUiModel
 import java.io.File
 import java.util.*
 
-class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
-                            private val fileUtil: FileUtil) :
-        BaseViewModel() {
+class DefectDetailViewModel(
+    private val detoursInteractor: DetoursInteractor,
+    private val fileUtil: FileUtil
+) :
+    BaseViewModel() {
 
     private var descriptionDefect: String? = null
     private var defect: DefectModel? = null
@@ -89,16 +88,16 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
 
     fun getDefectTypicalList() {
         if (defectTypicalModels.isNullOrEmpty()) {
-            routesInteractor.getDefectTypical()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ items ->
-                        defectTypicalModels.clear()
-                        defectTypicalModels.addAll(items)
-                        updateDefectTypicalList()
-                    }, {
-                        it.printStackTrace()
-                    })
-                    .addTo(disposables)
+            detoursInteractor.getDefectTypicalDb()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ items ->
+                    defectTypicalModels.clear()
+                    defectTypicalModels.addAll(items)
+                    updateDefectTypicalList()
+                }, {
+                    it.printStackTrace()
+                })
+                .addTo(disposables)
         }
     }
 
@@ -158,11 +157,11 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
         val items = mutableListOf<DefectTypicalUiModel>().apply {
             defectTypicalModels.map { item ->
                 add(
-                        DefectTypicalUiModel(
-                                id = item.id,
-                                name = item.name.orEmpty(),
-                                code = item.code
-                        )
+                    DefectTypicalUiModel(
+                        id = item.id,
+                        name = item.name.orEmpty(),
+                        code = item.code
+                    )
                 )
             }
         }
@@ -187,36 +186,16 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
                 }
                 files?.let {
                     it.map { fileModel ->
-                        when (fileModel.extension) {
-                            "jpg" -> { // если в файле изображение добавляем в список
-                                mediaModels.add(MediaUiModel(
-                                        id = fileModel.id.orEmpty(),
-                                        isImage = true,
-                                        isNetwork = fileModel.shipped,
-                                        url = if (fileModel.shipped) {
-                                            ApiData.apiUrl + fileModel.url.orEmpty()
-                                        } else {
-                                            ""
-                                        },
-                                        imageBitmap = BitmapFactory.decodeFile(fileModel.localFile?.path)
-                                ))
-                            }
-                            "mp4" -> {
-                                mediaModels.add(MediaUiModel(
-                                        id = fileModel.id.orEmpty(),
-                                        isImage = false,
-                                        isNetwork = fileModel.shipped,
-                                        url = if (fileModel.shipped) {
-                                            ApiData.apiUrl + fileModel.url.orEmpty()
-                                        } else {
-                                            ""
-                                        },
-                                        fileVideo = fileModel.localFile
-                                ))
-                            }
-                            else -> {
-                            }
-                        }
+                        mediaModels.add(
+                            MediaUiModel(
+                                id = fileModel.id,
+                                file = detoursInteractor.getFileInFolder(
+                                    fileModel.name,
+                                    if(fileModel.isLocal) AppDirType.Local else AppDirType.Defects
+                                ),
+                                isLocal = fileModel.isLocal
+                            )
+                        )
                     }
                 }
                 updateMediaList()
@@ -235,13 +214,13 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
     }
 
     fun addImage(image: Bitmap) {
+        val id = UUID.randomUUID().toString()
         mediaModels.add(
-                MediaUiModel(
-                        id = UUID.randomUUID().toString(),
-                        imageBitmap = image,
-                        isNetwork = false,
-                        isImage = true
-                )
+            MediaUiModel(
+                id = id,
+                file = fileUtil.createJpgFile(image, detoursInteractor.getFileInFolder("$id.jpg", AppDirType.Local)),
+                isLocal = true
+            )
         )
         isChangedDefect = true
         updateMediaList()
@@ -249,12 +228,11 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
 
     fun addVideo(videoFile: File) {
         mediaModels.add(
-                MediaUiModel(
-                        id = UUID.randomUUID().toString(),
-                        isImage = false,
-                        isNetwork = false,
-                        fileVideo = videoFile
-                )
+            MediaUiModel(
+                id = UUID.randomUUID().toString(),
+                isLocal = true,
+                file = videoFile
+            )
         )
         isChangedDefect = true
         updateMediaList()
@@ -273,44 +251,71 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
     }
 
     fun sendSaveDefect() {
-        routesInteractor.saveDefect(detourId = detourId,
-                equipmentId = currentDeviceModel?.id,
-                defectTypicalId = currentTypical?.id,
-                statusProcessId = DefectStatus.NEW.id,
+//        detoursInteractor.saveDefectRemote(
+//            detourId = detourId,
+//            equipmentId = currentDeviceModel?.id,
+//            defectTypicalId = currentTypical?.id,
+//            statusProcessId = DefectStatus.NEW.id,
+//            description = descriptionDefect.orEmpty(),
+//            dateDetectDefect = Date().toyyyyMMddTHHmmssXXX(),
+//            files = getFilesToSend()
+//        )
+        val model = DefectModel(
+            id = UUID.randomUUID().toString(),
+            detourId = detourId,
+            equipmentId = currentDeviceModel?.id,
+            defectTypicalId = currentTypical?.id,
+            statusProcessId = DefectStatus.NEW.id,
+            description = descriptionDefect.orEmpty(),
+            dateDetectDefect = Date(),
+            files = getFilesToSend(),
+            defectName = currentTypical?.name,
+            equipmentName = currentDeviceModel?.name,
+            extraData = null,
+            staffDetectId = null
+        ).apply {
+            isNew = true
+        }
+        detoursInteractor.saveDefectToDb(model).observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { _progressVisibility.postValue(true) }
+            .doAfterTerminate { _progressVisibility.postValue(false) }
+            .subscribe({
+                _showSnackBar.value = Event(Unit)
+                _popNavigation.value = Event(Unit)
+            }, {
+                it.printStackTrace()
+            })
+            .addTo(disposables)
+    }
+
+    fun sendUpdateDefect() {
+        defect?.let { defectModel ->
+//            detoursInteractor.updateDefectRemote(
+//                detoursId = defectModel.detourId,
+//                id = defectModel.id,
+//                statusProcessId = targetDefectStatus?.id.orEmpty(),
+//                description = descriptionDefect.orEmpty(),
+//                dateDetectDefect = Date().toyyyyMMddTHHmmssXXX(),
+//                files = getFilesToSend()
+//            )
+            val model = defectModel.copy(
+                statusProcessId = targetDefectStatus?.id.orEmpty(),
                 description = descriptionDefect.orEmpty(),
-                dateDetectDefect = Date().toyyyyMMddTHHmmssXXX(),
-                files = getFilesToSend()
-        )
+                dateDetectDefect = Date(),
+                files = (defectModel.files?: arrayListOf()) + getFilesToSend()
+            ).apply {
+                changed = true
+            }
+            detoursInteractor.saveDefectToDb(model)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { _progressVisibility.postValue(true) }
                 .doAfterTerminate { _progressVisibility.postValue(false) }
-                .subscribe({ item ->
-                    _showSnackBar.value = Event(Unit)
+                .subscribe({
                     _popNavigation.value = Event(Unit)
                 }, {
                     it.printStackTrace()
                 })
                 .addTo(disposables)
-    }
-
-    fun sendUpdateDefect() {
-        defect?.let { defectModel ->
-            routesInteractor.updateDefect(detoursId = defectModel.detourId,
-                    id = defectModel.id,
-                    statusProcessId = targetDefectStatus?.id.orEmpty(),
-                    description = descriptionDefect.orEmpty(),
-                    dateDetectDefect = Date().toyyyyMMddTHHmmssXXX(),
-                    files = getFilesToSend()
-            )
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnSubscribe { _progressVisibility.postValue(true) }
-                    .doAfterTerminate { _progressVisibility.postValue(false) }
-                    .subscribe({ item ->
-                        _popNavigation.value = Event(Unit)
-                    }, {
-                        it.printStackTrace()
-                    })
-                    .addTo(disposables)
         }
 
     }
@@ -319,17 +324,17 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
         //todo db offline
     }
 
-    private fun getFilesToSend(): List<MediaModel> {
-        return mediaModels.filter {
-            !it.isNetwork
-        }.map { media ->
-            //fileUtil.createFile(media.imageBitmap!!, media.id)
-            if (media.isImage){
-                MediaModel(extension = "jpg", file = fileUtil.createFile(media.imageBitmap!!, media.id))
-
-            } else {
-                MediaModel(extension = "mp4", file = media.fileVideo!!)
-            }
+    private fun getFilesToSend(): List<FileModel> {
+        return mediaModels.filter { it.isLocal }.mapNotNull { media -> media.file }.map {
+            FileModel(
+                id = UUID.randomUUID().toString(),
+                fileId = UUID.randomUUID().toString(),
+                url = "",
+                name = it.name,
+                extension = it.extension,
+                date = Date(),
+                isLocal = true
+            )
         }
     }
 
@@ -347,7 +352,7 @@ class DefectDetailViewModel(private val routesInteractor: RoutesInteractor,
             } ?: run {
                 if (checkIsNoEmptyRequiredFields()) {
                     if (checkIsNotEmptyFields()) {
-                        if (detourId.isNullOrEmpty()){
+                        if (detourId.isNullOrEmpty()) {
                             _showDialogSaveNoLinkedDetour.value = Event(Unit)
                         } else {
                             sendSaveDefect()

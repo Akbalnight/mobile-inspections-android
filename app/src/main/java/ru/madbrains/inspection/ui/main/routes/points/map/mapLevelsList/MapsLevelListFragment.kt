@@ -18,10 +18,10 @@ class MapsLevelListFragment : DialogFragment() {
 
     private val mapLevelsAdapter by lazy {
         MapLevelsAdapter(
-                onItemClick = {
-                    routePointsMapViewModel.setActiveMap(it)
-                    findNavController().popBackStack()
-                }
+            onItemClick = {
+                routePointsMapViewModel.setActiveMap(it)
+                findNavController().popBackStack()
+            }
         )
     }
 

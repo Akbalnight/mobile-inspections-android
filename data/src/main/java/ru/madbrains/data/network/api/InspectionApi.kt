@@ -6,15 +6,15 @@ import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.*
+import ru.madbrains.data.network.models.DetoursRemote
+import ru.madbrains.data.network.models.EquipmentRemote
 import ru.madbrains.data.network.request.*
 import ru.madbrains.data.network.response.*
-import ru.madbrains.domain.model.DetourModel
 
 interface InspectionApi {
 
-    // region detours
     @POST("/api/dynamicdq/data/flat/mobileDetours")
-    fun getDetours(@Body request: GetDetoursReq): Single<List<GetDetoursResp>>
+    fun getDetours(@Body request: GetDetoursReq): Single<List<DetoursRemote>>
 
     @POST("/api/dynamicdq/data/flat/mobileDetoursStatuses")
     fun getDetoursStatuses(@Body request: Any): Single<List<GetDetourStatusResp>>
@@ -23,24 +23,23 @@ interface InspectionApi {
     fun getRoutePoints(@Body request: GetRoutePointsReq): Single<List<GetRoutePointResp>>
 
     @POST("/api/dynamicdq/mobile/detours")
-    fun saveDetour(@Body detour: DetourModel): Completable
+    fun updateDetour(@Body detour: DetoursRemote): Completable
 
     @POST("/api/dynamicdq/data/flat/mobileDetoursFreeze")
     fun freezeDetours(@Body request: FreezeDetoursReq): Completable
-    // endregion
 
-    // region tech operations
     @POST("/api/dynamicdq/data/flat/mobileDetoursPlanTechOperations")
     fun getPlanTechOperations(@Body request: GetPlanTechOperationsReq): Single<List<GetPlanTechOperationsResp>>
-    // endregion
-
-    // region defects
 
     @POST("/api/dynamicdq/data/flat/mobileDefects?page=0&size=${Int.MAX_VALUE}&sort=dateDetectDefect,desc")
     fun getDefects(@Body request: GetDefectsReq): Single<List<GetDefectsResp>>
 
     @POST("/api/dynamicdq/data/flat/mobileControlPoints")
-    fun getCheckpoints(@Body request: Any, @Query("page") page: Int, @Query("size") size: Int): Single<List<GetCheckpointResp>>
+    fun getCheckpoints(
+        @Body request: Any,
+        @Query("page") page: Int,
+        @Query("size") size: Int
+    ): Single<List<GetCheckpointResp>>
 
     @POST("/api/dynamicdq/data/save/mobileControlPointsSave")
     fun updateCheckpoint(@Body request: CheckpointUpdateReq): Single<Any>
@@ -55,20 +54,17 @@ interface InspectionApi {
     @Multipart
     @POST("/api/dynamicdq/mobile/updateDefects")
     fun updateDefect(
-            @Part("defectObject") defectObject: UpdateDefectReq,
-            @Part files: List<MultipartBody.Part>?
+        @Part("defectObject") defectObject: UpdateDefectReq,
+        @Part files: List<MultipartBody.Part>?
     ): Single<String>
 
     @POST("/api/dynamicdq/data/flat/mobileDefectTypical")
-    fun getDefectTypical(@Body request: GetDefectTypicalReq): Single<List<GetDefectTypicalResp>>
-    // endregion
+    fun getDefectTypical(@Body request: Any): Single<List<GetDefectTypicalResp>>
 
-    // region Equipments
     @POST("/api/dynamicdq/data/flat/mobileEquipments")
-    fun getEquipments(@Body request: GetEquipmentsReq): Single<List<GetEquipmentResp>>
-    // endregion
+    fun getEquipments(@Body request: GetEquipmentsReq): Single<List<EquipmentRemote>>
 
     @Streaming
-    @GET
-    fun downloadFile(@Url fileUrl:String): Single<Response<ResponseBody>>
+    @POST("/api/dynamicdq/data/file/zip/mobileFiles")
+    fun downloadArchive(@Body request: List<String>): Single<Response<ResponseBody>>
 }

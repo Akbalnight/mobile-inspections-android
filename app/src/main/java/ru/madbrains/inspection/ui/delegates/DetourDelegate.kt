@@ -1,6 +1,5 @@
 package ru.madbrains.inspection.ui.delegates
 
-import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.core.view.isVisible
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
@@ -11,7 +10,6 @@ import ru.madbrains.domain.model.DetourStatusType
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.model.DiffItem
 
-@SuppressLint("SimpleDateFormat")
 fun detourDelegate(clickListener: (DetourUiModel) -> Unit) =
     adapterDelegateLayoutContainer<DetourUiModel, DiffItem>(R.layout.item_detour) {
 
@@ -24,12 +22,14 @@ fun detourDelegate(clickListener: (DetourUiModel) -> Unit) =
                     clickListener.invoke(item)
                 }
                 tvName.text = item.name
-                item.status?.type?.icon()?.let {
-                    ivDetourStatus.setImageResource(it)
-                }
+                ivDetourStatus.setImageResource(item.status?.type?.icon() ?: 0)
                 ivExpired.isVisible = isExpired
                 ivExpired.setOnClickListener {
-                    Toast.makeText(itemView.context, R.string.fragment_routes_expired_time, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        itemView.context,
+                        R.string.fragment_routes_expired_time,
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
                 tvDate.text = item.date.replace("T", " ")
             }
@@ -37,10 +37,10 @@ fun detourDelegate(clickListener: (DetourUiModel) -> Unit) =
     }
 
 data class DetourUiModel(
-        val id: String,
-        val name: String,
-        val status: DetourStatus?,
-        val date: String
+    val id: String,
+    val name: String,
+    val status: DetourStatus?,
+    val date: String
 ) : DiffItem {
 
     override fun areItemsTheSame(newItem: DiffItem): Boolean =
@@ -49,15 +49,14 @@ data class DetourUiModel(
     override fun areContentsTheSame(newItem: DiffItem): Boolean = this == newItem
 }
 
-fun DetourStatusType.icon(): Int{
-    return when(this){
+fun DetourStatusType.icon(): Int {
+    return when (this) {
         DetourStatusType.PENDING -> R.drawable.ic_detour_pending
         DetourStatusType.COMPLETED -> R.drawable.ic_detour_completed
         DetourStatusType.NOT_COMPLETED -> R.drawable.ic_detour_not_completed
         DetourStatusType.IN_PROGRESS -> R.drawable.ic_detour_in_progress
         DetourStatusType.COMPLETED_AHEAD -> R.drawable.ic_detour_completed
         DetourStatusType.PAUSED -> R.drawable.ic_detour_paused
-        //TODO: add icons
         DetourStatusType.NEW -> R.drawable.ic_detour_new
         DetourStatusType.UNKNOWN -> R.drawable.ic_defect_card_media
     }

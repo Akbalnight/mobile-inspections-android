@@ -12,8 +12,8 @@ data class UserInfoModel(
     val roles: List<UserRole>,
     val username: String
 ) {
-    val isAdmin: Boolean = roles.any{ it == UserRole.ROLE_ADMIN || it == UserRole.ROLE_MI_ADMIN }
-    val isCreator: Boolean = roles.any{ it == UserRole.ROLE_MI_DETOURS_CREATOR }
+    val isAdmin: Boolean = roles.any { it == UserRole.ROLE_ADMIN || it == UserRole.ROLE_MI_ADMIN }
+    val isCreator: Boolean = roles.any { it == UserRole.ROLE_MI_DETOURS_CREATOR }
 }
 
 data class PermissionModel(
@@ -21,7 +21,7 @@ data class PermissionModel(
     val path: String
 )
 
-enum class UserRole{
+enum class UserRole {
     ROLE_MOBILE_APP,
     ROLE_README,
     ROLE_ADMIN,

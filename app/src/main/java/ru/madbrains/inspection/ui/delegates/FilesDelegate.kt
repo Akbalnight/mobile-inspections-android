@@ -23,7 +23,7 @@ data class FilesUiModel(
     val id: String,
     val date: String,
     val url: String,
-    val name: String,
+    val name: String?,
     val extension: String
 ) : DiffItem {
 

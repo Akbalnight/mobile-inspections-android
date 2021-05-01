@@ -7,7 +7,6 @@ import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_route_list_date.*
 import kotlinx.android.synthetic.main.toolbar_with_back.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.madbrains.domain.model.DetourModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
@@ -23,7 +22,6 @@ class DateRouteListFragment : BaseFragment(R.layout.fragment_route_list_date) {
         const val KEY_TOOLBAR_TITLE = "toolbar_title"
     }
 
-    private val dateRouteListViewModel: DateRouteListViewModel by viewModel()
     private val detoursViewModel: DetoursViewModel by sharedViewModel()
 
     private var date: String? = null
@@ -31,10 +29,7 @@ class DateRouteListFragment : BaseFragment(R.layout.fragment_route_list_date) {
     private val routesAdapter by lazy {
         DetourAdapter(
             onDetourClick = {
-                val detour = detoursViewModel.detourModels.find { detourModel ->
-                    detourModel.id == it.id
-                }
-                dateRouteListViewModel.routeClick(detour)
+                detoursViewModel.dateRouteClick(it.id)
             }
         )
     }
@@ -54,7 +49,8 @@ class DateRouteListFragment : BaseFragment(R.layout.fragment_route_list_date) {
                 route.date.split("T").firstOrNull() == date
             }
         })
-        dateRouteListViewModel.navigateToRoutePoints.observe(viewLifecycleOwner, EventObserver {
+
+        detoursViewModel.navigateToDateRoutePoints.observe(viewLifecycleOwner, EventObserver {
             openRoutePointsFragment(it)
         })
     }

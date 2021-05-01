@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/graph_routes"
-    app:startDestination="@id/routesFragment">
+    app:startDestination="@id/DetoursFragment">
 
     <dialog
         android:id="@+id/mapsLevelListFragment"
@@ -96,15 +96,15 @@
         android:label="RoutePointsCloseDialog"
         tools:layout="@layout/fragment_route_points_close_dialog" />
     <fragment
-        android:id="@+id/routesFragment"
+        android:id="@+id/DetoursFragment"
         android:name="ru.madbrains.inspection.ui.main.routes.DetoursFragment"
-        android:label="RoutesFragment"
+        android:label="DetoursFragment"
         tools:layout="@layout/fragment_detours">
         <action
-            android:id="@+id/action_routesFragment_to_routeFiltersFragment"
+            android:id="@+id/action_DetoursFragment_to_routeFiltersFragment"
             app:destination="@id/routeFiltersFragment" />
         <action
-            android:id="@+id/action_routesFragment_to_dateRouteListFragment"
+            android:id="@+id/action_DetoursFragment_to_dateRouteListFragment"
             app:destination="@id/dateRouteListFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
@@ -118,7 +118,7 @@
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <action
-            android:id="@+id/action_routesFragment_to_routePointsFragment"
+            android:id="@+id/action_DetoursFragment_to_routePointsFragment"
             app:destination="@id/routePointsFragment" />
     </fragment>
 
@@ -135,6 +135,7 @@
         android:name="ru.madbrains.inspection.ui.main.routes.routefilters.RouteFiltersFragment"
         android:label="RouteFiltersFragment"
         tools:layout="@layout/fragment_route_filters" />
+
     <fragment
         android:id="@+id/dateRouteListFragment"
         android:name="ru.madbrains.inspection.ui.main.routes.dateroutelist.DateRouteListFragment"
@@ -150,4 +151,15 @@
         android:name="ru.madbrains.inspection.ui.main.defects.defectdetail.DefectDetailFragment"
         android:label="AddDefectFragment"
         tools:layout="@layout/fragment_defect_detail" />
+
+    <dialog
+        android:id="@+id/btSyncPanelFragment"
+        android:name="ru.madbrains.inspection.ui.main.dialogs.BtSyncPanelFragment"
+        android:label="BtSyncPanelFragment"
+        tools:layout="@layout/fragment_bt_sync_panel" />
+
+    <action
+        android:id="@+id/to_btSyncPanelFragment"
+        app:destination="@id/btSyncPanelFragment" />
+
 </navigation>

@@ -4,7 +4,7 @@ import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.inspection.base.BaseViewModel
 
 class SettingsViewModel(
-        private val preferenceStorage: PreferenceStorage
+    private val preferenceStorage: PreferenceStorage
 ) : BaseViewModel() {
     var saveInfoDuration: Int
         get() {

@@ -7,33 +7,33 @@ import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.model.DiffItem
 
 fun mapLevelDelegate(clickListener: (MapLevelUiModel) -> Unit) =
-        adapterDelegateLayoutContainer<MapLevelUiModel, DiffItem>(R.layout.item_map_level) {
+    adapterDelegateLayoutContainer<MapLevelUiModel, DiffItem>(R.layout.item_map_level) {
 
-            bind {
-                itemView.apply {
-                    setOnClickListener {
-                        clickListener(item)
-                    }
-
-                    if (item.isActive) {
-                        ivSelected.visibility = View.VISIBLE
-                    } else {
-                        ivSelected.visibility = View.INVISIBLE
-                    }
-                    tvLabel.text = item.name
+        bind {
+            itemView.apply {
+                setOnClickListener {
+                    clickListener(item)
                 }
+
+                if (item.isActive) {
+                    ivSelected.visibility = View.VISIBLE
+                } else {
+                    ivSelected.visibility = View.INVISIBLE
+                }
+                tvLabel.text = item.name
             }
         }
+    }
 
 data class MapLevelUiModel(
-        val id: String,
-        val name: String?,
-        val url: String,
-        val isActive: Boolean
+    val id: String,
+    val name: String?,
+    val url: String,
+    val isActive: Boolean
 ) : DiffItem {
 
     override fun areItemsTheSame(newItem: DiffItem): Boolean =
-            newItem is MapLevelUiModel && id == newItem.id
+        newItem is MapLevelUiModel && id == newItem.id
 
     override fun areContentsTheSame(newItem: DiffItem): Boolean = this == newItem
 }

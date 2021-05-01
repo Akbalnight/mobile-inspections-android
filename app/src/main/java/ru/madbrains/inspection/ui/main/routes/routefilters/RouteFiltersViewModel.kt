@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.domain.model.DetourStatus
 import ru.madbrains.domain.model.DetourStatusType
+import ru.madbrains.domain.model.getStatusByType
 import ru.madbrains.inspection.base.BaseViewModel
 
 class RouteFiltersViewModel(
@@ -20,11 +21,11 @@ class RouteFiltersViewModel(
     var currentFilter: DetourStatus? = null
 
     init {
-        _availableStatuses.value = preferenceStorage.detourStatuses?.statuses
+        _availableStatuses.value = preferenceStorage.detourStatuses?.data
     }
 
     fun setFilter(type: DetourStatusType?) {
-        currentFilter = preferenceStorage.detourStatuses?.getStatusByType(type)
+        currentFilter = preferenceStorage.detourStatuses?.data?.getStatusByType(type)
     }
 
     fun applyFilter() {

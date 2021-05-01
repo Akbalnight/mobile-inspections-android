@@ -18,7 +18,7 @@ abstract class BaseFragment(
         super.onActivityCreated(savedInstanceState)
         lifecycle.addObserver(this)
     }
-    
+
     override fun onStop() {
         hideKeyboard()
         super.onStop()

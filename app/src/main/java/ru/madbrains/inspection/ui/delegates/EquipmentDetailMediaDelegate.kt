@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.item_equipment_image.view.*
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.adapters.EquipmentImageAdapter
+import java.io.File
 import kotlin.math.roundToInt
 
 fun equipmentDetailMediaDelegate(
@@ -22,7 +23,7 @@ fun equipmentDetailMediaDelegate(
 ) =
     adapterDelegateLayoutContainer<EquipmentDetailMediaUiModel, DiffItem>(R.layout.item_equipment_image) {
 
-        onViewAttachedToWindow {  }
+        onViewAttachedToWindow { }
 
         bind {
             itemView.apply {
@@ -36,7 +37,7 @@ fun equipmentDetailMediaDelegate(
 
                 // Load image
                 Glide.with(ivEquipment)
-                    .load(item.url)
+                    .load(item.file)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .placeholder(R.drawable.ic_item_media_padded)
                     .listener(object : RequestListener<Drawable?> {
@@ -58,14 +59,16 @@ fun equipmentDetailMediaDelegate(
                         ): Boolean {
                             resource?.let {
                                 // Change aspect ratio
-                                val imageAspectRatio = it.intrinsicWidth.toFloat() / it.intrinsicHeight.toFloat()
-                                val targetImageWidth: Int = if (imageAspectRatio < adapter.maxImageAspectRatio) {
-                                    // Tall image: height = max
-                                    (adapter.maxImageHeight * imageAspectRatio).roundToInt()
-                                } else {
-                                    // Wide image: width = max
-                                    adapter.maxImageWidth
-                                }
+                                val imageAspectRatio =
+                                    it.intrinsicWidth.toFloat() / it.intrinsicHeight.toFloat()
+                                val targetImageWidth: Int =
+                                    if (imageAspectRatio < adapter.maxImageAspectRatio) {
+                                        // Tall image: height = max
+                                        (adapter.maxImageHeight * imageAspectRatio).roundToInt()
+                                    } else {
+                                        // Wide image: width = max
+                                        adapter.maxImageWidth
+                                    }
                                 layoutParams.width = targetImageWidth
                             }
                             return false
@@ -77,11 +80,11 @@ fun equipmentDetailMediaDelegate(
     }
 
 data class EquipmentDetailMediaUiModel(
-    val url: String
+    val file: File?
 ) : DiffItem {
 
     override fun areItemsTheSame(newItem: DiffItem): Boolean =
-        newItem is EquipmentDetailMediaUiModel && url == newItem.url
+        newItem is EquipmentDetailMediaUiModel && file?.name == file?.name
 
     override fun areContentsTheSame(newItem: DiffItem): Boolean = this == newItem
 }

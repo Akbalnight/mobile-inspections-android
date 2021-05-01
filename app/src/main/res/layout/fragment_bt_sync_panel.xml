@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingBottom="24dp">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:theme="@style/ThemeOverlay.AppCompat.Light"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <include
+            android:id="@+id/toolbarLayout"
+            layout="@layout/toolbar_sync_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:id="@+id/contentWrap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/appBar"
+        android:orientation="vertical">
+
+        <ru.madbrains.inspection.ui.view.SyncBarItemView
+            android:id="@+id/detourStatusView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:textValue="@string/sync_detours"
+            tools:iconValue="@drawable/ic_sync_done" />
+
+        <ru.madbrains.inspection.ui.view.SyncBarItemView
+            android:id="@+id/defectsStatusView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:textValue="@string/sync_defects"
+            tools:iconValue="@drawable/ic_sync_failed" />
+
+        <ru.madbrains.inspection.ui.view.SyncBarItemView
+            android:id="@+id/mediaStatusView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:textValue="@string/sync_media"
+            tools:iconValue="@drawable/ic_sync_progress" />
+
+        <ru.madbrains.inspection.ui.view.SyncBarItemView
+            android:id="@+id/docStatusView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:textValue="@string/sync_documents"
+            tools:iconValue="@drawable/ic_sync_progress" />
+
+        <ru.madbrains.inspection.ui.view.SyncBarItemView
+            android:id="@+id/etcStatusView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:textValue="@string/sync_etc"
+            tools:iconValue="@drawable/ic_sync_progress" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="24dp"
+        android:background="@color/greyLight"
+        app:layout_constraintTop_toBottomOf="@+id/contentWrap" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCancel"
+        style="@style/inspection_button_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="@string/cancel"
+        app:iconPadding="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/btnApply"
+        app:layout_constraintTop_toTopOf="@+id/btnApply" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnApply"
+        style="@style/inspection_button_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/proceed"
+        android:enabled="false"
+        app:iconPadding="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

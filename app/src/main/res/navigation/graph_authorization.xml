@@ -20,7 +20,7 @@
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <action
             android:id="@+id/action_authorizationFragment_to_serverSettingsFragment"
-            app:destination="@id/serverSettingsFragment" />
+            app:destination="@id/btServerSettingsFragment" />
 
     </fragment>
 
@@ -30,9 +30,9 @@
         android:label="WebViewFragment"
         tools:layout="@layout/fragment_web_view" />
     <dialog
-        android:id="@+id/serverSettingsFragment"
-        android:name="ru.madbrains.inspection.ui.auth.serversettings.ServerSettingsFragment"
-        android:label="ServerSettingsFragment"
-        tools:layout="@layout/fragment_server_settings" />
+        android:id="@+id/btServerSettingsFragment"
+        android:name="ru.madbrains.inspection.ui.auth.dialogs.BtServerSettingsFragment"
+        android:label="BtServerSettingsFragment"
+        tools:layout="@layout/fragment_bt_server_settings" />
 
 </navigation>

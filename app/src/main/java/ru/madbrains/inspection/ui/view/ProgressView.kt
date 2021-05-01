@@ -28,7 +28,7 @@ class ProgressView @JvmOverloads constructor(
         progressText.isVisible = visibility
     }
 
-    fun setTextButton(text: String, call:()->Unit) {
+    fun setTextButton(text: String, call: () -> Unit) {
         progressText.text = text
         progressText.setOnClickListener { call() }
     }

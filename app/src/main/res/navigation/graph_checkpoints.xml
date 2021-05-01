@@ -9,7 +9,7 @@
         android:id="@+id/checkpointListFragment"
         android:name="ru.madbrains.inspection.ui.main.checkpoints.list.CheckpointListFragment"
         android:label="CheckpointListFragment"
-        tools:layout="@layout/fragment_checkpoint_list" >
+        tools:layout="@layout/fragment_checkpoint_list">
         <action
             android:id="@+id/action_checkpointListFragment_to_checkpointDetailFragment"
             app:destination="@id/checkpointDetailFragment"
@@ -22,7 +22,7 @@
         android:id="@+id/checkpointDetailFragment"
         android:name="ru.madbrains.inspection.ui.main.checkpoints.detail.CheckpointDetailFragment"
         android:label="CheckpointDetailFragment"
-        tools:layout="@layout/fragment_checkpoint_detail" >
+        tools:layout="@layout/fragment_checkpoint_detail">
         <action
             android:id="@+id/action_checkpointDetailFragment_to_cameraFragment"
             app:destination="@id/cameraFragment"

@@ -12,7 +12,9 @@ class EquipmentSpecsTableRow @JvmOverloads constructor(
     attrs: AttributeSet? = null
 ) : TableRow(context, attrs) {
 
-    constructor(context: Context, label:String, value:String?, greyStyle: Boolean = false): this(context) {
+    constructor(context: Context, label: String, value: String?, greyStyle: Boolean = false) : this(
+        context
+    ) {
         setLabelText(label)
         setValueText(value)
         setGreyStyle(greyStyle)
@@ -37,17 +39,23 @@ class EquipmentSpecsTableRow @JvmOverloads constructor(
         }
     }
 
-    fun setLabelText(value:String?){
+    fun setLabelText(value: String?) {
         tvLabel.text = value
     }
 
-    fun setValueText(value:String?){
+    fun setValueText(value: String?) {
         tvValue.text = value
     }
 
-    private fun setGreyStyle(value:Boolean){
-        if(value){
-            tvValue.setTextColor(ResourcesCompat.getColor(context.resources, R.color.textMain87, null))
+    private fun setGreyStyle(value: Boolean) {
+        if (value) {
+            tvValue.setTextColor(
+                ResourcesCompat.getColor(
+                    context.resources,
+                    R.color.textMain87,
+                    null
+                )
+            )
         }
     }
 }

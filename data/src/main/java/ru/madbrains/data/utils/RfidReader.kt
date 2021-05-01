@@ -10,7 +10,7 @@ import java.io.FileOutputStream
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-class RfidReader: RfidDevice {
+class RfidReader : RfidDevice {
     private val handler = Handler()
     private var scanIsOn = false
     private val rPower = RfidPower(RfidPower.PDATYPE.ZoomSmart)
@@ -22,7 +22,7 @@ class RfidReader: RfidDevice {
         try {
             FileOutputStream("/sys/class/bj_dev/func/uhf_en")
             Timber.d("device found")
-        } catch (e: Throwable){
+        } catch (e: Throwable) {
             throw Throwable("device is not found")
         }
     }
@@ -35,7 +35,7 @@ class RfidReader: RfidDevice {
     private val executorService: ExecutorService = Executors.newFixedThreadPool(4)
     private val mainThreadHandler: Handler = HandlerCompat.createAsync(Looper.getMainLooper())
 
-    companion object{
+    companion object {
         private const val deviceSource = "/dev/ttyHSL3"
         private const val rType = 1
         private val ants: IntArray = intArrayOf(1)
@@ -43,7 +43,7 @@ class RfidReader: RfidDevice {
         private const val timeout: Short = 500
     }
 
-    private fun scan(){
+    private fun scan() {
         val er = reader.TagInventory_Raw(ants, ants.size, timeout, tagCnt)
         Timber.d("debug_dmm RFID loop $er")
         if (er == Reader.READER_ERR.MT_OK_ERR) {
@@ -56,7 +56,7 @@ class RfidReader: RfidDevice {
         }
     }
 
-    override fun startScan(progressListener:RfidProgressListener, listener: RfidListener) {
+    override fun startScan(progressListener: RfidProgressListener, listener: RfidListener) {
         dataListener = listener
         mProgressListener = progressListener
 
@@ -74,7 +74,6 @@ class RfidReader: RfidDevice {
             }
         }, 0)
     }
-
 
 
     override fun stopScan() {
@@ -97,10 +96,10 @@ class RfidReader: RfidDevice {
         }
     }
 
-    private fun onProgressChanged(active: Boolean, clean:Boolean = false) {
+    private fun onProgressChanged(active: Boolean, clean: Boolean = false) {
         mainThreadHandler.post {
             mProgressListener?.invoke(active)
-            if(clean){
+            if (clean) {
                 mProgressListener = null
             }
         }

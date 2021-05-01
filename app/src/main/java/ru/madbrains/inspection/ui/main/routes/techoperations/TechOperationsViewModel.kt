@@ -3,23 +3,21 @@ package ru.madbrains.inspection.ui.main.routes.techoperations
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ru.madbrains.data.utils.RfidDevice
-import ru.madbrains.domain.interactor.RoutesInteractor
+import ru.madbrains.domain.interactor.DetoursInteractor
 import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.domain.model.RouteDataModel
-import ru.madbrains.domain.model.TechMapModel
 import ru.madbrains.domain.model.TechOperationModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.TechOperationUiModel
-import timber.log.Timber
 
 class TechOperationsViewModel(
-    private val routesInteractor: RoutesInteractor,
+    private val detoursInteractor: DetoursInteractor,
     private val rfidDevice: RfidDevice
 ) :
-        BaseViewModel() {
+    BaseViewModel() {
 
     private val _progressVisibility = MutableLiveData<Boolean>()
     val progressVisibility: LiveData<Boolean> = _progressVisibility
@@ -38,8 +36,8 @@ class TechOperationsViewModel(
     private val _navigateToEquipmentList = MutableLiveData<Event<List<EquipmentModel>>>()
     val navigateToEquipmentList: LiveData<Event<List<EquipmentModel>>> = _navigateToEquipmentList
 
-    private val _completeTechMapEvent = MutableLiveData<Event<TechMapModel>>()
-    val completeTechMapEvent: LiveData<Event<TechMapModel>> = _completeTechMapEvent
+    private val _completeTechMapEvent = MutableLiveData<Event<RouteDataModel>>()
+    val completeTechMapEvent: LiveData<Event<RouteDataModel>> = _completeTechMapEvent
 
     private val _navigatePop = MutableLiveData<Event<Unit>>()
     val navigatePop: LiveData<Event<Unit>> = _navigatePop
@@ -58,7 +56,7 @@ class TechOperationsViewModel(
 
 
     fun finishTechMap() {
-        savedRouteData?.techMap?.let { _completeTechMapEvent.value = Event(it) }
+        savedRouteData?.let { _completeTechMapEvent.value = Event(it) }
         _navigatePop.value = Event(Unit)
     }
 
@@ -92,9 +90,10 @@ class TechOperationsViewModel(
 
     fun onTechDataInput(techOperationId: String, dataValue: String) {
         savedRouteData?.let { routeData ->
-            routeData.techMap?.techOperations?.find { it.id == techOperationId }?.let { techOperation ->
-                techOperation.valueInputData = dataValue
-            }
+            routeData.techMap?.techOperations?.find { it.id == techOperationId }
+                ?.let { techOperation ->
+                    techOperation.valueInputData = dataValue
+                }
         }
     }
 
@@ -102,35 +101,35 @@ class TechOperationsViewModel(
         val operations = mutableListOf<DiffItem>().apply {
             operationsModels.map { operation ->
                 add(
-                        TechOperationUiModel(
-                                id = operation.id,
-                                name = operation.name.orEmpty(),
-                                labelInputData = operation.labelInputData.orEmpty(),
-                                valueInputData = operation.valueInputData.orEmpty(),
-                                needInputData = operation.needInputData,
-                                position = operation.position
-                        )
+                    TechOperationUiModel(
+                        id = operation.id,
+                        name = operation.name.orEmpty(),
+                        labelInputData = operation.labelInputData.orEmpty(),
+                        valueInputData = operation.valueInputData.orEmpty(),
+                        needInputData = operation.needInputData,
+                        position = operation.position
+                    )
                 )
             }
         }
         _techOperations.value = operations
     }
 
-    fun checkRfidAndFinish(){
+    fun checkRfidAndFinish() {
         rfidDevice.startScan({
             _rfidProgress.value = it
-        }) { scannedCode->
-            savedRouteData?.rfidCode?.let { code->
-                if(scannedCode == code){
+        }) { scannedCode ->
+            savedRouteData?.rfidCode?.let { code ->
+                if (scannedCode == code) {
                     finishTechMap()
-                } else{
+                } else {
                     _showDialog.value = Event(R.string.fragment_tech_mark_is_different)
                 }
             }
         }
     }
 
-    fun stopRfidScan(){
+    fun stopRfidScan() {
         rfidDevice.stopScan()
     }
 

@@ -8,8 +8,6 @@ import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_defect_list.*
-import kotlinx.android.synthetic.main.fragment_defect_list.toolbarLayout
-import kotlinx.android.synthetic.main.fragment_defect_list.progressView
 import kotlinx.android.synthetic.main.toolbar_with_menu.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -35,30 +33,30 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
 
     private val defectsAdapter by lazy {
         DefectListAdapter(
-                onEditClick = {
-                    val defect = defectListViewModel.defectListModels.find { defectModel ->
-                        defectModel.id == it.id
-                    }
-                    defectListViewModel.editDefect(defect)
-                },
-                onDeleteClick = {
-                    val defect = defectListViewModel.defectListModels.find { defectModel ->
-                        defectModel.id == it.id
-                    }
-                    showDialogDeleteDefect(defect)
-                },
-                onConfirmClick = {
-                    val defect = defectListViewModel.defectListModels.find { defectModel ->
-                        defectModel.id == it.id
-                    }
-                    defectListViewModel.confirmDefect(defect)
-                },
-                onEliminatedClick = {
-                    val defect = defectListViewModel.defectListModels.find { defectModel ->
-                        defectModel.id == it.id
-                    }
-                    showDialogEliminatedDefect(defect)
+            onEditClick = {
+                val defect = defectListViewModel.defectListModels.find { defectModel ->
+                    defectModel.id == it.id
                 }
+                defectListViewModel.editDefect(defect)
+            },
+            onDeleteClick = {
+                val defect = defectListViewModel.defectListModels.find { defectModel ->
+                    defectModel.id == it.id
+                }
+                showDialogDeleteDefect(defect)
+            },
+            onConfirmClick = {
+                val defect = defectListViewModel.defectListModels.find { defectModel ->
+                    defectModel.id == it.id
+                }
+                defectListViewModel.confirmDefect(defect)
+            },
+            onEliminatedClick = {
+                val defect = defectListViewModel.defectListModels.find { defectModel ->
+                    defectModel.id == it.id
+                }
+                showDialogEliminatedDefect(defect)
+            }
 
         )
     }
@@ -66,8 +64,8 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val deviceIds = arguments?.getStringArrayList(DefectListFragment.KEY_EQUIPMENTS_IDS_DEFECT_LIST)
-        val isConfirmList = arguments?.getBoolean(DefectListFragment.KEY_IS_CONFIRM_DEFECT_LIST, false)
+        val deviceIds = arguments?.getStringArrayList(KEY_EQUIPMENTS_IDS_DEFECT_LIST)
+        val isConfirmList = arguments?.getBoolean(KEY_IS_CONFIRM_DEFECT_LIST, false)
         isConfirmList?.let {
             defectListViewModel.setConfirmList(it)
             if (it) {
@@ -89,15 +87,15 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
 
         defectListViewModel.navigateToEditDefect.observe(viewLifecycleOwner, EventObserver {
             val args = bundleOf(
-                    DefectDetailFragment.KEY_DETAIL_DEFECT to it
+                DefectDetailFragment.KEY_DETAIL_DEFECT to it
             )
             findNavController().navigate(R.id.action_defectListFragment_to_detailFragment, args)
         })
 
         defectListViewModel.navigateToConfirmDefect.observe(viewLifecycleOwner, EventObserver {
             val args = bundleOf(
-                    DefectDetailFragment.KEY_DETAIL_DEFECT to it,
-                    DefectDetailFragment.KEY_DEFECT_TARGET_STATUS to DefectStatus.CONFIRMED
+                DefectDetailFragment.KEY_DETAIL_DEFECT to it,
+                DefectDetailFragment.KEY_DEFECT_TARGET_STATUS to DefectStatus.CONFIRMED
             )
             findNavController().navigate(R.id.action_defectListFragment_to_detailFragment, args)
         })
@@ -143,12 +141,12 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
             builder.apply {
                 setMessage(strings[R.string.fragment_defect_dialog_delete_defect_subtitle])
                 setPositiveButton(strings[R.string.fragment_add_dialog_btn_delete],
-                        DialogInterface.OnClickListener { _, _ ->
-                            defectListViewModel.deleteDefect(item)
-                        })
+                    DialogInterface.OnClickListener { _, _ ->
+                        defectListViewModel.deleteDefect(item)
+                    })
                 setNegativeButton(strings[R.string.fragment_dialog_btn_cancel],
-                        DialogInterface.OnClickListener { _, _ ->
-                        })
+                    DialogInterface.OnClickListener { _, _ ->
+                    })
             }
             builder.create()
         }
@@ -163,12 +161,12 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
                 setTitle(strings[R.string.fragment_defect_dialog_eliminated_defect_title])
                 setMessage(strings[R.string.fragment_defect_dialog_eliminated_defect_subtitle])
                 setPositiveButton(strings[R.string.fragment_dialog_btn_save],
-                        DialogInterface.OnClickListener { _, _ ->
-                            defectListViewModel.eliminatedDefect(item)
-                        })
+                    DialogInterface.OnClickListener { _, _ ->
+                        defectListViewModel.eliminateDefect(item)
+                    })
                 setNegativeButton(strings[R.string.fragment_dialog_btn_cancel],
-                        DialogInterface.OnClickListener { _, _ ->
-                        })
+                    DialogInterface.OnClickListener { _, _ ->
+                    })
             }
             builder.create()
         }

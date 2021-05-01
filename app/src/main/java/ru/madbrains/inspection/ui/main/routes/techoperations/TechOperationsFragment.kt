@@ -8,8 +8,6 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_tech_operations.*
-import kotlinx.android.synthetic.main.fragment_tech_operations.progressView
-import kotlinx.android.synthetic.main.fragment_tech_operations.toolbarLayout
 import kotlinx.android.synthetic.main.toolbar_with_back.view.*
 import kotlinx.android.synthetic.main.toolbar_with_close.view.tvTitle
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -57,7 +55,7 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
             val routeDataModel = (getSerializable(KEY_ROUTE_DATA) as? RouteDataModel)
             routeDataModel?.let {
                 techOperationsViewModel.setRouteData(it)
-                setupToolbar(it.techMap?.pointNumber)
+                setupToolbar(it.position)
                 setupUI(it)
             }
         }
@@ -92,7 +90,7 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
 
         setupNavigation()
 
-        progressView.setTextButton(strings[R.string.stop]){
+        progressView.setTextButton(strings[R.string.stop]) {
             techOperationsViewModel.stopRfidScan()
         }
 
@@ -102,7 +100,7 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
         })
 
         techOperationsViewModel.showDialog.observe(viewLifecycleOwner, EventObserver {
-            val alertDialog: AlertDialog? = activity?.let {activity->
+            val alertDialog: AlertDialog? = activity?.let { activity ->
                 val builder = AlertDialog.Builder(activity)
                 builder.apply {
                     setTitle(strings[it])
@@ -116,7 +114,7 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
     }
 
     private fun setupUI(routeDataModel: RouteDataModel) {
-        val rfidVisible = routeDataModel.rfidCode!=null
+        val rfidVisible = routeDataModel.rfidCode != null
         val isEditable = routePointsViewModel.isDetourEditable()
         fabTechOperationsScanRFID.isVisible = rfidVisible && isEditable
         fabTechOperationsSave.isVisible = !rfidVisible && isEditable
@@ -151,15 +149,19 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
     private fun setupNavigation() {
 
         techOperationsViewModel.navigateToEquipment.observe(viewLifecycleOwner, EventObserver {
-            findNavController().navigate(R.id.action_techOperationsFragment_to_equipmentFragment, bundleOf(
-                EquipmentFragment.KEY_EQUIPMENT_DATA to it
-            ))
+            findNavController().navigate(
+                R.id.action_techOperationsFragment_to_equipmentFragment, bundleOf(
+                    EquipmentFragment.KEY_EQUIPMENT_DATA to it
+                )
+            )
         })
 
         techOperationsViewModel.navigateToEquipmentList.observe(viewLifecycleOwner, EventObserver {
-            findNavController().navigate(R.id.action_techOperationsFragment_to_equipmentListFragment, bundleOf(
-                EquipmentListFragment.KEY_EQUIPMENT_LIST_DATA to it
-            ))
+            findNavController().navigate(
+                R.id.action_techOperationsFragment_to_equipmentListFragment, bundleOf(
+                    EquipmentListFragment.KEY_EQUIPMENT_LIST_DATA to it
+                )
+            )
         })
     }
 
@@ -185,17 +187,21 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
     }
 
     private fun toDefectDetailFragment() {
-        findNavController().navigate(R.id.action_techOperationsFragment_to_addDefectFragment, bundleOf(
+        findNavController().navigate(
+            R.id.action_techOperationsFragment_to_addDefectFragment, bundleOf(
                 DefectDetailFragment.KEY_EQUIPMENT_LIST to getEquipments(),
                 DefectDetailFragment.KEY_DETOUR_ID to routePointsViewModel.detourModel?.id
-        ))
+            )
+        )
     }
 
     private fun toDefectListFragment() {
-        findNavController().navigate(R.id.graph_defects, bundleOf(
+        findNavController().navigate(
+            R.id.graph_defects, bundleOf(
                 DefectListFragment.KEY_EQUIPMENTS_IDS_DEFECT_LIST to getEquipmentIds(),
                 DefectListFragment.KEY_IS_CONFIRM_DEFECT_LIST to true
-        ))
+            )
+        )
     }
 
     private fun showDialogBlankFields() {
@@ -205,12 +211,12 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
                 setTitle(strings[R.string.fragment_tech_operations_dialog_empty_fields_title])
                 setMessage(strings[R.string.fragment_tech_operations_dialog_empty_fields_message])
                 setPositiveButton(strings[R.string.fragment_tech_operations_dialog_empty_fields_button_complete],
-                        DialogInterface.OnClickListener { _, _ ->
-                            techOperationsViewModel.finishTechMap()
-                        })
+                    DialogInterface.OnClickListener { _, _ ->
+                        techOperationsViewModel.finishTechMap()
+                    })
                 setNegativeButton(strings[R.string.fragment_tech_operations_dialog_empty_fields_button_cancel],
-                        DialogInterface.OnClickListener { _, _ ->
-                        })
+                    DialogInterface.OnClickListener { _, _ ->
+                    })
             }
             builder.create()
         }

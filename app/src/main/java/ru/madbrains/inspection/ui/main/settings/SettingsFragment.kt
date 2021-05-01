@@ -23,13 +23,13 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
         setupSaveButton()
     }
 
-    private fun setupNumberPicker(){
+    private fun setupNumberPicker() {
         npSaveInfoDuration.minValue = 1
         npSaveInfoDuration.maxValue = 5
         npSaveInfoDuration.value = settingsViewModel.saveInfoDuration
     }
 
-    private fun setupSaveButton(){
+    private fun setupSaveButton() {
         btnSave.setOnClickListener {
             settingsViewModel.saveInfoDuration = npSaveInfoDuration.value
         }

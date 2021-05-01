@@ -1,13 +1,15 @@
 package ru.madbrains.inspection.ui.main.defects.defectlist
 
-import android.graphics.BitmapFactory
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
-import ru.madbrains.data.extensions.*
-import ru.madbrains.data.network.ApiData
-import ru.madbrains.domain.interactor.RoutesInteractor
+import ru.madbrains.data.extensions.toDDMMYYYY
+import ru.madbrains.data.extensions.toHHmm
+import ru.madbrains.data.extensions.toddMMyyyyHHmm
+import ru.madbrains.data.extensions.toyyyyMMddTHHmmssXXX
+import ru.madbrains.domain.interactor.DetoursInteractor
+import ru.madbrains.domain.model.AppDirType
 import ru.madbrains.domain.model.DefectModel
 import ru.madbrains.domain.model.DefectStatus
 import ru.madbrains.domain.model.FileModel
@@ -16,12 +18,11 @@ import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.DefectListUiModel
 import ru.madbrains.inspection.ui.delegates.MediaUiModel
+import timber.log.Timber
 import java.util.*
 
-class DefectListViewModel(private val routesInteractor: RoutesInteractor) : BaseViewModel() {
+class DefectListViewModel(private val detoursInteractor: DetoursInteractor) : BaseViewModel() {
 
-    //Models
-    private var deviceIds: List<String>? = null
     val defectListModels = mutableListOf<DefectModel>()
 
     private var isConfirmList: Boolean = false
@@ -48,32 +49,24 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
         defect?.let { _navigateToConfirmDefect.value = Event(it) }
     }
 
-    fun getDefectList(device: List<String>?) {
-        deviceIds = device
-        routesInteractor.getDefects(equipmentIds = getDeviceIdsList())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { _progressVisibility.postValue(true) }
-                .doAfterTerminate { _progressVisibility.postValue(false) }
-                .subscribe({ items ->
-                    defectListModels.clear()
-                    defectListModels.addAll(items)
-                    updateDefectList()
-                }, {
-                    it.printStackTrace()
-                })
-                .addTo(disposables)
+    fun getDefectList(deviceIds: List<String>?) {
+        detoursInteractor.getDefectsDb(equipmentIds = deviceIds)
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { _progressVisibility.postValue(true) }
+            .doAfterTerminate { _progressVisibility.postValue(false) }
+            .subscribe({ items ->
+                defectListModels.clear()
+                defectListModels.addAll(items)
+                updateDefectList()
+            }, {
+                it.printStackTrace()
+            })
+            .addTo(disposables)
 
     }
 
     fun setConfirmList(isConfirm: Boolean) {
         isConfirmList = isConfirm
-    }
-
-    private fun getDeviceIdsList(): List<String> {
-        deviceIds?.let {
-            return it
-        }
-        return emptyList()
     }
 
     fun deleteDefect(deleteItem: DefectModel?) {
@@ -84,19 +77,19 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
         val defects = mutableListOf<DiffItem>().apply {
             defectListModels.map { defect ->
                 add(
-                        DefectListUiModel(
-                                id = defect.id,
-                                detour = defect.detourId.orEmpty(),
-                                date = defect.dateDetectDefect?.toDDMMYYYY().orEmpty(),
-                                time = defect.dateDetectDefect?.toHHmm().orEmpty(),
-                                device = defect.equipmentName.orEmpty(),
-                                type = defect.defectName.orEmpty(),
-                                description = defect.description.orEmpty(),
-                                isConfirmList = isConfirmList,
-                                images = getMediaListItem(defect.files),
-                                shipped = defect.shipped,
-                                dateConfirm = defect.getLastDateConfirm()?.toddMMyyyyHHmm().orEmpty()
-                        )
+                    DefectListUiModel(
+                        id = defect.id,
+                        detour = defect.detourId.orEmpty(),
+                        date = defect.dateDetectDefect?.toDDMMYYYY().orEmpty(),
+                        time = defect.dateDetectDefect?.toHHmm().orEmpty(),
+                        device = defect.equipmentName.orEmpty(),
+                        type = defect.defectName.orEmpty(),
+                        description = defect.description.orEmpty(),
+                        isConfirmList = isConfirmList,
+                        images = getMediaListItem(defect.files),
+                        isLocal = defect.isNew,
+                        dateConfirm = defect.getLastDateConfirm()?.toddMMyyyyHHmm().orEmpty()
+                    )
                 )
             }
         }
@@ -107,53 +100,33 @@ class DefectListViewModel(private val routesInteractor: RoutesInteractor) : Base
         val list: MutableList<MediaUiModel> = mutableListOf()
         files?.let {
             files.map { fileModel ->
-                when (fileModel.extension) {
-                    "jpg" -> { // если в файле изображение добавляем в список
-                        list.add(MediaUiModel(
-                                id = fileModel.id.orEmpty(),
-                                isImage = true,
-                                isNetwork = fileModel.shipped,
-                                url = if (fileModel.shipped) {
-                                    ApiData.apiUrl + fileModel.url.orEmpty()
-                                } else {
-                                    ""
-                                },
-                                imageBitmap = BitmapFactory.decodeFile(fileModel.localFile?.path)
-                        ))
-                    }
-                    "mp4" -> {
-                        list.add(MediaUiModel(
-                                id = fileModel.id.orEmpty(),
-                                isImage = false,
-                                isNetwork = fileModel.shipped,
-                                url = if (fileModel.shipped) {
-                                    ApiData.apiUrl + fileModel.url.orEmpty()
-                                } else {
-                                    ""
-                                },
-                                fileVideo = fileModel.localFile
-                        ))
-                    }
-                    else -> {
-                    }
-                }
+                list.add(
+                    MediaUiModel(
+                        id = fileModel.id,
+                        file = detoursInteractor.getFileInFolder(
+                            fileModel.name,
+                            if(fileModel.isLocal) AppDirType.Local else AppDirType.Defects
+                        ),
+                        isLocal = fileModel.isLocal
+                    )
+                )
             }
         }
         return list
     }
 
-    fun eliminatedDefect(deleteItem: DefectModel?) {
-        deleteItem?.let {
-            routesInteractor.updateDefect(id = it.id,
-                    statusProcessId = DefectStatus.ELIMINATED.id,
-                    dateDetectDefect = Date().toyyyyMMddTHHmmssXXX()
-            )
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ items ->
-                    }, {
-                        it.printStackTrace()
-                    })
-                    .addTo(disposables)
+    fun eliminateDefect(deleteItem: DefectModel?) {
+        deleteItem?.let { it ->
+            detoursInteractor.updateDefectRemote(it.copy(
+                id = it.id,
+                statusProcessId = DefectStatus.ELIMINATED.id,
+                dateDetectDefect = Date()
+            ))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({}, {
+                    it.printStackTrace()
+                })
+                .addTo(disposables)
         }
     }
 

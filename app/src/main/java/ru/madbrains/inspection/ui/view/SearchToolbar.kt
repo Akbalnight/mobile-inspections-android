@@ -22,9 +22,17 @@ class SearchToolbar : Toolbar {
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    )
 
-    fun setupSearch(leadingItem: Drawable, onSearchInput: (searchString: String) -> Unit, initialState: State = State.DEFAULT) {
+    fun setupSearch(
+        leadingItem: Drawable,
+        onSearchInput: (searchString: String) -> Unit,
+        initialState: State = State.DEFAULT
+    ) {
         btnLeading.setImageDrawable(leadingItem)
         title = tvTitle.text.toString()
         this.onSearchInput = onSearchInput

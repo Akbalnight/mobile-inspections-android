@@ -2,13 +2,18 @@ package ru.madbrains.inspection.ui.main.routes.points.map
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import ru.madbrains.domain.interactor.DetoursInteractor
+import ru.madbrains.domain.model.AppDirType
 import ru.madbrains.domain.model.DetourModel
 import ru.madbrains.domain.model.RouteDataModel
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.ui.delegates.MapLevelUiModel
+import java.io.File
 
-class RoutePointsMapViewModel : BaseViewModel() {
+class RoutePointsMapViewModel(
+    private val detoursInteractor: DetoursInteractor
+) : BaseViewModel() {
     private val _mapLevels = MutableLiveData<List<MapLevelUiModel>>()
     val mapLevels: LiveData<List<MapLevelUiModel>> = _mapLevels
 
@@ -18,6 +23,9 @@ class RoutePointsMapViewModel : BaseViewModel() {
     private val _navigateToTechOperations = MutableLiveData<Event<RouteDataModel>>()
     val navigateToTechOperations: LiveData<Event<RouteDataModel>> = _navigateToTechOperations
 
+    private val _mapImage = MutableLiveData<File>()
+    val mapImage: LiveData<File> = _mapImage
+
     private lateinit var detourModel: DetourModel
 
     fun setData(detour: DetourModel) {
@@ -25,7 +33,7 @@ class RoutePointsMapViewModel : BaseViewModel() {
         val levels = detour.route.routeMaps?.mapIndexed { i, map ->
             MapLevelUiModel(map.id, map.name, map.url, i == 0)
         }.also {
-            if(it != null) _mapLevels.value = it
+            if (it != null) _mapLevels.value = it
         }
         filterMapPoints(levels?.find { it.isActive })
     }
@@ -50,8 +58,11 @@ class RoutePointsMapViewModel : BaseViewModel() {
         val preserveOrder = detourModel.saveOrderControlPoints == true
 
         if (!preserveOrder || routeData.completed || clickedIndex == 0 || prevWasCompleted) {
-            routeData.techMap?.pointNumber = routeData.position
             _navigateToTechOperations.value = Event(routeData)
         }
+    }
+
+    fun loadImage(item: MapLevelUiModel) {
+        _mapImage.postValue(detoursInteractor.getFileInFolder(item.name, AppDirType.Docs))
     }
 }
