@@ -96,8 +96,6 @@
                 app:layout_constraintTop_toBottomOf="@id/tvEquipmentNameTitle" />
 
 
-
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvEquipmentMedia"
                 android:layout_width="0dp"

@@ -7,11 +7,11 @@ import ru.madbrains.inspection.ui.delegates.MapLevelUiModel
 import ru.madbrains.inspection.ui.delegates.mapLevelDelegate
 
 class MapLevelsAdapter(
-        onItemClick: (MapLevelUiModel) -> Unit
+    onItemClick: (MapLevelUiModel) -> Unit
 ) : AsyncListDifferDelegationAdapter<DiffItem>(BaseDiffCallback()) {
 
     init {
         delegatesManager
-                .addDelegate(mapLevelDelegate(onItemClick))
+            .addDelegate(mapLevelDelegate(onItemClick))
     }
 }

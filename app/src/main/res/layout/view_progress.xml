@@ -9,7 +9,7 @@
         android:id="@+id/viewLockContent"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#99FFFFFF"
+        android:background="#99787878"
         android:clickable="true"
         android:focusable="true"
         android:visibility="gone"

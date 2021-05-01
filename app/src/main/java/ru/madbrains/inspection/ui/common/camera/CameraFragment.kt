@@ -77,12 +77,16 @@ class CameraFragment : BaseFragment(R.layout.fragment_camera) {
             changeFacing()
         }
         ivStartRecord.setOnClickListener {
+            cameraViewModel.startRecord("${System.currentTimeMillis()}.mp4")
+        }
+        ivStopRecord.setOnClickListener {
+            ivStopRecord.isInvisible = true
+            ivStartRecord.isInvisible = false
+            videoCapture.stopRecording()
+        }
+        cameraViewModel.startRecording.observe(viewLifecycleOwner, EventObserver { videoFile->
             ivStartRecord.isInvisible = true
             ivStopRecord.isInvisible = false
-            val videoFile = File(
-                requireContext().externalMediaDirs.first(),
-                "${System.currentTimeMillis()}.mp4"
-            )
             videoCapture.startRecording(videoFile, object : VideoCapture.OnVideoSavedListener {
                 override fun onVideoSaved(file: File?) {
                     file?.let { cameraViewModel.setVideo(it) }
@@ -96,12 +100,7 @@ class CameraFragment : BaseFragment(R.layout.fragment_camera) {
                     Timber.tag("CameraLog").d(message)
                 }
             })
-        }
-        ivStopRecord.setOnClickListener {
-            ivStopRecord.isInvisible = true
-            ivStartRecord.isInvisible = false
-            videoCapture.stopRecording()
-        }
+        })
         cameraViewModel.cameraState.observe(viewLifecycleOwner, EventObserver {
             when (it) {
                 CameraViewModel.CameraState.PHOTO -> {

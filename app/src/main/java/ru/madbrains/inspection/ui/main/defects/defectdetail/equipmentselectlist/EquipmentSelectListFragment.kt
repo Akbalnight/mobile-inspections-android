@@ -21,12 +21,12 @@ class EquipmentSelectListFragment : BaseFragment(R.layout.fragment_defect_find_e
 
     private val equipmentSelectAdapter by lazy {
         EquipmentSelectAdapter(
-                onDeviceSelectClick = {
-                    val deviceSelect = equipmentSelectViewModel.deviceListModels.find { deviceSelect ->
-                        deviceSelect.id == it.id
-                    }
-                    equipmentSelectViewModel.deviceSelectClick(deviceSelect)
-                })
+            onDeviceSelectClick = {
+                val deviceSelect = equipmentSelectViewModel.deviceListModels.find { deviceSelect ->
+                    deviceSelect.id == it.id
+                }
+                equipmentSelectViewModel.deviceSelectClick(deviceSelect)
+            })
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -47,10 +47,10 @@ class EquipmentSelectListFragment : BaseFragment(R.layout.fragment_defect_find_e
         })
 
         equipmentSelectViewModel.navigateToDefectDetail.observe(
-                viewLifecycleOwner,
-                EventObserver {
-                    findNavController().popBackStack()
-                })
+            viewLifecycleOwner,
+            EventObserver {
+                findNavController().popBackStack()
+            })
     }
 
     private fun setupToolBar() {
@@ -60,7 +60,7 @@ class EquipmentSelectListFragment : BaseFragment(R.layout.fragment_defect_find_e
                 onNavigationBack(this@EquipmentSelectListFragment)
             }
             setupSearch(context.drawables[R.drawable.ic_back],
-                    { equipmentSelectViewModel.searchEquipments(it) }
+                { equipmentSelectViewModel.searchEquipments(it) }
             )
         }
     }

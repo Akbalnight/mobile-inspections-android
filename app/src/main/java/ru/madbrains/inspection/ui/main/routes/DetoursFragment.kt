@@ -42,8 +42,7 @@ class DetoursFragment : BaseFragment(R.layout.fragment_detours) {
             progressView.changeVisibility(it)
         })
         routeFiltersViewModel.selectedFilter.observe(viewLifecycleOwner, Observer {
-            detoursViewModel.savedFilter(it)
-            detoursViewModel.updateData()
+            detoursViewModel.saveFilter(it)
         })
     }
 
@@ -53,7 +52,7 @@ class DetoursFragment : BaseFragment(R.layout.fragment_detours) {
             mainViewModel.menuClick()
         }
         toolbarLayout.btnFilter.setOnClickListener {
-            findNavController().navigate(R.id.action_routesFragment_to_routeFiltersFragment)
+            findNavController().navigate(R.id.action_DetoursFragment_to_routeFiltersFragment)
         }
     }
 

@@ -7,11 +7,11 @@ import ru.madbrains.inspection.ui.delegates.EquipmentListUiModel
 import ru.madbrains.inspection.ui.delegates.equipmentListDelegate
 
 class EquipmentListAdapter(
-        onEquipmentClick: (EquipmentListUiModel) -> Unit
+    onEquipmentClick: (EquipmentListUiModel) -> Unit
 ) : AsyncListDifferDelegationAdapter<DiffItem>(BaseDiffCallback()) {
 
     init {
         delegatesManager
-                .addDelegate(equipmentListDelegate(onEquipmentClick))
+            .addDelegate(equipmentListDelegate(onEquipmentClick))
     }
 }

@@ -2,7 +2,7 @@ package ru.madbrains.data.utils
 
 import android.os.Handler
 
-class RfidMock: RfidDevice {
+class RfidMock : RfidDevice {
 
     private var dataListener: RfidListener? = null
     private var mProgressListener: RfidProgressListener? = null
@@ -18,7 +18,6 @@ class RfidMock: RfidDevice {
             stopScan()
         }, 5000);
     }
-
 
 
     override fun stopScan() {

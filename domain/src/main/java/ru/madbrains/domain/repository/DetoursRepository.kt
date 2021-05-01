@@ -5,11 +5,12 @@ import io.reactivex.Single
 import okhttp3.ResponseBody
 import retrofit2.Response
 import ru.madbrains.domain.model.*
+import java.io.File
 
 interface DetoursRepository {
-    fun getDetours(): Single<List<DetourModel>>
+    fun getDetours(statuses: List<DetourStatus>): Single<List<DetourModel>>
 
-    fun saveDetour(detour: DetourModel): Completable
+    fun updateDetour(detour: DetourModel): Completable
 
     fun freezeDetours(detourIds: List<String>): Completable
 
@@ -23,39 +24,26 @@ interface DetoursRepository {
 
     fun getCheckpoints(): Single<List<CheckpointModel>>
 
-    fun updateCheckpoint(id:String, rfidCode: String): Single<Any>
+    fun updateCheckpoint(id: String, rfidCode: String): Single<Any>
 
-    fun getDefects(id: String?,
-                   codes: List<String>?,
-                   dateDetectStart: String?,
-                   dateDetectEnd: String?,
-                   detourIds: List<String>?,
-                   defectNames: List<String>?,
-                   equipmentNames: List<String>?,
-                   equipmentIds: List<String>?,
-                   statusProcessId: String?): Single<List<DefectModel>>
+    fun getDefects(
+        id: String?,
+        codes: List<String>?,
+        dateDetectStart: String?,
+        dateDetectEnd: String?,
+        detourIds: List<String>?,
+        defectNames: List<String>?,
+        equipmentNames: List<String>?,
+        equipmentIds: List<String>?,
+        statusProcessId: String?
+    ): Single<List<DefectModel>>
 
 
-    fun saveDefect(files: List<MediaModel>?,
-                   detourId: String?,
-                   equipmentId: String?,
-                   staffDetectId: String?,
-                   defectTypicalId: String?,
-                   description: String?,
-                   dateDetectDefect: String?,
-                   statusProcessId: String?
-    ): Single<String>
+    fun saveDefect(model: DefectModel, files: List<File>?): Single<String>
 
-    fun updateDefect(files: List<MediaModel>?,
-                     id: String?,
-                     statusProcessId: String?,
-                     dateDetectDefect: String?,
-                     staffDetectId: String?,
-                     description: String?,
-                     detoursId: String?
-    ): Single<String>
-
-    fun downloadFile(fileUrl: String): Single<Response<ResponseBody>>
+    fun updateDefect(model: DefectModel, files: List<File>?): Single<String>
 
     fun getDetoursStatuses(): Single<List<DetourStatus>>
+
+    fun downloadFileArchive(ids: List<String>): Single<Response<ResponseBody>>
 }

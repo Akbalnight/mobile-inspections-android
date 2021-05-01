@@ -1,7 +1,6 @@
 package ru.madbrains.inspection.ui.delegates
 
-import android.graphics.Bitmap
-import android.view.View
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.request.RequestOptions
@@ -13,69 +12,43 @@ import ru.madbrains.inspection.extensions.drawables
 import java.io.File
 
 fun mediaDelegate(
-        clickImageListener: (MediaUiModel) -> Unit,
-        clickDeleteListener: (MediaUiModel) -> Unit
+    clickImageListener: (MediaUiModel) -> Unit,
+    clickDeleteListener: (MediaUiModel) -> Unit
 ) =
-        adapterDelegateLayoutContainer<MediaUiModel, DiffItem>(R.layout.item_media) {
+    adapterDelegateLayoutContainer<MediaUiModel, DiffItem>(R.layout.item_media) {
 
-            bind {
-                itemView.apply {
+        bind {
+            itemView.apply {
+                ivVideo.isVisible = !item.isImage
+                ivMediaContent.setOnClickListener {
+                    clickImageListener.invoke(item)
+                }
 
-                    if (item.isImage) {
-                        ivVideo.visibility = View.GONE
-                    } else {
-                        ivVideo.visibility = View.VISIBLE
-                    }
-                    ivMediaContent.setOnClickListener {
-                        clickImageListener.invoke(item)
-                    }
-
-                    if (item.isNetwork) {
-                        ivMediaDelete.visibility = View.GONE
-                    } else {
-                        ivMediaDelete.visibility = View.VISIBLE
-                        ivMediaDelete.setOnClickListener {
-                            clickDeleteListener.invoke(item)
-                        }
-                    }
-
-                    if (item.isImage) {
-                        if (item.isNetwork) {
-                            Glide.with(context)
-                                    .load(item.url)
-                                    .apply(RequestOptions.bitmapTransform(CenterCrop()))
-                                    .placeholder(context.drawables[R.drawable.ic_item_media])
-                                    .into(ivMediaContent)
-                        } else {
-                            item.imageBitmap?.let { ivMediaContent.setImageBitmap(it) }
-                        }
-                    } else {
-                        val path: String = if (item.isNetwork) {
-                            item.url
-                        } else {
-                            item.fileVideo?.path.toString()
-                        }
-                        Glide.with(context)
-                                .load(path)
-                                .apply(RequestOptions.bitmapTransform(CenterCrop()))
-                                .placeholder(context.drawables[R.drawable.ic_item_media])
-                                .into(ivMediaContent)
+                ivMediaDelete.isVisible = item.isLocal
+                if (item.isLocal) {
+                    ivMediaDelete.setOnClickListener {
+                        clickDeleteListener.invoke(item)
                     }
                 }
+                Glide.with(context)
+                    .load(item.file)
+                    .apply(RequestOptions.bitmapTransform(CenterCrop()))
+                    .placeholder(context.drawables[R.drawable.ic_item_media])
+                    .into(ivMediaContent)
             }
         }
+    }
 
 data class MediaUiModel(
-        val id: String,
-        val isImage: Boolean = true, // признак изображение или видео
-        val isNetwork: Boolean = true, // признак онлайн медиа или локально
-        val imageBitmap: Bitmap? = null, // изображение для оффлайн изобржений
-        val fileVideo: File? = null, // видео
-        val url: String = "" // адрес для онлайн медиа
+    val id: String,
+    val isLocal: Boolean = false,
+    val file: File? = null
 ) : DiffItem {
 
+    val isImage get() = file?.extension in arrayListOf("png", "jpg", "jpeg")
+
     override fun areItemsTheSame(newItem: DiffItem): Boolean =
-            newItem is MediaUiModel && id == newItem.id
+        newItem is MediaUiModel && id == newItem.id
 
     override fun areContentsTheSame(newItem: DiffItem): Boolean = this == newItem
 }

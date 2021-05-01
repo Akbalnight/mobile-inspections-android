@@ -1,5 +1,5 @@
 stages:
-- build
+  - build
 
 firebase_inspection:
   stage: build

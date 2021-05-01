@@ -29,5 +29,86 @@ data class DetourModel(
     val frozen: Boolean?,
     var route: RouteModel
 ) : Serializable {
-    @Transient var startTime: Date? = null
+    @Transient
+    var startTime: Date? = null
+    @Transient
+    var changed = false
+
+    fun getAllFilesIds(): List<String> {
+        val res = arrayListOf<FileModel>()
+        route.routeMaps?.let {
+            res.addAll(it)
+        }
+        for (data in route.routesData) {
+            data.equipments?.let { equipment ->
+                for (item in equipment) {
+                    item.attachmentFiles?.let {
+                        res.addAll(it)
+                    }
+                    item.warrantyFiles?.let {
+                        res.addAll(it)
+                    }
+                }
+            }
+        }
+        return res.mapNotNull { it.fileId }
+    }
 }
+
+fun List<DetourModel>.getAllFilesIds(): List<String> {
+    val res = arrayListOf<String>()
+    for (item in this) {
+        res.addAll(item.getAllFilesIds())
+    }
+    return res.distinct()
+}
+
+data class RouteModel(
+    val id: String,
+    val name: String,
+    val code: Int?,
+    val duration: Int?,
+    val routesData: List<RouteDataModel>,
+    val routeMaps: List<FileModel>?
+) : Serializable
+
+data class RouteDataModel(
+    val id: String?,
+    val techMapId: String?,
+    val controlPointId: String?,
+    val rfidCode: String?,
+    val routeMapId: String?,
+    val routeId: String?,
+    val duration: Int?,
+    val xLocation: Int?,
+    val yLocation: Int?,
+    val position: Int?,
+    val equipments: List<EquipmentModel>?,
+    var techMap: TechMapModel?,
+    var completed: Boolean
+) : Serializable
+
+data class TechMapModel(
+    val id: String,
+    val name: String?,
+    val code: Int?,
+    val dateStart: String?,
+    val techMapsStatusId: String?,
+    val parentId: String?,
+    val isGroup: Boolean?,
+    val techOperations: List<TechOperationModel>
+) : Serializable
+
+data class TechOperationModel(
+    val id: String,
+    val name: String?,
+    val code: Int?,
+    val needInputData: Boolean?,
+    val labelInputData: String?,
+    var valueInputData: String?,
+    val equipmentStop: Boolean?,
+    val increasedDanger: Boolean?,
+    val duration: Int?,
+    val techMapId: String?,
+    val position: Int?
+) : Serializable

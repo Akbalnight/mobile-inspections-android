@@ -33,12 +33,12 @@ class CheckpointDetailFragment : BaseFragment(R.layout.fragment_checkpoint_detai
 
     private val checkpointMediaAdapter by lazy {
         MediaAdapter(
-                onMediaImageClick = {
-                    // todo show image preview
-                },
-                onMediaDeleteClick = {
-                    showDialogDeleteMedia(it)
-                }
+            onMediaImageClick = {
+                // todo show image preview
+            },
+            onMediaDeleteClick = {
+                showDialogDeleteMedia(it)
+            }
         )
     }
 
@@ -51,7 +51,7 @@ class CheckpointDetailFragment : BaseFragment(R.layout.fragment_checkpoint_detai
         super.onActivityCreated(savedInstanceState)
 
         arguments?.let {
-            (it.getSerializable(KEY_CHECKPOINT_DETAIL_DATA) as? CheckpointModel)?.let {model->
+            (it.getSerializable(KEY_CHECKPOINT_DETAIL_DATA) as? CheckpointModel)?.let { model ->
                 checkpointDetailViewModel.setRawData(model)
                 setupToolbar(model.name)
                 setupData(model)
@@ -69,7 +69,7 @@ class CheckpointDetailFragment : BaseFragment(R.layout.fragment_checkpoint_detai
 
         setupNavigation()
 
-        progressView.setTextButton(strings[R.string.stop]){
+        progressView.setTextButton(strings[R.string.stop]) {
             checkpointDetailViewModel.stopRfidScan()
         }
 
@@ -153,12 +153,16 @@ class CheckpointDetailFragment : BaseFragment(R.layout.fragment_checkpoint_detai
     }
 
     private fun setupDialogs() {
-        checkpointDetailViewModel.showDialogChangedFields.observe(viewLifecycleOwner, EventObserver {
-            showDialogChangedFields()
-        })
-        checkpointDetailViewModel.showDialogConfirmChangedFields.observe(viewLifecycleOwner, EventObserver {
-            showDialogConfirmChange()
-        })
+        checkpointDetailViewModel.showDialogChangedFields.observe(
+            viewLifecycleOwner,
+            EventObserver {
+                showDialogChangedFields()
+            })
+        checkpointDetailViewModel.showDialogConfirmChangedFields.observe(
+            viewLifecycleOwner,
+            EventObserver {
+                showDialogConfirmChange()
+            })
 
         checkpointDetailViewModel.showSnackBar.observe(viewLifecycleOwner, EventObserver {
             mainViewModel.openSnackBar(strings[it])
@@ -173,11 +177,13 @@ class CheckpointDetailFragment : BaseFragment(R.layout.fragment_checkpoint_detai
             if (it.isNotEmpty()) {
                 rvAddCheckpointMedia.visibility = View.VISIBLE
                 tvMediaListNoData.visibility = View.GONE
-                tvMediaList.text = formattedStrings[R.string.fragment_media_list_title].invoke(values = *arrayOf(it.size))
+                tvMediaList.text =
+                    formattedStrings[R.string.fragment_media_list_title].invoke(values = *arrayOf(it.size))
             } else {
                 tvMediaListNoData.visibility = View.VISIBLE
                 rvAddCheckpointMedia.visibility = View.GONE
-                tvMediaList.text = formattedStrings[R.string.fragment_media_list_title].invoke(values = *arrayOf("0"))
+                tvMediaList.text =
+                    formattedStrings[R.string.fragment_media_list_title].invoke(values = *arrayOf("0"))
             }
             checkpointMediaAdapter.items = it
         })
@@ -193,7 +199,8 @@ class CheckpointDetailFragment : BaseFragment(R.layout.fragment_checkpoint_detai
             val builder = AlertDialog.Builder(it)
             builder.apply {
                 setMessage(strings[R.string.fragment_dialog_delete_subtitle])
-                setPositiveButton(strings[R.string.fragment_add_dialog_btn_delete]
+                setPositiveButton(
+                    strings[R.string.fragment_add_dialog_btn_delete]
                 ) { _, _ ->
                     checkpointDetailViewModel.deleteMedia(item)
                 }
@@ -209,7 +216,8 @@ class CheckpointDetailFragment : BaseFragment(R.layout.fragment_checkpoint_detai
             val builder = AlertDialog.Builder(it)
             builder.apply {
                 setMessage(strings[R.string.fragment_dialog_changed_fields])
-                setPositiveButton(strings[R.string.fragment_dialog_btn_exit]
+                setPositiveButton(
+                    strings[R.string.fragment_dialog_btn_exit]
                 ) { _, _ ->
                     findNavController().popBackStack()
                 }

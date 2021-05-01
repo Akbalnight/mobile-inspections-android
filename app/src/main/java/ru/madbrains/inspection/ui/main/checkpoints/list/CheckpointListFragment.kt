@@ -13,7 +13,6 @@ import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.extensions.drawables
 import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.adapters.CheckpointAdapter
-import ru.madbrains.inspection.ui.delegates.CheckpointUiModel
 import ru.madbrains.inspection.ui.main.MainViewModel
 import ru.madbrains.inspection.ui.main.checkpoints.detail.CheckpointDetailFragment.Companion.KEY_CHECKPOINT_DETAIL_DATA
 import ru.madbrains.inspection.ui.view.SearchToolbar
@@ -35,7 +34,7 @@ class CheckpointListFragment : BaseFragment(R.layout.fragment_checkpoint_list) {
 
         rvList.adapter = checkpointAdapter
 
-        checkpointListViewModel.checkPointList.observe(viewLifecycleOwner, Observer { list->
+        checkpointListViewModel.checkPointList.observe(viewLifecycleOwner, Observer { list ->
             checkpointAdapter.items = list
             setupToolbar(strings[R.string.fragment_checkpoint_title])
         })

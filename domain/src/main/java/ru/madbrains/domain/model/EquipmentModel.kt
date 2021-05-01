@@ -22,19 +22,20 @@ data class EquipmentModel(
     val dateWarrantyStart: Date?,
     val dateWarrantyFinish: Date?,
     val typeEquipment: String?,
-    val warrantyFiles: List<EquipmentFileModel>?,
-    val attachmentFiles: List<EquipmentFileModel>?,
+    val warrantyFiles: List<FileModel>?,
+    val attachmentFiles: List<FileModel>?,
     val deleted: Boolean?
-): Serializable{
-    fun getImageUrls(): List<EquipmentFileModel> {
-        val images = attachmentFiles?.filter { it.extension == "jpg" }?: emptyList()
-        val warrantyImages = warrantyFiles?.filter { it.extension == "jpg" }?: emptyList()
+) : Serializable {
+    fun getImageUrls(): List<FileModel> {
+        val images = attachmentFiles?.filter { it.extension == "jpg" } ?: emptyList()
+        val warrantyImages = warrantyFiles?.filter { it.extension == "jpg" } ?: emptyList()
 
         return images + warrantyImages
     }
-    fun getAllDocs(): List<EquipmentFileModel> {
-        val attach = attachmentFiles?: emptyList()
-        val warranty = warrantyFiles?: emptyList()
+
+    fun getAllDocs(): List<FileModel> {
+        val attach = attachmentFiles ?: emptyList()
+        val warranty = warrantyFiles ?: emptyList()
 
         return attach + warranty
     }

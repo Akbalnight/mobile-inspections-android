@@ -5,7 +5,6 @@ import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_equipment_list.*
-import kotlinx.android.synthetic.main.fragment_equipment_list.toolbarLayout
 import kotlinx.android.synthetic.main.toolbar_with_back.view.*
 import kotlinx.android.synthetic.main.toolbar_with_menu.view.tvTitle
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -49,9 +48,11 @@ class EquipmentListFragment : BaseFragment(R.layout.fragment_equipment_list) {
         })
 
         equipmentListViewModel.navigateToEquipment.observe(viewLifecycleOwner, EventObserver {
-            findNavController().navigate(R.id.action_equipmentListFragment_to_equipmentFragment, bundleOf(
-                EquipmentFragment.KEY_EQUIPMENT_DATA to it
-            ))
+            findNavController().navigate(
+                R.id.action_equipmentListFragment_to_equipmentFragment, bundleOf(
+                    EquipmentFragment.KEY_EQUIPMENT_DATA to it
+                )
+            )
         })
     }
 

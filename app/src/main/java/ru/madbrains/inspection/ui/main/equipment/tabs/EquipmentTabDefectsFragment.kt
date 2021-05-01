@@ -4,21 +4,21 @@ import android.content.DialogInterface
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import ru.madbrains.inspection.R
-import ru.madbrains.inspection.base.BaseFragment
-import ru.madbrains.inspection.ui.adapters.DefectListAdapter
-import ru.madbrains.inspection.ui.main.defects.defectlist.DefectListViewModel
-import ru.madbrains.inspection.ui.main.equipment.EquipmentViewModel
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_equipment_tab_defects.*
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.madbrains.domain.model.DefectModel
 import ru.madbrains.domain.model.DefectStatus
+import ru.madbrains.inspection.R
+import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.extensions.strings
+import ru.madbrains.inspection.ui.adapters.DefectListAdapter
 import ru.madbrains.inspection.ui.main.defects.defectdetail.DefectDetailFragment
+import ru.madbrains.inspection.ui.main.defects.defectlist.DefectListViewModel
+import ru.madbrains.inspection.ui.main.equipment.EquipmentViewModel
 
 class EquipmentTabDefectsFragment : BaseFragment(R.layout.fragment_equipment_tab_defects) {
 
@@ -28,22 +28,22 @@ class EquipmentTabDefectsFragment : BaseFragment(R.layout.fragment_equipment_tab
 
     private val defectsAdapter by lazy {
         DefectListAdapter(
-                onEditClick = {
-                },
-                onDeleteClick = {
-                },
-                onConfirmClick = {
-                    val defect = defectListViewModel.defectListModels.find { defectModel ->
-                        defectModel.id == it.id
-                    }
-                    defectListViewModel.confirmDefect(defect)
-                },
-                onEliminatedClick = {
-                    val defect = defectListViewModel.defectListModels.find { defectModel ->
-                        defectModel.id == it.id
-                    }
-                    showDialogEliminatedDefect(defect)
+            onEditClick = {
+            },
+            onDeleteClick = {
+            },
+            onConfirmClick = {
+                val defect = defectListViewModel.defectListModels.find { defectModel ->
+                    defectModel.id == it.id
                 }
+                defectListViewModel.confirmDefect(defect)
+            },
+            onEliminatedClick = {
+                val defect = defectListViewModel.defectListModels.find { defectModel ->
+                    defectModel.id == it.id
+                }
+                showDialogEliminatedDefect(defect)
+            }
 
         )
     }
@@ -67,8 +67,8 @@ class EquipmentTabDefectsFragment : BaseFragment(R.layout.fragment_equipment_tab
 
         defectListViewModel.navigateToConfirmDefect.observe(viewLifecycleOwner, EventObserver {
             val args = bundleOf(
-                    DefectDetailFragment.KEY_DETAIL_DEFECT to it,
-                    DefectDetailFragment.KEY_DEFECT_TARGET_STATUS to DefectStatus.CONFIRMED
+                DefectDetailFragment.KEY_DETAIL_DEFECT to it,
+                DefectDetailFragment.KEY_DEFECT_TARGET_STATUS to DefectStatus.CONFIRMED
             )
             findNavController().navigate(R.id.action_equipmentFragment_to_detailFragment, args)
         })
@@ -89,12 +89,12 @@ class EquipmentTabDefectsFragment : BaseFragment(R.layout.fragment_equipment_tab
                 setTitle(strings[R.string.fragment_defect_dialog_eliminated_defect_title])
                 setMessage(strings[R.string.fragment_defect_dialog_eliminated_defect_subtitle])
                 setPositiveButton(strings[R.string.fragment_dialog_btn_save],
-                        DialogInterface.OnClickListener { _, _ ->
-                            defectListViewModel.eliminatedDefect(item)
-                        })
+                    DialogInterface.OnClickListener { _, _ ->
+                        defectListViewModel.eliminateDefect(item)
+                    })
                 setNegativeButton(strings[R.string.fragment_dialog_btn_cancel],
-                        DialogInterface.OnClickListener { _, _ ->
-                        })
+                    DialogInterface.OnClickListener { _, _ ->
+                    })
             }
             builder.create()
         }

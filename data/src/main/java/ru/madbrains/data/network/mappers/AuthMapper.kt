@@ -1,7 +1,6 @@
 package ru.madbrains.data.network.mappers
 
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import ru.madbrains.data.network.response.GetTokenResp
 import ru.madbrains.data.network.response.PermissionResp
 import ru.madbrains.domain.model.PermissionModel

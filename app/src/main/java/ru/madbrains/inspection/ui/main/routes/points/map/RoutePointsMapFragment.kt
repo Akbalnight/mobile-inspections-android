@@ -16,7 +16,6 @@ import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import kotlinx.android.synthetic.main.fragment_route_points_map.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import ru.madbrains.data.network.ApiData.apiUrl
 import ru.madbrains.domain.model.RouteDataModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
@@ -24,8 +23,9 @@ import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.ui.main.routes.points.RoutePointsViewModel
 import ru.madbrains.inspection.ui.main.routes.techoperations.TechOperationsFragment
 import ru.madbrains.inspection.ui.view.MapPoint
+import java.io.File
 
-class RoutePointsMapFragment : BaseFragment(R.layout.fragment_route_points_map) {
+class RoutePointsMapFragment() : BaseFragment(R.layout.fragment_route_points_map) {
 
     private val routePointsViewModel: RoutePointsViewModel by sharedViewModel()
     private val routePointsMapViewModel: RoutePointsMapViewModel by sharedViewModel()
@@ -41,18 +41,21 @@ class RoutePointsMapFragment : BaseFragment(R.layout.fragment_route_points_map) 
         }
         routePointsMapViewModel.mapLevels.observe(viewLifecycleOwner) { list ->
             list.find { it.isActive }?.let { item ->
-                loadImage(item.url)
+                routePointsMapViewModel.loadImage(item)
             }
         }
         routePointsMapViewModel.navigateToTechOperations.observe(
-                viewLifecycleOwner,
-                EventObserver {
-                    openTechOperationsFragment(it)
-                }
+            viewLifecycleOwner,
+            EventObserver {
+                openTechOperationsFragment(it)
+            }
         )
         routePointsMapViewModel.mapPoints.observe(viewLifecycleOwner) { list ->
             points?.clear()
             points = mutableListOf<RouteDataModel>().apply { addAll(list) }
+        }
+        routePointsMapViewModel.mapImage.observe(viewLifecycleOwner) { imageFile ->
+            loadImage(imageFile)
         }
 
         btnZoomPlus.setOnClickListener {
@@ -100,58 +103,59 @@ class RoutePointsMapFragment : BaseFragment(R.layout.fragment_route_points_map) 
                 params.topMargin = it.toInt()
             }
 
-            val view = MapPoint(requireContext(), point.position.toString(), point.completed).apply {
-                setOnClickListener {
-                    routePointsMapViewModel.routePointClick(point)
+            val view =
+                MapPoint(requireContext(), point.position.toString(), point.completed).apply {
+                    setOnClickListener {
+                        routePointsMapViewModel.routePointClick(point)
+                    }
                 }
-            }
             pointsContainer.addView(view, params)
         }
     }
 
-    private fun loadImage(url: String) {
+    private fun loadImage(file: File) {
         Glide
-                .with(requireContext())
-                .asBitmap()
-                .load(apiUrl + url)
-                .into(object : SimpleTarget<Bitmap>() {
-                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                        bitmap = resource
-                        tvError.isVisible = false
-                        progressView.changeVisibility(false)
-                        mapIV.apply {
-                            setImageBitmap(resource)
+            .with(requireContext())
+            .asBitmap()
+            .load(file)
+            .into(object : SimpleTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    bitmap = resource
+                    tvError.isVisible = false
+                    progressView.changeVisibility(false)
+                    mapIV.apply {
+                        setImageBitmap(resource)
 
-                            Handler(Looper.getMainLooper()).postDelayed({ //hack for not showing points after other screen
-                                displayRect?.let {
-                                    calculatePoints(it)
-                                }
-                            }, 100)
-                        }
+                        Handler(Looper.getMainLooper()).postDelayed({ //hack for not showing points after other screen
+                            displayRect?.let {
+                                calculatePoints(it)
+                            }
+                        }, 100)
                     }
+                }
 
-                    override fun onLoadFailed(errorDrawable: Drawable?) {
-                        Glide.with(requireContext()).clear(mapIV)
-                        tvError.isVisible = true
-                        progressView.changeVisibility(false)
-                        super.onLoadFailed(errorDrawable)
-                    }
+                override fun onLoadFailed(errorDrawable: Drawable?) {
+                    Glide.with(requireContext()).clear(mapIV)
+                    tvError.isVisible = true
+                    progressView.changeVisibility(false)
+                    super.onLoadFailed(errorDrawable)
+                }
 
-                    override fun onLoadStarted(placeholder: Drawable?) {
-                        tvError.isVisible = false
-                        progressView.changeVisibility(true)
-                        super.onLoadStarted(placeholder)
-                    }
-                })
+                override fun onLoadStarted(placeholder: Drawable?) {
+                    tvError.isVisible = false
+                    progressView.changeVisibility(true)
+                    super.onLoadStarted(placeholder)
+                }
+            })
     }
 
     private fun openTechOperationsFragment(routeData: RouteDataModel) {
         val args = bundleOf(
-                TechOperationsFragment.KEY_ROUTE_DATA to routeData
+            TechOperationsFragment.KEY_ROUTE_DATA to routeData
         )
         findNavController().navigate(
-                R.id.action_routePointsFragment_to_techOperationsFragment,
-                args
+            R.id.action_routePointsFragment_to_techOperationsFragment,
+            args
         )
     }
 }

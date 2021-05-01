@@ -2,14 +2,17 @@ package ru.madbrains.inspection.ui.main.equipmentList
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import ru.madbrains.data.network.ApiData
+import ru.madbrains.domain.interactor.DetoursInteractor
+import ru.madbrains.domain.model.AppDirType
 import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.EquipmentListUiModel
 
-class EquipmentListViewModel : BaseViewModel() {
+class EquipmentListViewModel(
+    private val detoursInteractor: DetoursInteractor
+) : BaseViewModel() {
     private val _equipmentList = MutableLiveData<List<DiffItem>>()
     val equipmentList: LiveData<List<DiffItem>> = _equipmentList
     private val _navigateToEquipment = MutableLiveData<Event<EquipmentModel>>()
@@ -25,7 +28,7 @@ class EquipmentListViewModel : BaseViewModel() {
                         name = equipment.name,
                         type = equipment.typeEquipment,
                         images = equipment.getImageUrls().map {
-                            ApiData.apiUrl + it.url
+                            detoursInteractor.getFileInFolder(it.name, AppDirType.Docs)
                         }
                     )
                 )

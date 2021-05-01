@@ -3,6 +3,7 @@ package ru.madbrains.inspection.ui.main
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Environment
 import android.view.View
 import android.webkit.CookieManager
 import androidx.appcompat.app.AlertDialog
@@ -34,6 +35,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     }
 
     private val mainViewModel: MainViewModel by viewModel()
+    private val syncViewModel: SyncViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,8 +74,18 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         mainViewModel.showExitDialog.observe(this, EventObserver {
             showExitDialog()
         })
-
-        mainViewModel.refreshInitialData()
+        syncViewModel.openSyncDialog.observe(this, EventObserver {
+            navController.navigate(R.id.to_btSyncPanelFragment)
+        })
+        syncViewModel.showSnackBar.observe(this, EventObserver {
+            showSnackBar(resources.getString(it))
+        })
+        syncViewModel.globalProgress.observe(this, Observer {
+            progressView.changeVisibility(it)
+        })
+        syncViewModel.initAction(
+            externalCacheDir, getExternalFilesDir("")
+        )
     }
 
     private fun setupMenu() {
@@ -138,7 +150,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         val alertDialog = AlertDialog.Builder(this)
         alertDialog.apply {
             setMessage(strings[R.string.fragment_dialog_exit_app])
-            setPositiveButton(strings[R.string.fragment_dialog_btn_exit]
+            setPositiveButton(
+                strings[R.string.fragment_dialog_btn_exit]
             ) { _, _ ->
                 mainDrawer.closeDrawer(GravityCompat.START)
                 mainViewModel.logout()
@@ -153,12 +166,11 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     }
 
     private fun showSnackBar(text: String) {
-
         val snackBar = Snackbar
-                .make(coordinatorLayoutMain, text, Snackbar.LENGTH_SHORT)
-                .setAction(strings[R.string.fragment_add_defect_snackbar_button], View.OnClickListener {
+            .make(coordinatorLayoutMain, text, Snackbar.LENGTH_SHORT)
+            .setAction(strings[R.string.fragment_add_defect_snackbar_button], View.OnClickListener {
 
-                })
+            })
         snackBar.setTextColor(colors[R.color.textWhite])
         snackBar.setActionTextColor(colors[R.color.accidentDark])
         snackBar.setBackgroundTint(colors[R.color.colorPrimaryDark])

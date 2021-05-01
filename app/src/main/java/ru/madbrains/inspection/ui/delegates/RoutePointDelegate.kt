@@ -12,7 +12,7 @@ fun routePointDelegate(clickListener: (RoutePointUiModel) -> Unit) =
 
         bind {
             itemView.apply {
-                if(item.clickable) clContainer.setOnClickListener {
+                if (item.clickable) clContainer.setOnClickListener {
                     clickListener.invoke(item)
                 }
                 tvPointNumber.text = item.position.toString()
@@ -29,6 +29,7 @@ fun routePointDelegate(clickListener: (RoutePointUiModel) -> Unit) =
 
 data class RoutePointUiModel(
     val id: String,
+    val parentId: String?,
     val name: String,
     val position: Int?,
     val completed: Boolean = false,

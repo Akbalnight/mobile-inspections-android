@@ -32,7 +32,13 @@ class EquipmentTabCommonDataFragment : BaseFragment(R.layout.fragment_equipment_
         equipmentViewModel.equipmentImageList.observe(viewLifecycleOwner, Observer { images ->
             rvEquipmentImages.run {
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                addItemDecoration(LinearHorizontalSpacingDecoration(resources.getDimensionPixelSize(R.dimen.carousel_spacing)))
+                addItemDecoration(
+                    LinearHorizontalSpacingDecoration(
+                        resources.getDimensionPixelSize(
+                            R.dimen.carousel_spacing
+                        )
+                    )
+                )
                 adapter = carouselImageAdapter.apply {
                     items = images
                 }

@@ -8,27 +8,25 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_route_list.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.madbrains.domain.model.DetourModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
+import ru.madbrains.inspection.extensions.clickWithDebounce
 import ru.madbrains.inspection.ui.adapters.DetourAdapter
+import ru.madbrains.inspection.ui.main.SyncViewModel
 import ru.madbrains.inspection.ui.main.routes.DetoursViewModel
 import ru.madbrains.inspection.ui.main.routes.points.RoutePointsFragment
 
 class RouteListFragment : BaseFragment(R.layout.fragment_route_list) {
 
-    private val routeListViewModel: RouteListViewModel by viewModel()
     private val detoursViewModel: DetoursViewModel by sharedViewModel()
+    private val syncViewModel: SyncViewModel by sharedViewModel()
 
     private val routesAdapter by lazy {
         DetourAdapter(
             onDetourClick = {
-                val detour = detoursViewModel.detourModels.find { detourModel ->
-                    detourModel.id == it.id
-                }
-                routeListViewModel.routeClick(detour)
+                detoursViewModel.routeClick(it.id)
             }
         )
     }
@@ -39,16 +37,16 @@ class RouteListFragment : BaseFragment(R.layout.fragment_route_list) {
 
         rvRoutes.adapter = routesAdapter
 
-        btnGetData.setOnClickListener {
-            detoursViewModel.getDetours()
+        btnGetData.clickWithDebounce {
+            syncViewModel.startSync()
         }
 
         detoursViewModel.detours.observe(viewLifecycleOwner, Observer {
             routesAdapter.items = it
-            ivGetData.isVisible = false
-            btnGetData.isVisible = false
+            ivGetData.isVisible = it.isEmpty()
+            btnGetData.isVisible = it.isEmpty()
         })
-        routeListViewModel.navigateToRoutePoints.observe(viewLifecycleOwner, EventObserver {
+        detoursViewModel.navigateToRoutePoints.observe(viewLifecycleOwner, EventObserver {
             openRoutePointsFragment(it)
         })
     }
@@ -57,6 +55,6 @@ class RouteListFragment : BaseFragment(R.layout.fragment_route_list) {
         val args = bundleOf(
             RoutePointsFragment.KEY_DETOUR to route
         )
-        findNavController().navigate(R.id.action_routesFragment_to_routePointsFragment, args)
+        findNavController().navigate(R.id.action_DetoursFragment_to_routePointsFragment, args)
     }
 }

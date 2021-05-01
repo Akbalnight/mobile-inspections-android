@@ -49,9 +49,11 @@ class RouteCalendarFragment : BaseFragment(R.layout.fragment_route_calendar) {
             routeCalendarViewModel.updateRouteDates(it.filterIsInstance<DetourUiModel>())
             calendarView.notifyCalendarChanged()
         })
-        routeCalendarViewModel.navigateToDateRouteList.observe(viewLifecycleOwner, EventObserver { date ->
-            openDateRouteList(date)
-        })
+        routeCalendarViewModel.navigateToDateRouteList.observe(
+            viewLifecycleOwner,
+            EventObserver { date ->
+                openDateRouteList(date)
+            })
     }
 
     private fun setupCalendar() {
@@ -108,6 +110,6 @@ class RouteCalendarFragment : BaseFragment(R.layout.fragment_route_calendar) {
         val args = bundleOf(
             DateRouteListFragment.KEY_TOOLBAR_TITLE to date
         )
-        findNavController().navigate(R.id.action_routesFragment_to_dateRouteListFragment, args)
+        findNavController().navigate(R.id.action_DetoursFragment_to_dateRouteListFragment, args)
     }
 }

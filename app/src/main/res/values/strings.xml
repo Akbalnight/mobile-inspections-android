@@ -17,7 +17,7 @@
     <!-- WebViewFragment -->
     <string name="fragment_web_view_title_auth">Авторизация</string>
 
-    <!-- RoutesFragment -->
+    <!-- DetoursFragment -->
     <string name="fragment_routes_title">Реестр обходов</string>
     <string name="fragment_routes_route_list">Список</string>
     <string name="fragment_routes_route_calendar">Календарь</string>
@@ -128,6 +128,24 @@
     <string name="fragment_equipment_list_type">Тип оборудования</string>
     <string name="fragment_equipment_list_name">Наименование</string>
 
+    <!-- BtSyncPanelFragment -->
+
+    <string name="get_data">Получение данных…</string>
+    <string name="sync_detours">Обходы</string>
+    <string name="sync_defects">Дефекты</string>
+    <string name="sync_media">Медиа-файлы</string>
+    <string name="sync_documents">Документация</string>
+    <string name="sync_etc">Прочее</string>
+
+    <!-- SyncFragment -->
+    <string name="fragment_sync_get">Получение:</string>
+    <string name="fragment_sync_send">Отправка:</string>
+    <string name="fragment_sync_last_sync">Последняя синхронизация</string>
+    <string name="fragment_get_data">Получить данные</string>
+    <string name="fragment_sync_send_data">Отправить данные</string>
+    <string name="fragment_sync_send_data_error">Сбой передачи данных. Повторите попытку</string>
+
+
     <!-- common -->
     <string name="yes">Да</string>
     <string name="no">Нет</string>
@@ -155,6 +173,9 @@
     <string name="fragment_dialog_point_completed_title">Все контрольные точки пройдены</string>
     <string name="fragment_dialog_points_completed_description">Вы уверены, что хотите сохранить обход и перейти в "Реестр обходов", или хотите внести правки?</string>
     <string name="rfid_s">RFID: %s</string>
+    <string name="confirm">Подтвердить</string>
+    <string name="proceed">Продолжить</string>
+    <string name="cancel">Отмена</string>
 
     <string-array name="months">
         <item>Январь</item>

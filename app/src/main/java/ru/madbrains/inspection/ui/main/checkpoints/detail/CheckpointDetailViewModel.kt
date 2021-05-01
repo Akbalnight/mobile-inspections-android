@@ -7,21 +7,21 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
 import ru.madbrains.data.utils.FileUtil
 import ru.madbrains.data.utils.RfidDevice
-import ru.madbrains.domain.interactor.RoutesInteractor
+import ru.madbrains.domain.interactor.DetoursInteractor
+import ru.madbrains.domain.model.AppDirType
 import ru.madbrains.domain.model.CheckpointModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.MediaUiModel
-import java.io.File
 import java.util.*
 
 class CheckpointDetailViewModel(
-    private val routesInteractor: RoutesInteractor,
+    private val detoursInteractor: DetoursInteractor,
     private val fileUtil: FileUtil,
     private val rfidDevice: RfidDevice
-    ) : BaseViewModel() {
+) : BaseViewModel() {
 
     private val _isChanged = MutableLiveData<Boolean>()
     val isChanged: LiveData<Boolean> = _isChanged
@@ -69,7 +69,7 @@ class CheckpointDetailViewModel(
 
     fun setRawData(data: CheckpointModel?) {
         _checkpointRawData = data
-        _rfidDataReceiver.value = Event(data?.rfidCode?:"-")
+        _rfidDataReceiver.value = Event(data?.rfidCode ?: "-")
         _rfidCode = data?.rfidCode
     }
 
@@ -88,13 +88,13 @@ class CheckpointDetailViewModel(
     }
 
     fun addImage(image: Bitmap) {
+        val id = UUID.randomUUID().toString()
         mediaModels.add(
-                MediaUiModel(
-                        id = UUID.randomUUID().toString(),
-                        imageBitmap = image,
-                        isNetwork = false,
-                        isImage = true
-                )
+            MediaUiModel(
+                id = id,
+                file = fileUtil.createJpgFile(image, detoursInteractor.getFileInFolder("$id.jpg", AppDirType.Local)),
+                isLocal = true
+            )
         )
         _isChanged.value = true
         updateMediaList()
@@ -113,14 +113,15 @@ class CheckpointDetailViewModel(
     }
 
     fun sendUpdate() {
-        _checkpointRawData?.let { model->
-            _rfidCode?.let { rfid->
-                routesInteractor.updateCheckpoint(model.id, rfid)
+        _checkpointRawData?.let { model ->
+            _rfidCode?.let { rfid ->
+                detoursInteractor.updateCheckpointRemote(model.id, rfid)
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnSubscribe { _rfidProgress.postValue(true) }
                     .doAfterTerminate { _rfidProgress.postValue(false) }
                     .subscribe({
-                        _showSnackBar.value = Event(R.string.fragment_checkpoint_detail_saved_success)
+                        _showSnackBar.value =
+                            Event(R.string.fragment_checkpoint_detail_saved_success)
                         _popAndRefresh.value = Event(Unit)
                     }, {
                         it.printStackTrace()
@@ -146,7 +147,7 @@ class CheckpointDetailViewModel(
         }
     }
 
-    fun startRfidScan(){
+    fun startRfidScan() {
         rfidDevice.startScan({
             _rfidProgress.value = it
         }) {
@@ -156,7 +157,7 @@ class CheckpointDetailViewModel(
         }
     }
 
-    fun stopRfidScan(){
+    fun stopRfidScan() {
         rfidDevice.stopScan()
     }
 

@@ -1,16 +1,17 @@
-package ru.madbrains.inspection.ui.auth.serversettings
+package ru.madbrains.inspection.ui.auth.dialogs
 
 import android.os.Bundle
-import kotlinx.android.synthetic.main.fragment_server_settings.*
+import kotlinx.android.synthetic.main.fragment_bt_server_settings.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.madbrains.data.network.ApiData
 import ru.madbrains.data.network.OAuthData
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseBottomSheetDialogFragment
 
-class ServerSettingsFragment : BaseBottomSheetDialogFragment(R.layout.fragment_server_settings) {
+class BtServerSettingsFragment :
+    BaseBottomSheetDialogFragment(R.layout.fragment_bt_server_settings) {
 
-    private val serverSettingsViewModel: ServerSettingsViewModel by viewModel()
+    private val serverSettingsViewModel: BtServerSettingsViewModel by viewModel()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

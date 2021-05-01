@@ -2,7 +2,6 @@ package ru.madbrains.inspection.ui.main.equipment.tabs
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Environment
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_equipment_tab_documents.*
@@ -12,18 +11,14 @@ import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.ui.adapters.FilesAdapter
 import ru.madbrains.inspection.ui.main.equipment.EquipmentViewModel
-import timber.log.Timber
-import java.io.File
 
 class EquipmentTabDocumentsFragment : BaseFragment(R.layout.fragment_equipment_tab_documents) {
 
     private val equipmentViewModel: EquipmentViewModel by sharedViewModel()
     private val filesAdapter by lazy {
         FilesAdapter(
-            onFileClick = { file->
-                context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)?.let { directory ->
-                    equipmentViewModel.downloadAndOpenFile(file, directory)
-                }
+            onFileClick = { file ->
+                equipmentViewModel.openFile(file)
             }
         )
     }
@@ -33,6 +28,7 @@ class EquipmentTabDocumentsFragment : BaseFragment(R.layout.fragment_equipment_t
         equipmentViewModel.prepareFiles()
         observeData()
     }
+
     private fun observeData() {
         equipmentViewModel.files.observe(viewLifecycleOwner, Observer { files ->
             rvFiles.run {
@@ -54,7 +50,7 @@ class EquipmentTabDocumentsFragment : BaseFragment(R.layout.fragment_equipment_t
                 newIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 context.startActivity(newIntent)
-            } catch (e: Throwable){
+            } catch (e: Throwable) {
                 e.printStackTrace()
                 equipmentViewModel.showError()
             }

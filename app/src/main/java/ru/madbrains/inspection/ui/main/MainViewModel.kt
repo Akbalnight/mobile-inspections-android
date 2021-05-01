@@ -2,20 +2,21 @@ package ru.madbrains.inspection.ui.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
 import retrofit2.HttpException
 import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.domain.interactor.AuthInteractor
-import ru.madbrains.domain.interactor.RoutesInteractor
-import ru.madbrains.domain.model.DetourStatusHolder
+import ru.madbrains.domain.interactor.DetoursInteractor
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
+import timber.log.Timber
 
 class MainViewModel(
     private val preferenceStorage: PreferenceStorage,
     private val authInteractor: AuthInteractor,
-    private val routesInteractor: RoutesInteractor
+    private val detoursInteractor: DetoursInteractor
 ) : BaseViewModel() {
 
     val username: String
@@ -89,17 +90,6 @@ class MainViewModel(
         _showExitDialog.value = Event(Unit)
     }
 
-    fun refreshInitialData() {
-        routesInteractor.getDetoursStatuses()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                preferenceStorage.detourStatuses = DetourStatusHolder(it)
-            }, {
-                it.printStackTrace()
-            })
-            .addTo(disposables)
-    }
-
     fun logout() {
         val accessToken = preferenceStorage.token.orEmpty()
 
@@ -107,15 +97,24 @@ class MainViewModel(
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { _progressVisibility.postValue(true) }
             .doAfterTerminate { _progressVisibility.postValue(false) }
+            .onErrorResumeNext {
+                //TODO change to 401 when server is ready
+                if (it is HttpException && it.code() == 500) {
+                    Completable.complete()
+                } else{
+                    throw it
+                }
+            }
+            //.andThen(detoursInteractor.cleanEverything())
             .subscribe({
-                preferenceStorage.clearData()
+                //preferenceStorage.clearData()
+                preferenceStorage.token = null
+                preferenceStorage.refreshToken = null
+                preferenceStorage.codeVerifier = null
+                preferenceStorage.userId = null
+                preferenceStorage.username = null
                 _navigateToAuthorization.postValue(Event(Unit))
             }, {
-                //TODO change to 401 when server is ready
-                if(it is HttpException && it.code() == 500){
-                    preferenceStorage.clearData()
-                    _navigateToAuthorization.postValue(Event(Unit))
-                }
                 it.printStackTrace()
             })
             .addTo(disposables)

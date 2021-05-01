@@ -18,7 +18,7 @@ class LauncherViewModel(
     init {
         initApi(preferenceStorage)
 //        _launchDestination.value = Event(LaunchDestination.Main)
-       if (preferenceStorage.token.isNullOrEmpty()) {
+        if (preferenceStorage.token.isNullOrEmpty()) {
             _launchDestination.value = Event(LaunchDestination.Authorization)
         } else {
             _launchDestination.value = Event(LaunchDestination.Main)

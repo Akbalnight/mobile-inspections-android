@@ -1,11 +1,11 @@
-package ru.madbrains.data.network.response
+package ru.madbrains.data.network.models
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import java.util.*
 
 @JsonClass(generateAdapter = true)
-data class GetDetoursResp(
+data class DetoursRemote(
     @field:Json(name = "id") val id: String,
     @field:Json(name = "code") val code: Int?,
     @field:Json(name = "routeId") val routeId: String?,
@@ -29,21 +29,21 @@ data class GetDetoursResp(
     @field:Json(name = "possibleDeviationDateFinish") val possibleDeviationDateFinish: Int?,
     @field:Json(name = "isDefectExist") val isDefectExist: Int?,
     @field:Json(name = "frozen") val frozen: Boolean?,
-    @field:Json(name = "route") val route: GetRouteResp
+    @field:Json(name = "route") val route: RouteRemote
 )
 
 @JsonClass(generateAdapter = true)
-data class GetRouteResp(
+data class RouteRemote(
     @field:Json(name = "id") val id: String,
     @field:Json(name = "name") val name: String,
     @field:Json(name = "code") val code: Int?,
     @field:Json(name = "duration") val duration: Int?,
-    @field:Json(name = "routesData") val routesData: List<GetRouteDataResp>,
-    @field:Json(name = "routeMaps") val routeMaps: List<GetRouteMapsResp>?
+    @field:Json(name = "routesData") val routesData: List<RouteDataRemote>,
+    @field:Json(name = "routeMaps") val routeMaps: List<FileRemote>?
 )
 
 @JsonClass(generateAdapter = true)
-data class GetRouteDataResp(
+data class RouteDataRemote(
     @field:Json(name = "id") val id: String?,
     @field:Json(name = "techMapId") val techMapId: String?,
     @field:Json(name = "controlPointId") val controlPointId: String?,
@@ -54,13 +54,13 @@ data class GetRouteDataResp(
     @field:Json(name = "xLocation") val xLocation: Int?,
     @field:Json(name = "yLocation") val yLocation: Int?,
     @field:Json(name = "position") val position: Int?,
-    @field:Json(name = "equipments") val equipments: List<GetEquipmentResp>?,
-    @field:Json(name = "techMap") val techMap: GetTechMapResp?,
+    @field:Json(name = "equipments") val equipment: List<EquipmentRemote>?,
+    @field:Json(name = "techMap") val techMap: TechMapRemote?,
     @field:Json(name = "completed") val completed: Boolean = false
 )
 
 @JsonClass(generateAdapter = true)
-data class GetEquipmentResp(
+data class EquipmentRemote(
     @field:Json(name = "id") val id: String,
     @field:Json(name = "code") val code: Int?,
     @field:Json(name = "name") val name: String?,
@@ -79,21 +79,13 @@ data class GetEquipmentResp(
     @field:Json(name = "dateWarrantyStart") val dateWarrantyStart: Date?,
     @field:Json(name = "dateWarrantyFinish") val dateWarrantyFinish: Date?,
     @field:Json(name = "typeEquipment") val typeEquipment: String?,
-    @field:Json(name = "warrantyFiles") val warrantyFiles: List<GetEquipmentFileResp>?,
-    @field:Json(name = "attachmentFiles") val attachmentFiles: List<GetEquipmentFileResp>?,
+    @field:Json(name = "warrantyFiles") val warrantyFiles: List<FileRemote>?,
+    @field:Json(name = "attachmentFiles") val attachmentFiles: List<FileRemote>?,
     @field:Json(name = "deleted") val deleted: Boolean?
-)
-@JsonClass(generateAdapter = true)
-data class GetEquipmentFileResp(
-    @field:Json(name = "id") val id: String,
-    @field:Json(name = "url") val url: String,
-    @field:Json(name = "name") val name: String,
-    @field:Json(name = "extension") val extension: String,
-    @field:Json(name = "ts") val date: Date?
 )
 
 @JsonClass(generateAdapter = true)
-data class GetTechMapResp(
+data class TechMapRemote(
     @field:Json(name = "id") val id: String,
     @field:Json(name = "name") val name: String?,
     @field:Json(name = "code") val code: Int?,
@@ -101,11 +93,11 @@ data class GetTechMapResp(
     @field:Json(name = "techMapsStatusId") val techMapsStatusId: String?,
     @field:Json(name = "parentId") val parentId: String?,
     @field:Json(name = "isGroup") val isGroup: Boolean?,
-    @field:Json(name = "techOperations") val techOperations: List<GetTechOperationResp>
+    @field:Json(name = "techOperations") val techOperations: List<TechOperationRemote>
 )
 
 @JsonClass(generateAdapter = true)
-data class GetTechOperationResp(
+data class TechOperationRemote(
     @field:Json(name = "id") val id: String,
     @field:Json(name = "name") val name: String?,
     @field:Json(name = "code") val code: Int?,
@@ -117,13 +109,4 @@ data class GetTechOperationResp(
     @field:Json(name = "duration") val duration: Int?,
     @field:Json(name = "techMapId") val techMapId: String?,
     @field:Json(name = "position") val position: Int?
-)
-
-@JsonClass(generateAdapter = true)
-data class GetRouteMapsResp(
-        @field:Json(name = "id") val id: String,
-        @field:Json(name = "url") val url: String,
-        @field:Json(name = "name") val name: String?,
-        @field:Json(name = "extension") val extension: String,
-        @field:Json(name = "position") val position: Int?
 )

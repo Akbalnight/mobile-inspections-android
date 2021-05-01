@@ -4,17 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
-import ru.madbrains.domain.interactor.RoutesInteractor
+import ru.madbrains.domain.interactor.DetoursInteractor
 import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.ui.delegates.EquipmentSelectUiModel
 
-class EquipmentSelectListViewModel(private val routesInteractor: RoutesInteractor) :
-        BaseViewModel() {
-
-    private var names: List<String> = emptyList()
-    private var controlPointsIds: List<String> = emptyList()
+class EquipmentSelectListViewModel(private val detoursInteractor: DetoursInteractor) :
+    BaseViewModel() {
 
     val deviceListModels = mutableListOf<EquipmentModel>()
     private var currentDevice: EquipmentModel? = null
@@ -56,31 +53,31 @@ class EquipmentSelectListViewModel(private val routesInteractor: RoutesInteracto
 
     fun getEquipments() {
         if (deviceListModels.isNullOrEmpty()) {
-            routesInteractor.getEquipments(names, controlPointsIds)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnSubscribe { _progressVisibility.postValue(true) }
-                    .doAfterTerminate { _progressVisibility.postValue(false) }
-                    .subscribe({ items ->
-                        deviceListModels.clear()
-                        deviceListModels.addAll(items)
-                        updateDeviceList()
-                    }, {
-                        it.printStackTrace()
-                    })
-                    .addTo(disposables)
+            detoursInteractor.getEquipmentsDb()
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { _progressVisibility.postValue(true) }
+                .doAfterTerminate { _progressVisibility.postValue(false) }
+                .subscribe({ items ->
+                    deviceListModels.clear()
+                    deviceListModels.addAll(items)
+                    updateDeviceList()
+                }, {
+                    it.printStackTrace()
+                })
+                .addTo(disposables)
         }
     }
 
     fun searchEquipments(query: String) {
         val items = deviceListModels
-                .filter { it.name.orEmpty().contains(query, true) }
-                .map {
-                    EquipmentSelectUiModel(
-                            id = it.id,
-                            name = it.name.orEmpty(),
-                            isSelected = it.id == currentDevice?.id
-                    )
-                }
+            .filter { it.name.orEmpty().contains(query, true) }
+            .map {
+                EquipmentSelectUiModel(
+                    id = it.id,
+                    name = it.name.orEmpty(),
+                    isSelected = it.id == currentDevice?.id
+                )
+            }
         _deviceList.value = items
     }
 
@@ -88,11 +85,11 @@ class EquipmentSelectListViewModel(private val routesInteractor: RoutesInteracto
         val items = mutableListOf<EquipmentSelectUiModel>().apply {
             deviceListModels.map { item ->
                 add(
-                        EquipmentSelectUiModel(
-                                id = item.id,
-                                name = item.name.orEmpty(),
-                                isSelected = item.id == currentDevice?.id
-                        )
+                    EquipmentSelectUiModel(
+                        id = item.id,
+                        name = item.name.orEmpty(),
+                        isSelected = item.id == currentDevice?.id
+                    )
                 )
             }
         }

@@ -1,7 +1,6 @@
 package ru.madbrains.inspection.ui.launcher
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import androidx.appcompat.app.AppCompatActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.madbrains.inspection.base.EventObserver

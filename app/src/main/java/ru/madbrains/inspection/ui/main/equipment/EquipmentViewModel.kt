@@ -1,18 +1,13 @@
 package ru.madbrains.inspection.ui.main.equipment
 
 import android.content.ActivityNotFoundException
-import android.net.Uri
-import android.os.Parcelable
 import android.webkit.MimeTypeMap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.rxkotlin.addTo
-import okhttp3.ResponseBody
 import ru.madbrains.data.extensions.toDDMMYYYY
 import ru.madbrains.data.extensions.toHHmmYYYYMMDD
-import ru.madbrains.data.network.ApiData
-import ru.madbrains.domain.interactor.RoutesInteractor
+import ru.madbrains.domain.interactor.DetoursInteractor
+import ru.madbrains.domain.model.AppDirType
 import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseViewModel
@@ -20,11 +15,10 @@ import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.EquipmentDetailMediaUiModel
 import ru.madbrains.inspection.ui.delegates.FilesUiModel
-import java.io.*
-import java.util.*
+import java.io.File
 
 
-class EquipmentViewModel(private val routesInteractor: RoutesInteractor) : BaseViewModel() {
+class EquipmentViewModel(private val detoursInteractor: DetoursInteractor) : BaseViewModel() {
     var savedEquipmentData: EquipmentModel? = null
 
     private val _equipmentImageList = MutableLiveData<List<DiffItem>>()
@@ -55,10 +49,19 @@ class EquipmentViewModel(private val routesInteractor: RoutesInteractor) : BaseV
     fun prepareCommonData() {
         savedEquipmentData?.let { data ->
             data.getImageUrls().map {
-                EquipmentDetailMediaUiModel(url = ApiData.apiUrl + it.url)
+                EquipmentDetailMediaUiModel(
+                    detoursInteractor.getFileInFolder(
+                        it.name,
+                        AppDirType.Docs
+                    )
+                )
             }.let { images ->
                 _equipmentImageList.value =
-                    if (images.isNotEmpty()) images else arrayListOf(EquipmentDetailMediaUiModel("placeholder"))
+                    if (images.isNotEmpty()) images else arrayListOf(
+                        EquipmentDetailMediaUiModel(
+                            null
+                        )
+                    )
             }
 
             _commonSpecsList.value = mapOf(
@@ -89,7 +92,7 @@ class EquipmentViewModel(private val routesInteractor: RoutesInteractor) : BaseV
         }
     }
 
-    fun prepareFiles(){
+    fun prepareFiles() {
         savedEquipmentData?.let { data ->
             _files.value = data.getAllDocs().map {
                 FilesUiModel(
@@ -97,66 +100,25 @@ class EquipmentViewModel(private val routesInteractor: RoutesInteractor) : BaseV
                     url = it.url,
                     name = it.name,
                     extension = it.extension,
-                    date = it.date?.toHHmmYYYYMMDD()?:"-"
+                    date = it.date?.toHHmmYYYYMMDD() ?: "-"
                 )
             }
         }
     }
 
-    fun downloadAndOpenFile(file: FilesUiModel, directory: File) {
-        routesInteractor.downloadFile(ApiData.apiUrl + file.url)
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { _progressVisibility.postValue(true) }
-            .doAfterTerminate { _progressVisibility.postValue(false) }
-            .subscribe({ response ->
-                if (response.isSuccessful) {
-                    response.body()?.run {
-                        saveFile(this, file, directory)
-                    }
-                }
-            }, {
-                _commonError.value = Event(Unit)
-            })
-            .addTo(disposables)
-    }
-
-    fun showError(){
-        _commonError.value = Event(Unit)
-    }
-
-    private fun saveFile(body: ResponseBody, fileUI: FilesUiModel, directory: File) {
-        try {
-            val file = File(directory, fileUI.name)
-            var inputStream: InputStream? = null
-            var outputStream: OutputStream? = null
-            try {
-                val fileReader = ByteArray(4096)
-                var fileSizeDownloaded: Long = 0
-                inputStream = body.byteStream()
-                outputStream = FileOutputStream(file)
-                while (true) {
-                    val read = inputStream.read(fileReader)
-                    if (read == -1) {
-                        break
-                    }
-                    outputStream.write(fileReader, 0, read)
-                    fileSizeDownloaded += read.toLong()
-                }
-                outputStream.flush()
-            } catch (e: IOException) {
-                _commonError.value = Event(Unit)
-                e.printStackTrace()
-            } finally {
-                inputStream?.close()
-                outputStream?.close()
-                openFile(file, fileUI)
-            }
-        } catch (e: IOException) {
+    fun openFile(fileUI: FilesUiModel) {
+        detoursInteractor.getFileInFolder(fileUI.name, AppDirType.Docs)?.let { file ->
+            openFile(file, fileUI)
+        } ?: run {
             _commonError.value = Event(Unit)
         }
     }
 
-    private fun openFile(file:File, fileUI: FilesUiModel) {
+    fun showError() {
+        _commonError.value = Event(Unit)
+    }
+
+    private fun openFile(file: File, fileUI: FilesUiModel) {
         val myMime = MimeTypeMap.getSingleton()
         val mimeType = myMime.getMimeTypeFromExtension(fileUI.extension)
         try {

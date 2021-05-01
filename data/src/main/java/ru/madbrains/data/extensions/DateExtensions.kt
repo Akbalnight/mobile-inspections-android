@@ -7,10 +7,12 @@ fun Date.toDDMMYYYY(): String {
     val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
     return dateFormat.format(this)
 }
+
 fun Date.toYYYYMMDD(): String {
     val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     return dateFormat.format(this)
 }
+
 fun Date.toHHmmYYYYMMDD(): String {
     val dateFormat = SimpleDateFormat("HH:mm  dd.MM.yyyy", Locale.getDefault())
     return dateFormat.format(this)
@@ -18,6 +20,11 @@ fun Date.toHHmmYYYYMMDD(): String {
 
 fun Date.toyyyyMMddTHHmmssXXX(): String {
     val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.getDefault())
+    return dateFormat.format(this)
+}
+
+fun Date.toyyyyMMddHHmm(): String {
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
     return dateFormat.format(this)
 }
 

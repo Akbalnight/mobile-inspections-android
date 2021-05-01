@@ -10,7 +10,7 @@
         android:id="@+id/defectDetailFragment"
         android:name="ru.madbrains.inspection.ui.main.defects.defectdetail.DefectDetailFragment"
         android:label="DetailDefectFragment"
-        tools:layout="@layout/fragment_defect_detail" >
+        tools:layout="@layout/fragment_defect_detail">
 
         <action
             android:id="@+id/action_defectDetailFragment_to_deviceSelectListFragment"

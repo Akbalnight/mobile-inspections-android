@@ -11,7 +11,7 @@
         android:id="@+id/defectListFragment"
         android:name="ru.madbrains.inspection.ui.main.defects.defectlist.DefectListFragment"
         android:label="DefectListFragment"
-        tools:layout="@layout/fragment_defect_list" >
+        tools:layout="@layout/fragment_defect_list">
         <action
             android:id="@+id/action_defectListFragment_to_detailFragment"
             app:destination="@id/graph_defects_detail"
