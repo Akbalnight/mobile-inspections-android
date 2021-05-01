@@ -355,6 +355,7 @@ class SyncViewModel(
             .doOnSubscribe { _globalProgress.postValue(true) }
             .doAfterTerminate { _globalProgress.postValue(false) }
             .subscribe ({
+                _sendDataAvailable.postValue(false)
                 detoursInteractor.finishSendSync(Date())
             },{
                 _showSnackBar.postValue(Event(R.string.fragment_sync_send_data_error))
