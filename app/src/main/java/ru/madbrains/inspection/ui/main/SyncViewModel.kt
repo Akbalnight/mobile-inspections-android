@@ -273,6 +273,7 @@ class SyncViewModel(
                 .doAfterTerminate { _globalProgress.postValue(false) }
                 .subscribe({
                     detoursInteractor.finishGetSync(Date())
+                    getChangedDetours()
                 }, {
                     _showSnackBar.postValue(Event(R.string.error))
                     it.printStackTrace()
