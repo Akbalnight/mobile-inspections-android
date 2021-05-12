@@ -32,8 +32,8 @@ class DetoursInteractor(
                         .map { it.id }
                     )
                 models.filter { it.statusId != null }
-                    .filter { it -> it.route.routesData.all { it.techMap != null } }
-                    .filter { it -> it.route.routesData.all { it.equipments != null } }
+                    .filter { it -> it.route.routesData?.all { it.techMap != null } == true }
+                    .filter { it -> it.route.routesData?.all { it.equipments != null } == true }
             }
         }.subscribeOn(Schedulers.io())
     }
@@ -94,12 +94,12 @@ class DetoursInteractor(
     }
 
     fun saveDefectRemote(model: DefectModel): Single<String> {
-        val files = model.files?.filter { it.isLocal }?.mapNotNull { media -> getFileInFolder(media.name, AppDirType.Local) }
+        val files = model.files?.filter { it.isLocal }?.mapNotNull { media -> getFileInFolder(media.fileName, AppDirType.Local) }
         return routesRepository.saveDefect(model, files).subscribeOn(Schedulers.io())
     }
 
     fun updateDefectRemote(model: DefectModel): Single<String> {
-        val files = model.files?.filter { it.isLocal }?.mapNotNull { media -> getFileInFolder(media.name, AppDirType.Local) }
+        val files = model.files?.filter { it.isLocal }?.mapNotNull { media -> getFileInFolder(media.fileName, AppDirType.Local) }
         return routesRepository.updateDefect(model, files).subscribeOn(Schedulers.io())
     }
 

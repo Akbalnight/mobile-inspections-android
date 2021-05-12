@@ -31,7 +31,13 @@ class RoutePointsMapViewModel(
     fun setData(detour: DetourModel) {
         detourModel = detour
         val levels = detour.route.routeMaps?.mapIndexed { i, map ->
-            MapLevelUiModel(map.id, map.name, map.url, i == 0)
+            MapLevelUiModel(
+                id = map.id,
+                fileName = map.fileName,
+                routeMapName = map.routeMapName,
+                url = map.url,
+                isActive = i == 0
+            )
         }.also {
             if (it != null) _mapLevels.value = it
         }
@@ -40,7 +46,13 @@ class RoutePointsMapViewModel(
 
     fun setActiveMap(map: MapLevelUiModel) {
         _mapLevels.value = _mapLevels.value?.map {
-            MapLevelUiModel(it.id, it.name, it.url, map.id == it.id)
+            MapLevelUiModel(
+                id = it.id,
+                fileName = it.fileName,
+                routeMapName = it.routeMapName,
+                url = it.url,
+                isActive = map.id == it.id
+            )
         }
         filterMapPoints(map)
     }
@@ -48,21 +60,22 @@ class RoutePointsMapViewModel(
     private fun filterMapPoints(map: MapLevelUiModel?) {
         if (map == null) return
 
-        _mapPoints.value = detourModel.route.routesData.filter { it.routeMapId == map.id }
+        _mapPoints.value = detourModel.route.routesData?.filter { it.routeMapId == map.id }
     }
 
     fun routePointClick(routeData: RouteDataModel) {
-        val routes = detourModel.route.routesData.sortedBy { it.position }
-        val clickedIndex = routes.indexOf(routeData)
-        val prevWasCompleted = if (clickedIndex > 0) routes[clickedIndex - 1].completed else false
-        val preserveOrder = detourModel.saveOrderControlPoints == true
+        detourModel.route.routesData?.sortedBy { it.position }?.let {routes->
+            val clickedIndex = routes.indexOf(routeData)
+            val prevWasCompleted = if (clickedIndex > 0) routes[clickedIndex - 1].completed else false
+            val preserveOrder = detourModel.saveOrderControlPoints == true
 
-        if (!preserveOrder || routeData.completed || clickedIndex == 0 || prevWasCompleted) {
-            _navigateToTechOperations.value = Event(routeData)
+            if (!preserveOrder || routeData.completed || clickedIndex == 0 || prevWasCompleted) {
+                _navigateToTechOperations.value = Event(routeData)
+            }
         }
     }
 
     fun loadImage(item: MapLevelUiModel) {
-        _mapImage.postValue(detoursInteractor.getFileInFolder(item.name, AppDirType.Docs))
+        _mapImage.postValue(detoursInteractor.getFileInFolder(item.fileName, AppDirType.Docs))
     }
 }

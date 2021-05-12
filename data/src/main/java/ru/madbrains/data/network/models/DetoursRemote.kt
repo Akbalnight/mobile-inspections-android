@@ -38,7 +38,7 @@ data class RouteRemote(
     @field:Json(name = "name") val name: String,
     @field:Json(name = "code") val code: Int?,
     @field:Json(name = "duration") val duration: Int?,
-    @field:Json(name = "routesData") val routesData: List<RouteDataRemote>,
+    @field:Json(name = "routesData") val routesData: List<RouteDataRemote>?,
     @field:Json(name = "routeMaps") val routeMaps: List<FileRemote>?
 )
 

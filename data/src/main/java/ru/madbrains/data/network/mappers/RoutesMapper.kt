@@ -42,7 +42,7 @@ private fun mapGetRouteResp(remote: RouteRemote): RouteModel {
             name = name,
             code = code,
             duration = duration,
-            routesData = routesData.map { mapGetRoutesDataResp(it) },
+            routesData = routesData?.map { mapGetRoutesDataResp(it) },
             routeMaps = routeMaps?.map { mapGetFileResp(it) }
         )
     }
@@ -216,9 +216,10 @@ fun mapGetFileResp(remote: FileRemote): FileModel {
             id = id,
             fileId = fileId,
             url = url,
-            name = name,
+            fileName = name,
             extension = extension,
-            date = date
+            date = date,
+            routeMapName = routeMapName
         )
     }
 }
