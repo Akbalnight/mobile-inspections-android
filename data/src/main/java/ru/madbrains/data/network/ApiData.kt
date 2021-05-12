@@ -1,5 +1,6 @@
 package ru.madbrains.data.network
 
+import android.content.Context
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -21,12 +22,13 @@ object ApiData {
 
     lateinit var inspectionApi: InspectionApi
 
-    private fun getInspectionOkHttpClient(preferenceStorage: PreferenceStorage): OkHttpClient {
+    private fun getInspectionOkHttpClient(preferenceStorage: PreferenceStorage, authenticator: IAuthenticator): OkHttpClient {
         val builder = OkHttpClient.Builder().apply {
             connectTimeout(30, TimeUnit.SECONDS)
             readTimeout(30, TimeUnit.SECONDS)
             writeTimeout(30, TimeUnit.SECONDS)
             addInterceptor(SessionInterceptor(preferenceStorage))
+            authenticator(authenticator)
             if (BuildConfig.DEBUG) {
                 addInterceptor(HttpLoggingInterceptor().apply {
                     level = HttpLoggingInterceptor.Level.BODY
@@ -36,10 +38,10 @@ object ApiData {
         return builder.build()
     }
 
-    fun initApi(preferenceStorage: PreferenceStorage) {
+    fun initApi(preferenceStorage: PreferenceStorage, authenticator: IAuthenticator) {
         inspectionApi = Retrofit.Builder()
             .baseUrl(apiUrl)
-            .client(getInspectionOkHttpClient(preferenceStorage))
+            .client(getInspectionOkHttpClient(preferenceStorage, authenticator))
             .addConverterFactory(MoshiConverterFactory.create(getMoshi()))
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
