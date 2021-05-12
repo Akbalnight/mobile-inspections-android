@@ -7,7 +7,6 @@ import io.reactivex.rxkotlin.addTo
 import ru.madbrains.data.extensions.toDDMMYYYY
 import ru.madbrains.data.extensions.toHHmm
 import ru.madbrains.data.extensions.toddMMyyyyHHmm
-import ru.madbrains.data.extensions.toyyyyMMddTHHmmssXXX
 import ru.madbrains.domain.interactor.DetoursInteractor
 import ru.madbrains.domain.model.AppDirType
 import ru.madbrains.domain.model.DefectModel
@@ -18,7 +17,6 @@ import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.DefectListUiModel
 import ru.madbrains.inspection.ui.delegates.MediaUiModel
-import timber.log.Timber
 import java.util.*
 
 class DefectListViewModel(private val detoursInteractor: DetoursInteractor) : BaseViewModel() {
@@ -41,6 +39,8 @@ class DefectListViewModel(private val detoursInteractor: DetoursInteractor) : Ba
     private val _navigateToConfirmDefect = MutableLiveData<Event<DefectModel>>()
     val navigateToConfirmDefect: LiveData<Event<DefectModel>> = _navigateToConfirmDefect
 
+    private var lastDeviceIds: List<String>? = null
+
     fun editDefect(defect: DefectModel?) {
         defect?.let { _navigateToEditDefect.value = Event(it) }
     }
@@ -50,13 +50,16 @@ class DefectListViewModel(private val detoursInteractor: DetoursInteractor) : Ba
     }
 
     fun getDefectList(deviceIds: List<String>?) {
+        lastDeviceIds = deviceIds
         detoursInteractor.getDefectsDb(equipmentIds = deviceIds)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { _progressVisibility.postValue(true) }
             .doAfterTerminate { _progressVisibility.postValue(false) }
             .subscribe({ items ->
                 defectListModels.clear()
-                defectListModels.addAll(items)
+                defectListModels.addAll(items.filter {
+                    it.statusProcessId!=DefectStatus.ELIMINATED.id
+                })
                 updateDefectList()
             }, {
                 it.printStackTrace()
@@ -121,9 +124,13 @@ class DefectListViewModel(private val detoursInteractor: DetoursInteractor) : Ba
                 id = it.id,
                 statusProcessId = DefectStatus.ELIMINATED.id,
                 dateDetectDefect = Date()
-            ))
+            ).apply {
+                changed = true
+            })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({}, {
+                .subscribe({
+                    getDefectList(lastDeviceIds)
+                }, {
                     it.printStackTrace()
                 })
                 .addTo(disposables)
