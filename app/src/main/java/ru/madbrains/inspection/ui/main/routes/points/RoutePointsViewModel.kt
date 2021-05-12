@@ -15,6 +15,7 @@ import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.RoutePointUiModel
+import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -85,6 +86,7 @@ class RoutePointsViewModel(
             detour.statusId = currentStatus?.id
             detour.changed = true
             detoursInteractor.updateDetourDB(detour)
+                .andThen(detoursInteractor.refreshDetoursDb())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { _progressVisibility.postValue(true) }
                 .doAfterTerminate { _progressVisibility.postValue(false) }
