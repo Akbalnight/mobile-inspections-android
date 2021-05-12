@@ -276,7 +276,7 @@ class DefectDetailViewModel(
         ).apply {
             isNew = true
         }
-        detoursInteractor.saveDefectToDb(model).observeOn(AndroidSchedulers.mainThread())
+        detoursInteractor.saveDefectDb(model).observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { _progressVisibility.postValue(true) }
             .doAfterTerminate { _progressVisibility.postValue(false) }
             .subscribe({
@@ -306,7 +306,7 @@ class DefectDetailViewModel(
             ).apply {
                 changed = true
             }
-            detoursInteractor.saveDefectToDb(model)
+            detoursInteractor.saveDefectDb(model)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { _progressVisibility.postValue(true) }
                 .doAfterTerminate { _progressVisibility.postValue(false) }

@@ -105,8 +105,8 @@ class DetoursInteractor(
 
     //offline
 
-    fun updateDetourDB(detour: DetourModel): Completable {
-        return offlineRepository.updateDetour(detour)
+    fun saveDetourDB(detour: DetourModel): Completable {
+        return offlineRepository.insertDetour(detour)
             .subscribeOn(Schedulers.io())
     }
 
@@ -114,15 +114,16 @@ class DetoursInteractor(
         return offlineRepository.getSyncInfoSource()
     }
 
-    fun saveDetoursToDb(models: List<DetourModel>): Completable {
-        return offlineRepository.saveDetours(models).subscribeOn(Schedulers.io())
+    fun saveDetoursDb(models: List<DetourModel>): Completable {
+        return offlineRepository.insertDetours(models).subscribeOn(Schedulers.io())
     }
 
-    fun saveDefectsToDb(models: List<DefectModel>): Completable {
-        return offlineRepository.saveDefects(models).subscribeOn(Schedulers.io())
+    fun saveDefectsDb(models: List<DefectModel>): Completable {
+        return offlineRepository.insertDefects(models).subscribeOn(Schedulers.io())
     }
-    fun saveDefectToDb(model: DefectModel): Completable {
-        return offlineRepository.saveDefect(model).subscribeOn(Schedulers.io())
+
+    fun saveDefectDb(model: DefectModel): Completable {
+        return offlineRepository.insertDefect(model).subscribeOn(Schedulers.io())
     }
 
     fun refreshDetoursDb(): Single<List<DetourModel>> {

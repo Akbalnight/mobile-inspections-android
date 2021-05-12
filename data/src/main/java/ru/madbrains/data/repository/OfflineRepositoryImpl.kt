@@ -27,11 +27,11 @@ class OfflineRepositoryImpl(
     private var _tempDirectory: File? = null
     private var _saveDirectory: File? = null
 
-    override fun saveDetours(models: List<DetourModel>): Completable {
+    override fun insertDetours(models: List<DetourModel>): Completable {
         return db.detourItemDao().insertItem(models.map { toDetourItemDB(it) })
     }
 
-    override fun updateDetour(model: DetourModel): Completable {
+    override fun insertDetour(model: DetourModel): Completable {
         return db.detourItemDao().insertItem(toDetourItemDB(model))
     }
 
@@ -58,11 +58,11 @@ class OfflineRepositoryImpl(
         return syncInfoSource
     }
 
-    override fun saveDefects(models: List<DefectModel>): Completable {
+    override fun insertDefects(models: List<DefectModel>): Completable {
         return db.defectItemDao().insertItem(models.map { toDefectItemDB(it) })
     }
 
-    override fun saveDefect(model: DefectModel): Completable {
+    override fun insertDefect(model: DefectModel): Completable {
         return db.defectItemDao().insertItem(toDefectItemDB(model))
     }
 
