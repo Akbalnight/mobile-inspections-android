@@ -11,5 +11,6 @@ data class FileModel(
     val name: String?,
     val extension: String,
     val date: Date?,
+    val routeMapName: String?,
     val isLocal:Boolean = false
 ) : Serializable

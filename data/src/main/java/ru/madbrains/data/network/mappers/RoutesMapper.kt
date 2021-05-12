@@ -218,7 +218,8 @@ fun mapGetFileResp(remote: FileRemote): FileModel {
             url = url,
             name = name,
             extension = extension,
-            date = date
+            date = date,
+            routeMapName = routeMapName
         )
     }
 }

@@ -31,7 +31,7 @@ class RoutePointsMapViewModel(
     fun setData(detour: DetourModel) {
         detourModel = detour
         val levels = detour.route.routeMaps?.mapIndexed { i, map ->
-            MapLevelUiModel(map.id, map.name, map.url, i == 0)
+            MapLevelUiModel(map.id, map.routeMapName, map.url, i == 0)
         }.also {
             if (it != null) _mapLevels.value = it
         }

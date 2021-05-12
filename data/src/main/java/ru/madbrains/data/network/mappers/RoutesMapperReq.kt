@@ -136,7 +136,8 @@ private fun mapGetFileReq(resp: FileModel): FileRemote {
             url = url,
             name = name,
             extension = extension,
-            date = date
+            date = date,
+            routeMapName = routeMapName
         )
     }
 }

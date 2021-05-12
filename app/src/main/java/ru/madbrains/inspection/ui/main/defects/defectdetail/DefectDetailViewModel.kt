@@ -333,6 +333,7 @@ class DefectDetailViewModel(
                 name = it.name,
                 extension = it.extension,
                 date = Date(),
+                routeMapName = "",
                 isLocal = true
             )
         }
