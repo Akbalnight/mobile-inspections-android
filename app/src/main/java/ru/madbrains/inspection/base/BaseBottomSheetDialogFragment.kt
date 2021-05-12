@@ -2,6 +2,7 @@ package ru.madbrains.inspection.base
 
 import android.app.Dialog
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -33,8 +34,9 @@ abstract class BaseBottomSheetDialogFragment(@LayoutRes val layout: Int) :
             val dialog = it as BottomSheetDialog
             val layout =
                 dialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
+            val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
             val state =
-                if (isExpanded) BottomSheetBehavior.STATE_EXPANDED else BottomSheetBehavior.STATE_COLLAPSED
+                if (isExpanded || isLandscape) BottomSheetBehavior.STATE_EXPANDED else BottomSheetBehavior.STATE_COLLAPSED
             val bottomSheetBehavior = BottomSheetBehavior.from<FrameLayout?>(layout!!)
 
             bottomSheetBehavior.state = state
