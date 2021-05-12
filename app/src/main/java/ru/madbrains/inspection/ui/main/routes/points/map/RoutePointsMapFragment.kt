@@ -123,6 +123,8 @@ class RoutePointsMapFragment() : BaseFragment(R.layout.fragment_route_points_map
                     bitmap = resource
                     tvError.isVisible = false
                     progressView.changeVisibility(false)
+                    mapIV.isVisible = true
+                    pointsContainer.isVisible = true
                     mapIV.apply {
                         setImageBitmap(resource)
 
@@ -137,12 +139,16 @@ class RoutePointsMapFragment() : BaseFragment(R.layout.fragment_route_points_map
                 override fun onLoadFailed(errorDrawable: Drawable?) {
                     Glide.with(requireContext()).clear(mapIV)
                     tvError.isVisible = true
+                    mapIV.isVisible = false
+                    pointsContainer.isVisible = false
                     progressView.changeVisibility(false)
                     super.onLoadFailed(errorDrawable)
                 }
 
                 override fun onLoadStarted(placeholder: Drawable?) {
                     tvError.isVisible = false
+                    mapIV.isVisible = false
+                    pointsContainer.isVisible = false
                     progressView.changeVisibility(true)
                     super.onLoadStarted(placeholder)
                 }
