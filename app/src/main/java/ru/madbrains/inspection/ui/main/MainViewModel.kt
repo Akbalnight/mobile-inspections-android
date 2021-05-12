@@ -107,16 +107,20 @@ class MainViewModel(
             }
             //.andThen(detoursInteractor.cleanEverything())
             .subscribe({
-                //preferenceStorage.clearData()
-                preferenceStorage.token = null
-                preferenceStorage.refreshToken = null
-                preferenceStorage.codeVerifier = null
-                preferenceStorage.userId = null
-                preferenceStorage.username = null
-                _navigateToAuthorization.postValue(Event(Unit))
+                clearDataAndNavToAuth()
             }, {
                 it.printStackTrace()
             })
             .addTo(disposables)
+    }
+
+    fun clearDataAndNavToAuth(){
+        //preferenceStorage.clearData()
+        preferenceStorage.token = null
+        preferenceStorage.refreshToken = null
+        preferenceStorage.codeVerifier = null
+        preferenceStorage.userId = null
+        preferenceStorage.username = null
+        _navigateToAuthorization.postValue(Event(Unit))
     }
 }

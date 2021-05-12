@@ -7,6 +7,7 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
+import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.rxkotlin.addTo
 import ru.madbrains.data.extensions.toyyyyMMddTHHmmssXXX
 import ru.madbrains.data.prefs.PreferenceStorage
@@ -19,7 +20,6 @@ import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.ProgressState
 import ru.madbrains.inspection.ui.delegates.DetourUiModel
-import timber.log.Timber
 import java.io.File
 import java.util.*
 
@@ -79,6 +79,8 @@ class SyncViewModel(
                 it.printStackTrace()
             })
             .addTo(observables)
+
+        RxJavaPlugins.setErrorHandler(Throwable::printStackTrace)
     }
 
     fun initAction(fileTempDir: File?, fileSaveDir: File?) {

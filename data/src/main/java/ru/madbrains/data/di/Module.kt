@@ -5,6 +5,7 @@ import androidx.room.Room
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import ru.madbrains.data.database.HcbDatabase
+import ru.madbrains.data.network.IAuthenticator
 import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.data.prefs.SharedPreferenceStorage
 import ru.madbrains.data.repository.AuthRepositoryImpl
@@ -21,6 +22,7 @@ import timber.log.Timber
 
 val dataModule = module {
     single { getPreferenceStorage(androidContext()) }
+    single { getIAuthenticator(androidContext()) }
     single { getFileUtil(get()) }
     single { getReader() }
     single { getDatabase(androidContext()) }
@@ -32,6 +34,10 @@ val dataModule = module {
 
 private fun getPreferenceStorage(context: Context): PreferenceStorage {
     return SharedPreferenceStorage(context)
+}
+
+private fun getIAuthenticator(context: Context): IAuthenticator {
+    return IAuthenticator(context)
 }
 
 private fun getAuthRepository(): AuthRepository {

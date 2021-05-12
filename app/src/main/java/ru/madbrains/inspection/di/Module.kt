@@ -25,7 +25,7 @@ import ru.madbrains.inspection.ui.main.routes.techoperations.TechOperationsViewM
 import ru.madbrains.inspection.ui.main.settings.SettingsViewModel
 
 val appModule = module {
-    viewModel { LauncherViewModel(get()) }
+    viewModel { LauncherViewModel(get(), get()) }
     viewModel { AuthorizationViewModel(get()) }
     viewModel {
         WebViewViewModel(
@@ -45,7 +45,7 @@ val appModule = module {
     viewModel { DefectDetailViewModel(get(), get()) }
     viewModel { EquipmentSelectListViewModel(get()) }
     viewModel { CameraViewModel(get()) }
-    viewModel { BtServerSettingsViewModel(get()) }
+    viewModel { BtServerSettingsViewModel(get(), get()) }
     viewModel { EquipmentViewModel(get()) }
     viewModel { EquipmentListViewModel(get()) }
     viewModel { SettingsViewModel(get()) }
