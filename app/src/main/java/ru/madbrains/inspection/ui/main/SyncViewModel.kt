@@ -248,10 +248,10 @@ class SyncViewModel(
         _pendingDataDb?.let { data ->
             val observables = arrayListOf<Completable>()
             data.routes?.let {
-                observables.add(detoursInteractor.saveDetoursToDb(it))
+                observables.add(detoursInteractor.saveDetoursDb(it))
             }
             data.defects?.let {
-                observables.add(detoursInteractor.saveDefectsToDb(it))
+                observables.add(detoursInteractor.saveDefectsDb(it))
             }
             data.equipment?.let {
                 observables.add(detoursInteractor.saveEquipmentsDb(it))
@@ -323,7 +323,7 @@ class SyncViewModel(
             if(list.isNotEmpty()){
                 val detourTasks = list.map { item->
                     detoursInteractor.updateDetourRemote(item).andThen(
-                        detoursInteractor.updateDetourDB(
+                        detoursInteractor.saveDetourDB(
                             item.apply { changed = false }
                         ).doFinally {
                             _changedItems.postValue(_changedItems.value?.filter {
@@ -341,7 +341,7 @@ class SyncViewModel(
                     val single = if(item.changed) detoursInteractor.updateDefectRemote(item) else detoursInteractor.saveDefectRemote(item)
                     single.flatMapCompletable { Completable.complete() }
                     .andThen(
-                        detoursInteractor.saveDefectToDb(
+                        detoursInteractor.saveDefectDb(
                             item.apply { changed = false }
                         ).doFinally {
                             _changedItems.postValue(_changedItems.value?.filter {

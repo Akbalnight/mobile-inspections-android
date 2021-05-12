@@ -15,12 +15,12 @@ interface OfflineRepository {
         const val ARCHIVE_DEFECTS_MEDIA = "defects-media-archive.zip"
     }
 
-    fun saveDetours(models: List<DetourModel>): Completable
-    fun updateDetour(model: DetourModel): Completable
+    fun insertDetours(models: List<DetourModel>): Completable
+    fun insertDetour(model: DetourModel): Completable
     fun getDetours(): Single<List<DetourModel>>
     fun getDetoursSource(): Observable<List<DetourModel>>
     fun getSyncInfoSource(): Observable<SyncInfo>
-    fun saveDefects(models: List<DefectModel>): Completable
+    fun insertDefects(models: List<DefectModel>): Completable
     fun getDefects(equipmentIds: List<String>?): Single<List<DefectModel>>
     fun saveDetourStatuses(list: List<DetourStatus>)
     fun saveEquipments(models: List<EquipmentModel>): Completable
@@ -43,6 +43,6 @@ interface OfflineRepository {
     fun getFileInFolder(name: String?, folder: AppDirType): File?
     fun cleanEverything(): Completable
     fun getChangedDetours(): Single<List<DetourModel>>
-    fun saveDefect(model: DefectModel): Completable
+    fun insertDefect(model: DefectModel): Completable
     fun getChangedDefects(): Single<List<DefectModel>>
 }

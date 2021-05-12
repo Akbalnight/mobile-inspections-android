@@ -172,6 +172,7 @@ class DetoursRepositoryImpl(
                 }.build()
                 multiParts = body.parts
             }
+
         }
         return ApiData.inspectionApi.updateDefect(request, multiParts)
     }

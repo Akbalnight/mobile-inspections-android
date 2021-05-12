@@ -117,7 +117,7 @@ class DefectListViewModel(private val detoursInteractor: DetoursInteractor) : Ba
 
     fun eliminateDefect(deleteItem: DefectModel?) {
         deleteItem?.let { it ->
-            detoursInteractor.updateDefectRemote(it.copy(
+            detoursInteractor.saveDefectDb(it.copy(
                 id = it.id,
                 statusProcessId = DefectStatus.ELIMINATED.id,
                 dateDetectDefect = Date()
