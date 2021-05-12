@@ -8,7 +8,7 @@ data class FileModel(
     val id: String,
     val fileId: String?,
     val url: String,
-    val name: String?,
+    val fileName: String?,
     val extension: String,
     val date: Date?,
     val routeMapName: String?,

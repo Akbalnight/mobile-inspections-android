@@ -51,7 +51,7 @@ class EquipmentViewModel(private val detoursInteractor: DetoursInteractor) : Bas
             data.getImageUrls().map {
                 EquipmentDetailMediaUiModel(
                     detoursInteractor.getFileInFolder(
-                        it.name,
+                        it.fileName,
                         AppDirType.Docs
                     )
                 )
@@ -98,7 +98,7 @@ class EquipmentViewModel(private val detoursInteractor: DetoursInteractor) : Bas
                 FilesUiModel(
                     id = it.id,
                     url = it.url,
-                    name = it.name,
+                    name = it.fileName,
                     extension = it.extension,
                     date = it.date?.toHHmmYYYYMMDD() ?: "-"
                 )

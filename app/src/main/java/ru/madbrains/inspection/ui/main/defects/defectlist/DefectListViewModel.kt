@@ -107,7 +107,7 @@ class DefectListViewModel(private val detoursInteractor: DetoursInteractor) : Ba
                     MediaUiModel(
                         id = fileModel.id,
                         file = detoursInteractor.getFileInFolder(
-                            fileModel.name,
+                            fileModel.fileName,
                             if(fileModel.isLocal) AppDirType.Local else AppDirType.Defects
                         ),
                         isLocal = fileModel.isLocal

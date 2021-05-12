@@ -28,7 +28,7 @@ class EquipmentListViewModel(
                         name = equipment.name,
                         type = equipment.typeEquipment,
                         images = equipment.getImageUrls().map {
-                            detoursInteractor.getFileInFolder(it.name, AppDirType.Docs)
+                            detoursInteractor.getFileInFolder(it.fileName, AppDirType.Docs)
                         }
                     )
                 )

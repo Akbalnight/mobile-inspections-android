@@ -190,7 +190,7 @@ class DefectDetailViewModel(
                             MediaUiModel(
                                 id = fileModel.id,
                                 file = detoursInteractor.getFileInFolder(
-                                    fileModel.name,
+                                    fileModel.fileName,
                                     if(fileModel.isLocal) AppDirType.Local else AppDirType.Defects
                                 ),
                                 isLocal = fileModel.isLocal
@@ -330,7 +330,7 @@ class DefectDetailViewModel(
                 id = UUID.randomUUID().toString(),
                 fileId = UUID.randomUUID().toString(),
                 url = "",
-                name = it.name,
+                fileName = it.name,
                 extension = it.extension,
                 date = Date(),
                 routeMapName = "",

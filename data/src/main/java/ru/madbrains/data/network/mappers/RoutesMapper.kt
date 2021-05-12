@@ -216,7 +216,7 @@ fun mapGetFileResp(remote: FileRemote): FileModel {
             id = id,
             fileId = fileId,
             url = url,
-            name = name,
+            fileName = name,
             extension = extension,
             date = date,
             routeMapName = routeMapName

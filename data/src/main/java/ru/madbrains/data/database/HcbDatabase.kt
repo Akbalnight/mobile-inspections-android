@@ -13,7 +13,7 @@ import ru.madbrains.data.database.models.EquipmentItemDB
         DefectItemDB::class,
         EquipmentItemDB::class,
         DefectTypicalDB::class
-    ], version = 7, exportSchema = false
+    ], version = 8, exportSchema = false
 )
 abstract class HcbDatabase : RoomDatabase() {
     abstract fun detourItemDao(): DetourItemDao

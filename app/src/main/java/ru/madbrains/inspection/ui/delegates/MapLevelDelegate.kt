@@ -20,14 +20,15 @@ fun mapLevelDelegate(clickListener: (MapLevelUiModel) -> Unit) =
                 } else {
                     ivSelected.visibility = View.INVISIBLE
                 }
-                tvLabel.text = item.name
+                tvLabel.text = item.routeMapName
             }
         }
     }
 
 data class MapLevelUiModel(
     val id: String,
-    val name: String?,
+    val fileName: String?,
+    val routeMapName: String?,
     val url: String,
     val isActive: Boolean
 ) : DiffItem {

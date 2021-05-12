@@ -31,7 +31,13 @@ class RoutePointsMapViewModel(
     fun setData(detour: DetourModel) {
         detourModel = detour
         val levels = detour.route.routeMaps?.mapIndexed { i, map ->
-            MapLevelUiModel(map.id, map.routeMapName, map.url, i == 0)
+            MapLevelUiModel(
+                id = map.id,
+                fileName = map.fileName,
+                routeMapName = map.routeMapName,
+                url = map.url,
+                isActive = i == 0
+            )
         }.also {
             if (it != null) _mapLevels.value = it
         }
@@ -40,7 +46,13 @@ class RoutePointsMapViewModel(
 
     fun setActiveMap(map: MapLevelUiModel) {
         _mapLevels.value = _mapLevels.value?.map {
-            MapLevelUiModel(it.id, it.name, it.url, map.id == it.id)
+            MapLevelUiModel(
+                id = it.id,
+                fileName = it.fileName,
+                routeMapName = it.routeMapName,
+                url = it.url,
+                isActive = map.id == it.id
+            )
         }
         filterMapPoints(map)
     }
@@ -63,6 +75,6 @@ class RoutePointsMapViewModel(
     }
 
     fun loadImage(item: MapLevelUiModel) {
-        _mapImage.postValue(detoursInteractor.getFileInFolder(item.name, AppDirType.Docs))
+        _mapImage.postValue(detoursInteractor.getFileInFolder(item.fileName, AppDirType.Docs))
     }
 }
