@@ -42,7 +42,7 @@ private fun mapGetRouteResp(remote: RouteRemote): RouteModel {
             name = name,
             code = code,
             duration = duration,
-            routesData = routesData.map { mapGetRoutesDataResp(it) },
+            routesData = routesData?.map { mapGetRoutesDataResp(it) },
             routeMaps = routeMaps?.map { mapGetFileResp(it) }
         )
     }

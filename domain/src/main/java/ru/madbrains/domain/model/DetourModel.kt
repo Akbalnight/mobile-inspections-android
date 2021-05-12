@@ -39,14 +39,16 @@ data class DetourModel(
         route.routeMaps?.let {
             res.addAll(it)
         }
-        for (data in route.routesData) {
-            data.equipments?.let { equipment ->
-                for (item in equipment) {
-                    item.attachmentFiles?.let {
-                        res.addAll(it)
-                    }
-                    item.warrantyFiles?.let {
-                        res.addAll(it)
+        route.routesData?.let{ routes->
+            for (data in routes) {
+                data.equipments?.let { equipment ->
+                    for (item in equipment) {
+                        item.attachmentFiles?.let {
+                            res.addAll(it)
+                        }
+                        item.warrantyFiles?.let {
+                            res.addAll(it)
+                        }
                     }
                 }
             }
@@ -68,7 +70,7 @@ data class RouteModel(
     val name: String,
     val code: Int?,
     val duration: Int?,
-    val routesData: List<RouteDataModel>,
+    val routesData: List<RouteDataModel>?,
     val routeMaps: List<FileModel>?
 ) : Serializable
 

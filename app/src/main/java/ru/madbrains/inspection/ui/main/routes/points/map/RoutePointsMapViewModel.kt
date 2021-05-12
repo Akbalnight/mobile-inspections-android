@@ -60,17 +60,18 @@ class RoutePointsMapViewModel(
     private fun filterMapPoints(map: MapLevelUiModel?) {
         if (map == null) return
 
-        _mapPoints.value = detourModel.route.routesData.filter { it.routeMapId == map.id }
+        _mapPoints.value = detourModel.route.routesData?.filter { it.routeMapId == map.id }
     }
 
     fun routePointClick(routeData: RouteDataModel) {
-        val routes = detourModel.route.routesData.sortedBy { it.position }
-        val clickedIndex = routes.indexOf(routeData)
-        val prevWasCompleted = if (clickedIndex > 0) routes[clickedIndex - 1].completed else false
-        val preserveOrder = detourModel.saveOrderControlPoints == true
+        detourModel.route.routesData?.sortedBy { it.position }?.let {routes->
+            val clickedIndex = routes.indexOf(routeData)
+            val prevWasCompleted = if (clickedIndex > 0) routes[clickedIndex - 1].completed else false
+            val preserveOrder = detourModel.saveOrderControlPoints == true
 
-        if (!preserveOrder || routeData.completed || clickedIndex == 0 || prevWasCompleted) {
-            _navigateToTechOperations.value = Event(routeData)
+            if (!preserveOrder || routeData.completed || clickedIndex == 0 || prevWasCompleted) {
+                _navigateToTechOperations.value = Event(routeData)
+            }
         }
     }
 
