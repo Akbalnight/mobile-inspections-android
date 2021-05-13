@@ -51,7 +51,7 @@ class DefectListViewModel(private val detoursInteractor: DetoursInteractor) : Ba
 
     fun getDefectList(deviceIds: List<String>?) {
         lastDeviceIds = deviceIds
-        detoursInteractor.getDefectsDb(equipmentIds = deviceIds)
+        detoursInteractor.getDefectsDb(equipmentIds = deviceIds, limit = if(isConfirmMode) 5 else null)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { _progressVisibility.postValue(true) }
             .doAfterTerminate { _progressVisibility.postValue(false) }
