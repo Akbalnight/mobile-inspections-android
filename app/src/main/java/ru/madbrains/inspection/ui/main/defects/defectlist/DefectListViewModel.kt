@@ -90,7 +90,7 @@ class DefectListViewModel(private val detoursInteractor: DetoursInteractor) : Ba
                         description = defect.description.orEmpty(),
                         isConfirmList = isConfirmList,
                         images = getMediaListItem(defect.files),
-                        isLocal = defect.isNew,
+                        isCreated = defect.created,
                         dateConfirm = defect.getLastDateConfirm()?.toddMMyyyyHHmm().orEmpty()
                     )
                 )

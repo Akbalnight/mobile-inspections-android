@@ -18,7 +18,7 @@ data class DefectModel(
     val extraData: List<ExtraDataModel>?
 ) : Serializable {
     @Transient
-    var isNew: Boolean = false
+    var created: Boolean = false
     @Transient
     var changed: Boolean = false
 

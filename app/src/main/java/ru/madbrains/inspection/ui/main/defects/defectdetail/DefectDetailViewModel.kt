@@ -251,15 +251,6 @@ class DefectDetailViewModel(
     }
 
     fun sendSaveDefect() {
-//        detoursInteractor.saveDefectRemote(
-//            detourId = detourId,
-//            equipmentId = currentDeviceModel?.id,
-//            defectTypicalId = currentTypical?.id,
-//            statusProcessId = DefectStatus.NEW.id,
-//            description = descriptionDefect.orEmpty(),
-//            dateDetectDefect = Date().toyyyyMMddTHHmmssXXX(),
-//            files = getFilesToSend()
-//        )
         val model = DefectModel(
             id = UUID.randomUUID().toString(),
             detourId = detourId,
@@ -274,7 +265,7 @@ class DefectDetailViewModel(
             extraData = null,
             staffDetectId = null
         ).apply {
-            isNew = true
+            created = true
         }
         detoursInteractor.saveDefectDb(model).observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { _progressVisibility.postValue(true) }
@@ -290,14 +281,6 @@ class DefectDetailViewModel(
 
     fun sendUpdateDefect() {
         defect?.let { defectModel ->
-//            detoursInteractor.updateDefectRemote(
-//                detoursId = defectModel.detourId,
-//                id = defectModel.id,
-//                statusProcessId = targetDefectStatus?.id.orEmpty(),
-//                description = descriptionDefect.orEmpty(),
-//                dateDetectDefect = Date().toyyyyMMddTHHmmssXXX(),
-//                files = getFilesToSend()
-//            )
             val model = defectModel.copy(
                 statusProcessId = targetDefectStatus?.id.orEmpty(),
                 description = descriptionDefect.orEmpty(),

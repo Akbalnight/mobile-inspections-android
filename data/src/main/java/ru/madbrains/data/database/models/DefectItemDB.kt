@@ -22,5 +22,5 @@ data class DefectItemDB(
     val statusProcessId: String?,
     val extraData: List<ExtraDataModel>?,
     val changed: Boolean = false,
-    val isNew: Boolean = false
+    val created: Boolean = false
 )

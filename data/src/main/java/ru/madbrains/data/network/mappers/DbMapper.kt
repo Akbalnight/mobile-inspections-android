@@ -106,7 +106,7 @@ fun toDefectItemDB(resp: DefectModel): DefectItemDB {
             equipmentName = equipmentName,
             statusProcessId = statusProcessId,
             extraData = extraData,
-            isNew = isNew,
+            created = created,
             changed = changed
         )
     }

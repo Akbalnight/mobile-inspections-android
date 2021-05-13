@@ -112,7 +112,7 @@ fun defectListDelegate(
                     btnEditContainer.visibility = View.GONE
                 } else {
                     btnConfirmContainer.visibility = View.GONE
-                    btnEditContainer.isVisible = item.isLocal
+                    btnEditContainer.isVisible = item.isCreated
                 }
 
                 val mediaAdapter = MediaAdapter(
@@ -148,7 +148,7 @@ data class DefectListUiModel(
     val images: List<MediaUiModel>?,
     var hideDetail: Boolean = true,
     var hideLinkDetour: Boolean = true,
-    val isLocal: Boolean
+    val isCreated: Boolean
 
 ) : DiffItem {
 
