@@ -69,7 +69,18 @@ class DefectListViewModel(private val detoursInteractor: DetoursInteractor) : Ba
     }
 
     fun deleteDefect(deleteItem: DefectModel?) {
-        //todo offline delete
+        deleteItem?.let { item->
+            detoursInteractor.delDefectDb(item.id)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { _progressVisibility.postValue(true) }
+                .doAfterTerminate { _progressVisibility.postValue(false) }
+                .subscribe({
+                    getDefectList(lastDeviceIds)
+                }, {
+                    it.printStackTrace()
+                })
+                .addTo(disposables)
+        }
     }
 
     private fun updateDefectList() {

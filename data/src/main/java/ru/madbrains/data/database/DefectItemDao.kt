@@ -27,4 +27,7 @@ interface DefectItemDao {
 
     @Query("DELETE FROM DefectItemDB WHERE changed = 0 AND created = 0")
     fun clean(): Completable
+
+    @Query("DELETE FROM DefectItemDB WHERE id = :id")
+    fun del(id:String): Completable
 }
