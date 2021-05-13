@@ -1,5 +1,6 @@
 package ru.madbrains.inspection.ui.main.routes.points.map
 
+import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
 import android.graphics.RectF
 import android.graphics.drawable.Drawable
@@ -86,6 +87,12 @@ class RoutePointsMapFragment() : BaseFragment(R.layout.fragment_route_points_map
     override fun onPause() {
         super.onPause()
         imageScale = 1f
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+    }
+
+    override fun onResume() {
+        super.onResume()
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
     }
 
     private fun calculatePoints(rectF: RectF) {
