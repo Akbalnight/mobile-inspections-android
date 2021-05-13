@@ -46,7 +46,7 @@ class DateRouteListFragment : BaseFragment(R.layout.fragment_route_list_date) {
 
         detoursViewModel.detours.observe(viewLifecycleOwner, Observer {
             routesAdapter.items = it.filterIsInstance<DetourUiModel>().filter { route ->
-                route.date.split("T").firstOrNull() == date
+                route.date?.split("T")?.firstOrNull() == date
             }
         })
 
