@@ -29,8 +29,9 @@ class DetoursInteractor(
                 )
             ).flatMapCompletable { items ->
                 models.addAll(items)
-                if (models.isNotEmpty()) {
-                    routesRepository.freezeDetours(models.filter { it.frozen != true }.map { it.id })
+                val unfrozenIds = models.filter { it.frozen != true }.map { it.id }
+                if (unfrozenIds.isNotEmpty()) {
+                    routesRepository.freezeDetours(unfrozenIds)
                 }
                 else{
                     Completable.complete()

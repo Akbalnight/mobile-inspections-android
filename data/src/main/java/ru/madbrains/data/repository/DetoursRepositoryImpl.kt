@@ -45,7 +45,6 @@ class DetoursRepositoryImpl(
         val request = FreezeDetoursReq(
             detourIds = detourIds
         )
-        Timber.d("debug_dmm request: ${request}")
         return ApiData.inspectionApi.freezeDetours(request)
     }
 
