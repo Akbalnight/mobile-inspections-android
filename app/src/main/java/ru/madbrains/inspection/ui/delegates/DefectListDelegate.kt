@@ -9,6 +9,7 @@ import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.extensions.drawables
 import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.adapters.MediaAdapter
+import timber.log.Timber
 
 fun defectListDelegate(
     clickEdit: (DefectListUiModel) -> Unit,
@@ -107,6 +108,7 @@ fun defectListDelegate(
                     clickEliminated.invoke(item)
                 }
 
+                Timber.d("debug_dmm item.isCreated: ${item.isCreated}")
                 when {
                     item.isCreated -> {
                         btnConfirmContainer.isVisible = false

@@ -263,10 +263,10 @@ class DefectDetailViewModel(
             defectName = currentTypical?.name,
             equipmentName = currentDeviceModel?.name,
             extraData = null,
-            staffDetectId = null
-        ).apply {
-            created = true
-        }
+            staffDetectId = null,
+            created = true,
+            changed = false
+        )
         detoursInteractor.saveDefectDb(model).observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { _progressVisibility.postValue(true) }
             .doAfterTerminate { _progressVisibility.postValue(false) }

@@ -30,7 +30,8 @@ fun mapGetDetoursResp(remote: DetoursRemote): DetourModel {
             possibleDeviationDateFinish = possibleDeviationDateFinish,
             isDefectExist = isDefectExist,
             frozen = frozen,
-            route = mapGetRouteResp(route)
+            route = mapGetRouteResp(route),
+            changed = false
         )
     }
 }
@@ -204,8 +205,9 @@ fun mapGetDefectsResp(resp: GetDefectsResp): DefectModel {
             defectName = defectName,
             equipmentName = equipmentName,
             statusProcessId = statusProcessId,
-            extraData = extraData?.map { mapGetExtraDataResp(it) }
-
+            extraData = extraData?.map { mapGetExtraDataResp(it) },
+            created = false,
+            changed = false
         )
     }
 }
