@@ -14,6 +14,7 @@ import ru.madbrains.data.network.request.*
 import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.domain.model.*
 import ru.madbrains.domain.repository.DetoursRepository
+import timber.log.Timber
 import java.io.File
 
 class DetoursRepositoryImpl(
@@ -44,6 +45,7 @@ class DetoursRepositoryImpl(
         val request = FreezeDetoursReq(
             detourIds = detourIds
         )
+        Timber.d("debug_dmm request: ${request}")
         return ApiData.inspectionApi.freezeDetours(request)
     }
 
