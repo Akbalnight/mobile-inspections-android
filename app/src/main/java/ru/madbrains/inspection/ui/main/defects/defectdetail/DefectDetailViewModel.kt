@@ -250,7 +250,7 @@ class DefectDetailViewModel(
             _navigateToCamera.value = Event(Unit)
     }
 
-    fun sendSaveDefect() {
+    fun saveDefectDb() {
         val model = DefectModel(
             id = UUID.randomUUID().toString(),
             detourId = detourId,
@@ -279,16 +279,15 @@ class DefectDetailViewModel(
             .addTo(disposables)
     }
 
-    fun sendUpdateDefect() {
+    fun updateDefectDb() {
         defect?.let { defectModel ->
             val model = defectModel.copy(
                 statusProcessId = targetDefectStatus?.id.orEmpty(),
                 description = descriptionDefect.orEmpty(),
                 dateDetectDefect = Date(),
-                files = (defectModel.files?: arrayListOf()) + getFilesToSend()
-            ).apply {
+                files = (defectModel.files?: arrayListOf()) + getFilesToSend(),
                 changed = true
-            }
+            )
             detoursInteractor.saveDefectDb(model)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { _progressVisibility.postValue(true) }
@@ -301,10 +300,6 @@ class DefectDetailViewModel(
                 .addTo(disposables)
         }
 
-    }
-
-    fun localEditDefect() {
-        //todo db offline
     }
 
     private fun getFilesToSend(): List<FileModel> {
@@ -328,7 +323,7 @@ class DefectDetailViewModel(
             if (isChangedDefect) {
                 _showDialogConfirmChangedFields.value = Event(true)
             } else {
-                sendUpdateDefect()
+                updateDefectDb()
             }
         } ?: run {
             defect?.let {
@@ -339,7 +334,7 @@ class DefectDetailViewModel(
                         if (detourId.isNullOrEmpty()) {
                             _showDialogSaveNoLinkedDetour.value = Event(Unit)
                         } else {
-                            sendSaveDefect()
+                            saveDefectDb()
                         }
                     } else {
                         _showDialogBlankFields.value = Event(detourId.isNullOrEmpty())

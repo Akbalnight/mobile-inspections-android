@@ -294,7 +294,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
                 setMessage(if (isLinkedDetour) strings[R.string.fragment_add_defect_dialog_empty_fields_subtitle] else strings[R.string.fragment_add_defect_dialog_empty_fields_no_detour_subtitle])
                 setPositiveButton(if (isLinkedDetour) strings[R.string.fragment_dialog_btn_save] else strings[R.string.fragment_add_defect_dialog_btn_fix],
                     DialogInterface.OnClickListener { _, _ ->
-                        defectDetailViewModel.sendSaveDefect()
+                        defectDetailViewModel.saveDefectDb()
                     })
                 setNegativeButton(strings[R.string.fragment_dialog_btn_cancel],
                     DialogInterface.OnClickListener { _, _ ->
@@ -346,11 +346,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
                 setMessage(strings[R.string.fragment_dialog_confirmed_subtitle])
                 setPositiveButton(strings[R.string.fragment_dialog_btn_save],
                     DialogInterface.OnClickListener { _, _ ->
-                        if (isConfirm) {
-                            defectDetailViewModel.sendUpdateDefect()
-                        } else {
-                            defectDetailViewModel.localEditDefect()
-                        }
+                        defectDetailViewModel.updateDefectDb()
                     })
                 setNegativeButton(strings[R.string.fragment_dialog_btn_cancel],
                     DialogInterface.OnClickListener { _, _ ->
@@ -369,7 +365,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
                 setMessage(strings[R.string.fragment_add_defect_dialog_empty_fields_no_detour_subtitle])
                 setPositiveButton(strings[R.string.fragment_add_defect_dialog_btn_fix],
                     DialogInterface.OnClickListener { _, _ ->
-                        defectDetailViewModel.sendSaveDefect()
+                        defectDetailViewModel.saveDefectDb()
                     })
                 setNegativeButton(strings[R.string.fragment_dialog_btn_cancel],
                     DialogInterface.OnClickListener { _, _ ->
