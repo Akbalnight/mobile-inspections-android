@@ -1,5 +1,6 @@
 package ru.madbrains.inspection.ui.main
 
+import android.webkit.CookieManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.Completable
@@ -116,6 +117,7 @@ class MainViewModel(
 
     fun clearDataAndNavToAuth(){
         //preferenceStorage.clearData()
+        CookieManager.getInstance().removeAllCookies(null) // fix autologin
         preferenceStorage.token = null
         preferenceStorage.refreshToken = null
         preferenceStorage.codeVerifier = null

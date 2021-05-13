@@ -208,7 +208,6 @@ class OfflineRepositoryImpl(
             ).use { zipStream ->
                 while (true) {
                     val ze = zipStream.nextEntry ?: break
-                    Timber.d("debug_dmm ze.name: ${ze.name}")
                     val file = File(saveDirectory, ze.name)
                     val dir = if (ze.isDirectory) file else file.parentFile
                     if (!dir.isDirectory && !dir.mkdirs()) throw FileNotFoundException(
@@ -251,6 +250,5 @@ class OfflineRepositoryImpl(
             }
         }
         fileOrDirectory.delete()
-        Timber.d("debug_dmm deleted $fileOrDirectory")
     }
 }

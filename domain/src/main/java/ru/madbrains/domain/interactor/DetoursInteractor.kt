@@ -17,6 +17,7 @@ class DetoursInteractor(
     private val offlineRepository: OfflineRepository
 ) {
     fun getDetoursRemote(): Single<List<DetourModel>> {
+        val models = mutableListOf<DetourModel>()
         return routesRepository.getDetoursStatuses().flatMap { statuses ->
             offlineRepository.saveDetourStatuses(statuses)
             routesRepository.getDetours(
@@ -26,11 +27,15 @@ class DetoursInteractor(
                         DetourStatusType.NEW
                     )
                 )
-            ).map { models ->
-                if (models.isNotEmpty())
-                    routesRepository.freezeDetours(models.filter { it.frozen != true }
-                        .map { it.id }
-                    )
+            ).flatMapCompletable { items ->
+                models.addAll(items)
+                if (models.isNotEmpty()) {
+                    routesRepository.freezeDetours(models.filter { it.frozen != true }.map { it.id })
+                }
+                else{
+                    Completable.complete()
+                }
+            }.toSingle{
                 models.filter { it.statusId != null }
                     .filter { it -> it.route.routesData?.all { it.techMap != null } == true }
                     .filter { it -> it.route.routesData?.all { it.equipments != null } == true }

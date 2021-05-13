@@ -108,7 +108,6 @@ fun defectListDelegate(
                     clickEliminated.invoke(item)
                 }
 
-                Timber.d("debug_dmm item.isCreated: ${item.isCreated}")
                 when {
                     item.isCreated -> {
                         btnConfirmContainer.isVisible = false

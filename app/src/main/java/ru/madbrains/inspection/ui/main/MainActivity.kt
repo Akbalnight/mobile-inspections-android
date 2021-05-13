@@ -163,7 +163,6 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             ) { _, _ ->
                 mainDrawer.closeDrawer(GravityCompat.START)
                 mainViewModel.logout()
-                CookieManager.getInstance().removeAllCookies(null) // fix autologin
             }
             setNegativeButton(strings[R.string.fragment_dialog_btn_cancel]) { _, _ ->
                 mainDrawer.closeDrawer(GravityCompat.START)
