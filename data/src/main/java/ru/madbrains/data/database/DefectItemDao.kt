@@ -19,7 +19,7 @@ interface DefectItemDao {
     @Query("SELECT * FROM DefectItemDB WHERE equipmentId in (:equipmentIds)")
     fun getItemsByEquipment(equipmentIds: List<String>): Single<List<DefectItemDB>>
 
-    @Query("SELECT * FROM DefectItemDB")
+    @Query("SELECT * FROM DefectItemDB ORDER BY dateDetectDefect DESC")
     fun getItems(): Single<List<DefectItemDB>>
 
     @Query("SELECT * FROM DefectItemDB WHERE changed = 1 OR created = 1")
