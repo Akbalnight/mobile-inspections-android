@@ -27,12 +27,11 @@ data class DetourModel(
     val possibleDeviationDateFinish: Int?,
     val isDefectExist: Int?,
     val frozen: Boolean?,
-    var route: RouteModel
+    var route: RouteModel,
+    var changed : Boolean
 ) : Serializable {
     @Transient
     var startTime: Date? = null
-    @Transient
-    var changed = false
 
     fun getAllFilesIds(): List<String> {
         val res = arrayListOf<FileModel>()

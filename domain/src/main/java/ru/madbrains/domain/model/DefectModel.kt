@@ -15,12 +15,10 @@ data class DefectModel(
     val defectName: String?,
     val equipmentName: String?,
     val statusProcessId: String?,
-    val extraData: List<ExtraDataModel>?
+    val extraData: List<ExtraDataModel>?,
+    var created: Boolean,
+    var changed: Boolean
 ) : Serializable {
-    @Transient
-    var isNew: Boolean = false
-    @Transient
-    var changed: Boolean = false
 
     fun getLastDateConfirm(): Date? {
         extraData?.let { extraList ->

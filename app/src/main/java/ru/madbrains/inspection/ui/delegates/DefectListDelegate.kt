@@ -9,6 +9,7 @@ import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.extensions.drawables
 import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.adapters.MediaAdapter
+import timber.log.Timber
 
 fun defectListDelegate(
     clickEdit: (DefectListUiModel) -> Unit,
@@ -107,12 +108,20 @@ fun defectListDelegate(
                     clickEliminated.invoke(item)
                 }
 
-                if (item.isConfirmList) {
-                    btnConfirmContainer.visibility = View.VISIBLE
-                    btnEditContainer.visibility = View.GONE
-                } else {
-                    btnConfirmContainer.visibility = View.GONE
-                    btnEditContainer.isVisible = item.isLocal
+                Timber.d("debug_dmm item.isCreated: ${item.isCreated}")
+                when {
+                    item.isCreated -> {
+                        btnConfirmContainer.isVisible = false
+                        btnEditContainer.isVisible = true
+                    }
+                    item.isConfirmMode -> {
+                        btnConfirmContainer.isVisible = true
+                        btnEditContainer.isVisible = false
+                    }
+                    else -> {
+                        btnConfirmContainer.isVisible = false
+                        btnEditContainer.isVisible = false
+                    }
                 }
 
                 val mediaAdapter = MediaAdapter(
@@ -144,11 +153,11 @@ data class DefectListUiModel(
     val dateConfirm: String,
     val type: String,
     val description: String,
-    val isConfirmList: Boolean,
+    val isConfirmMode: Boolean,
     val images: List<MediaUiModel>?,
     var hideDetail: Boolean = true,
     var hideLinkDetour: Boolean = true,
-    val isLocal: Boolean
+    val isCreated: Boolean
 
 ) : DiffItem {
 

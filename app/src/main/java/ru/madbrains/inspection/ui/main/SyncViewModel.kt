@@ -307,7 +307,7 @@ class SyncViewModel(
                         id = defect.id,
                         name = defect.defectName.orEmpty(),
                         status = null,
-                        date = defect.dateDetectDefect?.toyyyyMMddTHHmmssXXX().orEmpty()
+                        date = null
                     )
                 }
                 _changedItems.postValue(detours + defects)

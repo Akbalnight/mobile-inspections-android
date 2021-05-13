@@ -17,7 +17,7 @@ class RouteCalendarViewModel : BaseViewModel() {
     fun updateRouteDates(routes: List<DetourUiModel>) {
         routeDates.clear()
         routes.map { route ->
-            route.date.split("T").firstOrNull()?.let { routeDates.add(it) }
+            route.date?.split("T")?.firstOrNull()?.let { routeDates.add(it) }
         }
     }
 

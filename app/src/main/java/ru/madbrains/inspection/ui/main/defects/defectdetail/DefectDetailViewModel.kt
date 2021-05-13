@@ -250,16 +250,7 @@ class DefectDetailViewModel(
             _navigateToCamera.value = Event(Unit)
     }
 
-    fun sendSaveDefect() {
-//        detoursInteractor.saveDefectRemote(
-//            detourId = detourId,
-//            equipmentId = currentDeviceModel?.id,
-//            defectTypicalId = currentTypical?.id,
-//            statusProcessId = DefectStatus.NEW.id,
-//            description = descriptionDefect.orEmpty(),
-//            dateDetectDefect = Date().toyyyyMMddTHHmmssXXX(),
-//            files = getFilesToSend()
-//        )
+    fun saveDefectDb() {
         val model = DefectModel(
             id = UUID.randomUUID().toString(),
             detourId = detourId,
@@ -272,10 +263,10 @@ class DefectDetailViewModel(
             defectName = currentTypical?.name,
             equipmentName = currentDeviceModel?.name,
             extraData = null,
-            staffDetectId = null
-        ).apply {
-            isNew = true
-        }
+            staffDetectId = null,
+            created = true,
+            changed = false
+        )
         detoursInteractor.saveDefectDb(model).observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { _progressVisibility.postValue(true) }
             .doAfterTerminate { _progressVisibility.postValue(false) }
@@ -288,24 +279,15 @@ class DefectDetailViewModel(
             .addTo(disposables)
     }
 
-    fun sendUpdateDefect() {
+    fun updateDefectDb() {
         defect?.let { defectModel ->
-//            detoursInteractor.updateDefectRemote(
-//                detoursId = defectModel.detourId,
-//                id = defectModel.id,
-//                statusProcessId = targetDefectStatus?.id.orEmpty(),
-//                description = descriptionDefect.orEmpty(),
-//                dateDetectDefect = Date().toyyyyMMddTHHmmssXXX(),
-//                files = getFilesToSend()
-//            )
             val model = defectModel.copy(
                 statusProcessId = targetDefectStatus?.id.orEmpty(),
                 description = descriptionDefect.orEmpty(),
                 dateDetectDefect = Date(),
-                files = (defectModel.files?: arrayListOf()) + getFilesToSend()
-            ).apply {
+                files = (defectModel.files?: arrayListOf()) + getFilesToSend(),
                 changed = true
-            }
+            )
             detoursInteractor.saveDefectDb(model)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { _progressVisibility.postValue(true) }
@@ -318,10 +300,6 @@ class DefectDetailViewModel(
                 .addTo(disposables)
         }
 
-    }
-
-    fun localEditDefect() {
-        //todo db offline
     }
 
     private fun getFilesToSend(): List<FileModel> {
@@ -345,7 +323,7 @@ class DefectDetailViewModel(
             if (isChangedDefect) {
                 _showDialogConfirmChangedFields.value = Event(true)
             } else {
-                sendUpdateDefect()
+                updateDefectDb()
             }
         } ?: run {
             defect?.let {
@@ -356,7 +334,7 @@ class DefectDetailViewModel(
                         if (detourId.isNullOrEmpty()) {
                             _showDialogSaveNoLinkedDetour.value = Event(Unit)
                         } else {
-                            sendSaveDefect()
+                            saveDefectDb()
                         }
                     } else {
                         _showDialogBlankFields.value = Event(detourId.isNullOrEmpty())

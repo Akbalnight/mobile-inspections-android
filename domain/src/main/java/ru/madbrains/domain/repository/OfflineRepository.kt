@@ -44,5 +44,6 @@ interface OfflineRepository {
     fun cleanEverything(): Completable
     fun getChangedDetours(): Single<List<DetourModel>>
     fun insertDefect(model: DefectModel): Completable
+    fun deleteDefect(id: String): Completable
     fun getChangedDefects(): Single<List<DefectModel>>
 }

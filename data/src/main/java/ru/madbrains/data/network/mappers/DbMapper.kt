@@ -35,7 +35,8 @@ fun fromDetourItemDB(resp: DetourItemDB): DetourModel {
             possibleDeviationDateFinish = possibleDeviationDateFinish,
             isDefectExist = isDefectExist,
             frozen = frozen,
-            route = route
+            route = route,
+            changed = changed
         )
     }
 }
@@ -86,7 +87,9 @@ fun fromDefectItemDB(resp: DefectItemDB): DefectModel {
             defectName = defectName,
             equipmentName = equipmentName,
             statusProcessId = statusProcessId,
-            extraData = extraData
+            extraData = extraData,
+            created = created,
+            changed = changed
         )
     }
 }
@@ -106,7 +109,7 @@ fun toDefectItemDB(resp: DefectModel): DefectItemDB {
             equipmentName = equipmentName,
             statusProcessId = statusProcessId,
             extraData = extraData,
-            isNew = isNew,
+            created = created,
             changed = changed
         )
     }

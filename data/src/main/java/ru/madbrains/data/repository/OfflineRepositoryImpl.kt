@@ -66,6 +66,10 @@ class OfflineRepositoryImpl(
         return db.defectItemDao().insertItem(toDefectItemDB(model))
     }
 
+    override fun deleteDefect(id: String): Completable {
+        return db.defectItemDao().del(id)
+    }
+
     override fun saveDefectsTypical(models: List<DefectTypicalModel>): Completable {
         return db.defectTypicalDao().insertItem(models.map { toDefectTypicalDB(it) })
     }

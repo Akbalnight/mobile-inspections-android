@@ -51,7 +51,7 @@ class EquipmentTabDefectsFragment : BaseFragment(R.layout.fragment_equipment_tab
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        defectListViewModel.setConfirmList(true)
+        defectListViewModel.isConfirmMode = true
 
         setupRVList()
 

@@ -126,6 +126,10 @@ class DetoursInteractor(
         return offlineRepository.insertDefect(model).subscribeOn(Schedulers.io())
     }
 
+    fun delDefectDb(id: String): Completable {
+        return offlineRepository.deleteDefect(id).subscribeOn(Schedulers.io())
+    }
+
     fun refreshDetoursDb(): Single<List<DetourModel>> {
         return offlineRepository.getDetours().subscribeOn(Schedulers.io())
     }

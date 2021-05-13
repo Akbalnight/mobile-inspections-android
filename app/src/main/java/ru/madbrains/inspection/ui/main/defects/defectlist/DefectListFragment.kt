@@ -24,8 +24,8 @@ import ru.madbrains.inspection.ui.main.defects.defectdetail.DefectDetailFragment
 class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
 
     companion object {
-        const val KEY_EQUIPMENTS_IDS_DEFECT_LIST = "device_id_defect_list_fragment"
-        const val KEY_IS_CONFIRM_DEFECT_LIST = "is_filter_defect_list_fragment"
+        const val KEY_EQUIPMENTS_IDS_DEFECT_LIST = "KEY_EQUIPMENTS_IDS_DEFECT_LIST"
+        const val KEY_IS_CONFIRM_MODE = "KEY_IS_CONFIRM_MODE"
     }
 
     private val mainViewModel: MainViewModel by sharedViewModel()
@@ -65,15 +65,11 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
         super.onActivityCreated(savedInstanceState)
 
         val deviceIds = arguments?.getStringArrayList(KEY_EQUIPMENTS_IDS_DEFECT_LIST)
-        val isConfirmList = arguments?.getBoolean(KEY_IS_CONFIRM_DEFECT_LIST, false)
-        isConfirmList?.let {
-            defectListViewModel.setConfirmList(it)
-            if (it) {
-                setupViewingDefects()
-            } else {
-                setupRegisterDefects()
-            }
-        } ?: run {
+        val isConfirmMode = arguments?.getBoolean(KEY_IS_CONFIRM_MODE, false)?:false
+        defectListViewModel.isConfirmMode = isConfirmMode
+        if(isConfirmMode){
+            setupViewingDefects()
+        } else{
             setupRegisterDefects()
         }
 
