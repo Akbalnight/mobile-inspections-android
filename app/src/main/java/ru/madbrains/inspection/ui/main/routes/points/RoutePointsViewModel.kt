@@ -144,6 +144,7 @@ class RoutePointsViewModel(
                         name = it.name.orEmpty(),
                         position = route.position,
                         completed = route.completed,
+                        haveDefects = false, //TODO:
                         clickable = !preserveOrder || route.completed || index == 0 || prevWasCompleted
                     )
                 )

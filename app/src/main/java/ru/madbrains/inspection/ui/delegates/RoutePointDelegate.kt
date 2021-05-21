@@ -18,11 +18,11 @@ fun routePointDelegate(clickListener: (RoutePointUiModel) -> Unit) =
                 tvPointNumber.text = item.position.toString()
                 tvPointName.text = item.name
                 tvPointNumber.background =
-                    if (item.completed) context.drawables[R.drawable.light_blue_circle]
-                    else context.drawables[R.drawable.light_grey_circle]
-                if (item.completed) tvPointNumber.setTextColor(context.colors[R.color.textWhite])
-                else tvPointNumber.setTextColor(context.colors[R.color.textMain])
-
+                    when {
+                        item.completed && item.haveDefects -> context.drawables[R.drawable.light_red_circle]
+                        item.completed && !item.haveDefects -> context.drawables[R.drawable.light_green_circle]
+                        else -> context.drawables[R.drawable.light_blue_circle]
+                    }
             }
         }
     }
@@ -32,7 +32,8 @@ data class RoutePointUiModel(
     val parentId: String?,
     val name: String,
     val position: Int?,
-    val completed: Boolean = false,
+    val completed: Boolean,
+    val haveDefects: Boolean,
     val clickable: Boolean
 ) : DiffItem {
 
