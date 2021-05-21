@@ -16,7 +16,7 @@ interface DetourItemDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertItem(detailedItemList: List<DetourItemDB>): Completable
 
-    @Query("SELECT * FROM DetourItemDB B ORDER BY dateStartPlan DESC")
+    @Query("SELECT * FROM DetourItemDB ORDER BY dateStartPlan DESC")
     fun getItems(): Single<List<DetourItemDB>>
 
     @Query("SELECT * FROM DetourItemDB WHERE changed = 1 ORDER BY dateStartPlan DESC")

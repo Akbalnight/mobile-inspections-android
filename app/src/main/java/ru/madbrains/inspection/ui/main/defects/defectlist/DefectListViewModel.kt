@@ -17,6 +17,7 @@ import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.DefectListUiModel
 import ru.madbrains.inspection.ui.delegates.MediaUiModel
+import timber.log.Timber
 import java.util.*
 
 class DefectListViewModel(private val detoursInteractor: DetoursInteractor) : BaseViewModel() {
@@ -51,7 +52,8 @@ class DefectListViewModel(private val detoursInteractor: DetoursInteractor) : Ba
 
     fun getDefectList(deviceIds: List<String>?) {
         lastDeviceIds = deviceIds
-        detoursInteractor.getDefectsDb(equipmentIds = deviceIds, limit = if(isConfirmMode) 5 else null)
+        val single = if(deviceIds!=null) detoursInteractor.getActiveDefectsDb(equipmentIds = deviceIds) else detoursInteractor.getDefectsDb()
+        single
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { _progressVisibility.postValue(true) }
             .doAfterTerminate { _progressVisibility.postValue(false) }
@@ -65,7 +67,6 @@ class DefectListViewModel(private val detoursInteractor: DetoursInteractor) : Ba
                 it.printStackTrace()
             })
             .addTo(disposables)
-
     }
 
     fun deleteDefect(deleteItem: DefectModel?) {

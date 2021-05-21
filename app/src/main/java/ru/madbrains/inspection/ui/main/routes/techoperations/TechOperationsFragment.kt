@@ -165,20 +165,6 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
         })
     }
 
-
-    private fun getEquipmentIds(): ArrayList<String>? {
-        techOperationsViewModel.savedRouteData?.equipments?.let {
-            if (!it.isNullOrEmpty()) {
-                return arrayListOf<String>().apply {
-                    it.map { equipmentModel ->
-                        add(equipmentModel.id)
-                    }
-                }
-            }
-        }
-        return null
-    }
-
     private fun getEquipments(): List<EquipmentModel>? {
         techOperationsViewModel.savedRouteData?.equipments?.let {
             return it
@@ -198,7 +184,7 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
     private fun toDefectListFragment() {
         findNavController().navigate(
             R.id.graph_defects, bundleOf(
-                DefectListFragment.KEY_EQUIPMENTS_IDS_DEFECT_LIST to getEquipmentIds(),
+                DefectListFragment.KEY_EQUIPMENTS_IDS_DEFECT_LIST to techOperationsViewModel.savedRouteData?.equipments?.map { it.id },
                 DefectListFragment.KEY_IS_CONFIRM_MODE to true
             )
         )

@@ -74,13 +74,16 @@ class OfflineRepositoryImpl(
         return db.defectTypicalDao().insertItem(models.map { toDefectTypicalDB(it) })
     }
 
-    override fun getDefects(equipmentIds: List<String>?, limit: Int): Single<List<DefectModel>> {
-        val single = if (equipmentIds != null) {
-            db.defectItemDao().getItemsByEquipment(equipmentIds, limit)
-        } else {
-            db.defectItemDao().getItems(limit)
-        }
-        return single.map { it -> it.map { fromDefectItemDB(it) } }
+    override fun getDefects(): Single<List<DefectModel>> {
+        return db.defectItemDao().getItems().map { it -> it.map { fromDefectItemDB(it) } }
+    }
+
+    override fun getActiveDefects(equipmentIds: List<String>): Single<List<DefectModel>> {
+        return db.defectItemDao().getActiveItems(equipmentIds, DefectStatus.ELIMINATED.id).map { it -> it.map { fromDefectItemDB(it) } }
+    }
+
+    override fun getEquipmentIdsWithDefects(equipmentIds: List<String>): Single<List<String>> {
+        return db.defectItemDao().getEquipmentIdsWithDefects(equipmentIds, DefectStatus.ELIMINATED.id)
     }
 
     override fun getEquipments(): Single<List<EquipmentModel>> {
