@@ -2,6 +2,8 @@ package ru.madbrains.inspection.ui.common.camera
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -19,12 +21,14 @@ import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
 import timber.log.Timber
-import java.io.File
+import java.io.*
+
 
 @SuppressLint("RestrictedApi")
 class CameraFragment : BaseFragment(R.layout.fragment_camera) {
     companion object {
         private const val CAMERA_PERMISSIONS_REQUEST_CODE = 1
+        private const val REQUEST_TAKE_PHOTO_FROM_GALLERY = 1000
     }
 
     private val cameraViewModel: CameraViewModel by sharedViewModel()
@@ -59,6 +63,10 @@ class CameraFragment : BaseFragment(R.layout.fragment_camera) {
             cameraViewModel.changeCameraState(CameraViewModel.CameraState.PHOTO)
         }
 
+        llGallery.setOnClickListener {
+            cameraViewModel.galleryClick()
+        }
+
         llVideo.setOnClickListener {
             cameraViewModel.changeCameraState(CameraViewModel.CameraState.VIDEO)
         }
@@ -84,12 +92,12 @@ class CameraFragment : BaseFragment(R.layout.fragment_camera) {
             ivStartRecord.isInvisible = false
             videoCapture.stopRecording()
         }
-        cameraViewModel.startRecording.observe(viewLifecycleOwner, EventObserver { videoFile->
+        cameraViewModel.startRecording.observe(viewLifecycleOwner, EventObserver { videoFile ->
             ivStartRecord.isInvisible = true
             ivStopRecord.isInvisible = false
             videoCapture.startRecording(videoFile, object : VideoCapture.OnVideoSavedListener {
                 override fun onVideoSaved(file: File?) {
-                    file?.let { cameraViewModel.setVideo(it) }
+                    file?.let { cameraViewModel.postFile(it) }
                 }
 
                 override fun onError(
@@ -119,6 +127,28 @@ class CameraFragment : BaseFragment(R.layout.fragment_camera) {
                 }
             }
         })
+
+        cameraViewModel.toGallery.observe(viewLifecycleOwner, EventObserver {
+            val intent = Intent(Intent.ACTION_GET_CONTENT)
+            intent.addCategory(Intent.CATEGORY_OPENABLE)
+            intent.type = "image/*"
+            startActivityForResult(
+                Intent.createChooser(intent, "Select Picture"),
+                REQUEST_TAKE_PHOTO_FROM_GALLERY
+            )
+        })
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REQUEST_TAKE_PHOTO_FROM_GALLERY && resultCode == RESULT_OK) {
+            val dir = activity?.externalCacheDir
+            val contentResolver = activity?.contentResolver
+            val dataData = data?.data
+
+            if(dir!=null && contentResolver!=null && dataData!=null){
+                cameraViewModel.getDataFromGallery(dataData, dir, contentResolver)
+            }
+        }
     }
 
     override fun onRequestPermissionsResult(

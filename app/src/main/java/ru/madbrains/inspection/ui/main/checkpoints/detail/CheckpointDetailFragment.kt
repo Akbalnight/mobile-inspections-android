@@ -44,7 +44,6 @@ class CheckpointDetailFragment : BaseFragment(R.layout.fragment_checkpoint_detai
 
     private val checkpointDetailViewModel: CheckpointDetailViewModel by viewModel()
     private val checkpointListViewModel: CheckpointListViewModel by sharedViewModel()
-    private val cameraViewModel: CameraViewModel by sharedViewModel()
     private val mainViewModel: MainViewModel by sharedViewModel()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -187,11 +186,6 @@ class CheckpointDetailFragment : BaseFragment(R.layout.fragment_checkpoint_detai
             }
             checkpointMediaAdapter.items = it
         })
-
-        cameraViewModel.capturedImage.observe(viewLifecycleOwner, EventObserver {
-            checkpointDetailViewModel.addImage(it)
-        })
-
     }
 
     private fun showDialogDeleteMedia(item: MediaUiModel) {

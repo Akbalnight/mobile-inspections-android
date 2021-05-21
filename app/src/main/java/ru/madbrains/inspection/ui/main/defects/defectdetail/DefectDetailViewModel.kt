@@ -16,8 +16,7 @@ import java.io.File
 import java.util.*
 
 class DefectDetailViewModel(
-    private val detoursInteractor: DetoursInteractor,
-    private val fileUtil: FileUtil
+    private val detoursInteractor: DetoursInteractor
 ) :
     BaseViewModel() {
 
@@ -213,25 +212,12 @@ class DefectDetailViewModel(
         _mediaList.value = items
     }
 
-    fun addImage(image: Bitmap) {
-        val id = UUID.randomUUID().toString()
-        mediaModels.add(
-            MediaUiModel(
-                id = id,
-                file = fileUtil.createJpgFile(image, detoursInteractor.getFileInFolder("$id.jpg", AppDirType.Local)),
-                isLocal = true
-            )
-        )
-        isChangedDefect = true
-        updateMediaList()
-    }
-
-    fun addVideo(videoFile: File) {
+    fun addFile(file: File) {
         mediaModels.add(
             MediaUiModel(
                 id = UUID.randomUUID().toString(),
                 isLocal = true,
-                file = videoFile
+                file = file
             )
         )
         isChangedDefect = true
