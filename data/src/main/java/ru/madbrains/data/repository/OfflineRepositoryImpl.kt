@@ -83,6 +83,10 @@ class OfflineRepositoryImpl(
         return single.map { it -> it.map { fromDefectItemDB(it) } }
     }
 
+    override fun getEquipmentIdsWithDefects(equipmentIds: List<String>): Single<List<String>> {
+        return db.defectItemDao().getEquipmentIdsWithDefects(equipmentIds, DefectStatus.ELIMINATED.id)
+    }
+
     override fun getEquipments(): Single<List<EquipmentModel>> {
         return db.equipmentItemDao().getItems().map { it -> it.map { fromEquipmentItemDB(it) } }
     }

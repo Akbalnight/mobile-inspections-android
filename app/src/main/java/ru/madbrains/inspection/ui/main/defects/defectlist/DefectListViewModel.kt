@@ -65,7 +65,6 @@ class DefectListViewModel(private val detoursInteractor: DetoursInteractor) : Ba
                 it.printStackTrace()
             })
             .addTo(disposables)
-
     }
 
     fun deleteDefect(deleteItem: DefectModel?) {

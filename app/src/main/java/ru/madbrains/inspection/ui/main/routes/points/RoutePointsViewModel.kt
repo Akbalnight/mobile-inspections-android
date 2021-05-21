@@ -15,6 +15,7 @@ import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.RoutePointUiModel
+import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -49,7 +50,7 @@ class RoutePointsViewModel(
 
     var detourModel: DetourModel? = null
     lateinit var timerDispose: Disposable
-    val routeDataModels
+    private val routeDataModels
         get() = detourModel?.route?.routesData?.sortedBy { it.position } ?: emptyList()
 
     private val _navigateToTechOperations = MutableLiveData<Event<RouteDataModel>>()
@@ -130,27 +131,55 @@ class RoutePointsViewModel(
         route?.let { _navigateToNextRoute.value = Event(route) }
     }
 
-    private fun updateData() {
+    private fun updateDataR(defectsMap: MutableMap<String, Boolean>) {
         setRouteStatus()
+        Timber.d("debug_dmm defectsMap: ${defectsMap}")
         val routePoints = mutableListOf<DiffItem>()
         routeDataModels.mapIndexed { index, route ->
-            val prevWasCompleted = if (index > 0) routeDataModels[index - 1].completed else false
-            val preserveOrder = detourModel?.saveOrderControlPoints == true
-            route.techMap?.let {
+            route.techMap?.let { techMap->
+                val prevWasCompleted = if (index > 0) routeDataModels[index - 1].completed else false
+                val preserveOrder = detourModel?.saveOrderControlPoints == true
+                val haveDefects = route.equipments?.fold(false, {acc, a -> acc || defectsMap[a.id] == true})?:false
                 routePoints.add(
                     RoutePointUiModel(
-                        id = it.id,
+                        id = techMap.id,
                         parentId = route.id,
-                        name = it.name.orEmpty(),
+                        name = techMap.name.orEmpty(),
                         position = route.position,
                         completed = route.completed,
-                        haveDefects = false, //TODO:
+                        haveDefects = haveDefects,
                         clickable = !preserveOrder || route.completed || index == 0 || prevWasCompleted
                     )
                 )
             }
         }
         _routePoints.value = routePoints
+    }
+
+   private fun updateData() {
+        val deviceIds = routeDataModels.fold(mutableListOf<String>(), {acc, a ->
+            val ids = a.equipments?.map { it.id }
+            if (ids!=null){
+                acc.addAll(ids)
+            }
+            acc
+        })
+
+        detoursInteractor.getEquipmentIdsWithDefectsDB(equipmentIds = deviceIds)
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { _progressVisibility.postValue(true) }
+            .doAfterTerminate { _progressVisibility.postValue(false) }
+            .subscribe({ ids ->
+                val defectsMap = ids.fold(mutableMapOf<String, Boolean>()){acc,id ->
+                    acc[id] = true
+                    acc
+                }
+
+                updateDataR(defectsMap)
+            }, {
+                it.printStackTrace()
+            })
+            .addTo(disposables)
     }
 
     private fun setRouteStatus() {

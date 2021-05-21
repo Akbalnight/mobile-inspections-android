@@ -156,6 +156,10 @@ class DetoursInteractor(
         return offlineRepository.getDefects(equipmentIds, limit?:-1).subscribeOn(Schedulers.io())
     }
 
+    fun getEquipmentIdsWithDefectsDB(equipmentIds: List<String>): Single<List<String>> {
+        return offlineRepository.getEquipmentIdsWithDefects(equipmentIds).subscribeOn(Schedulers.io())
+    }
+
     fun saveEquipmentsDb(models: List<EquipmentModel>): Completable {
         return offlineRepository.saveEquipments(models).subscribeOn(Schedulers.io())
     }

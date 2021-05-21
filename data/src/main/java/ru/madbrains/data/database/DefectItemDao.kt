@@ -23,6 +23,9 @@ interface DefectItemDao {
     @Query("SELECT * FROM DefectItemDB ORDER BY dateDetectDefect DESC LIMIT :limit")
     fun getItems(limit: Int): Single<List<DefectItemDB>>
 
+    @Query("SELECT DISTINCT equipmentId FROM DefectItemDB WHERE equipmentId in (:equipmentIds) AND statusProcessId!=:eliminatedId")
+    fun getEquipmentIdsWithDefects(equipmentIds: List<String>, eliminatedId:String): Single<List<String>>
+
     @Query("SELECT * FROM DefectItemDB WHERE changed = 1 OR created = 1")
     fun getChangedItems(): Single<List<DefectItemDB>>
 
