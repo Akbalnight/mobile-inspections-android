@@ -84,7 +84,7 @@ class CameraFragment : BaseFragment(R.layout.fragment_camera) {
             changeFacing()
         }
         ivStartRecord.setOnClickListener {
-            cameraViewModel.startRecord("${System.currentTimeMillis()}.mp4")
+            cameraViewModel.startRecord()
         }
         ivStopRecord.setOnClickListener {
             ivStopRecord.isInvisible = true
@@ -143,12 +143,10 @@ class CameraFragment : BaseFragment(R.layout.fragment_camera) {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_TAKE_PHOTO_FROM_GALLERY && resultCode == RESULT_OK) {
-            val dir = activity?.externalCacheDir
             val contentResolver = activity?.contentResolver
-            val dataData = data?.data
-
-            if(dir!=null && contentResolver!=null && dataData!=null){
-                cameraViewModel.getDataFromGallery(dataData, dir, contentResolver)
+            val uri = data?.data
+            if(contentResolver!=null && uri!=null){
+                cameraViewModel.getDataFromGallery(uri, contentResolver)
             }
         }
     }

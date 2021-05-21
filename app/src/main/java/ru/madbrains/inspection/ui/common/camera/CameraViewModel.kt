@@ -38,10 +38,10 @@ class CameraViewModel(
     val popNav: LiveData<Event<Unit>> = _popNav
 
     fun setImage(bitmap: Bitmap) {
-       fileUtil.createJpgFile(
+        fileUtil.createJpgFile(
            bitmap, detoursInteractor.getFileInFolder(
-               "${UUID.randomUUID()}.jpg",
-               AppDirType.Local
+                "${System.currentTimeMillis()}.jpg",
+                AppDirType.Local
            )
        )?.let{
            postFile(it)
@@ -61,15 +61,23 @@ class CameraViewModel(
         _toGallery.postValue(Event(Unit))
     }
 
-    fun startRecord(name: String) {
+    fun startRecord() {
         _startRecording.postValue(
-            Event(detoursInteractor.getFileInFolder(name, AppDirType.Local))
+            Event(detoursInteractor.getFileInFolder(
+                "${System.currentTimeMillis()}.mp4",
+                AppDirType.Local
+            ))
         )
     }
 
-    fun getDataFromGallery(uri: Uri, dir: File, contentResolver: ContentResolver) {
+    fun getDataFromGallery(uri: Uri, contentResolver: ContentResolver) {
         try {
-            createImageFile(dir, contentResolver.getType(uri))?.let{ file->
+            val type = contentResolver.getType(uri)
+            val ext =  MimeTypeMap.getSingleton().getExtensionFromMimeType(type)
+            detoursInteractor.getFileInFolder(
+                "${System.currentTimeMillis()}.$ext",
+                AppDirType.Local
+            )?.let{ file->
                 contentResolver.openInputStream(uri)?.let { inputStream->
                     val fileOutputStream = FileOutputStream(file)
                     copyStream(inputStream, fileOutputStream)
@@ -78,22 +86,9 @@ class CameraViewModel(
                     postFile(file)
                 }
             }
-
         } catch (e: Throwable) {
             Timber.d("debug_dmm e: $e")
         }
-    }
-
-    @Throws(IOException::class)
-    private fun createImageFile(storageDir: File, type: String?): File? {
-        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-        val mime = MimeTypeMap.getSingleton()
-        val ext = mime.getExtensionFromMimeType(type)
-        return File.createTempFile(
-            timeStamp + "_",
-            ".$ext",
-            storageDir
-        )
     }
 
     @Throws(IOException::class)
