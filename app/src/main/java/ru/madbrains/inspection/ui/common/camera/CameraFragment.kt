@@ -79,7 +79,6 @@ class CameraFragment : BaseFragment(R.layout.fragment_camera) {
         }
         ivShot.setOnClickListener {
             cameraViewModel.setImage(textureCamera.bitmap)
-            findNavController().popBackStack()
         }
         ivChangeCamera.setOnClickListener {
             changeFacing()
@@ -136,6 +135,9 @@ class CameraFragment : BaseFragment(R.layout.fragment_camera) {
                 Intent.createChooser(intent, "Select Picture"),
                 REQUEST_TAKE_PHOTO_FROM_GALLERY
             )
+        })
+        cameraViewModel.popNav.observe(viewLifecycleOwner, EventObserver {
+            findNavController().popBackStack()
         })
     }
 
