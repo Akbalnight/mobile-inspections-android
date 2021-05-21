@@ -133,11 +133,11 @@ class RoutePointsViewModel(
 
     private fun updateDataR(defectsMap: MutableMap<String, Boolean>) {
         setRouteStatus()
-        Timber.d("debug_dmm defectsMap: ${defectsMap}")
         val routePoints = mutableListOf<DiffItem>()
+        val lastCompleted = routeDataModels.indexOfLast { it.completed }
         routeDataModels.mapIndexed { index, route ->
             route.techMap?.let { techMap->
-                val prevWasCompleted = if (index > 0) routeDataModels[index - 1].completed else false
+                val current = lastCompleted + 1 == index
                 val preserveOrder = detourModel?.saveOrderControlPoints == true
                 val haveDefects = route.equipments?.fold(false, {acc, a -> acc || defectsMap[a.id] == true})?:false
                 routePoints.add(
@@ -148,7 +148,8 @@ class RoutePointsViewModel(
                         position = route.position,
                         completed = route.completed,
                         haveDefects = haveDefects,
-                        clickable = !preserveOrder || route.completed || index == 0 || prevWasCompleted
+                        current = current,
+                        clickable = !preserveOrder || route.completed || current
                     )
                 )
             }
