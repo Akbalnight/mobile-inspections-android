@@ -87,29 +87,11 @@ class CheckpointDetailViewModel(
         _mediaList.value = items
     }
 
-    fun addImage(image: Bitmap) {
-        val id = UUID.randomUUID().toString()
-        mediaModels.add(
-            MediaUiModel(
-                id = id,
-                file = fileUtil.createJpgFile(image, detoursInteractor.getFileInFolder("$id.jpg", AppDirType.Local)),
-                isLocal = true
-            )
-        )
-        _isChanged.value = true
-        updateMediaList()
-    }
-
     fun deleteMedia(deleteItem: MediaUiModel) {
         if (mediaModels.remove(deleteItem)) {
             _isChanged.value = true
             updateMediaList()
         }
-    }
-
-    fun photoVideoClick() {
-        if (mediaModels.size < 8)
-            _navigateToCamera.value = Event(Unit)
     }
 
     fun sendUpdate() {

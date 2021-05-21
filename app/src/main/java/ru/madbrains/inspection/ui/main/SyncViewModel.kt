@@ -342,7 +342,10 @@ class SyncViewModel(
                     single.flatMapCompletable { Completable.complete() }
                     .andThen(
                         detoursInteractor.saveDefectDb(
-                            item.apply { changed = false }
+                            item.apply {
+                                changed = false
+                                created = false
+                            }
                         ).doFinally {
                             _changedItems.postValue(_changedItems.value?.filter {
                                 it.id != item.id

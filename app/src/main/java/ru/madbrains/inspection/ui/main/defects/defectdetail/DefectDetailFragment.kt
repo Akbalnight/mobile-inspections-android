@@ -258,12 +258,8 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
             defectMediaAdapter.items = it
         })
 
-        cameraViewModel.capturedImage.observe(viewLifecycleOwner, EventObserver {
-            defectDetailViewModel.addImage(it)
-        })
-
-        cameraViewModel.capturedVideo.observe(viewLifecycleOwner, EventObserver {
-            defectDetailViewModel.addVideo(it)
+        cameraViewModel.resolvedFile.observe(viewLifecycleOwner, EventObserver {
+            defectDetailViewModel.addFile(it)
         })
 
     }
