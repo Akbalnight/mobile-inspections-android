@@ -21,7 +21,8 @@ interface OfflineRepository {
     fun getDetoursSource(): Observable<List<DetourModel>>
     fun getSyncInfoSource(): Observable<SyncInfo>
     fun insertDefects(models: List<DefectModel>): Completable
-    fun getDefects(equipmentIds: List<String>?, limit: Int): Single<List<DefectModel>>
+    fun getDefects(): Single<List<DefectModel>>
+    fun getActiveDefects(equipmentIds: List<String>): Single<List<DefectModel>>
     fun getEquipmentIdsWithDefects(equipmentIds: List<String>): Single<List<String>>
     fun saveDetourStatuses(list: List<DetourStatus>)
     fun saveEquipments(models: List<EquipmentModel>): Completable

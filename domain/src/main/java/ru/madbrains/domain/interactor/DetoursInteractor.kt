@@ -152,8 +152,12 @@ class DetoursInteractor(
         return offlineRepository.getChangedDefects().subscribeOn(Schedulers.io())
     }
 
-    fun getDefectsDb(equipmentIds: List<String>?, limit:Int? = null): Single<List<DefectModel>> {
-        return offlineRepository.getDefects(equipmentIds, limit?:-1).subscribeOn(Schedulers.io())
+    fun getDefectsDb(): Single<List<DefectModel>> {
+        return offlineRepository.getDefects().subscribeOn(Schedulers.io())
+    }
+
+    fun getActiveDefectsDb(equipmentIds: List<String>): Single<List<DefectModel>> {
+        return offlineRepository.getActiveDefects(equipmentIds).subscribeOn(Schedulers.io())
     }
 
     fun getEquipmentIdsWithDefectsDB(equipmentIds: List<String>): Single<List<String>> {

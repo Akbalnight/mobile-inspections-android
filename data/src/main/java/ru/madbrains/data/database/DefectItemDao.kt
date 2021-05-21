@@ -17,11 +17,11 @@ interface DefectItemDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertItem(detailedItemList: List<DefectItemDB>): Completable
 
-    @Query("SELECT * FROM DefectItemDB WHERE equipmentId in (:equipmentIds) LIMIT :limit")
-    fun getItemsByEquipment(equipmentIds: List<String>, limit: Int): Single<List<DefectItemDB>>
+    @Query("SELECT * FROM DefectItemDB ORDER BY dateDetectDefect DESC")
+    fun getItems(): Single<List<DefectItemDB>>
 
-    @Query("SELECT * FROM DefectItemDB ORDER BY dateDetectDefect DESC LIMIT :limit")
-    fun getItems(limit: Int): Single<List<DefectItemDB>>
+    @Query("SELECT * FROM DefectItemDB WHERE equipmentId in (:equipmentIds) AND statusProcessId!=:eliminatedId ORDER BY dateDetectDefect DESC LIMIT 5")
+    fun getActiveItems(equipmentIds: List<String>, eliminatedId:String): Single<List<DefectItemDB>>
 
     @Query("SELECT DISTINCT equipmentId FROM DefectItemDB WHERE equipmentId in (:equipmentIds) AND statusProcessId!=:eliminatedId")
     fun getEquipmentIdsWithDefects(equipmentIds: List<String>, eliminatedId:String): Single<List<String>>
