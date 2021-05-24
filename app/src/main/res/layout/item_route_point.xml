@@ -8,7 +8,7 @@
     android:background="?attr/selectableItemBackground">
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvPointNumberBG"
+        android:id="@+id/tvPointNumber"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
@@ -17,22 +17,6 @@
         android:background="@drawable/light_grey_circle"
         android:gravity="center"
         android:textColor="@color/textMain"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="1" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvPointNumber"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/light_blue_circle"
-        android:gravity="center"
-        android:textColor="@color/textWhite"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
