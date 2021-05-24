@@ -2,13 +2,18 @@ package ru.madbrains.inspection.ui.main.routes.points.map
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.addTo
 import ru.madbrains.domain.interactor.DetoursInteractor
 import ru.madbrains.domain.model.AppDirType
 import ru.madbrains.domain.model.DetourModel
 import ru.madbrains.domain.model.RouteDataModel
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
+import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.MapLevelUiModel
+import ru.madbrains.inspection.ui.delegates.RoutePointUiModel
+import timber.log.Timber
 import java.io.File
 
 class RoutePointsMapViewModel(
@@ -17,8 +22,8 @@ class RoutePointsMapViewModel(
     private val _mapLevels = MutableLiveData<List<MapLevelUiModel>>()
     val mapLevels: LiveData<List<MapLevelUiModel>> = _mapLevels
 
-    private val _mapPoints = MutableLiveData<List<RouteDataModel>>()
-    val mapPoints: LiveData<List<RouteDataModel>> = _mapPoints
+    private val _mapPoints = MutableLiveData<List<MapPointUiModel>>()
+    val mapPoints: LiveData<List<MapPointUiModel>> = _mapPoints
 
     private val _navigateToTechOperations = MutableLiveData<Event<RouteDataModel>>()
     val navigateToTechOperations: LiveData<Event<RouteDataModel>> = _navigateToTechOperations
@@ -60,17 +65,15 @@ class RoutePointsMapViewModel(
     private fun filterMapPoints(map: MapLevelUiModel?) {
         if (map == null) return
 
-        _mapPoints.value = detourModel.route.routesData?.filter { it.routeMapId == map.id }
+        detourModel.route.routesData?.let { list->
+            updateData(list.filter { it.routeMapId == map.id })
+        }
     }
 
-    fun routePointClick(routeData: RouteDataModel) {
-        detourModel.route.routesData?.sortedBy { it.position }?.let {routes->
-            val clickedIndex = routes.indexOf(routeData)
-            val prevWasCompleted = if (clickedIndex > 0) routes[clickedIndex - 1].completed else false
-            val preserveOrder = detourModel.saveOrderControlPoints == true
-
-            if (!preserveOrder || routeData.completed || clickedIndex == 0 || prevWasCompleted) {
-                _navigateToTechOperations.value = Event(routeData)
+    fun routePointClick(point: MapPointUiModel) {
+        detourModel.route.routesData?.let {routes->
+            routes.find { it.id == point.routeId }?.let {
+                _navigateToTechOperations.value = Event(it)
             }
         }
     }
@@ -78,4 +81,81 @@ class RoutePointsMapViewModel(
     fun loadImage(item: MapLevelUiModel) {
         _mapImage.postValue(detoursInteractor.getFileInFolder(item.fileName, AppDirType.Docs))
     }
+
+    private fun updateData(points: List<RouteDataModel>) {
+        val deviceIds = points.fold(mutableListOf<String>(), {acc, a ->
+            val ids = a.equipments?.map { it.id }
+            if (ids!=null){
+                acc.addAll(ids)
+            }
+            acc
+        })
+
+        detoursInteractor.getEquipmentIdsWithDefectsDB(equipmentIds = deviceIds)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ ids ->
+                val defectsMap = ids.fold(mutableMapOf<String, Boolean>()){acc,id ->
+                    acc[id] = true
+                    acc
+                }
+                updateDataR(points, defectsMap)
+            }, {
+                it.printStackTrace()
+            })
+            .addTo(disposables)
+    }
+
+    private fun updateDataR(points: List<RouteDataModel>, defectsMap: MutableMap<String, Boolean>) {
+        val mapPoints = mutableListOf<MapPointUiModel>()
+        val lastCompleted = points.indexOfLast { it.completed }
+        points.mapIndexed { index, route ->
+            route.techMap?.let { techMap->
+                val current = lastCompleted + 1 == index
+                val preserveOrder = detourModel.saveOrderControlPoints == true
+                val haveDefects = route.equipments?.fold(false, {acc, a -> acc || defectsMap[a.id] == true})?:false
+
+                val status = when{
+                    current -> MapPointStatus.Current
+                    route.completed && !haveDefects -> MapPointStatus.Completed
+                    route.completed && haveDefects -> MapPointStatus.CompletedWithDefects
+                    else -> MapPointStatus.None
+                }
+
+                mapPoints.add(
+                    MapPointUiModel(
+                        techMapId = techMap.id,
+                        routeId = route.id,
+                        xLocation = route.xLocation,
+                        yLocation = route.yLocation,
+                        name = techMap.name.orEmpty(),
+                        position = route.position,
+                        status = status,
+                        clickable = !preserveOrder || route.completed || current
+                    )
+                )
+            }
+        }
+        _mapPoints.value = mapPoints
+    }
+}
+
+data class MapPointUiModel(
+    val techMapId: String,
+    val routeId: String?,
+    val name: String,
+    val position: Int?,
+    val status: MapPointStatus,
+    val clickable: Boolean,
+    val xLocation: Int?,
+    val yLocation: Int?
+) : DiffItem {
+
+    override fun areItemsTheSame(newItem: DiffItem): Boolean =
+        newItem is RoutePointUiModel && techMapId == newItem.id
+
+    override fun areContentsTheSame(newItem: DiffItem): Boolean = this == newItem
+}
+
+enum class MapPointStatus{
+    None, Current, CompletedWithDefects, Completed
 }
