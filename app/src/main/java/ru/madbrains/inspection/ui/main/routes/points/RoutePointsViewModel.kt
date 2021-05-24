@@ -197,6 +197,10 @@ class RoutePointsViewModel(
         }
     }
 
+    fun clean() {
+        _routePoints.value = null
+    }
+
     enum class RouteStatus {
         NOT_STARTED,
         IN_PROGRESS,

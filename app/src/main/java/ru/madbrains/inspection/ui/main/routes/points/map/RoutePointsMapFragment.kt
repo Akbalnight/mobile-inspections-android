@@ -74,6 +74,12 @@ class RoutePointsMapFragment : BaseFragment(R.layout.fragment_route_points_map) 
         btnMapLayers.setOnClickListener {
             findNavController().navigate(R.id.action_routePointsFragment_to_mapsLevelListFragment)
         }
+
+        routePointsMapViewModel.mapPoints.observe(viewLifecycleOwner) { list ->
+            mapIV.setOnMatrixChangeListener {
+                calculatePoints(it, list)
+            }
+        }
     }
 
     override fun onPause() {
@@ -85,15 +91,16 @@ class RoutePointsMapFragment : BaseFragment(R.layout.fragment_route_points_map) 
     override fun onResume() {
         super.onResume()
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        routePointsMapViewModel.mapPoints.observe(viewLifecycleOwner) { list ->
-            mapIV.setOnMatrixChangeListener {
-                calculatePoints(it, list)
+        routePointsMapViewModel.mapPoints.value?.let { list->
+            mapIV.displayRect?.let { rect->
+                calculatePoints(rect, list)
             }
         }
-        super.onViewCreated(view, savedInstanceState)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        routePointsViewModel.clean()
     }
 
     private fun calculatePoints(rectF: RectF, list: List<MapPointUiModel>) {
