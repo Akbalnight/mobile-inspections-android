@@ -6,208 +6,199 @@
     android:layout_height="match_parent"
     android:background="@android:color/black">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="5dp"
+        android:padding="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_cam_back" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivFlash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="16dp"
+        android:padding="8dp"
+        app:layout_constraintEnd_toStartOf="@id/ivChangeCamera"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_flash" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivChangeCamera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="16dp"
+        android:padding="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_change_camera" />
+
+    <LinearLayout
+        android:id="@+id/llGallery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/ic_solid_imagegallery" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="ГАЛЕРЕЯ"
+            android:textAllCaps="true"
+            android:textColor="@color/textWhite"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvPointNumber"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/tvPointNumber"
+            app:layout_constraintTop_toTopOf="@+id/tvPointNumber" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/shotLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/llPhoto"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="@+id/llGallery">
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/ivBack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="5dp"
-            android:padding="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_cam_back" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/ivFlash"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="16dp"
-            android:padding="8dp"
-            app:layout_constraintEnd_toStartOf="@id/ivChangeCamera"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_flash" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/ivChangeCamera"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="16dp"
-            android:padding="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_change_camera" />
-
-        <TextureView
-            android:id="@+id/textureCamera"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="16dp"
-            app:layout_constraintBottom_toTopOf="@id/shotLayout"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ivBack"
-            tools:background="@android:color/white" />
-
-        <LinearLayout
-            android:id="@+id/llGallery"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginBottom="16dp"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:srcCompat="@drawable/ic_solid_imagegallery" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="ГАЛЕРЕЯ"
-                android:textAllCaps="true"
-                android:textColor="@color/textWhite"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="@+id/tvPointNumber"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/tvPointNumber"
-                app:layout_constraintTop_toTopOf="@+id/tvPointNumber" />
-
-        </LinearLayout>
-
-        <FrameLayout
-            android:id="@+id/shotLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/llPhoto"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/llGallery">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/ivStartRecord"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_gravity="center_horizontal"
-                android:visibility="invisible"
-                app:layout_constraintEnd_toStartOf="@+id/llPhoto"
-                app:layout_constraintStart_toEndOf="@+id/llGallery"
-                app:srcCompat="@drawable/ic_start_record" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/ivStopRecord"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_gravity="center_horizontal"
-                android:visibility="invisible"
-                app:layout_constraintEnd_toStartOf="@+id/llPhoto"
-                app:layout_constraintStart_toEndOf="@+id/llGallery"
-                app:srcCompat="@drawable/ic_stop_record" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/ivShot"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_gravity="center_horizontal"
-                android:visibility="visible"
-                app:layout_constraintEnd_toStartOf="@+id/llPhoto"
-                app:layout_constraintStart_toEndOf="@+id/llGallery"
-                app:srcCompat="@drawable/ic_shot"
-                tools:layout_editor_absoluteY="651dp" />
-
-        </FrameLayout>
-
-        <LinearLayout
-            android:id="@+id/llPhoto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="16dp"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
+            android:id="@+id/ivStartRecord"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center_horizontal"
             android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintEnd_toStartOf="@+id/llPhoto"
+            app:layout_constraintStart_toEndOf="@+id/llGallery"
+            app:srcCompat="@drawable/ic_start_record" />
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:srcCompat="@drawable/ic_solid_photo" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivStopRecord"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center_horizontal"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toStartOf="@+id/llPhoto"
+            app:layout_constraintStart_toEndOf="@+id/llGallery"
+            app:srcCompat="@drawable/ic_stop_record" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="ФОТО"
-                android:textAllCaps="true"
-                android:textColor="@color/textWhite"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="@+id/tvPointNumber"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/tvPointNumber"
-                app:layout_constraintTop_toTopOf="@+id/tvPointNumber" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivShot"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center_horizontal"
+            android:visibility="visible"
+            app:layout_constraintEnd_toStartOf="@+id/llPhoto"
+            app:layout_constraintStart_toEndOf="@+id/llGallery"
+            app:srcCompat="@drawable/ic_shot"
+            tools:layout_editor_absoluteY="651dp" />
 
-        </LinearLayout>
+    </FrameLayout>
 
-        <LinearLayout
-            android:id="@+id/llVideo"
+    <LinearLayout
+        android:id="@+id/llPhoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="16dp"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:visibility="visible"
+            android:layout_gravity="center_horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/ic_solid_photo" />
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:srcCompat="@drawable/ic_solid_video" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="ФОТО"
+            android:textAllCaps="true"
+            android:textColor="@color/textWhite"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvPointNumber"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/tvPointNumber"
+            app:layout_constraintTop_toTopOf="@+id/tvPointNumber" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="ВИДЕО"
-                android:textAllCaps="true"
-                android:textColor="@color/textWhite"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="@+id/tvPointNumber"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/tvPointNumber"
-                app:layout_constraintTop_toTopOf="@+id/tvPointNumber" />
+    </LinearLayout>
 
-        </LinearLayout>
+    <LinearLayout
+        android:id="@+id/llVideo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/ic_solid_video" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="ВИДЕО"
+            android:textAllCaps="true"
+            android:textColor="@color/textWhite"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvPointNumber"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/tvPointNumber"
+            app:layout_constraintTop_toTopOf="@+id/tvPointNumber" />
+
+    </LinearLayout>
+
+    <androidx.camera.view.PreviewView
+        android:id="@+id/viewFinder"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@id/shotLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivBack"
+        tools:background="@android:color/white" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
