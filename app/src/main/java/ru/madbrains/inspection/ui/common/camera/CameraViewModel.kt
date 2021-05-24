@@ -28,8 +28,11 @@ class CameraViewModel(
     private val _resolvedFile = MutableLiveData<Event<File>>()
     val resolvedFile: LiveData<Event<File>> = _resolvedFile
 
-    private val _startRecording = MutableLiveData<Event<File?>>()
-    val startRecording: LiveData<Event<File?>> = _startRecording
+    private val _startRecording = MutableLiveData<Event<File>>()
+    val startRecording: LiveData<Event<File>> = _startRecording
+
+    private val _startCapture = MutableLiveData<Event<File>>()
+    val startCapture: LiveData<Event<File>> = _startCapture
 
     private val _toGallery = MutableLiveData<Event<Unit>>()
     val toGallery: LiveData<Event<Unit>> = _toGallery
@@ -37,15 +40,24 @@ class CameraViewModel(
     private val _popNav = MutableLiveData<Event<Unit>>()
     val popNav: LiveData<Event<Unit>> = _popNav
 
-    fun setImage(bitmap: Bitmap) {
-        fileUtil.createJpgFile(
-           bitmap, detoursInteractor.getFileInFolder(
-                "${System.currentTimeMillis()}.jpg",
-                AppDirType.Local
-           )
-       )?.let{
-           postFile(it)
-       }
+    fun startCapture() {
+//        fileUtil.createJpgFile(
+//           bitmap, detoursInteractor.getFileInFolder(
+//                "${System.currentTimeMillis()}.jpg",
+//                AppDirType.Local
+//           )
+//       )?.let{
+//           postFile(it)
+//       }
+
+        detoursInteractor.getFileInFolder(
+            "${System.currentTimeMillis()}.jpg",
+            AppDirType.Local
+        )?.let{
+            _startCapture.postValue(Event(it))
+        }
+
+
     }
 
     fun postFile(file: File) {
@@ -62,12 +74,12 @@ class CameraViewModel(
     }
 
     fun startRecord() {
-        _startRecording.postValue(
-            Event(detoursInteractor.getFileInFolder(
-                "${System.currentTimeMillis()}.mp4",
-                AppDirType.Local
-            ))
-        )
+        detoursInteractor.getFileInFolder(
+            "${System.currentTimeMillis()}.mp4",
+            AppDirType.Local
+        )?.let {
+            _startRecording.postValue(Event(it))
+        }
     }
 
     fun getDataFromGallery(uri: Uri, contentResolver: ContentResolver) {

@@ -7,12 +7,11 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.util.Rational
-import android.util.Size
 import android.view.View
 import android.view.WindowManager
 import androidx.camera.core.*
-import androidx.camera.core.CameraX.LensFacing
+import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.core.content.ContextCompat
 import androidx.core.view.isInvisible
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_camera.*
@@ -21,7 +20,11 @@ import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
 import timber.log.Timber
-import java.io.*
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 
 
 @SuppressLint("RestrictedApi")
@@ -29,12 +32,22 @@ class CameraFragment : BaseFragment(R.layout.fragment_camera) {
     companion object {
         private const val CAMERA_PERMISSIONS_REQUEST_CODE = 1
         private const val REQUEST_TAKE_PHOTO_FROM_GALLERY = 1000
+        private const val RATIO_4_3_VALUE = 4.0 / 3.0
+        private const val RATIO_16_9_VALUE = 16.0 / 9.0
+
     }
 
     private val cameraViewModel: CameraViewModel by sharedViewModel()
-    private lateinit var preview: Preview
-    private lateinit var videoCapture: VideoCapture
-    private var lensFacing = LensFacing.BACK
+
+    private var displayId: Int = -1
+    private var lensFacing: Int = CameraSelector.LENS_FACING_BACK
+    private var preview: Preview? = null
+    private var imageCapture: ImageCapture? = null
+    private var videoCapture: VideoCapture? = null
+    private var camera: Camera? = null
+    private var cameraProvider: ProcessCameraProvider? = null
+
+    private lateinit var cameraExecutor: ExecutorService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,8 +63,7 @@ class CameraFragment : BaseFragment(R.layout.fragment_camera) {
     override fun onDestroyView() {
         super.onDestroyView()
         showSystemUI()
-        // Turn off all camera operations when we navigate away
-        CameraX.unbindAll()
+        cameraExecutor.shutdown()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -78,7 +90,7 @@ class CameraFragment : BaseFragment(R.layout.fragment_camera) {
             changeFlashlightState()
         }
         ivShot.setOnClickListener {
-            cameraViewModel.setImage(textureCamera.bitmap)
+            cameraViewModel.startCapture()
         }
         ivChangeCamera.setOnClickListener {
             changeFacing()
@@ -89,24 +101,49 @@ class CameraFragment : BaseFragment(R.layout.fragment_camera) {
         ivStopRecord.setOnClickListener {
             ivStopRecord.isInvisible = true
             ivStartRecord.isInvisible = false
-            videoCapture.stopRecording()
+            videoCapture?.stopRecording()
         }
+        cameraViewModel.startCapture.observe(viewLifecycleOwner, EventObserver { photoFile ->
+            imageCapture?.let { imageCapture ->
+                val metadata = ImageCapture.Metadata().apply {
+                    isReversedHorizontal = lensFacing == CameraSelector.LENS_FACING_FRONT
+                }
+                val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile)
+                    .setMetadata(metadata)
+                    .build()
+                imageCapture.takePicture(outputOptions, cameraExecutor, object : ImageCapture.OnImageSavedCallback {
+                    override fun onError(exc: ImageCaptureException) {
+                    }
+
+                    override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                        cameraViewModel.postFile(photoFile)
+                    }
+                })
+            }
+        })
         cameraViewModel.startRecording.observe(viewLifecycleOwner, EventObserver { videoFile ->
             ivStartRecord.isInvisible = true
             ivStopRecord.isInvisible = false
-            videoCapture.startRecording(videoFile, object : VideoCapture.OnVideoSavedListener {
-                override fun onVideoSaved(file: File?) {
-                    file?.let { cameraViewModel.postFile(it) }
-                }
+            videoCapture?.let { videoCapture ->
+                val metadata = VideoCapture.Metadata().apply {}
+                val outputOptions = VideoCapture.OutputFileOptions.Builder(videoFile)
+                    .setMetadata(metadata)
+                    .build()
+                videoCapture.startRecording(outputOptions, cameraExecutor, object : VideoCapture.OnVideoSavedCallback {
+                    override fun onVideoSaved(outputFileResults: VideoCapture.OutputFileResults) {
+                        cameraViewModel.postFile(videoFile)
+                    }
 
-                override fun onError(
-                    useCaseError: VideoCapture.UseCaseError?,
-                    message: String?,
-                    cause: Throwable?
-                ) {
-                    Timber.tag("CameraLog").d(message)
-                }
-            })
+                    override fun onError(
+                        videoCaptureError: Int,
+                        message: String,
+                        cause: Throwable?
+                    ) {
+                        Timber.d("debug_dmm message: ${message}")
+                    }
+                })
+            }
+
         })
         cameraViewModel.cameraState.observe(viewLifecycleOwner, EventObserver {
             when (it) {
@@ -159,7 +196,7 @@ class CameraFragment : BaseFragment(R.layout.fragment_camera) {
         when (requestCode) {
             CAMERA_PERMISSIONS_REQUEST_CODE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    showCamera()
+                    setUpCamera()
                 } else {
                     requestCameraPermissions()
                 }
@@ -167,14 +204,14 @@ class CameraFragment : BaseFragment(R.layout.fragment_camera) {
         }
     }
 
-    private fun showCamera() {
-        try {
-            CameraX.getCameraWithLensFacing(lensFacing)
-            bindCameraCases()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            // Do nothing
-        }
+    private fun setUpCamera() {
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
+        cameraProviderFuture.addListener(Runnable {
+            cameraExecutor = Executors.newSingleThreadExecutor()
+            displayId = viewFinder.display.displayId
+            cameraProvider = cameraProviderFuture.get()
+            bindCameraUseCases()
+        }, ContextCompat.getMainExecutor(requireContext()))
     }
 
     private fun requestCameraPermissions() {
@@ -184,38 +221,55 @@ class CameraFragment : BaseFragment(R.layout.fragment_camera) {
         )
     }
 
-    private fun bindCameraCases() {
-        CameraX.unbindAll()
+    private fun bindCameraUseCases() {
+        val metrics = DisplayMetrics().also { viewFinder.display.getRealMetrics(it) }
+        val screenAspectRatio = aspectRatio(metrics.widthPixels, metrics.heightPixels)
+        val rotation = viewFinder.display.rotation
 
-        val videoCaptureConfig = VideoCaptureConfig.Builder().apply {
-            setTargetRotation(textureCamera.display.rotation)
-            setLensFacing(lensFacing)
-        }.build()
+        val cameraProvider = cameraProvider ?: throw IllegalStateException("Camera initialization failed.")
+        val cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
+        preview = Preview.Builder()
+            .setTargetAspectRatio(screenAspectRatio)
+            .setTargetRotation(rotation)
+            .build()
 
-        videoCapture = VideoCapture(videoCaptureConfig)
+        imageCapture = ImageCapture.Builder()
+            .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+            .setTargetAspectRatio(screenAspectRatio)
+            .setTargetRotation(rotation)
+            .build()
 
-        val metrics = DisplayMetrics().also { textureCamera.display.getRealMetrics(it) }
-        val screenSize = Size(metrics.widthPixels, metrics.heightPixels)
-        val screenAspectRatio = Rational(metrics.widthPixels, metrics.heightPixels)
-        val previewConfig = PreviewConfig.Builder().apply {
-            setLensFacing(lensFacing)
-            setTargetResolution(screenSize)
-            setTargetAspectRatio(screenAspectRatio)
-            setTargetRotation(textureCamera.display.rotation)
-        }.build()
+        videoCapture = VideoCapture.Builder()
+            .setTargetAspectRatio(screenAspectRatio)
+            .setTargetRotation(rotation)
+            .build()
 
-        preview = AutoFitPreviewBuilder.build(previewConfig, textureCamera)
+        cameraProvider.unbindAll()
 
-        CameraX.bindToLifecycle(viewLifecycleOwner, preview, videoCapture)
+        try {
+            camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture, videoCapture)
+            preview?.setSurfaceProvider(viewFinder.surfaceProvider)
+        } catch (exc: Exception) {
+            Timber.d("debug_dmm exc: $exc")
+        }
     }
 
     private fun changeFlashlightState() {
-        preview.enableTorch(!preview.isTorchOn)
+        val value = camera?.cameraInfo?.torchState?.value == TorchState.OFF
+        camera?.cameraControl?.enableTorch(value)
+    }
+
+    private fun aspectRatio(width: Int, height: Int): Int {
+        val previewRatio = max(width, height).toDouble() / min(width, height)
+        if (abs(previewRatio - RATIO_4_3_VALUE) <= abs(previewRatio - RATIO_16_9_VALUE)) {
+            return AspectRatio.RATIO_4_3
+        }
+        return AspectRatio.RATIO_16_9
     }
 
     private fun changeFacing() {
-        lensFacing = if (lensFacing == LensFacing.FRONT) LensFacing.BACK else LensFacing.FRONT
-        showCamera()
+        lensFacing = if (lensFacing == CameraSelector.LENS_FACING_BACK) CameraSelector.LENS_FACING_FRONT else CameraSelector.LENS_FACING_BACK
+        setUpCamera()
     }
 
     private fun hideSystemUI() {
