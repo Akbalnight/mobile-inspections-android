@@ -131,7 +131,7 @@ class RoutePointsViewModel(
         route?.let { _navigateToNextRoute.value = Event(route) }
     }
 
-    private fun updateDataR(defectsMap: MutableMap<String, Boolean>) {
+    private fun updateData() {
         setRouteStatus()
         val routePoints = mutableListOf<DiffItem>()
         val lastCompleted = routeDataModels.indexOfLast { it.completed }
@@ -139,7 +139,6 @@ class RoutePointsViewModel(
             route.techMap?.let { techMap->
                 val current = lastCompleted + 1 == index
                 val preserveOrder = detourModel?.saveOrderControlPoints == true
-                val haveDefects = route.equipments?.fold(false, {acc, a -> acc || defectsMap[a.id] == true})?:false
                 routePoints.add(
                     RoutePointUiModel(
                         id = techMap.id,
@@ -147,40 +146,12 @@ class RoutePointsViewModel(
                         name = techMap.name.orEmpty(),
                         position = route.position,
                         completed = route.completed,
-                        haveDefects = haveDefects,
-                        current = current,
                         clickable = !preserveOrder || route.completed || current
                     )
                 )
             }
         }
         _routePoints.value = routePoints
-    }
-
-   private fun updateData() {
-        val deviceIds = routeDataModels.fold(mutableListOf<String>(), {acc, a ->
-            val ids = a.equipments?.map { it.id }
-            if (ids!=null){
-                acc.addAll(ids)
-            }
-            acc
-        })
-
-        detoursInteractor.getEquipmentIdsWithDefectsDB(equipmentIds = deviceIds)
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { _progressVisibility.postValue(true) }
-            .doAfterTerminate { _progressVisibility.postValue(false) }
-            .subscribe({ ids ->
-                val defectsMap = ids.fold(mutableMapOf<String, Boolean>()){acc,id ->
-                    acc[id] = true
-                    acc
-                }
-
-                updateDataR(defectsMap)
-            }, {
-                it.printStackTrace()
-            })
-            .addTo(disposables)
     }
 
     private fun setRouteStatus() {
@@ -224,6 +195,10 @@ class RoutePointsViewModel(
         if (_durationTimer.value != null) {
             timerDispose.dispose()
         }
+    }
+
+    fun clean() {
+        _routePoints.value = null
     }
 
     enum class RouteStatus {

@@ -5,8 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.view.View
 import android.widget.FrameLayout
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -26,14 +25,13 @@ import ru.madbrains.inspection.ui.main.routes.techoperations.TechOperationsFragm
 import ru.madbrains.inspection.ui.view.MapPoint
 import java.io.File
 
-class RoutePointsMapFragment() : BaseFragment(R.layout.fragment_route_points_map) {
+class RoutePointsMapFragment : BaseFragment(R.layout.fragment_route_points_map) {
 
     private val routePointsViewModel: RoutePointsViewModel by sharedViewModel()
     private val routePointsMapViewModel: RoutePointsMapViewModel by sharedViewModel()
     private var imageScale: Float = 1f
     private var scaleStep: Float = 0.3f
     private var bitmap: Bitmap? = null
-    private var points: MutableList<RouteDataModel>? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -51,10 +49,6 @@ class RoutePointsMapFragment() : BaseFragment(R.layout.fragment_route_points_map
                 openTechOperationsFragment(it)
             }
         )
-        routePointsMapViewModel.mapPoints.observe(viewLifecycleOwner) { list ->
-            points?.clear()
-            points = mutableListOf<RouteDataModel>().apply { addAll(list) }
-        }
         routePointsMapViewModel.mapImage.observe(viewLifecycleOwner) { imageFile ->
             loadImage(imageFile)
         }
@@ -76,11 +70,15 @@ class RoutePointsMapFragment() : BaseFragment(R.layout.fragment_route_points_map
         mapIV.setOnScaleChangeListener { scaleFactor, focusX, focusY ->
             imageScale = scaleFactor
         }
-        mapIV.setOnMatrixChangeListener {
-            calculatePoints(it)
-        }
+
         btnMapLayers.setOnClickListener {
             findNavController().navigate(R.id.action_routePointsFragment_to_mapsLevelListFragment)
+        }
+
+        routePointsMapViewModel.mapPoints.observe(viewLifecycleOwner) { list ->
+            mapIV.setOnMatrixChangeListener {
+                calculatePoints(it, list)
+            }
         }
     }
 
@@ -93,15 +91,25 @@ class RoutePointsMapFragment() : BaseFragment(R.layout.fragment_route_points_map
     override fun onResume() {
         super.onResume()
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
+        routePointsMapViewModel.mapPoints.value?.let { list->
+            mapIV.displayRect?.let { rect->
+                calculatePoints(rect, list)
+            }
+        }
     }
 
-    private fun calculatePoints(rectF: RectF) {
+    override fun onDestroy() {
+        super.onDestroy()
+        routePointsViewModel.clean()
+    }
+
+    private fun calculatePoints(rectF: RectF, list: List<MapPointUiModel>) {
         val image = bitmap ?: return
         val pointSize = 100
         val scaleFactor: Double = rectF.width() / image.width.toDouble()
         pointsContainer.removeAllViews()
 
-        points?.forEach { point ->
+        list.forEach { point ->
             val params = FrameLayout.LayoutParams(pointSize, pointSize)
             point.xLocation?.let { it.times(scaleFactor) + rectF.left - (pointSize / 2) }?.also {
                 params.leftMargin = it.toInt()
@@ -109,13 +117,10 @@ class RoutePointsMapFragment() : BaseFragment(R.layout.fragment_route_points_map
             point.yLocation?.let { it.times(scaleFactor) + rectF.top - (pointSize / 2) }?.also {
                 params.topMargin = it.toInt()
             }
-
-            val view =
-                MapPoint(requireContext(), point.position.toString(), point.completed).apply {
-                    setOnClickListener {
-                        routePointsMapViewModel.routePointClick(point)
-                    }
-                }
+            val view = MapPoint(requireContext(), point.position.toString(), point.status)
+            if(point.clickable) {
+                view.setOnClickListener { routePointsMapViewModel.routePointClick(point) }
+            }
             pointsContainer.addView(view, params)
         }
     }
@@ -134,12 +139,6 @@ class RoutePointsMapFragment() : BaseFragment(R.layout.fragment_route_points_map
                     pointsContainer.isVisible = true
                     mapIV.apply {
                         setImageBitmap(resource)
-
-                        Handler(Looper.getMainLooper()).postDelayed({ //hack for not showing points after other screen
-                            displayRect?.let {
-                                calculatePoints(it)
-                            }
-                        }, 100)
                     }
                 }
 
