@@ -88,7 +88,7 @@ class EquipmentTabDefectsFragment : BaseFragment(R.layout.fragment_equipment_tab
             builder.apply {
                 setTitle(strings[R.string.fragment_defect_dialog_eliminated_defect_title])
                 setMessage(strings[R.string.fragment_defect_dialog_eliminated_defect_subtitle])
-                setPositiveButton(strings[R.string.fragment_dialog_btn_save],
+                setPositiveButton(strings[R.string.save],
                     DialogInterface.OnClickListener { _, _ ->
                         defectListViewModel.eliminateDefect(item)
                     })

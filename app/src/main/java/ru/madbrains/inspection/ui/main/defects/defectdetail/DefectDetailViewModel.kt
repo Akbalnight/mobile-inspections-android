@@ -1,11 +1,9 @@
 package ru.madbrains.inspection.ui.main.defects.defectdetail
 
-import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
-import ru.madbrains.data.utils.FileUtil
 import ru.madbrains.domain.interactor.DetoursInteractor
 import ru.madbrains.domain.model.*
 import ru.madbrains.inspection.base.BaseViewModel
@@ -32,7 +30,7 @@ class DefectDetailViewModel(
 
     private val defectTypicalModels = mutableListOf<DefectTypicalModel>()
     var equipmentModelList: List<EquipmentModel>? = null
-    private val mediaModels = mutableListOf<MediaUiModel>()
+    private val uiFiles = mutableListOf<MediaUiModel>()
 
     //Models LiveData
     private val _progressVisibility = MutableLiveData<Boolean>()
@@ -183,19 +181,18 @@ class DefectDetailViewModel(
                         _descriptionObserver.value = it
                     }
                 }
-                files?.let {
-                    it.map { fileModel ->
-                        mediaModels.add(
-                            MediaUiModel(
-                                id = fileModel.id,
-                                file = detoursInteractor.getFileInFolder(
-                                    fileModel.fileName,
-                                    if(fileModel.isLocal) AppDirType.Local else AppDirType.Defects
-                                ),
-                                isLocal = fileModel.isLocal
-                            )
+                files?.forEach { fileModel ->
+                        val file = detoursInteractor.getFileInFolder(
+                            fileModel.fileName,
+                            if(fileModel.isNew) AppDirType.Local else AppDirType.Defects
                         )
-                    }
+                        if(file!=null){
+                            uiFiles.add(MediaUiModel(
+                                id = fileModel.id,
+                                file = file,
+                                isNew = fileModel.isNew
+                            ))
+                        }
                 }
                 updateMediaList()
             }
@@ -204,19 +201,16 @@ class DefectDetailViewModel(
     }
 
     private fun updateMediaList() {
-        val items = mutableListOf<MediaUiModel>().apply {
-            mediaModels.map { item ->
-                add(item)
-            }
+        _mediaList.value = mutableListOf<MediaUiModel>().apply {
+            addAll(uiFiles)
         }
-        _mediaList.value = items
     }
 
     fun addFile(file: File) {
-        mediaModels.add(
+        uiFiles.add(
             MediaUiModel(
                 id = UUID.randomUUID().toString(),
-                isLocal = true,
+                isNew = true,
                 file = file
             )
         )
@@ -225,14 +219,14 @@ class DefectDetailViewModel(
     }
 
     fun deleteMedia(deleteItem: MediaUiModel) {
-        if (mediaModels.remove(deleteItem)) {
+        if (uiFiles.remove(deleteItem)) {
             isChangedDefect = true
             updateMediaList()
         }
     }
 
     fun photoVideoClick() {
-        if (mediaModels.size < 8)
+        if (uiFiles.size < 8)
             _navigateToCamera.value = Event(Unit)
     }
 
@@ -245,7 +239,7 @@ class DefectDetailViewModel(
             statusProcessId = DefectStatus.NEW.id,
             description = descriptionDefect.orEmpty(),
             dateDetectDefect = Date(),
-            files = getFilesToSend(),
+            files = prepareFiles(),
             defectName = currentTypical?.name,
             equipmentName = currentDeviceModel?.name,
             extraData = null,
@@ -271,7 +265,7 @@ class DefectDetailViewModel(
                 statusProcessId = targetDefectStatus?.id.orEmpty(),
                 description = descriptionDefect.orEmpty(),
                 dateDetectDefect = Date(),
-                files = (defectModel.files?: arrayListOf()) + getFilesToSend(),
+                files = prepareFiles(),
                 changed = true
             )
             detoursInteractor.saveDefectDb(model)
@@ -288,17 +282,17 @@ class DefectDetailViewModel(
 
     }
 
-    private fun getFilesToSend(): List<FileModel> {
-        return mediaModels.filter { it.isLocal }.mapNotNull { media -> media.file }.map {
+    private fun prepareFiles(): List<FileModel> {
+        return uiFiles.map {
             FileModel(
                 id = UUID.randomUUID().toString(),
                 fileId = UUID.randomUUID().toString(),
                 url = "",
-                fileName = it.name,
-                extension = it.extension,
+                fileName = it.file.name,
+                extension = it.file.extension,
                 date = Date(),
                 routeMapName = "",
-                isLocal = true
+                isNew = it.isNew
             )
         }
     }

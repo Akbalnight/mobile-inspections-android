@@ -94,56 +94,6 @@
                     android:textStyle="bold"
                     android:textAllCaps="true"
                     android:textSize="17sp" />
-
-                <TextView
-                    android:id="@+id/tvMediaList"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="16dp"
-                    android:text="@string/fragment_media"
-                    android:textColor="@color/elementLight"
-                    android:textSize="12sp"
-                    android:visibility="gone"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvRFID" />
-
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvAddCheckpointMedia"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:orientation="horizontal"
-                    android:paddingRight="0dp"
-                    android:paddingBottom="8dp"
-                    android:visibility="gone"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvMediaList"
-                    tools:itemCount="5"
-                    tools:listitem="@layout/item_media" />
-
-                <TextView
-                    android:id="@+id/tvMediaListNoData"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:text="@string/fragment_not_media"
-                    android:textColor="@color/textMain"
-                    android:textSize="12sp"
-                    android:visibility="gone"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvMediaList" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
 

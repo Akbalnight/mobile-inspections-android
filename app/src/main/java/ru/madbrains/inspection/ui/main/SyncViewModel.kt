@@ -345,6 +345,9 @@ class SyncViewModel(
                             item.apply {
                                 changed = false
                                 created = false
+                                files = files?.map {
+                                    it.copy(isNew = false)
+                                }
                             }
                         ).doFinally {
                             _changedItems.postValue(_changedItems.value?.filter {

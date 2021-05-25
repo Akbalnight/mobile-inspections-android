@@ -24,8 +24,8 @@ fun mediaDelegate(
                     clickImageListener.invoke(item)
                 }
 
-                ivMediaDelete.isVisible = item.isLocal
-                if (item.isLocal) {
+                ivMediaDelete.isVisible = item.isNew
+                if (item.isNew) {
                     ivMediaDelete.setOnClickListener {
                         clickDeleteListener.invoke(item)
                     }
@@ -41,11 +41,11 @@ fun mediaDelegate(
 
 data class MediaUiModel(
     val id: String,
-    val isLocal: Boolean = false,
-    val file: File? = null
+    val isNew: Boolean = false,
+    val file: File
 ) : DiffItem {
 
-    val isImage get() = file?.extension in arrayListOf("png", "jpg", "jpeg")
+    val isImage get() = file.extension in arrayListOf("png", "jpg", "jpeg")
 
     override fun areItemsTheSame(newItem: DiffItem): Boolean =
         newItem is MediaUiModel && id == newItem.id

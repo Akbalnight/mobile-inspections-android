@@ -1,25 +1,19 @@
 package ru.madbrains.inspection.ui.main.checkpoints.detail
 
-import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
-import ru.madbrains.data.utils.FileUtil
 import ru.madbrains.data.utils.RfidDevice
 import ru.madbrains.domain.interactor.DetoursInteractor
-import ru.madbrains.domain.model.AppDirType
 import ru.madbrains.domain.model.CheckpointModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
-import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.MediaUiModel
-import java.util.*
 
 class CheckpointDetailViewModel(
     private val detoursInteractor: DetoursInteractor,
-    private val fileUtil: FileUtil,
     private val rfidDevice: RfidDevice
 ) : BaseViewModel() {
 
@@ -35,9 +29,6 @@ class CheckpointDetailViewModel(
 
     private val _descriptionObserver = MutableLiveData<String>()
     val descriptionObserver: LiveData<String> = _descriptionObserver
-
-    private val _mediaList = MutableLiveData<List<DiffItem>>()
-    val mediaList: LiveData<List<DiffItem>> = _mediaList
 
     //Events
     private val _navigateToCamera = MutableLiveData<Event<Unit>>()
@@ -76,22 +67,6 @@ class CheckpointDetailViewModel(
     fun changeDescription(text: CharSequence?) {
         _descriptionText = text?.toString()
         _isChanged.value = true
-    }
-
-    private fun updateMediaList() {
-        val items = mutableListOf<MediaUiModel>().apply {
-            mediaModels.map { item ->
-                add(item)
-            }
-        }
-        _mediaList.value = items
-    }
-
-    fun deleteMedia(deleteItem: MediaUiModel) {
-        if (mediaModels.remove(deleteItem)) {
-            _isChanged.value = true
-            updateMediaList()
-        }
     }
 
     fun sendUpdate() {

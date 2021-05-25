@@ -50,5 +50,5 @@ val appModule = module {
     viewModel { EquipmentListViewModel(get()) }
     viewModel { SettingsViewModel(get()) }
     viewModel { CheckpointListViewModel(get()) }
-    viewModel { CheckpointDetailViewModel(get(), get(), get()) }
+    viewModel { CheckpointDetailViewModel(get(), get()) }
 }
