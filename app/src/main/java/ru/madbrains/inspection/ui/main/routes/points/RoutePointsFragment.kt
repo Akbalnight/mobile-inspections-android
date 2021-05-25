@@ -54,11 +54,10 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
         setupViewPager()
 
         fabStart.setOnClickListener {
-            routePointsViewModel.startRoute()
+            routePointsViewModel.startNextRoute()
         }
         fabContinue.setOnClickListener {
             routePointsViewModel.startNextRoute()
-            Timber.d("debug_dmm 1")
         }
         fabFinish.setOnClickListener {
             routePointsViewModel.finishDetourAndSave(DetourStatusType.COMPLETED)
