@@ -31,17 +31,6 @@ class CheckpointDetailFragment : BaseFragment(R.layout.fragment_checkpoint_detai
         const val KEY_CHECKPOINT_DETAIL_DATA = "KEY_CHECKPOINT_DETAIL_DATA"
     }
 
-    private val checkpointMediaAdapter by lazy {
-        MediaAdapter(
-            onMediaImageClick = {
-                // todo show image preview
-            },
-            onMediaDeleteClick = {
-                showDialogDeleteMedia(it)
-            }
-        )
-    }
-
     private val checkpointDetailViewModel: CheckpointDetailViewModel by viewModel()
     private val checkpointListViewModel: CheckpointListViewModel by sharedViewModel()
     private val mainViewModel: MainViewModel by sharedViewModel()
@@ -59,9 +48,6 @@ class CheckpointDetailFragment : BaseFragment(R.layout.fragment_checkpoint_detai
 
         // настройка слушателей кликов по элементу
         setupClickListeners()
-
-        // настройка списка медиа
-        setupMediaList()
 
         // настройка диалоговых окон
         setupDialogs()
@@ -168,42 +154,6 @@ class CheckpointDetailFragment : BaseFragment(R.layout.fragment_checkpoint_detai
         })
     }
 
-    private fun setupMediaList() {
-
-        rvAddCheckpointMedia.adapter = checkpointMediaAdapter
-
-        checkpointDetailViewModel.mediaList.observe(viewLifecycleOwner, Observer {
-            if (it.isNotEmpty()) {
-                rvAddCheckpointMedia.visibility = View.VISIBLE
-                tvMediaListNoData.visibility = View.GONE
-                tvMediaList.text =
-                    formattedStrings[R.string.fragment_media_list_title].invoke(values = *arrayOf(it.size))
-            } else {
-                tvMediaListNoData.visibility = View.VISIBLE
-                rvAddCheckpointMedia.visibility = View.GONE
-                tvMediaList.text =
-                    formattedStrings[R.string.fragment_media_list_title].invoke(values = *arrayOf("0"))
-            }
-            checkpointMediaAdapter.items = it
-        })
-    }
-
-    private fun showDialogDeleteMedia(item: MediaUiModel) {
-        val alertDialog: AlertDialog? = activity?.let {
-            val builder = AlertDialog.Builder(it)
-            builder.apply {
-                setMessage(strings[R.string.fragment_dialog_delete_subtitle])
-                setPositiveButton(
-                    strings[R.string.fragment_add_dialog_btn_delete]
-                ) { _, _ ->
-                    checkpointDetailViewModel.deleteMedia(item)
-                }
-                setNegativeButton(strings[R.string.fragment_dialog_btn_cancel]) { _, _ -> }
-            }
-            builder.create()
-        }
-        alertDialog?.show()
-    }
 
     private fun showDialogChangedFields() {
         val alertDialog: AlertDialog? = activity?.let {
@@ -228,7 +178,7 @@ class CheckpointDetailFragment : BaseFragment(R.layout.fragment_checkpoint_detai
             builder.apply {
                 setTitle(strings[R.string.fragment_dialog_confirmed_title])
                 setMessage(strings[R.string.fragment_dialog_confirmed_subtitle])
-                setPositiveButton(strings[R.string.fragment_dialog_btn_save]) { _, _ ->
+                setPositiveButton(strings[R.string.save]) { _, _ ->
                     checkpointDetailViewModel.sendUpdate()
                 }
                 setNegativeButton(strings[R.string.fragment_dialog_btn_cancel]) { _, _ -> }

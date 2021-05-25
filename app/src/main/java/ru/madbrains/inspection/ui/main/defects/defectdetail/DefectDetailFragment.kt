@@ -288,7 +288,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
             builder.apply {
                 setTitle(if (isLinkedDetour) strings[R.string.fragment_add_defect_dialog_empty_fields_title] else strings[R.string.fragment_add_defect_dialog_empty_fields_no_detour_title])
                 setMessage(if (isLinkedDetour) strings[R.string.fragment_add_defect_dialog_empty_fields_subtitle] else strings[R.string.fragment_add_defect_dialog_empty_fields_no_detour_subtitle])
-                setPositiveButton(if (isLinkedDetour) strings[R.string.fragment_dialog_btn_save] else strings[R.string.fragment_add_defect_dialog_btn_fix],
+                setPositiveButton(if (isLinkedDetour) strings[R.string.save] else strings[R.string.fragment_add_defect_dialog_btn_fix],
                     DialogInterface.OnClickListener { _, _ ->
                         defectDetailViewModel.saveDefectDb()
                     })
@@ -340,7 +340,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
             builder.apply {
                 setTitle(strings[R.string.fragment_defect_dialog_confirmed_defect_title])
                 setMessage(strings[R.string.fragment_dialog_confirmed_subtitle])
-                setPositiveButton(strings[R.string.fragment_dialog_btn_save],
+                setPositiveButton(strings[R.string.save],
                     DialogInterface.OnClickListener { _, _ ->
                         defectDetailViewModel.updateDefectDb()
                     })

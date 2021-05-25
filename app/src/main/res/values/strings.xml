@@ -162,7 +162,6 @@
     <string name="fragment_dialog_changed_fields">Вы действительно хотите выйти без сохранения изменений?</string>
     <string name="fragment_media_list_title">Фото и видео: %s из 8</string>
     <string name="fragment_add_dialog_btn_delete">Удалить</string>
-    <string name="fragment_dialog_btn_save">Сохранить</string>
     <string name="fragment_dialog_btn_cancel">Отмена</string>
     <string name="fragment_dialog_btn_exit">Выйти</string>
     <string name="fragment_dialog_delete_subtitle">Вы действительно хотите удалить фото?</string>
