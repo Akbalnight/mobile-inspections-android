@@ -15,7 +15,6 @@ import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.RoutePointUiModel
-import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -49,7 +48,7 @@ class RoutePointsViewModel(
     val durationTimer: LiveData<Long?> = _durationTimer
 
     var detourModel: DetourModel? = null
-    lateinit var timerDispose: Disposable
+    private var timerDispose: Disposable? = null
     private val routeDataModels
         get() = detourModel?.route?.routesData?.sortedBy { it.position } ?: emptyList()
 
@@ -61,8 +60,6 @@ class RoutePointsViewModel(
             data.id == id
         }?.let { _navigateToTechOperations.value = Event(it) }
     }
-
-    private var startTime: Long? = null
 
     fun isDetourEditable(): Boolean {
         return preferenceStorage.detourStatuses?.data?.isEditable(detourModel?.statusId) == true
@@ -104,8 +101,8 @@ class RoutePointsViewModel(
     }
 
     fun closeClick() {
-        if (routeDataModels.all { it.completed } ||
-            preferenceStorage.detourStatuses?.data?.getStatusById(detourModel?.statusId)?.type == DetourStatusType.COMPLETED ||
+        val status =  preferenceStorage.detourStatuses?.data?.getStatusById(detourModel?.statusId)?.type
+        if (routeDataModels.all { it.completed } || status == DetourStatusType.COMPLETED ||
             detourModel?.startTime == null) {
             onBack()
         } else {
@@ -115,20 +112,15 @@ class RoutePointsViewModel(
 
     fun setDetour(detour: DetourModel) {
         detourModel = detour
-        startTime = null
         updateData()
     }
 
-    fun startRoute() {
-        detourModel?.startTime = Date()
-        startTimer()
-        val route = routeDataModels.firstOrNull { !it.completed }
-        route?.let { _navigateToNextRoute.value = Event(route) }
-    }
-
     fun startNextRoute() {
+        triggerTimer()
         val route = routeDataModels.firstOrNull { !it.completed }
-        route?.let { _navigateToNextRoute.value = Event(route) }
+        route?.let {
+            _navigateToNextRoute.value = Event(route)
+        }
     }
 
     private fun updateData() {
@@ -173,8 +165,13 @@ class RoutePointsViewModel(
         }
     }
 
-    private fun startTimer() {
-        timerDispose = Observable.timer(1, TimeUnit.SECONDS)
+    private fun triggerTimer() {
+        val startTime = detourModel?.startTime?:Date()
+        if(detourModel?.startTime == null){
+            detourModel?.startTime = startTime
+        }
+        if(timerDispose == null)
+            timerDispose = Observable.timer(1, TimeUnit.SECONDS)
             .subscribeOn(Schedulers.io())
             .repeat()
             .observeOn(AndroidSchedulers.mainThread())
@@ -185,7 +182,7 @@ class RoutePointsViewModel(
                 _durationTimer.value = null
             }
             .subscribe({
-                _durationTimer.value = _durationTimer.value?.plus(1L)
+                _durationTimer.value = (Date().time - startTime.time) / 1000
             }, {
                 it.printStackTrace()
             })
@@ -193,7 +190,8 @@ class RoutePointsViewModel(
 
     private fun stopTimer() {
         if (_durationTimer.value != null) {
-            timerDispose.dispose()
+            timerDispose?.dispose()
+            timerDispose = null
         }
     }
 

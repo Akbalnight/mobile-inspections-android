@@ -50,30 +50,5 @@ class RoutePointsListFragment : BaseFragment(R.layout.fragment_route_points_list
         routePointsViewModel.routePoints.observe(viewLifecycleOwner, Observer {
             routePointsAdapter.items = it
         })
-
-        routePointsViewModel.navigateToNextRoute.observe(
-            viewLifecycleOwner,
-            EventObserver { routeData ->
-                val techMap = routeData.techMap
-                techMap?.let {
-                    openTechOperationsFragment(routeData)
-                }
-            })
-
-        routePointsViewModel.navigateToTechOperations.observe(
-            viewLifecycleOwner,
-            EventObserver {
-                openTechOperationsFragment(it)
-            })
-    }
-
-    private fun openTechOperationsFragment(routeData: RouteDataModel) {
-        val args = bundleOf(
-            TechOperationsFragment.KEY_ROUTE_DATA to routeData
-        )
-        findNavController().navigate(
-            R.id.action_routePointsFragment_to_techOperationsFragment,
-            args
-        )
     }
 }
