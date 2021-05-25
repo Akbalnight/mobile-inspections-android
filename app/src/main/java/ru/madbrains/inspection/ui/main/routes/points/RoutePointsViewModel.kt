@@ -128,7 +128,9 @@ class RoutePointsViewModel(
 
     fun startNextRoute() {
         val route = routeDataModels.firstOrNull { !it.completed }
-        route?.let { _navigateToNextRoute.value = Event(route) }
+        route?.let {
+            _navigateToNextRoute.value = Event(route)
+        }
     }
 
     private fun updateData() {

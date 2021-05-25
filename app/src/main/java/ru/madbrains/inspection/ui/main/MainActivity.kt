@@ -175,7 +175,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     private fun showSnackBar(text: String) {
         val snackBar = Snackbar
             .make(coordinatorLayoutMain, text, Snackbar.LENGTH_SHORT)
-            .setAction(strings[R.string.fragment_add_defect_snackbar_button], View.OnClickListener {
+            .setAction(strings[R.string.proceed], View.OnClickListener {
 
             })
         snackBar.setTextColor(colors[R.color.textWhite])

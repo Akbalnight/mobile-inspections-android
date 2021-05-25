@@ -80,7 +80,7 @@
         android:gravity="center_vertical"
         android:visibility="invisible"
         app:iconPadding="8dp"
-        android:text="продолжить"
+        android:text="@string/proceed"
         app:icon="@drawable/ic_fab_continue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

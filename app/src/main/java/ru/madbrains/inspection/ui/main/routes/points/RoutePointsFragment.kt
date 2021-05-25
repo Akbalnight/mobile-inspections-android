@@ -1,6 +1,7 @@
 package ru.madbrains.inspection.ui.main.routes.points
 
 import android.os.Bundle
+import androidx.core.os.bundleOf
 import androidx.core.view.isInvisible
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -11,13 +12,16 @@ import kotlinx.android.synthetic.main.toolbar_with_close.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import ru.madbrains.domain.model.DetourModel
 import ru.madbrains.domain.model.DetourStatusType
+import ru.madbrains.domain.model.RouteDataModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.main.routes.points.list.RoutePointsListFragment
 import ru.madbrains.inspection.ui.main.routes.points.map.RoutePointsMapFragment
+import ru.madbrains.inspection.ui.main.routes.techoperations.TechOperationsFragment
 import ru.madbrains.inspection.ui.main.routes.techoperations.TechOperationsViewModel
+import timber.log.Timber
 
 class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
 
@@ -54,6 +58,7 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
         }
         fabContinue.setOnClickListener {
             routePointsViewModel.startNextRoute()
+            Timber.d("debug_dmm 1")
         }
         fabFinish.setOnClickListener {
             routePointsViewModel.finishDetourAndSave(DetourStatusType.COMPLETED)
@@ -82,7 +87,34 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
         routePointsViewModel.navigateToFinishDialog.observe(viewLifecycleOwner, EventObserver {
             openFinishDialog()
         })
+
+        routePointsViewModel.navigateToNextRoute.observe(
+            viewLifecycleOwner,
+            EventObserver { routeData ->
+                val techMap = routeData.techMap
+                techMap?.let {
+                    openTechOperationsFragment(routeData)
+                }
+            })
+
+        routePointsViewModel.navigateToTechOperations.observe(
+            viewLifecycleOwner,
+            EventObserver {
+                openTechOperationsFragment(it)
+            })
     }
+
+    private fun openTechOperationsFragment(routeData: RouteDataModel) {
+        val args = bundleOf(
+            TechOperationsFragment.KEY_ROUTE_DATA to routeData
+        )
+        findNavController().navigate(
+            R.id.action_routePointsFragment_to_techOperationsFragment,
+            args
+        )
+    }
+
+
 
     private fun setupToolbar(title: String?) {
         toolbarLayout.tvTitle.text = title.orEmpty()
