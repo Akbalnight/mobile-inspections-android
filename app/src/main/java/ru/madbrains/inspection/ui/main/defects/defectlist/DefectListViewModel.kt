@@ -17,7 +17,6 @@ import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.DefectListUiModel
 import ru.madbrains.inspection.ui.delegates.MediaUiModel
-import timber.log.Timber
 import java.util.*
 
 class DefectListViewModel(private val detoursInteractor: DetoursInteractor) : BaseViewModel() {
@@ -110,17 +109,20 @@ class DefectListViewModel(private val detoursInteractor: DetoursInteractor) : Ba
     private fun getMediaListItem(files: List<FileModel>?): List<MediaUiModel> {
         val list: MutableList<MediaUiModel> = mutableListOf()
         files?.let {
-            files.map { fileModel ->
-                list.add(
-                    MediaUiModel(
-                        id = fileModel.id,
-                        file = detoursInteractor.getFileInFolder(
-                            fileModel.fileName,
-                            if(fileModel.isLocal) AppDirType.Local else AppDirType.Defects
-                        ),
-                        isLocal = fileModel.isLocal
-                    )
+            files.forEach { fileModel ->
+                val file =  detoursInteractor.getFileInFolder(
+                    fileModel.fileName,
+                    if(fileModel.isNew) AppDirType.Local else AppDirType.Defects
                 )
+                if(file!=null){
+                    list.add(
+                        MediaUiModel(
+                            id = fileModel.id,
+                            file = file,
+                            isNew = fileModel.isNew
+                        )
+                    )
+                }
             }
         }
         return list

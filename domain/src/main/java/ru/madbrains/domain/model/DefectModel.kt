@@ -11,7 +11,7 @@ data class DefectModel(
     val description: String?,
     val dateDetectDefect: Date?,
     val detourId: String?,
-    val files: List<FileModel>?,
+    var files: List<FileModel>?,
     val defectName: String?,
     val equipmentName: String?,
     val statusProcessId: String?,
