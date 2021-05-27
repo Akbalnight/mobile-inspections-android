@@ -1,6 +1,7 @@
 package ru.madbrains.inspection.ui.main.routes.points
 
 import android.os.Bundle
+import androidx.activity.addCallback
 import androidx.core.os.bundleOf
 import androidx.core.view.isInvisible
 import androidx.lifecycle.Observer
@@ -21,6 +22,7 @@ import ru.madbrains.inspection.ui.main.routes.points.list.RoutePointsListFragmen
 import ru.madbrains.inspection.ui.main.routes.points.map.RoutePointsMapFragment
 import ru.madbrains.inspection.ui.main.routes.techoperations.TechOperationsFragment
 import ru.madbrains.inspection.ui.main.routes.techoperations.TechOperationsViewModel
+import timber.log.Timber
 
 class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
 
@@ -93,13 +95,19 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
                 techMap?.let {
                     openTechOperationsFragment(routeData)
                 }
-            })
+            }
+        )
 
         routePointsViewModel.navigateToTechOperations.observe(
             viewLifecycleOwner,
             EventObserver {
                 openTechOperationsFragment(it)
-            })
+            }
+        )
+
+        activity?.onBackPressedDispatcher?.addCallback(this){
+            routePointsViewModel.closeClick()
+        }
     }
 
     private fun openTechOperationsFragment(routeData: RouteDataModel) {

@@ -23,7 +23,8 @@ class DefectListViewModel(private val detoursInteractor: DetoursInteractor) : Ba
 
     val defectListModels = mutableListOf<DefectModel>()
 
-    var isConfirmMode: Boolean = false
+    var isEditConfirmMode: Boolean = false
+    var isEditable: Boolean = false
 
     //Live Data
     private val _defectList = MutableLiveData<List<DiffItem>>()
@@ -95,9 +96,9 @@ class DefectListViewModel(private val detoursInteractor: DetoursInteractor) : Ba
                         device = defect.equipmentName.orEmpty(),
                         type = defect.defectName.orEmpty(),
                         description = defect.description.orEmpty(),
-                        isConfirmMode = isConfirmMode,
                         images = getMediaListItem(defect.files),
-                        isCreated = defect.created,
+                        isEditConfirmMode = isEditConfirmMode && isEditable,
+                        isEditMode = defect.created && isEditable,
                         dateConfirm = defect.getLastDateConfirm()?.toddMMyyyyHHmm().orEmpty()
                     )
                 )
