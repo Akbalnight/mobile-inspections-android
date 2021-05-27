@@ -12,9 +12,14 @@ fun routePointDelegate(clickListener: (RoutePointUiModel) -> Unit) =
 
         bind {
             itemView.apply {
-                if (item.clickable) clContainer.setOnClickListener {
-                    clickListener.invoke(item)
+                if (item.clickable) {
+                    clContainer.setOnClickListener { clickListener.invoke(item) }
+                    clContainer.isClickable = true
+                } else{
+                    clContainer.setOnClickListener(null)
+                    clContainer.isClickable = false
                 }
+
                 tvPointNumber.text = item.position.toString()
                 tvPointName.text = item.name
                 tvPointNumber.background =
