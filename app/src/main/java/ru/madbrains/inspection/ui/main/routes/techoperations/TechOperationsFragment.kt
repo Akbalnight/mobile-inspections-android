@@ -134,7 +134,13 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
 
     private fun setupOnClickListener() {
 
-        layoutBottomButtonAddDefect.setOnClickListener { toDefectDetailFragment() }
+        if(routePointsViewModel.editable){
+            layoutBottomButtonAddDefect.setOnClickListener { toDefectDetailFragment() }
+        } else{
+            layoutBottomButtonAddDefect.isClickable = false
+            layoutBottomButtonAddDefect.alpha = 0.5f
+        }
+
 
         layoutBottomButtonDefect.setOnClickListener {
             routePointsViewModel.navigateToDefectList()
