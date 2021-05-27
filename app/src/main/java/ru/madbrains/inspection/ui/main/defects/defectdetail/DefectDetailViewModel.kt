@@ -10,6 +10,7 @@ import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.MediaUiModel
+import timber.log.Timber
 import java.io.File
 import java.util.*
 
@@ -262,11 +263,11 @@ class DefectDetailViewModel(
     fun updateDefectDb() {
         defect?.let { defectModel ->
             val model = defectModel.copy(
-                statusProcessId = targetDefectStatus?.id.orEmpty(),
+                statusProcessId = targetDefectStatus?.id?:defectModel.statusProcessId,
                 description = descriptionDefect.orEmpty(),
                 dateDetectDefect = Date(),
                 files = prepareFiles(),
-                changed = true
+                changed = !defectModel.created
             )
             detoursInteractor.saveDefectDb(model)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -299,29 +300,25 @@ class DefectDetailViewModel(
 
 
     fun checkAndSave() {
-        targetDefectStatus?.let {
-            if (isChangedDefect) {
-                _showDialogConfirmChangedFields.value = Event(true)
-            } else {
-                updateDefectDb()
-            }
-        } ?: run {
-            defect?.let {
-                _showDialogConfirmChangedFields.value = Event(false)
-            } ?: run {
-                if (checkIsNoEmptyRequiredFields()) {
-                    if (checkIsNotEmptyFields()) {
-                        if (detourId.isNullOrEmpty()) {
-                            _showDialogSaveNoLinkedDetour.value = Event(Unit)
-                        } else {
-                            saveDefectDb()
-                        }
+        if (defect == null) {
+            if (checkIsNoEmptyRequiredFields()) {
+                if (checkIsNotEmptyFields()) {
+                    if (detourId.isNullOrEmpty()) {
+                        _showDialogSaveNoLinkedDetour.value = Event(Unit)
                     } else {
-                        _showDialogBlankFields.value = Event(detourId.isNullOrEmpty())
+                        saveDefectDb()
                     }
                 } else {
-                    _showDialogBlankRequiredFields.value = Event(Unit)
+                    _showDialogBlankFields.value = Event(detourId.isNullOrEmpty())
                 }
+            } else {
+                _showDialogBlankRequiredFields.value = Event(Unit)
+            }
+        } else {
+            if (isChangedDefect || targetDefectStatus!=null) {
+                _showDialogConfirmChangedFields.value = Event(true)
+            } else{
+                _popNavigation.value = Event(Unit)
             }
         }
     }
