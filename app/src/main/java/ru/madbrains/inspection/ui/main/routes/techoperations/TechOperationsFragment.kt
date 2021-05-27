@@ -18,7 +18,6 @@ import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.adapters.TechOperationAdapter
-import ru.madbrains.inspection.ui.main.MainViewModel
 import ru.madbrains.inspection.ui.main.defects.defectdetail.DefectDetailFragment
 import ru.madbrains.inspection.ui.main.defects.defectlist.DefectListFragment
 import ru.madbrains.inspection.ui.main.equipment.EquipmentFragment
@@ -33,7 +32,6 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
 
     private val techOperationsViewModel: TechOperationsViewModel by sharedViewModel()
     private val routePointsViewModel: RoutePointsViewModel by sharedViewModel()
-    private val mainViewModel: MainViewModel by sharedViewModel()
 
     private val techOperationsAdapter by lazy {
         TechOperationAdapter(
@@ -139,7 +137,7 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
         layoutBottomButtonAddDefect.setOnClickListener { toDefectDetailFragment() }
 
         layoutBottomButtonDefect.setOnClickListener {
-            toDefectListFragment()
+            routePointsViewModel.navigateToDefectList()
         }
         layoutBottomButtonDevice.setOnClickListener {
             techOperationsViewModel.toEquipmentFragment()
@@ -163,6 +161,15 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
                 )
             )
         })
+        routePointsViewModel.navigateToDefectList.observe(viewLifecycleOwner, EventObserver { editable->
+            findNavController().navigate(
+                R.id.graph_defects, bundleOf(
+                    DefectListFragment.KEY_EQUIPMENTS_IDS_DEFECT_LIST to techOperationsViewModel.savedRouteData?.equipments?.map { it.id },
+                    DefectListFragment.KEY_IS_EDIT_CONFIRM_MODE to true,
+                    DefectListFragment.KEY_IS_EDITABLE to editable
+                )
+            )
+        })
     }
 
     private fun getEquipments(): List<EquipmentModel>? {
@@ -177,15 +184,6 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
             R.id.action_techOperationsFragment_to_addDefectFragment, bundleOf(
                 DefectDetailFragment.KEY_EQUIPMENT_LIST to getEquipments(),
                 DefectDetailFragment.KEY_DETOUR_ID to routePointsViewModel.detourModel?.id
-            )
-        )
-    }
-
-    private fun toDefectListFragment() {
-        findNavController().navigate(
-            R.id.graph_defects, bundleOf(
-                DefectListFragment.KEY_EQUIPMENTS_IDS_DEFECT_LIST to techOperationsViewModel.savedRouteData?.equipments?.map { it.id },
-                DefectListFragment.KEY_IS_CONFIRM_MODE to true
             )
         )
     }

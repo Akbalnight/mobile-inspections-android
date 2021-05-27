@@ -55,6 +55,11 @@ class RoutePointsViewModel(
     private val _navigateToTechOperations = MutableLiveData<Event<RouteDataModel>>()
     val navigateToTechOperations: LiveData<Event<RouteDataModel>> = _navigateToTechOperations
 
+    private val _navigateToDefectList = MutableLiveData<Event<Boolean>>()
+    val navigateToDefectList: LiveData<Event<Boolean>> = _navigateToDefectList
+
+    val editable get():Boolean = timerDispose != null;
+
     fun routePointClick(id: String?) {
         routeDataModels.find { data ->
             data.id == id
@@ -62,7 +67,11 @@ class RoutePointsViewModel(
     }
 
     fun isDetourEditable(): Boolean {
-        return preferenceStorage.detourStatuses?.data?.isEditable(detourModel?.statusId) == true
+        return preferenceStorage.detourStatuses?.data?.isEditable(detourModel?.statusId) == true && editable
+    }
+
+    fun navigateToDefectList(){
+        _navigateToDefectList.value = Event(editable)
     }
 
     fun completeTechMap(route: RouteDataModel) {

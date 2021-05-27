@@ -25,7 +25,8 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
 
     companion object {
         const val KEY_EQUIPMENTS_IDS_DEFECT_LIST = "KEY_EQUIPMENTS_IDS_DEFECT_LIST"
-        const val KEY_IS_CONFIRM_MODE = "KEY_IS_CONFIRM_MODE"
+        const val KEY_IS_EDIT_CONFIRM_MODE = "KEY_IS_EDIT_CONFIRM_MODE"
+        const val KEY_IS_EDITABLE = "KEY_IS_EDITABLE"
     }
 
     private val mainViewModel: MainViewModel by sharedViewModel()
@@ -65,9 +66,9 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
         super.onActivityCreated(savedInstanceState)
 
         val deviceIds = arguments?.getStringArrayList(KEY_EQUIPMENTS_IDS_DEFECT_LIST)
-        val isConfirmMode = arguments?.getBoolean(KEY_IS_CONFIRM_MODE, false)?:false
-        defectListViewModel.isConfirmMode = isConfirmMode
-        if(isConfirmMode){
+        defectListViewModel.isEditConfirmMode = arguments?.getBoolean(KEY_IS_EDIT_CONFIRM_MODE, false)?:false
+        defectListViewModel.isEditable = arguments?.getBoolean(KEY_IS_EDITABLE, false)?:false
+        if(defectListViewModel.isEditConfirmMode){
             setupViewingDefects()
         } else{
             setupRegisterDefects()
