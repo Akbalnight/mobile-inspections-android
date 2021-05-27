@@ -315,10 +315,16 @@ class DefectDetailViewModel(
                 _showDialogBlankRequiredFields.value = Event(Unit)
             }
         } else {
-            if (isChangedDefect || targetDefectStatus!=null) {
-                _showDialogConfirmChangedFields.value = Event(true)
-            } else{
-                _popNavigation.value = Event(Unit)
+            when {
+                targetDefectStatus!=null -> {
+                    updateDefectDb()
+                }
+                isChangedDefect -> {
+                    _showDialogConfirmChangedFields.value = Event(true)
+                }
+                else -> {
+                    _popNavigation.value = Event(Unit)
+                }
             }
         }
     }
@@ -328,6 +334,7 @@ class DefectDetailViewModel(
     }
 
     private fun checkIsNoEmptyRequiredFields(): Boolean {
+
         _deviceName.value?.let {
             return true
         } ?: run {
