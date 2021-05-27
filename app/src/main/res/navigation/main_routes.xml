@@ -126,9 +126,9 @@
 
     <include app:graph="@navigation/graph_checkpoints" />
 
-    <include app:graph="@navigation/grapg_sync" />
+    <include app:graph="@navigation/graph_sync" />
 
-    <include app:graph="@navigation/grapg_settings" />
+    <include app:graph="@navigation/graph_settings" />
 
     <dialog
         android:id="@+id/routeFiltersFragment"
