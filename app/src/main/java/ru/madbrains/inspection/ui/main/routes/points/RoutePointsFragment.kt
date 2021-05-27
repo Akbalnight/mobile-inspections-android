@@ -21,7 +21,6 @@ import ru.madbrains.inspection.ui.main.routes.points.list.RoutePointsListFragmen
 import ru.madbrains.inspection.ui.main.routes.points.map.RoutePointsMapFragment
 import ru.madbrains.inspection.ui.main.routes.techoperations.TechOperationsFragment
 import ru.madbrains.inspection.ui.main.routes.techoperations.TechOperationsViewModel
-import timber.log.Timber
 
 class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
 
@@ -29,7 +28,7 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
         const val KEY_DETOUR = "detour"
     }
 
-    private lateinit var routePointsAdapter: RoutePointsAdapter
+    private lateinit var routePointsTabAdapter: RoutePointsTabAdapter
 
     private val routePointsViewModel: RoutePointsViewModel by sharedViewModel()
     private val techOperationsViewModel: TechOperationsViewModel by sharedViewModel()
@@ -130,7 +129,7 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
 
         routePointsViewPager.isUserInputEnabled = false
 
-        routePointsAdapter = RoutePointsAdapter(this).apply {
+        routePointsTabAdapter = RoutePointsTabAdapter(this).apply {
             setItems(fragments)
             routePointsViewPager.adapter = this
         }
