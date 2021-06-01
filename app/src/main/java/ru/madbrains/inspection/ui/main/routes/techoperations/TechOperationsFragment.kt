@@ -171,7 +171,7 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
             findNavController().navigate(
                 R.id.graph_defects, bundleOf(
                     DefectListFragment.KEY_EQUIPMENTS_IDS_DEFECT_LIST to techOperationsViewModel.savedRouteData?.equipments?.map { it.id },
-                    DefectListFragment.KEY_IS_EDIT_CONFIRM_MODE to true,
+                    DefectListFragment.KEY_IS_DEFECT_REGISTRY to false,
                     DefectListFragment.KEY_IS_EDITABLE to editable
                 )
             )
