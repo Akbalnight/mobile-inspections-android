@@ -25,7 +25,7 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
 
     companion object {
         const val KEY_EQUIPMENTS_IDS_DEFECT_LIST = "KEY_EQUIPMENTS_IDS_DEFECT_LIST"
-        const val KEY_IS_EDIT_CONFIRM_MODE = "KEY_IS_EDIT_CONFIRM_MODE"
+        const val KEY_IS_DEFECT_REGISTRY = "KEY_IS_DEFECT_REGISTRY"
         const val KEY_IS_EDITABLE = "KEY_IS_EDITABLE"
     }
 
@@ -66,12 +66,12 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
         super.onActivityCreated(savedInstanceState)
 
         val deviceIds = arguments?.getStringArrayList(KEY_EQUIPMENTS_IDS_DEFECT_LIST)
-        defectListViewModel.isEditConfirmMode = arguments?.getBoolean(KEY_IS_EDIT_CONFIRM_MODE, false)?:false
-        defectListViewModel.isEditable = arguments?.getBoolean(KEY_IS_EDITABLE, false)?:false
-        if(defectListViewModel.isEditConfirmMode){
-            setupViewingDefects()
-        } else{
+        defectListViewModel.isDefectRegistry = arguments?.getBoolean(KEY_IS_DEFECT_REGISTRY, true)?:true
+        defectListViewModel.isEditable = arguments?.getBoolean(KEY_IS_EDITABLE, true)?:true
+        if (defectListViewModel.isDefectRegistry) {
             setupRegisterDefects()
+        } else {
+            setupViewingDefects()
         }
 
         setupRVList()
