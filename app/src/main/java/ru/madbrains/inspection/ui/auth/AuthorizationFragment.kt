@@ -45,7 +45,7 @@ class AuthorizationFragment : BaseFragment(R.layout.fragment_authorization) {
 
     private fun openAuthWebPage(url: String) {
         val args = bundleOf(
-            WebViewFragment.KEY_TOOLBAR_TITLE to strings[R.string.fragment_web_view_title_auth],
+            WebViewFragment.KEY_TOOLBAR_TITLE to strings[R.string.auth],
             WebViewFragment.KEY_WEB_URL to url
         )
         findNavController().navigate(R.id.action_authorizationFragment_to_webViewFragment, args)

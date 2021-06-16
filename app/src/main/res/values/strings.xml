@@ -11,11 +11,7 @@
 
     <!-- AuthorizationFragment -->
     <string name="fragment_auth_title">Вход</string>
-    <string name="fragment_auth_auth">Авторизация</string>
     <string name="fragment_auth_server_settings">Настройки сервера</string>
-
-    <!-- WebViewFragment -->
-    <string name="fragment_web_view_title_auth">Авторизация</string>
 
     <!-- DetoursFragment -->
     <string name="fragment_routes_title">Реестр обходов</string>
@@ -163,7 +159,8 @@
     <string name="fragment_media_list_title">Фото и видео: %s из 8</string>
     <string name="fragment_add_dialog_btn_delete">Удалить</string>
     <string name="fragment_dialog_btn_cancel">Отмена</string>
-    <string name="fragment_dialog_btn_exit">Выйти</string>
+    <string name="enter">Войти</string>
+    <string name="exit">Выйти</string>
     <string name="fragment_dialog_delete_subtitle">Вы действительно хотите удалить фото?</string>
     <string name="fragment_dialog_exit_app">Вы действительно хотите выйти из приложения?</string>
     <string name="fragment_dialog_confirmed_subtitle">Хотите сохранить изменения?</string>
@@ -174,6 +171,9 @@
     <string name="confirm">Подтвердить</string>
     <string name="proceed">Продолжить</string>
     <string name="cancel">Отмена</string>
+    <string name="password">Пароль</string>
+    <string name="user_name">Имя пользователя</string>
+    <string name="auth">Авторизация</string>
 
     <string-array name="months">
         <item>Январь</item>

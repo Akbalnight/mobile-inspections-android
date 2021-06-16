@@ -160,7 +160,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         alertDialog.apply {
             setMessage(strings[R.string.fragment_dialog_exit_app])
             setPositiveButton(
-                strings[R.string.fragment_dialog_btn_exit]
+                strings[R.string.exit]
             ) { _, _ ->
                 mainDrawer.closeDrawer(GravityCompat.START)
                 mainViewModel.logout()

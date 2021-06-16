@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.ui.auth.AuthorizationActivity
+import ru.madbrains.inspection.ui.main.LockScreenActivity
 import ru.madbrains.inspection.ui.main.MainActivity
 
 class LauncherActivity : AppCompatActivity() {
@@ -16,23 +17,17 @@ class LauncherActivity : AppCompatActivity() {
 
         launcherViewModel.launchDestination.observe(this, EventObserver { destination ->
             when (destination) {
+                LaunchDestination.LockScreen -> {
+                    LockScreenActivity.start(this)
+                }
                 LaunchDestination.Authorization -> {
-                    startAuthorizationActivity()
+                    AuthorizationActivity.start(this)
                 }
                 LaunchDestination.Main -> {
-                    startMainActivity()
+                    MainActivity.start(this)
                 }
             }
+            finish()
         })
-    }
-
-    private fun startAuthorizationActivity() {
-        AuthorizationActivity.start(this)
-        finish()
-    }
-
-    private fun startMainActivity() {
-        MainActivity.start(this)
-        finish()
     }
 }

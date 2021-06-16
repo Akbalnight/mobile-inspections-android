@@ -7,6 +7,7 @@ import ru.madbrains.inspection.ui.auth.dialogs.BtServerSettingsViewModel
 import ru.madbrains.inspection.ui.common.camera.CameraViewModel
 import ru.madbrains.inspection.ui.common.web.WebViewViewModel
 import ru.madbrains.inspection.ui.launcher.LauncherViewModel
+import ru.madbrains.inspection.ui.main.LockScreenViewModel
 import ru.madbrains.inspection.ui.main.MainViewModel
 import ru.madbrains.inspection.ui.main.SyncViewModel
 import ru.madbrains.inspection.ui.main.checkpoints.detail.CheckpointDetailViewModel
@@ -34,6 +35,7 @@ val appModule = module {
         )
     }
     viewModel { MainViewModel(get(), get(), get()) }
+    viewModel { LockScreenViewModel(get(), get()) }
     viewModel { SyncViewModel(get(), get()) }
     viewModel { DetoursViewModel(get(), get()) }
     viewModel { RouteFiltersViewModel(get()) }
