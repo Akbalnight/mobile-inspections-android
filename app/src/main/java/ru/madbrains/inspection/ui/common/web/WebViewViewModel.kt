@@ -4,10 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
+import ru.madbrains.data.extensions.toBase64HashWith256
 import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.domain.interactor.AuthInteractor
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
+import timber.log.Timber
 
 class WebViewViewModel(
     private val authInteractor: AuthInteractor,
@@ -41,5 +43,10 @@ class WebViewViewModel(
                 it.printStackTrace()
             })
             .addTo(disposables)
+    }
+
+    fun setFormData(username: String, password: String) {
+        preferenceStorage.loginHash = username.toBase64HashWith256()
+        preferenceStorage.passwordHash = password.toBase64HashWith256()
     }
 }

@@ -12,7 +12,6 @@ import ru.madbrains.domain.interactor.AuthInteractor
 import ru.madbrains.domain.interactor.DetoursInteractor
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
-import timber.log.Timber
 
 class MainViewModel(
     private val preferenceStorage: PreferenceStorage,
@@ -99,7 +98,6 @@ class MainViewModel(
             .doOnSubscribe { _progressVisibility.postValue(true) }
             .doAfterTerminate { _progressVisibility.postValue(false) }
             .onErrorResumeNext {
-                //TODO change to 401 when server is ready
                 if (it is HttpException && it.code() == 500) {
                     Completable.complete()
                 } else{
@@ -116,14 +114,8 @@ class MainViewModel(
     }
 
     fun clearDataAndNavToAuth(){
-        //preferenceStorage.clearData()
-        CookieManager.getInstance().removeAllCookies(null) // fix autologin
-        preferenceStorage.token = null
-        preferenceStorage.refreshToken = null
-        preferenceStorage.codeVerifier = null
-        preferenceStorage.userId = null
-        preferenceStorage.username = null
+        CookieManager.getInstance().removeAllCookies(null)
+        preferenceStorage.clearLogout()
         _navigateToAuthorization.postValue(Event(Unit))
-
     }
 }

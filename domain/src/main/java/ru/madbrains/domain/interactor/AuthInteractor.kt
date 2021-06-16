@@ -3,8 +3,6 @@ package ru.madbrains.domain.interactor
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.BehaviorSubject
-import ru.madbrains.domain.model.DetourModel
 import ru.madbrains.domain.model.UserInfoModel
 import ru.madbrains.domain.repository.AuthRepository
 

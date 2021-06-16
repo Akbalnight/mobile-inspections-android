@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    android:id="@+id/clLockView"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <ru.madbrains.inspection.ui.view.ProgressView
+        android:id="@+id/progressView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBar"
@@ -26,7 +33,7 @@
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tiServer"
+            android:id="@+id/tlUsername"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,7 +49,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etServerAuth"
+                android:id="@+id/tvUsername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:imeOptions="actionDone"
@@ -51,7 +58,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tiPortal"
+            android:id="@+id/tlPassword"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -64,16 +71,33 @@
             app:hintTextColor="@color/elementsBlue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tiServer">
+            app:layout_constraintTop_toBottomOf="@id/tlUsername">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etServerPortal"
+                android:id="@+id/tvPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:imeOptions="actionDone"
                 android:inputType="text" />
 
         </com.google.android.material.textfield.TextInputLayout>
+
+
+        <TextView
+            android:id="@+id/tvValidationError"
+            android:textColor="@color/alarm"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/login_and_password_do_not_match"
+            app:iconPadding="8dp"
+            android:textAlignment="textStart"
+            app:layout_constraintTop_toBottomOf="@+id/tlPassword"
+            app:layout_constraintStart_toStartOf="@+id/tlPassword"
+            app:layout_constraintEnd_toEndOf="@+id/tlPassword"
+            android:visibility="invisible"
+        />
 
 
         <com.google.android.material.button.MaterialButton
@@ -92,12 +116,12 @@
             style="@style/inspection_button_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:text="@string/enter"
             app:iconPadding="8dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tiPortal" />
+            app:layout_constraintTop_toBottomOf="@+id/tvValidationError" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

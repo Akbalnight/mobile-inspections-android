@@ -20,7 +20,7 @@ class LauncherViewModel(
     init {
         initApi(preferenceStorage, authenticator)
         when {
-            preferenceStorage.login.isNullOrEmpty() -> {
+            !preferenceStorage.loginHash.isNullOrEmpty() -> {
                 _launchDestination.value = Event(LaunchDestination.LockScreen)
             }
             preferenceStorage.token.isNullOrEmpty() -> {
