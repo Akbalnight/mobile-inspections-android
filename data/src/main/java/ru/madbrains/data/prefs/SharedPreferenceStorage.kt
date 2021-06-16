@@ -86,13 +86,9 @@ class SharedPreferenceStorage(
         prefs.edit { clear() }
     }
     override fun clearLogout() {
-        token = null
-        refreshToken = null
-        codeVerifier = null
-        userId = null
-        username = null
-        loginHash = null
-        passwordHash = null
+        val syncInfo = this.syncInfo
+        clearData()
+        this.syncInfo = syncInfo
     }
 }
 
