@@ -12,12 +12,19 @@ import ru.madbrains.domain.interactor.AuthInteractor
 import ru.madbrains.domain.interactor.DetoursInteractor
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
+import java.util.*
 
 class MainViewModel(
     private val preferenceStorage: PreferenceStorage,
     private val authInteractor: AuthInteractor,
     private val detoursInteractor: DetoursInteractor
 ) : BaseViewModel() {
+
+    companion object{
+        private const val lockTime = 5 * 60 * 1000
+    }
+
+    private var lastActive = Date()
 
     val username: String
         get() = preferenceStorage.username.orEmpty()
@@ -48,6 +55,9 @@ class MainViewModel(
 
     private val _navigateToSettings = MutableLiveData<Event<Unit>>()
     val navigateToSettings: LiveData<Event<Unit>> = _navigateToSettings
+
+    private val _navigateToLock = MutableLiveData<Event<Unit>>()
+    val navigateToLock: LiveData<Event<Unit>> = _navigateToLock
 
     private val _navigateToAuthorization = MutableLiveData<Event<Unit>>()
     val navigateToAuthorization: LiveData<Event<Unit>> = _navigateToAuthorization
@@ -117,5 +127,15 @@ class MainViewModel(
         CookieManager.getInstance().removeAllCookies(null)
         preferenceStorage.clearLogout()
         _navigateToAuthorization.postValue(Event(Unit))
+    }
+
+    fun onPause() {
+        lastActive = Date()
+    }
+
+    fun onResume() {
+        if(Date().time - lastActive.time > lockTime){
+            _navigateToLock.postValue(Event(Unit))
+        }
     }
 }

@@ -13,6 +13,7 @@ import ru.madbrains.domain.interactor.AuthInteractor
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
+import java.util.concurrent.TimeUnit
 
 class LockScreenViewModel(
     private val preferenceStorage: PreferenceStorage,
@@ -36,7 +37,12 @@ class LockScreenViewModel(
             login.toBase64HashWith256() == preferenceStorage.loginHash &&
             password.toBase64HashWith256() == preferenceStorage.passwordHash
         ){
+            _progressVisibility.postValue(true)
             _navigateToMain.postValue(Event(Unit))
+            Completable.timer(5, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
+                .subscribe({
+                    _progressVisibility.postValue(false)
+                },{}).addTo(disposables)
         } else{
             _showError.value = Event(R.string.login_and_password_do_not_match)
         }

@@ -44,6 +44,16 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         }
     }
 
+    override fun onPause() {
+        mainViewModel.onPause()
+        super.onPause()
+    }
+
+    override fun onResume() {
+        mainViewModel.onResume()
+        super.onResume()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -73,7 +83,11 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             openSettingsGraph()
         })
         mainViewModel.navigateToAuthorization.observe(this, EventObserver {
-            startAuthActivity()
+            AuthorizationActivity.start(this)
+            this.finish()
+        })
+        mainViewModel.navigateToLock.observe(this, EventObserver {
+            LockScreenActivity.start(this)
         })
         mainViewModel.showSnackBar.observe(this, EventObserver {
             showSnackBar(it)
@@ -183,10 +197,5 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         snackBar.setActionTextColor(colors[R.color.accidentDark])
         snackBar.setBackgroundTint(colors[R.color.colorPrimaryDark])
         snackBar.show()
-    }
-
-    private fun startAuthActivity() {
-        AuthorizationActivity.start(this)
-        this.finish()
     }
 }

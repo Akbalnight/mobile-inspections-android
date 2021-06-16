@@ -46,7 +46,6 @@ class LockScreenActivity : BaseActivity(R.layout.activity_lock_screen) {
         }
         lockScreenViewModel.navigateToMain.observe(this, EventObserver {
             MainActivity.start(this)
-            this.finish()
         })
         lockScreenViewModel.navigateToAuthorization.observe(this, EventObserver {
             AuthorizationActivity.start(this)
