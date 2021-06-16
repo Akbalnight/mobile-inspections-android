@@ -27,7 +27,10 @@ interface PreferenceStorage {
     var isCreator: Boolean
     var detourStatuses: DetourStatusHolder?
     var syncInfo: SyncInfo
+    var loginHash: String?
+    var passwordHash: String?
     fun clearData()
+    fun clearLogout()
 }
 
 /**
@@ -50,6 +53,8 @@ class SharedPreferenceStorage(
         const val PREF_IS_CREATOR = "PREF_IS_CREATOR"
         const val PREF_DETOUR_STATUSES = "PREF_DETOUR_STATUSES"
         const val PREF_SYNC_INFO = "PREF_SYNC_INFO"
+        const val PREF_LOGIN_HASH = "PREF_LOGIN_HASH"
+        const val PREF_PASSWORD_HASH = "PREF_PASSWORD_HASH"
     }
 
     private val prefs = context.applicationContext.getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
@@ -74,9 +79,20 @@ class SharedPreferenceStorage(
         SyncInfo::class.java,
         SyncInfo()
     )
+    override var loginHash by StringPreference(prefs, PREF_LOGIN_HASH, null)
+    override var passwordHash by StringPreference(prefs, PREF_PASSWORD_HASH, null)
 
     override fun clearData() {
         prefs.edit { clear() }
+    }
+    override fun clearLogout() {
+        token = null
+        refreshToken = null
+        codeVerifier = null
+        userId = null
+        username = null
+        loginHash = null
+        passwordHash = null
     }
 }
 

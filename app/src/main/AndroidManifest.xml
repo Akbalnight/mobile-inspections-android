@@ -30,6 +30,11 @@
             android:screenOrientation="portrait"
             />
         <activity
+            android:name=".ui.main.LockScreenActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
+            />
+        <activity
             android:name=".ui.auth.AuthorizationActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"

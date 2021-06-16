@@ -17,6 +17,14 @@ class AuthRepositoryImpl : AuthRepository {
         }
     }
 
+    override fun refreshToken(token: String): Single<UserInfoModel> {
+        return OAuthData.authApi.refreshToken(
+            token = token
+        ).map { resp ->
+            mapGetTokenResp(resp)
+        }
+    }
+
     override fun logout(accessToken: String): Completable {
         return OAuthData.authApi.logout(accessToken)
     }

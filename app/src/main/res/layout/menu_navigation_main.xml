@@ -126,7 +126,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="4dp"
-            android:text="@string/activity_main_menu_sync"
+            android:text="@string/sync"
             android:textColor="@color/elementsBlue"
             android:textSize="18sp" />
 

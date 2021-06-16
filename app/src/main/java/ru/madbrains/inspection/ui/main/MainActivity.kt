@@ -4,11 +4,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.os.Environment
 import android.view.View
-import android.webkit.CookieManager
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
@@ -27,6 +24,7 @@ import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.extensions.colors
 import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.auth.AuthorizationActivity
+import timber.log.Timber
 
 class MainActivity : BaseActivity(R.layout.activity_main) {
 
@@ -41,7 +39,21 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
     private val mainViewModel: MainViewModel by viewModel()
     private val syncViewModel: SyncViewModel by viewModel()
-    private val authorizationReceiver = AuthorizationReceiver()
+    private val logoutReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            mainViewModel.clearDataAndNavToAuth()
+        }
+    }
+
+    override fun onPause() {
+        mainViewModel.onPause()
+        super.onPause()
+    }
+
+    override fun onResume() {
+        mainViewModel.onResume()
+        super.onResume()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +63,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         setupMenu()
 
         mainViewModel.progressVisibility.observe(this, Observer {
-            progressView.changeVisibility(it)
+            progressView.changeVisibility(it.first, it.second)
         })
         mainViewModel.navigateToMenu.observe(this, EventObserver {
             mainDrawer.openDrawer(GravityCompat.START)
@@ -72,7 +84,11 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             openSettingsGraph()
         })
         mainViewModel.navigateToAuthorization.observe(this, EventObserver {
-            startAuthActivity()
+            AuthorizationActivity.start(this)
+            this.finish()
+        })
+        mainViewModel.navigateToLock.observe(this, EventObserver {
+            LockScreenActivity.start(this)
         })
         mainViewModel.showSnackBar.observe(this, EventObserver {
             showSnackBar(it)
@@ -92,8 +108,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         syncViewModel.initAction(
             externalCacheDir, getExternalFilesDir("")
         )
-        LocalBroadcastManager.getInstance(this).registerReceiver(authorizationReceiver, IntentFilter(
-            IAuthenticator.ACTION_UNAUTHORIZED))
+        LocalBroadcastManager.getInstance(this).registerReceiver(logoutReceiver, IntentFilter(
+            IAuthenticator.ACTION_LOGOUT))
     }
 
     private fun setupMenu() {
@@ -159,7 +175,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         alertDialog.apply {
             setMessage(strings[R.string.fragment_dialog_exit_app])
             setPositiveButton(
-                strings[R.string.fragment_dialog_btn_exit]
+                strings[R.string.exit]
             ) { _, _ ->
                 mainDrawer.closeDrawer(GravityCompat.START)
                 mainViewModel.logout()
@@ -182,16 +198,5 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         snackBar.setActionTextColor(colors[R.color.accidentDark])
         snackBar.setBackgroundTint(colors[R.color.colorPrimaryDark])
         snackBar.show()
-    }
-
-    private fun startAuthActivity() {
-        AuthorizationActivity.start(this)
-        this.finish()
-    }
-
-    inner class AuthorizationReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            mainViewModel.clearDataAndNavToAuth()
-        }
     }
 }

@@ -35,6 +35,10 @@ class SyncFragment : BaseFragment(R.layout.fragment_sync) {
 
         syncViewModel.changedItems.observe(viewLifecycleOwner, Observer {
             routesAdapter.items = it
+            val sendDataAvailable = it.isNotEmpty()
+            llBottomSendData.isClickable = sendDataAvailable
+            llBottomSendData.isFocusable = sendDataAvailable
+            llBottomSendData.alpha = if (sendDataAvailable) 1.0f else 0.5f
         })
 
         llBottomGetData.clickWithDebounce {
@@ -48,12 +52,6 @@ class SyncFragment : BaseFragment(R.layout.fragment_sync) {
             tvGetDate.text = it.getDate?.toyyyyMMddHHmm() ?: "-"
             tvSendDate.text = it.sendDate?.toyyyyMMddHHmm() ?: "-"
         })
-
-        syncViewModel.sendDataAvailable.observe(viewLifecycleOwner, Observer {
-            llBottomSendData.isClickable = it
-            llBottomSendData.isFocusable = it
-            llBottomSendData.alpha = if (it) 1.0f else 0.5f
-        })
     }
 
     override fun onResume() {
@@ -63,7 +61,7 @@ class SyncFragment : BaseFragment(R.layout.fragment_sync) {
 
     private fun setupToolbar() {
         toolbarLayout.apply {
-            tvTitle.text = strings[R.string.fragment_sync_title]
+            tvTitle.text = strings[R.string.sync]
             btnMenu.setOnClickListener {
                 mainViewModel.menuClick()
             }

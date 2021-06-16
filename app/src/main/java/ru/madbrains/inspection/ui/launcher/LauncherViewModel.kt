@@ -10,8 +10,8 @@ import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 
 class LauncherViewModel(
-    private val preferenceStorage: PreferenceStorage,
-    private val authenticator: IAuthenticator
+    preferenceStorage: PreferenceStorage,
+    authenticator: IAuthenticator
 ) : BaseViewModel() {
 
     private val _launchDestination = MutableLiveData<Event<LaunchDestination>>()
@@ -19,11 +19,16 @@ class LauncherViewModel(
 
     init {
         initApi(preferenceStorage, authenticator)
-//        _launchDestination.value = Event(LaunchDestination.Main)
-        if (preferenceStorage.token.isNullOrEmpty()) {
-            _launchDestination.value = Event(LaunchDestination.Authorization)
-        } else {
-            _launchDestination.value = Event(LaunchDestination.Main)
+        when {
+            !preferenceStorage.loginHash.isNullOrEmpty() -> {
+                _launchDestination.value = Event(LaunchDestination.LockScreen)
+            }
+            preferenceStorage.token.isNullOrEmpty() -> {
+                _launchDestination.value = Event(LaunchDestination.Authorization)
+            }
+            else -> {
+                _launchDestination.value = Event(LaunchDestination.Main)
+            }
         }
     }
 }
@@ -34,6 +39,7 @@ private fun initApi(preferenceStorage: PreferenceStorage, authenticator: IAuthen
 }
 
 sealed class LaunchDestination {
+    object LockScreen : LaunchDestination()
     object Authorization : LaunchDestination()
     object Main : LaunchDestination()
 }

@@ -15,6 +15,7 @@ import ru.madbrains.data.utils.FileUtil
 import ru.madbrains.data.utils.RfidDevice
 import ru.madbrains.data.utils.RfidMock
 import ru.madbrains.data.utils.RfidReader
+import ru.madbrains.domain.interactor.AuthInteractor
 import ru.madbrains.domain.repository.AuthRepository
 import ru.madbrains.domain.repository.DetoursRepository
 import ru.madbrains.domain.repository.OfflineRepository
@@ -22,12 +23,12 @@ import timber.log.Timber
 
 val dataModule = module {
     single { getPreferenceStorage(androidContext()) }
-    single { getIAuthenticator(androidContext()) }
     single { getFileUtil(get()) }
     single { getReader() }
     single { getDatabase(androidContext()) }
 
     single { getAuthRepository() }
+    single { getIAuthenticator(androidContext(), get(), get()) }
     single { getDetoursRepository(get()) }
     single { getOfflineRepository(get(), get()) }
 }
@@ -36,8 +37,12 @@ private fun getPreferenceStorage(context: Context): PreferenceStorage {
     return SharedPreferenceStorage(context)
 }
 
-private fun getIAuthenticator(context: Context): IAuthenticator {
-    return IAuthenticator(context)
+private fun getIAuthenticator(
+    context: Context,
+    authInteractor: AuthInteractor,
+    preferenceStorage: PreferenceStorage
+): IAuthenticator {
+    return IAuthenticator(context, authInteractor, preferenceStorage)
 }
 
 private fun getAuthRepository(): AuthRepository {

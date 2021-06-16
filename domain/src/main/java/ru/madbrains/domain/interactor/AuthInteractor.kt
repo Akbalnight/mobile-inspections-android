@@ -14,6 +14,11 @@ class AuthInteractor(
             .subscribeOn(Schedulers.io())
     }
 
+    fun refreshToken(token: String): Single<UserInfoModel> {
+        return authRepository.refreshToken(token)
+            .subscribeOn(Schedulers.io())
+    }
+
     fun logout(accessToken: String): Completable {
         return authRepository.logout(accessToken)
             .subscribeOn(Schedulers.io())

@@ -1,7 +1,6 @@
 package ru.madbrains.inspection.ui.main.checkpoints.detail
 
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
@@ -17,11 +16,7 @@ import ru.madbrains.domain.model.CheckpointModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
-import ru.madbrains.inspection.extensions.formattedStrings
 import ru.madbrains.inspection.extensions.strings
-import ru.madbrains.inspection.ui.adapters.MediaAdapter
-import ru.madbrains.inspection.ui.common.camera.CameraViewModel
-import ru.madbrains.inspection.ui.delegates.MediaUiModel
 import ru.madbrains.inspection.ui.main.MainViewModel
 import ru.madbrains.inspection.ui.main.checkpoints.list.CheckpointListViewModel
 
@@ -161,7 +156,7 @@ class CheckpointDetailFragment : BaseFragment(R.layout.fragment_checkpoint_detai
             builder.apply {
                 setMessage(strings[R.string.fragment_dialog_changed_fields])
                 setPositiveButton(
-                    strings[R.string.fragment_dialog_btn_exit]
+                    strings[R.string.exit]
                 ) { _, _ ->
                     findNavController().popBackStack()
                 }

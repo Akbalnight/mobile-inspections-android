@@ -321,7 +321,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
             val builder = AlertDialog.Builder(it)
             builder.apply {
                 setMessage(strings[R.string.fragment_dialog_changed_fields])
-                setPositiveButton(strings[R.string.fragment_dialog_btn_exit],
+                setPositiveButton(strings[R.string.exit],
                     DialogInterface.OnClickListener { _, _ ->
                         findNavController().popBackStack()
                     })

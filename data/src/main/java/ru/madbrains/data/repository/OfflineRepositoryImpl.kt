@@ -118,7 +118,6 @@ class OfflineRepositoryImpl(
     override fun checkAndRefreshDb(): Completable {
         preferenceStorage.syncInfo.getDate?.let {
             val diffInDays: Long = TimeUnit.MILLISECONDS.toDays(Date().time - it.time)
-            Timber.d("debug_dmm diffInDays: $diffInDays")
             if (diffInDays > preferenceStorage.saveInfoDuration) {
                 return cleanEverything()
             }
