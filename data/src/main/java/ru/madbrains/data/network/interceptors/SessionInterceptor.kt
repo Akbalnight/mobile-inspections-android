@@ -9,14 +9,14 @@ class SessionInterceptor constructor(
 ) : Interceptor {
 
     companion object {
-        private const val KEY_TOKEN = "Authorization"
-        private const val VALUE_TOKEN = "Bearer %s"
+        const val KEY_TOKEN = "Authorization"
+        const val VALUE_TOKEN = "Bearer %s"
 
-        private const val KEY_USER_ID = "userId"
-        private const val VALUE_USER_ID = "%s"
+        const val KEY_USER_ID = "userId"
+        const val VALUE_USER_ID = "%s"
 
-        private const val KEY_COOKIE = "Cookie"
-        private const val VALUE_COOKIE = "code_challenge=%s"
+        const val KEY_COOKIE = "Cookie"
+        const val VALUE_COOKIE = "code_challenge=%s"
     }
 
     override fun intercept(chain: Interceptor.Chain): Response {

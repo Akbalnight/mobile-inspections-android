@@ -39,7 +39,6 @@ class DetoursInteractor(
             }.toSingle{
                 models.filter { it.statusId != null }
                     .filter { it -> it.route.routesData?.all { it.techMap != null } == true }
-                    .filter { it -> it.route.routesData?.all { it.equipments != null } == true }
             }
         }.subscribeOn(Schedulers.io())
     }

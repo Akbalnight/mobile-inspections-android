@@ -124,5 +124,6 @@ class MainViewModel(
         preferenceStorage.userId = null
         preferenceStorage.username = null
         _navigateToAuthorization.postValue(Event(Unit))
+
     }
 }

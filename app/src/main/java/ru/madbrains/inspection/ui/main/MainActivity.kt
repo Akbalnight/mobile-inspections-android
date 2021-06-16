@@ -4,11 +4,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.os.Environment
 import android.view.View
-import android.webkit.CookieManager
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
@@ -41,7 +38,11 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
     private val mainViewModel: MainViewModel by viewModel()
     private val syncViewModel: SyncViewModel by viewModel()
-    private val authorizationReceiver = AuthorizationReceiver()
+    private val logoutReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            mainViewModel.clearDataAndNavToAuth()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,8 +93,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         syncViewModel.initAction(
             externalCacheDir, getExternalFilesDir("")
         )
-        LocalBroadcastManager.getInstance(this).registerReceiver(authorizationReceiver, IntentFilter(
-            IAuthenticator.ACTION_UNAUTHORIZED))
+        LocalBroadcastManager.getInstance(this).registerReceiver(logoutReceiver, IntentFilter(
+            IAuthenticator.ACTION_LOGOUT))
     }
 
     private fun setupMenu() {
@@ -187,11 +188,5 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     private fun startAuthActivity() {
         AuthorizationActivity.start(this)
         this.finish()
-    }
-
-    inner class AuthorizationReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            mainViewModel.clearDataAndNavToAuth()
-        }
     }
 }
