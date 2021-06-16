@@ -5,7 +5,6 @@
     <string name="activity_main_menu_routes">Реестр обходов</string>
     <string name="activity_main_menu_defects">Реестр дефектов</string>
     <string name="activity_main_menu_marks">Регистрация меток</string>
-    <string name="activity_main_menu_sync">Синхронизация</string>
     <string name="activity_main_menu_settings">Настройки</string>
     <string name="activity_main_menu_logout">Выход</string>
 
@@ -72,9 +71,6 @@
     <string name="fragment_checkpoint_detail_commentary">Комментарий</string>
     <string name="fragment_checkpoint_detail_saved_success">Метка успешно сохранена</string>
     <string name="fragment_checkpoint_title">Контрольные точки</string>
-
-    <!-- SyncFragment -->
-    <string name="fragment_sync_title">Синхронизация</string>
 
     <!-- SettingsFragment -->
     <string name="fragment_settings_title">Настройки</string>
@@ -175,6 +171,7 @@
     <string name="user_name">Имя пользователя</string>
     <string name="auth">Авторизация</string>
     <string name="login_and_password_do_not_match">Неверный логин и пароль</string>
+    <string name="sync">Синхронизация</string>
 
     <string-array name="months">
         <item>Январь</item>

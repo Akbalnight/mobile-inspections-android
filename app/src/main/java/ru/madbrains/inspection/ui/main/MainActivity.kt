@@ -24,6 +24,7 @@ import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.extensions.colors
 import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.auth.AuthorizationActivity
+import timber.log.Timber
 
 class MainActivity : BaseActivity(R.layout.activity_main) {
 
@@ -62,7 +63,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         setupMenu()
 
         mainViewModel.progressVisibility.observe(this, Observer {
-            progressView.changeVisibility(it)
+            progressView.changeVisibility(it.first, it.second)
         })
         mainViewModel.navigateToMenu.observe(this, EventObserver {
             mainDrawer.openDrawer(GravityCompat.START)

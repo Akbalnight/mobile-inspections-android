@@ -10,18 +10,21 @@ import retrofit2.HttpException
 import ru.madbrains.data.extensions.toBase64HashWith256
 import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.domain.interactor.AuthInteractor
+import ru.madbrains.domain.interactor.DetoursInteractor
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 class LockScreenViewModel(
     private val preferenceStorage: PreferenceStorage,
-    private val authInteractor: AuthInteractor
+    private val authInteractor: AuthInteractor,
+    private val detoursInteractor: DetoursInteractor
 ) : BaseViewModel() {
 
-    private val _progressVisibility = MutableLiveData<Boolean>()
-    val progressVisibility: LiveData<Boolean> = _progressVisibility
+    private val _progressVisibility = MutableLiveData<Pair<Boolean, Int?>>()
+    val progressVisibility: LiveData<Pair<Boolean, Int?>> = _progressVisibility
 
     private val _navigateToMain = MutableLiveData<Event<Unit>>()
     val navigateToMain: LiveData<Event<Unit>> = _navigateToMain
@@ -37,11 +40,11 @@ class LockScreenViewModel(
             login.toBase64HashWith256() == preferenceStorage.loginHash &&
             password.toBase64HashWith256() == preferenceStorage.passwordHash
         ){
-            _progressVisibility.postValue(true)
+            _progressVisibility.postValue(Pair(true, null))
             _navigateToMain.postValue(Event(Unit))
             Completable.timer(5, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
                 .subscribe({
-                    _progressVisibility.postValue(false)
+                    _progressVisibility.postValue(Pair(false, null))
                 },{}).addTo(disposables)
         } else{
             _showError.value = Event(R.string.login_and_password_do_not_match)
@@ -49,11 +52,12 @@ class LockScreenViewModel(
     }
     fun logout() {
         val accessToken = preferenceStorage.token.orEmpty()
-
-        authInteractor.logout(accessToken)
+        detoursInteractor.syncStartSendingData()
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { _progressVisibility.postValue(true) }
-            .doAfterTerminate { _progressVisibility.postValue(false) }
+            .doOnSubscribe { _progressVisibility.postValue(Pair(true, R.string.sync)) }
+            .andThen(authInteractor.logout(accessToken).doOnSubscribe {
+                _progressVisibility.postValue(Pair(true, null))
+            })
             .onErrorResumeNext {
                 if (it is HttpException && it.code() == 500) {
                     Completable.complete()
@@ -62,10 +66,11 @@ class LockScreenViewModel(
                 }
             }
             //.andThen(detoursInteractor.cleanEverything())
+            .doFinally { _progressVisibility.postValue(Pair(false, null)) }
             .subscribe({
                 clearDataAndNavToAuth()
             }, {
-                it.printStackTrace()
+                Timber.d("debug_dmm error: $it")
             })
             .addTo(disposables)
     }

@@ -35,7 +35,7 @@ val appModule = module {
         )
     }
     viewModel { MainViewModel(get(), get(), get()) }
-    viewModel { LockScreenViewModel(get(), get()) }
+    viewModel { LockScreenViewModel(get(), get(), get()) }
     viewModel { SyncViewModel(get(), get()) }
     viewModel { DetoursViewModel(get(), get()) }
     viewModel { RouteFiltersViewModel(get()) }

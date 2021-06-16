@@ -31,9 +31,6 @@ class SyncViewModel(
     private val _syncInfo = MutableLiveData<SyncInfo>(preferenceStorage.syncInfo)
     val syncInfo: LiveData<SyncInfo> = _syncInfo
 
-    private val _sendDataAvailable = MutableLiveData<Boolean>()
-    val sendDataAvailable: LiveData<Boolean> = _sendDataAvailable
-
     private val _detourSyncStatus = MutableLiveData<Event<ProgressState>>()
     val detourSyncStatus: LiveData<Event<ProgressState>> = _detourSyncStatus
 
@@ -62,8 +59,6 @@ class SyncViewModel(
     val changedItems: LiveData<List<DetourUiModel>> = _changedItems
 
     private var _pendingDataDb: PendingDataDb? = null
-    private var _changedDetourItems: List<DetourModel>? = null
-    private var _changedDefectsItems: List<DefectModel>? = null
 
     private val _showSnackBar = MutableLiveData<Event<Int>>()
     val showSnackBar: LiveData<Event<Int>> = _showSnackBar
@@ -75,6 +70,14 @@ class SyncViewModel(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 _syncInfo.postValue(it)
+            }, {
+                it.printStackTrace()
+            })
+            .addTo(observables)
+        detoursInteractor.changedItemsRem
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ id->
+                _changedItems.postValue(_changedItems.value?.filter { it.id != id })
             }, {
                 it.printStackTrace()
             })
@@ -284,16 +287,11 @@ class SyncViewModel(
 
     fun getChangedDetours(){
         Single.zip(detoursInteractor.getChangedDetoursDb(), detoursInteractor.getChangedDefectsDb(),
-            BiFunction { b1: List<DetourModel>, b2: List<DefectModel> ->
-            Pair(b1, b2)
-        })
+            BiFunction { b1: List<DetourModel>, b2: List<DefectModel> -> Pair(b1, b2) })
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { _globalProgress.postValue(true) }
             .doAfterTerminate { _globalProgress.postValue(false) }
             .subscribe({ pair->
-                _changedDetourItems = pair.first
-                _changedDefectsItems = pair.second
-                _sendDataAvailable.postValue((pair.first + pair.second).isNotEmpty())
                 val detours = pair.first.map { detour ->
                     DetourUiModel(
                         id = detour.id,
@@ -317,56 +315,13 @@ class SyncViewModel(
             .addTo(disposables)
     }
 
+
     fun startSendingData() {
-        val tasks = arrayListOf<Completable>()
-        _changedDetourItems?.let { list->
-            if(list.isNotEmpty()){
-                val detourTasks = list.map { item->
-                    detoursInteractor.updateDetourRemote(item).andThen(
-                        detoursInteractor.saveDetourDB(
-                            item.apply { changed = false }
-                        ).doFinally {
-                            _changedItems.postValue(_changedItems.value?.filter {
-                                it.id != item.id
-                            })
-                        }
-                    )
-                }
-                tasks.addAll(detourTasks)
-            }
-        }
-        _changedDefectsItems?.let { list->
-            if(list.isNotEmpty()){
-                val defectsTasks = list.map { item->
-                    val single = if(item.changed) detoursInteractor.updateDefectRemote(item) else detoursInteractor.saveDefectRemote(item)
-                    single.flatMapCompletable { Completable.complete() }
-                    .andThen(
-                        detoursInteractor.saveDefectDb(
-                            item.apply {
-                                changed = false
-                                created = false
-                                files = files?.map {
-                                    it.copy(isNew = false)
-                                }
-                            }
-                        ).doFinally {
-                            _changedItems.postValue(_changedItems.value?.filter {
-                                it.id != item.id
-                            })
-                        }
-                    )
-                }
-                tasks.addAll(defectsTasks)
-            }
-        }
-        Completable.merge(tasks)
+        detoursInteractor.syncStartSendingData()
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { _globalProgress.postValue(true) }
             .doAfterTerminate { _globalProgress.postValue(false) }
-            .subscribe ({
-                _sendDataAvailable.postValue(false)
-                detoursInteractor.finishSendSync(Date())
-            },{
+            .subscribe ({},{
                 _showSnackBar.postValue(Event(R.string.fragment_sync_send_data_error))
             })
             .addTo(disposables)
