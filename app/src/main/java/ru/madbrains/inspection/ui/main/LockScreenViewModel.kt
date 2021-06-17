@@ -33,6 +33,9 @@ class LockScreenViewModel(
     private val _showError = MutableLiveData<Event<Int>>()
     val showError: LiveData<Event<Int>> = _showError
 
+    private val _showSnackBar = MutableLiveData<Event<String>>()
+    val showSnackBar: LiveData<Event<String>> = _showSnackBar
+
     fun login(login: String, password: String) {
         if(
             login.toBase64HashWith256() == preferenceStorage.loginHash &&
@@ -61,7 +64,7 @@ class LockScreenViewModel(
             .subscribe({
                 _navigateToAuthorization.postValue(Event(Unit))
             }, {
-                Timber.d("debug_dmm error: $it")
+                _showSnackBar.postValue(Event(it.message?:""))
             })
             .addTo(disposables)
     }

@@ -88,9 +88,7 @@ class SharedPreferenceStorage(
     }
     override fun clearLogout() {
         CookieManager.getInstance().removeAllCookies(null)
-        val syncInfo = this.syncInfo
         clearData()
-        this.syncInfo = syncInfo
     }
 }
 

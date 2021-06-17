@@ -11,6 +11,7 @@ import ru.madbrains.data.network.mappers.*
 import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.domain.model.*
 import ru.madbrains.domain.repository.OfflineRepository
+import timber.log.Timber
 import java.io.*
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -127,8 +128,9 @@ class OfflineRepositoryImpl(
     }
 
     override fun logoutClean(): Completable {
-        preferenceStorage.clearLogout()
-        return cleanDbAndFiles()
+        return cleanDbAndFiles().doFinally {
+            preferenceStorage.clearLogout()
+        }
     }
 
     override fun cleanDbAndFiles(): Completable {

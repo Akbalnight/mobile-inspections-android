@@ -88,6 +88,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         })
         mainViewModel.navigateToLock.observe(this, EventObserver {
             LockScreenActivity.start(this)
+            this.finish()
         })
         mainViewModel.showSnackBar.observe(this, EventObserver {
             showSnackBar(it)

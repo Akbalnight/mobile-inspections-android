@@ -112,7 +112,7 @@ class MainViewModel(
             .subscribe({
                 _navigateToAuthorization.postValue(Event(Unit))
             }, {
-               Timber.d("debug_dmm error: $it")
+               _showSnackBar.postValue(Event(it.message?:""))
             })
             .addTo(disposables)
     }

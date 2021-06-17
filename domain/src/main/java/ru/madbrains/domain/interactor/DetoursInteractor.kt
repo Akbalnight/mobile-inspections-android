@@ -58,7 +58,7 @@ class DetoursInteractor(
             .subscribeOn(Schedulers.io())
     }
 
-    fun updateDetourRemote(detour: DetourModel): Completable {
+    private fun updateDetourRemote(detour: DetourModel): Completable {
         return routesRepository.updateDetour(detour)
             .subscribeOn(Schedulers.io())
     }
@@ -108,7 +108,7 @@ class DetoursInteractor(
         return routesRepository.saveDefect(model, files).subscribeOn(Schedulers.io())
     }
 
-    fun updateDefectRemote(model: DefectModel): Single<String> {
+    private fun updateDefectRemote(model: DefectModel): Single<String> {
         val files = model.files?.filter { it.isNew }?.mapNotNull { media -> getFileInFolder(media.fileName, AppDirType.Local) }
         return routesRepository.updateDefect(model, files).subscribeOn(Schedulers.io())
     }
