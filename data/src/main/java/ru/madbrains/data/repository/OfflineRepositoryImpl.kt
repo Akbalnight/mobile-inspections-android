@@ -119,7 +119,7 @@ class OfflineRepositoryImpl(
         preferenceStorage.syncInfo.getDate?.let {
             val diffInDays: Long = TimeUnit.MILLISECONDS.toDays(Date().time - it.time)
             if (diffInDays > preferenceStorage.saveInfoDuration) {
-                return cleanEverything()
+                return cleanDbAndFiles()
             }
         }
         return getDetours().flatMapCompletable {
@@ -127,9 +127,10 @@ class OfflineRepositoryImpl(
         }
     }
 
-    override fun cleanEverything(): Completable {
-        setSyncInfo(SyncInfo())
-        return cleanDbAndFiles()
+    override fun logoutClean(): Completable {
+        return cleanDbAndFiles().doFinally {
+            preferenceStorage.clearLogout()
+        }
     }
 
     override fun cleanDbAndFiles(): Completable {

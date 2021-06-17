@@ -43,7 +43,7 @@ interface OfflineRepository {
 
     fun unzipFiles(zipFile: File, folder: AppDirType): Completable
     fun getFileInFolder(name: String?, folder: AppDirType): File?
-    fun cleanEverything(): Completable
+    fun logoutClean(): Completable
     fun getChangedDetours(): Single<List<DetourModel>>
     fun insertDefect(model: DefectModel): Completable
     fun deleteDefect(id: String): Completable

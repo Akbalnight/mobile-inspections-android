@@ -24,7 +24,6 @@ import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.extensions.colors
 import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.auth.AuthorizationActivity
-import timber.log.Timber
 
 class MainActivity : BaseActivity(R.layout.activity_main) {
 
@@ -39,9 +38,9 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
     private val mainViewModel: MainViewModel by viewModel()
     private val syncViewModel: SyncViewModel by viewModel()
-    private val logoutReceiver = object : BroadcastReceiver() {
+    private val forceLogoutReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            mainViewModel.clearDataAndNavToAuth()
+            mainViewModel.forceLogout()
         }
     }
 
@@ -89,6 +88,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         })
         mainViewModel.navigateToLock.observe(this, EventObserver {
             LockScreenActivity.start(this)
+            this.finish()
         })
         mainViewModel.showSnackBar.observe(this, EventObserver {
             showSnackBar(it)
@@ -108,8 +108,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         syncViewModel.initAction(
             externalCacheDir, getExternalFilesDir("")
         )
-        LocalBroadcastManager.getInstance(this).registerReceiver(logoutReceiver, IntentFilter(
-            IAuthenticator.ACTION_LOGOUT))
+        LocalBroadcastManager.getInstance(this).registerReceiver(forceLogoutReceiver, IntentFilter(
+            IAuthenticator.ACTION_FORCE_LOGOUT))
     }
 
     private fun setupMenu() {

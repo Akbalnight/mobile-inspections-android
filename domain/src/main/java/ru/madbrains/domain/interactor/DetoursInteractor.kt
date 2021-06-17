@@ -4,7 +4,6 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
-import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import okhttp3.ResponseBody
@@ -59,7 +58,7 @@ class DetoursInteractor(
             .subscribeOn(Schedulers.io())
     }
 
-    fun updateDetourRemote(detour: DetourModel): Completable {
+    private fun updateDetourRemote(detour: DetourModel): Completable {
         return routesRepository.updateDetour(detour)
             .subscribeOn(Schedulers.io())
     }
@@ -109,7 +108,7 @@ class DetoursInteractor(
         return routesRepository.saveDefect(model, files).subscribeOn(Schedulers.io())
     }
 
-    fun updateDefectRemote(model: DefectModel): Single<String> {
+    private fun updateDefectRemote(model: DefectModel): Single<String> {
         val files = model.files?.filter { it.isNew }?.mapNotNull { media -> getFileInFolder(media.fileName, AppDirType.Local) }
         return routesRepository.updateDefect(model, files).subscribeOn(Schedulers.io())
     }
@@ -215,8 +214,8 @@ class DetoursInteractor(
         return offlineRepository.cleanDbAndFiles().subscribeOn(Schedulers.io())
     }
 
-    fun cleanEverything(): Completable {
-        return offlineRepository.cleanEverything().subscribeOn(Schedulers.io())
+    fun logoutClean(): Completable {
+        return offlineRepository.logoutClean().subscribeOn(Schedulers.io())
     }
 
     fun deleteFile(file: File?): Completable {
