@@ -4,7 +4,6 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
-import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import okhttp3.ResponseBody
@@ -215,8 +214,8 @@ class DetoursInteractor(
         return offlineRepository.cleanDbAndFiles().subscribeOn(Schedulers.io())
     }
 
-    fun cleanEverything(): Completable {
-        return offlineRepository.cleanEverything().subscribeOn(Schedulers.io())
+    fun logoutClean(): Completable {
+        return offlineRepository.logoutClean().subscribeOn(Schedulers.io())
     }
 
     fun deleteFile(file: File?): Completable {

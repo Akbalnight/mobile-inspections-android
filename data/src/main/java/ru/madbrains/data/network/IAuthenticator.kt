@@ -21,12 +21,12 @@ class IAuthenticator constructor(
 ) : Authenticator {
 
     companion object {
-        const val ACTION_LOGOUT = "ACTION_LOGOUT"
+        const val ACTION_FORCE_LOGOUT = "ACTION_FORCE_LOGOUT"
         var refreshTokenSource: BehaviorSubject<UserInfoModel>? = null
     }
 
-    private fun sendLogoutSignal(){
-        val intent = Intent(ACTION_LOGOUT)
+    private fun sendForceLogoutSignal(){
+        val intent = Intent(ACTION_FORCE_LOGOUT)
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
     }
 
@@ -62,7 +62,7 @@ class IAuthenticator constructor(
                 Timber.d("debug_dmm refresh token error: $e")
             }
         }
-        sendLogoutSignal()
+        sendForceLogoutSignal()
         return null
     }
 }

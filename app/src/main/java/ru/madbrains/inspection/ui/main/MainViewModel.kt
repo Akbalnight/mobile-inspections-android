@@ -1,12 +1,9 @@
 package ru.madbrains.inspection.ui.main
 
-import android.webkit.CookieManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
-import retrofit2.HttpException
 import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.domain.interactor.AuthInteractor
 import ru.madbrains.domain.interactor.DetoursInteractor
@@ -110,27 +107,26 @@ class MainViewModel(
             .andThen(authInteractor.logout(accessToken).doOnSubscribe {
                 _progressVisibility.postValue(Pair(true, null))
             })
-            .onErrorResumeNext {
-                if (it is HttpException && it.code() == 500) {
-                    Completable.complete()
-                } else{
-                    throw it
-                }
-            }
-            //.andThen(detoursInteractor.cleanEverything())
+            .andThen(detoursInteractor.logoutClean())
             .doFinally { _progressVisibility.postValue(Pair(false, null)) }
             .subscribe({
-                clearDataAndNavToAuth()
+                _navigateToAuthorization.postValue(Event(Unit))
             }, {
                Timber.d("debug_dmm error: $it")
             })
             .addTo(disposables)
     }
 
-    fun clearDataAndNavToAuth(){
-        CookieManager.getInstance().removeAllCookies(null)
-        preferenceStorage.clearLogout()
-        _navigateToAuthorization.postValue(Event(Unit))
+    fun forceLogout(){
+        detoursInteractor.logoutClean()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                _navigateToAuthorization.postValue(Event(Unit))
+            }, {
+                Timber.d("debug_dmm error: $it")
+            })
+            .addTo(disposables)
+
     }
 
     fun onPause() {

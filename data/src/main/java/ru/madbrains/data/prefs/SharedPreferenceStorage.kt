@@ -3,6 +3,7 @@ package ru.madbrains.data.prefs
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import android.webkit.CookieManager
 import androidx.annotation.WorkerThread
 import androidx.core.content.edit
 import com.google.gson.Gson
@@ -86,6 +87,7 @@ class SharedPreferenceStorage(
         prefs.edit { clear() }
     }
     override fun clearLogout() {
+        CookieManager.getInstance().removeAllCookies(null)
         val syncInfo = this.syncInfo
         clearData()
         this.syncInfo = syncInfo
