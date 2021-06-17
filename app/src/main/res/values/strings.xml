@@ -172,6 +172,7 @@
     <string name="auth">Авторизация</string>
     <string name="login_and_password_do_not_match">Неверный логин и пароль</string>
     <string name="sync">Синхронизация</string>
+    <string name="server_unavailable">Невозможно соединиться с сервером</string>
 
     <string-array name="months">
         <item>Январь</item>

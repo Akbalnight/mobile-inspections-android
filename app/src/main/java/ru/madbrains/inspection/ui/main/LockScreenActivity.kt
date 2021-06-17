@@ -16,6 +16,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseActivity
 import ru.madbrains.inspection.base.EventObserver
+import ru.madbrains.inspection.base.model.TextData
 import ru.madbrains.inspection.extensions.colors
 import ru.madbrains.inspection.extensions.hideKeyboard
 import ru.madbrains.inspection.extensions.strings
@@ -61,7 +62,11 @@ class LockScreenActivity : BaseActivity(R.layout.activity_lock_screen) {
             tvValidationError.isInvisible = false
         })
         lockScreenViewModel.showSnackBar.observe(this, EventObserver {
-            showSnackBar(it)
+            if(it is TextData.Str){
+                showSnackBar(it.data)
+            } else if(it is TextData.ResId){
+                showSnackBar(strings[it.data])
+            }
         })
         lockScreenViewModel.progressVisibility.observe(this, Observer {
             progressView.changeVisibility(it.first, it.second)
