@@ -10,7 +10,10 @@ import ru.madbrains.domain.interactor.DetoursInteractor
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
+import ru.madbrains.inspection.base.model.TextData
 import timber.log.Timber
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import java.util.*
 
 class MainViewModel(
@@ -61,8 +64,8 @@ class MainViewModel(
     private val _navigateToAuthorization = MutableLiveData<Event<Unit>>()
     val navigateToAuthorization: LiveData<Event<Unit>> = _navigateToAuthorization
 
-    private val _showSnackBar = MutableLiveData<Event<String>>()
-    val showSnackBar: LiveData<Event<String>> = _showSnackBar
+    private val _showSnackBar = MutableLiveData<Event<TextData>>()
+    val showSnackBar: LiveData<Event<TextData>> = _showSnackBar
 
     private val _showExitDialog = MutableLiveData<Event<Unit>>()
     val showExitDialog: LiveData<Event<Unit>> = _showExitDialog
@@ -92,7 +95,7 @@ class MainViewModel(
     }
 
     fun openSnackBar(text: String) {
-        _showSnackBar.value = Event(text)
+        _showSnackBar.value = Event(TextData.Str(text))
     }
 
     fun logoutClick() {
@@ -112,7 +115,11 @@ class MainViewModel(
             .subscribe({
                 _navigateToAuthorization.postValue(Event(Unit))
             }, {
-               _showSnackBar.postValue(Event(it.message?:""))
+                if(it is UnknownHostException || it is SocketTimeoutException){
+                    _showSnackBar.postValue(Event(TextData.ResId(R.string.server_unavailable)))
+                } else{
+                    _showSnackBar.postValue(Event(TextData.Str(it.message?:"")))
+                }
             })
             .addTo(disposables)
     }

@@ -12,8 +12,12 @@ import ru.madbrains.domain.interactor.DetoursInteractor
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
+import ru.madbrains.inspection.base.model.TextData
 import timber.log.Timber
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 
 class LockScreenViewModel(
     private val preferenceStorage: PreferenceStorage,
@@ -33,8 +37,8 @@ class LockScreenViewModel(
     private val _showError = MutableLiveData<Event<Int>>()
     val showError: LiveData<Event<Int>> = _showError
 
-    private val _showSnackBar = MutableLiveData<Event<String>>()
-    val showSnackBar: LiveData<Event<String>> = _showSnackBar
+    private val _showSnackBar = MutableLiveData<Event<TextData>>()
+    val showSnackBar: LiveData<Event<TextData>> = _showSnackBar
 
     fun login(login: String, password: String) {
         if(
@@ -64,7 +68,11 @@ class LockScreenViewModel(
             .subscribe({
                 _navigateToAuthorization.postValue(Event(Unit))
             }, {
-                _showSnackBar.postValue(Event(it.message?:""))
+                if(it is UnknownHostException || it is SocketTimeoutException){
+                    _showSnackBar.postValue(Event(TextData.ResId(R.string.server_unavailable)))
+                } else{
+                    _showSnackBar.postValue(Event(TextData.Str(it.message?:"")))
+                }
             })
             .addTo(disposables)
     }
