@@ -10,6 +10,7 @@ import ru.madbrains.domain.interactor.AuthInteractor
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import timber.log.Timber
+import java.util.*
 
 class WebViewViewModel(
     private val authInteractor: AuthInteractor,
@@ -46,7 +47,8 @@ class WebViewViewModel(
     }
 
     fun setFormData(username: String, password: String) {
-        preferenceStorage.loginHash = username.toBase64HashWith256()
+        preferenceStorage.loginHash =
+            username.toLowerCase(Locale.getDefault()).toBase64HashWith256()
         preferenceStorage.passwordHash = password.toBase64HashWith256()
     }
 }
