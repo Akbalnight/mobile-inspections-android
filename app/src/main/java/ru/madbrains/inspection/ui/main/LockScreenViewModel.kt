@@ -13,11 +13,10 @@ import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.TextData
-import timber.log.Timber
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import java.util.*
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.TimeoutException
 
 class LockScreenViewModel(
     private val preferenceStorage: PreferenceStorage,
@@ -42,7 +41,7 @@ class LockScreenViewModel(
 
     fun login(login: String, password: String) {
         if(
-            login.toBase64HashWith256() == preferenceStorage.loginHash &&
+            login.toLowerCase(Locale.getDefault()).toBase64HashWith256() == preferenceStorage.loginHash &&
             password.toBase64HashWith256() == preferenceStorage.passwordHash
         ){
             _progressVisibility.postValue(Pair(true, null))
