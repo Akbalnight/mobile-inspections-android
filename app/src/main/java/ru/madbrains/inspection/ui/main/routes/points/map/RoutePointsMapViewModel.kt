@@ -13,7 +13,6 @@ import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.MapLevelUiModel
 import ru.madbrains.inspection.ui.delegates.RoutePointUiModel
-import timber.log.Timber
 import java.io.File
 
 class RoutePointsMapViewModel(
@@ -98,14 +97,14 @@ class RoutePointsMapViewModel(
                     acc[id] = true
                     acc
                 }
-                updateDataR(points, defectsMap)
+                applyDefectDataAndUpdate(points, defectsMap)
             }, {
                 it.printStackTrace()
             })
             .addTo(disposables)
     }
 
-    private fun updateDataR(points: List<RouteDataModel>, defectsMap: MutableMap<String, Boolean>) {
+    private fun applyDefectDataAndUpdate(points: List<RouteDataModel>, defectsMap: MutableMap<String, Boolean>) {
         val mapPoints = mutableListOf<MapPointUiModel>()
         val lastCompleted = points.indexOfLast { it.completed }
         points.mapIndexed { index, route ->
