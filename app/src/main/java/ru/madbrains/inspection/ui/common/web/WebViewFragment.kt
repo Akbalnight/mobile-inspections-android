@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.webkit.*
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -28,6 +27,8 @@ class WebViewFragment : BaseFragment(R.layout.fragment_web_view) {
         const val KEY_WEB_URL = "web_url"
         private const val INTERFACE = "HTML_OUT"
     }
+
+    private var loadingStarted = false
 
     private val jsInjectCode = """
         function parseForm(event) {
@@ -102,10 +103,7 @@ class WebViewFragment : BaseFragment(R.layout.fragment_web_view) {
             webViewClient = object : WebViewClient() {
                 override fun onPageStarted(view: WebView?, url: String, favicon: Bitmap?) {
                     super.onPageStarted(view, url, favicon)
-                    progressView?.changeVisibility(true)
-
                     val authCode = Uri.parse(url).getQueryParameter("code")
-                    Timber.tag("WebViewLog").d("loading url: $url")
                     authCode?.let {
                         Timber.tag("WebViewLog").d("authCode: $authCode")
                         webViewViewModel.getToken(it)
@@ -116,6 +114,18 @@ class WebViewFragment : BaseFragment(R.layout.fragment_web_view) {
                     super.onPageFinished(view, url)
                     progressView?.changeVisibility(false)
                     view?.loadUrl("javascript:(function() { $jsInjectCode })()")
+                }
+
+                override fun onLoadResource(view: WebView?, url: String?) {
+                    super.onLoadResource(view, url)
+                    if(!loadingStarted){
+                        loadingStarted = true
+                        progressView?.changeVisibility(true)
+                    }
+                }
+
+                override fun onPageCommitVisible(view: WebView?, url: String?) {
+                    super.onPageCommitVisible(view, url)
                 }
             }
             loadUrl(startUrl)
