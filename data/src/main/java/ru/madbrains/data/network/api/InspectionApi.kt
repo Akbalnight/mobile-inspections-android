@@ -61,7 +61,7 @@ interface InspectionApi {
     @POST("/api/dynamicdq/data/flat/mobileDefectTypical")
     fun getDefectTypical(@Body request: Any): Single<List<GetDefectTypicalResp>>
 
-    @POST("/api/dynamicdq/data/flat/mobileEquipments")
+    @POST("/api/dynamicdq/data/flat/mobileEquipments?page=0&size=1")
     fun getEquipments(@Body request: GetEquipmentsReq): Single<List<EquipmentRemote>>
 
     @Streaming
