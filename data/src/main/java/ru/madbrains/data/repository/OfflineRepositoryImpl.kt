@@ -11,7 +11,6 @@ import ru.madbrains.data.network.mappers.*
 import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.domain.model.*
 import ru.madbrains.domain.repository.OfflineRepository
-import timber.log.Timber
 import java.io.*
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -79,11 +78,13 @@ class OfflineRepositoryImpl(
     }
 
     override fun getActiveDefects(equipmentIds: List<String>): Single<List<DefectModel>> {
-        return db.defectItemDao().getActiveItems(equipmentIds, DefectStatus.ELIMINATED.id).map { it -> it.map { fromDefectItemDB(it) } }
+        return db.defectItemDao().getActiveItems(equipmentIds, DefectStatus.ELIMINATED.id)
+            .map { it -> it.map { fromDefectItemDB(it) } }
     }
 
     override fun getEquipmentIdsWithDefects(equipmentIds: List<String>): Single<List<String>> {
-        return db.defectItemDao().getEquipmentIdsWithDefects(equipmentIds, DefectStatus.ELIMINATED.id)
+        return db.defectItemDao()
+            .getEquipmentIdsWithDefects(equipmentIds, DefectStatus.ELIMINATED.id)
     }
 
     override fun getEquipments(): Single<List<EquipmentModel>> {
@@ -159,7 +160,7 @@ class OfflineRepositoryImpl(
     override fun setDirectories(fileTempDir: File?, fileSaveDir: File?) {
         _tempDirectory = fileTempDir
         _saveDirectory = fileSaveDir?.apply {
-            if(!exists()){
+            if (!exists()) {
                 mkdirs()
             }
         }
@@ -234,7 +235,7 @@ class OfflineRepositoryImpl(
     override fun getFileInFolder(name: String?, folder: AppDirType): File? {
         if (name != null) {
             val directory = File(_saveDirectory, folder.value)
-            if(!directory.exists()){
+            if (!directory.exists()) {
                 directory.mkdirs()
             }
             return File(directory, name)

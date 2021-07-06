@@ -3,7 +3,6 @@ package ru.madbrains.inspection.ui.main.equipmentList
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ru.madbrains.domain.interactor.OfflineInteractor
-import ru.madbrains.domain.interactor.RemoteInteractor
 import ru.madbrains.domain.model.AppDirType
 import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.inspection.base.BaseViewModel

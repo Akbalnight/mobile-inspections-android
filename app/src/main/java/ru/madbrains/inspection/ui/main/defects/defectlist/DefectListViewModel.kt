@@ -56,7 +56,8 @@ class DefectListViewModel(
 
     fun getDefectList(deviceIds: List<String>?) {
         lastDeviceIds = deviceIds
-        val single = if(deviceIds!=null) offlineInteractor.getActiveDefectsDb(equipmentIds = deviceIds) else offlineInteractor.getDefectsDb()
+        val single =
+            if (deviceIds != null) offlineInteractor.getActiveDefectsDb(equipmentIds = deviceIds) else offlineInteractor.getDefectsDb()
         single
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { _progressVisibility.postValue(true) }
@@ -64,7 +65,7 @@ class DefectListViewModel(
             .subscribe({ items ->
                 defectListModels.clear()
                 defectListModels.addAll(items.filter {
-                    it.statusProcessId!=DefectStatus.ELIMINATED.id
+                    it.statusProcessId != DefectStatus.ELIMINATED.id
                 })
                 updateDefectList()
             }, {
@@ -74,7 +75,7 @@ class DefectListViewModel(
     }
 
     fun deleteDefect(deleteItem: DefectModel?) {
-        deleteItem?.let { item->
+        deleteItem?.let { item ->
             syncInteractor.delDefectDb(item.id)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { _progressVisibility.postValue(true) }
@@ -115,11 +116,11 @@ class DefectListViewModel(
         val list: MutableList<MediaUiModel> = mutableListOf()
         files?.let {
             files.forEach { fileModel ->
-                val file =  offlineInteractor.getFileInFolder(
+                val file = offlineInteractor.getFileInFolder(
                     fileModel.fileName,
-                    if(fileModel.isNew) AppDirType.Local else AppDirType.Defects
+                    if (fileModel.isNew) AppDirType.Local else AppDirType.Defects
                 )
-                if(file!=null){
+                if (file != null) {
                     list.add(
                         MediaUiModel(
                             id = fileModel.id,

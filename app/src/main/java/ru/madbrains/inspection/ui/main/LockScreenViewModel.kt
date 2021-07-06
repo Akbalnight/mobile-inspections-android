@@ -42,20 +42,22 @@ class LockScreenViewModel(
     val showSnackBar: LiveData<Event<TextData>> = _showSnackBar
 
     fun login(login: String, password: String) {
-        if(
-            login.toLowerCase(Locale.getDefault()).toBase64HashWith256() == preferenceStorage.loginHash &&
+        if (
+            login.toLowerCase(Locale.getDefault())
+                .toBase64HashWith256() == preferenceStorage.loginHash &&
             password.toBase64HashWith256() == preferenceStorage.passwordHash
-        ){
+        ) {
             _progressVisibility.postValue(Pair(true, null))
             _navigateToMain.postValue(Event(Unit))
             Completable.timer(5, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
                 .subscribe({
                     _progressVisibility.postValue(Pair(false, null))
-                },{}).addTo(disposables)
-        } else{
+                }, {}).addTo(disposables)
+        } else {
             _showError.value = Event(R.string.login_and_password_do_not_match)
         }
     }
+
     fun logout() {
         val accessToken = preferenceStorage.token.orEmpty()
         remoteInteractor.sendSyncDataAndRefreshDb()
@@ -69,10 +71,10 @@ class LockScreenViewModel(
             .subscribe({
                 _navigateToAuthorization.postValue(Event(Unit))
             }, {
-                if(it is UnknownHostException || it is SocketTimeoutException){
+                if (it is UnknownHostException || it is SocketTimeoutException) {
                     _showSnackBar.postValue(Event(TextData.ResId(R.string.server_unavailable)))
-                } else{
-                    _showSnackBar.postValue(Event(TextData.Str(it.message?:"")))
+                } else {
+                    _showSnackBar.postValue(Event(TextData.Str(it.message ?: "")))
                 }
             })
             .addTo(disposables)

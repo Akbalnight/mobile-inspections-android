@@ -22,7 +22,6 @@ import ru.madbrains.inspection.ui.main.routes.points.list.RoutePointsListFragmen
 import ru.madbrains.inspection.ui.main.routes.points.map.RoutePointsMapFragment
 import ru.madbrains.inspection.ui.main.routes.techoperations.TechOperationsFragment
 import ru.madbrains.inspection.ui.main.routes.techoperations.TechOperationsViewModel
-import timber.log.Timber
 
 class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
 
@@ -105,7 +104,7 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
             }
         )
 
-        activity?.onBackPressedDispatcher?.addCallback(this){
+        activity?.onBackPressedDispatcher?.addCallback(this) {
             routePointsViewModel.closeClick()
         }
     }
@@ -119,7 +118,6 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
             args
         )
     }
-
 
 
     private fun setupToolbar(title: String?) {

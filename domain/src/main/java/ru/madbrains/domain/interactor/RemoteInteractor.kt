@@ -35,11 +35,10 @@ class RemoteInteractor(
                 val unfrozenIds = models.filter { it.frozen != true }.map { it.id }
                 if (unfrozenIds.isNotEmpty()) {
                     routesRepository.freezeDetours(unfrozenIds)
-                }
-                else{
+                } else {
                     Completable.complete()
                 }
-            }.toSingle{
+            }.toSingle {
                 models.filter { it.statusId != null }
                     .filter { it -> it.route.routesData?.all { it.techMap != null } == true }
             }
@@ -97,26 +96,28 @@ class RemoteInteractor(
     }
 
     fun sendSyncDataAndRefreshDb(): Completable {
-        return Single.zip(offlineRepository.getChangedDetours(), offlineRepository.getChangedDefects(),
+        return Single.zip(offlineRepository.getChangedDetours(),
+            offlineRepository.getChangedDefects(),
             BiFunction { b1: List<DetourModel>, b2: List<DefectModel> -> Pair(b1, b2) })
             .flatMapCompletable { pair ->
                 val tasks = arrayListOf<Completable>()
-                pair.first.let { list->
-                    if(list.isNotEmpty()){
-                        val detourTasks = list.map { item->
+                pair.first.let { list ->
+                    if (list.isNotEmpty()) {
+                        val detourTasks = list.map { item ->
                             routesRepository.updateDetour(item).andThen(
-                                offlineRepository.insertDetour(item.apply { changed = false }).doFinally {
-                                    syncedItemsRem.onNext(item.id)
-                                }
+                                offlineRepository.insertDetour(item.apply { changed = false })
+                                    .doFinally {
+                                        syncedItemsRem.onNext(item.id)
+                                    }
                             )
                         }
                         tasks.addAll(detourTasks)
                     }
                 }
-                pair.second.let { list->
-                    if(list.isNotEmpty()){
-                        val defectsTasks = list.map { item->
-                            val single = if(item.changed) updateDefect(item) else saveDefect(item)
+                pair.second.let { list ->
+                    if (list.isNotEmpty()) {
+                        val defectsTasks = list.map { item ->
+                            val single = if (item.changed) updateDefect(item) else saveDefect(item)
                             single.flatMapCompletable { Completable.complete() }
                                 .andThen(
                                     offlineRepository.insertDefect(
@@ -144,12 +145,22 @@ class RemoteInteractor(
     }
 
     private fun saveDefect(model: DefectModel): Single<String> {
-        val files = model.files?.filter { it.isNew }?.mapNotNull { media -> offlineRepository.getFileInFolder(media.fileName, AppDirType.Local) }
+        val files = model.files?.filter { it.isNew }?.mapNotNull { media ->
+            offlineRepository.getFileInFolder(
+                media.fileName,
+                AppDirType.Local
+            )
+        }
         return routesRepository.saveDefect(model, files).subscribeOn(Schedulers.io())
     }
 
     private fun updateDefect(model: DefectModel): Single<String> {
-        val files = model.files?.filter { it.isNew }?.mapNotNull { media -> offlineRepository.getFileInFolder(media.fileName, AppDirType.Local) }
+        val files = model.files?.filter { it.isNew }?.mapNotNull { media ->
+            offlineRepository.getFileInFolder(
+                media.fileName,
+                AppDirType.Local
+            )
+        }
         return routesRepository.updateDefect(model, files).subscribeOn(Schedulers.io())
     }
 }

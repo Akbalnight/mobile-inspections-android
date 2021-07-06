@@ -24,7 +24,7 @@ class MainViewModel(
     private val syncInteractor: SyncInteractor
 ) : BaseViewModel() {
 
-    companion object{
+    companion object {
         private const val lockTime = 5 * 60 * 1000
     }
 
@@ -117,16 +117,16 @@ class MainViewModel(
             .subscribe({
                 _navigateToAuthorization.postValue(Event(Unit))
             }, {
-                if(it is UnknownHostException || it is SocketTimeoutException){
+                if (it is UnknownHostException || it is SocketTimeoutException) {
                     _showSnackBar.postValue(Event(TextData.ResId(R.string.server_unavailable)))
-                } else{
-                    _showSnackBar.postValue(Event(TextData.Str(it.message?:"")))
+                } else {
+                    _showSnackBar.postValue(Event(TextData.Str(it.message ?: "")))
                 }
             })
             .addTo(disposables)
     }
 
-    fun forceLogout(){
+    fun forceLogout() {
         syncInteractor.logoutClean()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
@@ -143,7 +143,7 @@ class MainViewModel(
     }
 
     fun onResume() {
-        if(Date().time - lastActive.time > lockTime){
+        if (Date().time - lastActive.time > lockTime) {
             _navigateToLock.postValue(Event(Unit))
         }
     }

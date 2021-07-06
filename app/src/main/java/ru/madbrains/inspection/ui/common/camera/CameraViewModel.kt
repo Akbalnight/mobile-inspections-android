@@ -38,7 +38,7 @@ class CameraViewModel(
         offlineInteractor.getFileInFolder(
             "${System.currentTimeMillis()}.jpg",
             AppDirType.Local
-        )?.let{
+        )?.let {
             _startCapture.postValue(Event(it))
         }
 
@@ -70,12 +70,12 @@ class CameraViewModel(
     fun getDataFromGallery(uri: Uri, contentResolver: ContentResolver) {
         try {
             val type = contentResolver.getType(uri)
-            val ext =  MimeTypeMap.getSingleton().getExtensionFromMimeType(type)
+            val ext = MimeTypeMap.getSingleton().getExtensionFromMimeType(type)
             offlineInteractor.getFileInFolder(
                 "${System.currentTimeMillis()}.$ext",
                 AppDirType.Local
-            )?.let{ file->
-                contentResolver.openInputStream(uri)?.let { inputStream->
+            )?.let { file ->
+                contentResolver.openInputStream(uri)?.let { inputStream ->
                     val fileOutputStream = FileOutputStream(file)
                     copyStream(inputStream, fileOutputStream)
                     fileOutputStream.close()
@@ -93,7 +93,7 @@ class CameraViewModel(
         val buffer = ByteArray(1024)
         do {
             val bytesRead = input.read(buffer)
-            if(bytesRead != -1){
+            if (bytesRead != -1) {
                 output.write(buffer, 0, bytesRead)
             }
         } while (bytesRead != -1)

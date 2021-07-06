@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.view.View
 import android.widget.FrameLayout
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -91,8 +90,8 @@ class RoutePointsMapFragment : BaseFragment(R.layout.fragment_route_points_map) 
     override fun onResume() {
         super.onResume()
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
-        routePointsMapViewModel.mapPoints.value?.let { list->
-            mapIV.displayRect?.let { rect->
+        routePointsMapViewModel.mapPoints.value?.let { list ->
+            mapIV.displayRect?.let { rect ->
                 calculatePoints(rect, list)
             }
         }
@@ -118,7 +117,7 @@ class RoutePointsMapFragment : BaseFragment(R.layout.fragment_route_points_map) 
                 params.topMargin = it.toInt()
             }
             val view = MapPoint(requireContext(), point.position.toString(), point.status)
-            if(point.clickable) {
+            if (point.clickable) {
                 view.setOnClickListener { routePointsMapViewModel.routePointClick(point) }
             }
             pointsContainer.addView(view, params)

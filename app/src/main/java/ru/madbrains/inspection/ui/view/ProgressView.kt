@@ -36,10 +36,10 @@ class ProgressView @JvmOverloads constructor(
     fun changeVisibility(visibility: Boolean, resId: Int?) {
         viewLockContent.isVisible = visibility
         progress.isVisible = visibility
-        if(resId!=null) {
+        if (resId != null) {
             progressText.setText(resId)
             progressText.isVisible = true
-        } else{
+        } else {
             progressText.isVisible = false
         }
     }

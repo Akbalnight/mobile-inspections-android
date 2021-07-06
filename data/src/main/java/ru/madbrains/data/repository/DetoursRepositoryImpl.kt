@@ -14,7 +14,6 @@ import ru.madbrains.data.network.request.*
 import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.domain.model.*
 import ru.madbrains.domain.repository.DetoursRepository
-import timber.log.Timber
 import java.io.File
 
 class DetoursRepositoryImpl(
@@ -122,7 +121,7 @@ class DetoursRepositoryImpl(
 
     override fun saveDefect(model: DefectModel, files: List<File>?): Single<String> {
         val request = CreateDefectReq(
-            detourId =  model.detourId,
+            detourId = model.detourId,
             equipmentId = model.equipmentId,
             staffDetectId = preferenceStorage.userId.orEmpty(),
             defectTypicalId = model.defectTypicalId,

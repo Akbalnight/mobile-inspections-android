@@ -79,7 +79,7 @@ class SyncViewModel(
 
         remoteInteractor.syncedItemsRem
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ id->
+            .subscribe({ id ->
                 _changedItems.postValue(_changedItems.value?.filter { it.id != id })
             }, {
                 it.printStackTrace()
@@ -287,13 +287,13 @@ class SyncViewModel(
         }
     }
 
-    fun getChangedDetours(){
+    fun getChangedDetours() {
         Single.zip(offlineInteractor.getChangedDetoursDb(), offlineInteractor.getChangedDefectsDb(),
             BiFunction { b1: List<DetourModel>, b2: List<DefectModel> -> Pair(b1, b2) })
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { _globalProgress.postValue(true) }
             .doAfterTerminate { _globalProgress.postValue(false) }
-            .subscribe({ pair->
+            .subscribe({ pair ->
                 val detours = pair.first.map { detour ->
                     DetourUiModel(
                         id = detour.id,
@@ -323,7 +323,7 @@ class SyncViewModel(
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { _globalProgress.postValue(true) }
             .doAfterTerminate { _globalProgress.postValue(false) }
-            .subscribe ({},{
+            .subscribe({}, {
                 _showSnackBar.postValue(Event(R.string.fragment_sync_send_data_error))
             })
             .addTo(disposables)

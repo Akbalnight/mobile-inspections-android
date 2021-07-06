@@ -5,8 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
 import ru.madbrains.domain.interactor.OfflineInteractor
-import ru.madbrains.domain.interactor.RemoteInteractor
-import ru.madbrains.domain.interactor.SyncInteractor
 import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event

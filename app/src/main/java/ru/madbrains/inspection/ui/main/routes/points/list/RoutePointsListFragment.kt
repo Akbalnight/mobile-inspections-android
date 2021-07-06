@@ -2,20 +2,15 @@ package ru.madbrains.inspection.ui.main.routes.points.list
 
 import android.os.Bundle
 import android.text.format.DateUtils
-import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_route_points_list.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import ru.madbrains.domain.model.RouteDataModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
-import ru.madbrains.inspection.base.EventObserver
 import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.adapters.RoutePointAdapter
 import ru.madbrains.inspection.ui.main.routes.points.RoutePointsViewModel
-import ru.madbrains.inspection.ui.main.routes.techoperations.TechOperationsFragment
 
 class RoutePointsListFragment : BaseFragment(R.layout.fragment_route_points_list) {
 

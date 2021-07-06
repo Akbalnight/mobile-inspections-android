@@ -10,7 +10,7 @@ import java.io.File
 import java.util.*
 
 interface OfflineRepository {
-    companion object{
+    companion object {
         const val ARCHIVE_DOCS = "doc-archive.zip"
         const val ARCHIVE_DEFECTS_MEDIA = "defects-media-archive.zip"
     }

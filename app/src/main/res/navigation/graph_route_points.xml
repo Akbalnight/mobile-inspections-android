@@ -8,8 +8,8 @@
     <fragment
         android:id="@+id/techOperationsFragment"
         android:name="ru.madbrains.inspection.ui.main.routes.techoperations.TechOperationsFragment"
-        tools:layout="@layout/fragment_tech_operations"
-        android:label="TechOperationsFragment">
+        android:label="TechOperationsFragment"
+        tools:layout="@layout/fragment_tech_operations">
         <action
             android:id="@+id/action_techOperationsFragment_to_addDefectFragment"
             app:destination="@id/graph_defects_detail"
@@ -36,18 +36,18 @@
     <dialog
         android:id="@+id/routePointsCloseDialog"
         android:name="ru.madbrains.inspection.ui.main.routes.points.RoutePointsCloseDialog"
-        tools:layout="@layout/fragment_route_points_close_dialog"
-        android:label="RoutePointsCloseDialog" />
+        android:label="RoutePointsCloseDialog"
+        tools:layout="@layout/fragment_route_points_close_dialog" />
     <dialog
         android:id="@+id/mapsLevelListFragment"
         android:name="ru.madbrains.inspection.ui.main.routes.points.map.mapLevelsList.MapsLevelListFragment"
-        tools:layout="@layout/maps_level_list_fragment"
-        android:label="maps_level_list_fragment" />
+        android:label="maps_level_list_fragment"
+        tools:layout="@layout/maps_level_list_fragment" />
     <fragment
         android:id="@+id/equipmentFragment"
         android:name="ru.madbrains.inspection.ui.main.equipment.EquipmentFragment"
-        tools:layout="@layout/fragment_equipment"
-        android:label="EquipmentFragment">
+        android:label="EquipmentFragment"
+        tools:layout="@layout/fragment_equipment">
         <action
             android:id="@+id/action_equipmentFragment_to_detailFragment"
             app:destination="@id/graph_defects_detail"
@@ -59,8 +59,8 @@
     <fragment
         android:id="@+id/equipmentListFragment"
         android:name="ru.madbrains.inspection.ui.main.equipmentList.EquipmentListFragment"
-        tools:layout="@layout/fragment_equipment_list"
-        android:label="EquipmentListFragment">
+        android:label="EquipmentListFragment"
+        tools:layout="@layout/fragment_equipment_list">
         <action
             android:id="@+id/action_equipmentListFragment_to_equipmentFragment"
             app:destination="@id/equipmentFragment"
@@ -72,8 +72,8 @@
     <fragment
         android:id="@+id/routePointsFragment"
         android:name="ru.madbrains.inspection.ui.main.routes.points.RoutePointsFragment"
-        tools:layout="@layout/fragment_route_points"
-        android:label="RoutePointsFragment">
+        android:label="RoutePointsFragment"
+        tools:layout="@layout/fragment_route_points">
         <action
             android:id="@+id/action_routePointsFragment_to_techOperationsFragment"
             app:destination="@id/techOperationsFragment"

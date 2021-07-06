@@ -13,8 +13,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:textColor="@color/textMain"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/ivRfid"
@@ -29,9 +29,9 @@
         android:layout_gravity="center_vertical"
         android:layout_marginEnd="16dp"
         android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/tvName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tvName"
-        app:layout_constraintBottom_toBottomOf="@+id/tvName"
         app:srcCompat="@drawable/ic_rfid"
         tools:visibility="visible" />
 

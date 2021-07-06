@@ -186,17 +186,19 @@ class DefectDetailViewModel(
                     }
                 }
                 files?.forEach { fileModel ->
-                        val file = offlineInteractor.getFileInFolder(
-                            fileModel.fileName,
-                            if(fileModel.isNew) AppDirType.Local else AppDirType.Defects
-                        )
-                        if(file!=null){
-                            uiFiles.add(MediaUiModel(
+                    val file = offlineInteractor.getFileInFolder(
+                        fileModel.fileName,
+                        if (fileModel.isNew) AppDirType.Local else AppDirType.Defects
+                    )
+                    if (file != null) {
+                        uiFiles.add(
+                            MediaUiModel(
                                 id = fileModel.id,
                                 file = file,
                                 isNew = fileModel.isNew
-                            ))
-                        }
+                            )
+                        )
+                    }
                 }
                 updateMediaList()
             }
@@ -266,7 +268,7 @@ class DefectDetailViewModel(
     fun updateDefectDb() {
         defect?.let { defectModel ->
             val model = defectModel.copy(
-                statusProcessId = targetDefectStatus?.id?:defectModel.statusProcessId,
+                statusProcessId = targetDefectStatus?.id ?: defectModel.statusProcessId,
                 description = descriptionDefect.orEmpty(),
                 dateDetectDefect = Date(),
                 files = prepareFiles(),
@@ -319,7 +321,7 @@ class DefectDetailViewModel(
             }
         } else {
             when {
-                targetDefectStatus!=null -> {
+                targetDefectStatus != null -> {
                     updateDefectDb()
                 }
                 isChangedDefect -> {

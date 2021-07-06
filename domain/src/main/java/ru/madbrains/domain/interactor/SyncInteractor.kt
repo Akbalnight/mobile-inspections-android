@@ -1,15 +1,11 @@
 package ru.madbrains.domain.interactor
 
 import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.BehaviorSubject
 import okhttp3.ResponseBody
 import retrofit2.Response
 import ru.madbrains.domain.model.*
-import ru.madbrains.domain.repository.DetoursRepository
 import ru.madbrains.domain.repository.OfflineRepository
 import java.io.File
 import java.util.*

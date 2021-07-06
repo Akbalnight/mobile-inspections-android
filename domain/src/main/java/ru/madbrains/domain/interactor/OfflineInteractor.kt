@@ -1,18 +1,11 @@
 package ru.madbrains.domain.interactor
 
-import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.BehaviorSubject
-import okhttp3.ResponseBody
-import retrofit2.Response
 import ru.madbrains.domain.model.*
-import ru.madbrains.domain.repository.DetoursRepository
 import ru.madbrains.domain.repository.OfflineRepository
 import java.io.File
-import java.util.*
 
 class OfflineInteractor(
     private val offlineRepository: OfflineRepository
@@ -31,7 +24,8 @@ class OfflineInteractor(
     }
 
     fun getEquipmentIdsWithDefectsDB(equipmentIds: List<String>): Single<List<String>> {
-        return offlineRepository.getEquipmentIdsWithDefects(equipmentIds).subscribeOn(Schedulers.io())
+        return offlineRepository.getEquipmentIdsWithDefects(equipmentIds)
+            .subscribeOn(Schedulers.io())
     }
 
     fun getEquipmentsDb(): Single<List<EquipmentModel>> {

@@ -16,9 +16,9 @@ fun detourDelegate(clickListener: (DetourUiModel) -> Unit) =
         bind {
             itemView.apply {
 
-                val isExpired = if(item.date!=null){
+                val isExpired = if (item.date != null) {
                     DateTime(item.date).isBeforeNow
-                } else{
+                } else {
                     false
                 }
 

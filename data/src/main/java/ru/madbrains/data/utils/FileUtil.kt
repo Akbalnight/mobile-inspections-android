@@ -2,9 +2,6 @@ package ru.madbrains.data.utils
 
 import android.content.Context
 import android.graphics.Bitmap
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toBitmap
-import timber.log.Timber
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream

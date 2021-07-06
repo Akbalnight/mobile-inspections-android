@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
-import android.webkit.*
+import android.webkit.JavascriptInterface
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_web_view.*
@@ -118,7 +120,7 @@ class WebViewFragment : BaseFragment(R.layout.fragment_web_view) {
 
                 override fun onLoadResource(view: WebView?, url: String?) {
                     super.onLoadResource(view, url)
-                    if(!loadingStarted){
+                    if (!loadingStarted) {
                         loadingStarted = true
                         progressView?.changeVisibility(true)
                     }
@@ -130,8 +132,8 @@ class WebViewFragment : BaseFragment(R.layout.fragment_web_view) {
             }
             loadUrl(startUrl)
 
-           Timber.d("auth server: ${OAuthData.oauthUrl}")
-           Timber.d("portal server: ${ApiData.apiUrl}")
+            Timber.d("auth server: ${OAuthData.oauthUrl}")
+            Timber.d("portal server: ${ApiData.apiUrl}")
         }
     }
 

@@ -1,6 +1,5 @@
 package ru.madbrains.data.network
 
-import android.content.Context
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -22,7 +21,10 @@ object ApiData {
 
     lateinit var inspectionApi: InspectionApi
 
-    private fun getInspectionOkHttpClient(preferenceStorage: PreferenceStorage, authenticator: IAuthenticator): OkHttpClient {
+    private fun getInspectionOkHttpClient(
+        preferenceStorage: PreferenceStorage,
+        authenticator: IAuthenticator
+    ): OkHttpClient {
         val builder = OkHttpClient.Builder().apply {
             connectTimeout(30, TimeUnit.SECONDS)
             readTimeout(30, TimeUnit.SECONDS)

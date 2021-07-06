@@ -34,12 +34,12 @@
         android:id="@+id/progressText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:layout_marginTop="8dp"
-        tools:text="Остановить"
-        app:layout_constraintTop_toBottomOf="@+id/progress"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/progress"
+        tools:text="Остановить"
         tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,5 @@
 package ru.madbrains.domain.model
 
-import java.io.File
 import java.io.Serializable
 import java.util.*
 
@@ -12,5 +11,5 @@ data class FileModel(
     val extension: String,
     val date: Date?,
     val routeMapName: String?,
-    val isNew:Boolean = false
+    val isNew: Boolean = false
 ) : Serializable

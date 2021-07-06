@@ -46,13 +46,13 @@ class DetoursViewModel(
             .addTo(disposables)
     }
 
-    private fun getStatusesForFiltration(): List<String>{
+    private fun getStatusesForFiltration(): List<String> {
         return preferenceStorage.detourStatuses?.data?.getStatusesByType(
             arrayOf(
                 DetourStatusType.PAUSED,
                 DetourStatusType.NEW
             )
-        )?.map { it.id }?: arrayListOf()
+        )?.map { it.id } ?: arrayListOf()
     }
 
     private fun updateData(models: List<DetourModel>, status: DetourStatus?) {

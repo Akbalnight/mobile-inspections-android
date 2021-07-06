@@ -7,8 +7,6 @@ import androidx.lifecycle.MutableLiveData
 import ru.madbrains.data.extensions.toDDMMYYYY
 import ru.madbrains.data.extensions.toHHmmYYYYMMDD
 import ru.madbrains.domain.interactor.OfflineInteractor
-import ru.madbrains.domain.interactor.RemoteInteractor
-import ru.madbrains.domain.interactor.SyncInteractor
 import ru.madbrains.domain.model.AppDirType
 import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.inspection.R
@@ -22,7 +20,7 @@ import java.io.File
 
 class EquipmentViewModel(
     private val offlineInteractor: OfflineInteractor
-    ) : BaseViewModel() {
+) : BaseViewModel() {
     var savedEquipmentData: EquipmentModel? = null
 
     private val _equipmentImageList = MutableLiveData<List<DiffItem>>()

@@ -15,7 +15,7 @@ fun routePointDelegate(clickListener: (RoutePointUiModel) -> Unit) =
                 if (item.clickable) {
                     clContainer.setOnClickListener { clickListener.invoke(item) }
                     clContainer.isClickable = true
-                } else{
+                } else {
                     clContainer.setOnClickListener(null)
                     clContainer.isClickable = false
                 }

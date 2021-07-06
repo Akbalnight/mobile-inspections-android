@@ -28,7 +28,7 @@ data class DetourModel(
     val isDefectExist: Int?,
     val frozen: Boolean?,
     var route: RouteModel,
-    var changed : Boolean
+    var changed: Boolean
 ) : Serializable {
     @Transient
     var startTime: Date? = null
@@ -38,7 +38,7 @@ data class DetourModel(
         route.routeMaps?.let {
             res.addAll(it)
         }
-        route.routesData?.let{ routes->
+        route.routesData?.let { routes ->
             for (data in routes) {
                 data.equipments?.let { equipment ->
                     for (item in equipment) {
