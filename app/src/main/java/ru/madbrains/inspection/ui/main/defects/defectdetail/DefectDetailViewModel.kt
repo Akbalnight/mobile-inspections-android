@@ -89,7 +89,7 @@ class DefectDetailViewModel(
 
     fun getDefectTypicalList() {
         if (defectTypicalModels.isNullOrEmpty()) {
-            offlineInteractor.getDefectTypicalDb()
+            offlineInteractor.getDefectTypical()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ items ->
                     defectTypicalModels.clear()
@@ -253,7 +253,7 @@ class DefectDetailViewModel(
             created = true,
             changed = false
         )
-        syncInteractor.saveDefectDb(model).observeOn(AndroidSchedulers.mainThread())
+        syncInteractor.saveDefect(model).observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { _progressVisibility.postValue(true) }
             .doAfterTerminate { _progressVisibility.postValue(false) }
             .subscribe({
@@ -274,7 +274,7 @@ class DefectDetailViewModel(
                 files = prepareFiles(),
                 changed = !defectModel.created
             )
-            syncInteractor.saveDefectDb(model)
+            syncInteractor.saveDefect(model)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { _progressVisibility.postValue(true) }
                 .doAfterTerminate { _progressVisibility.postValue(false) }

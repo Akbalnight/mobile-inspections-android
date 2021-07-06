@@ -90,7 +90,7 @@ class RoutePointsMapViewModel(
             acc
         })
 
-        offlineInteractor.getEquipmentIdsWithDefectsDB(equipmentIds = deviceIds)
+        offlineInteractor.getEquipmentIdsWithDefects(equipmentIds = deviceIds)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ ids ->
                 val defectsMap = ids.fold(mutableMapOf<String, Boolean>()) { acc, id ->

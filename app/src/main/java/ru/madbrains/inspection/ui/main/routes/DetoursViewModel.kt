@@ -30,10 +30,11 @@ class DetoursViewModel(
     val detours: LiveData<List<DiffItem>> = _detours
 
     private val detourModels = mutableListOf<DetourModel>()
-    var savedStatus: DetourStatus? = null
+
+    private var savedStatus: DetourStatus? = null
 
     init {
-        offlineInteractor.getDetoursSourceDb()
+        offlineInteractor.detoursSource
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext { routes ->
                 detourModels.clear()

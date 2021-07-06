@@ -20,11 +20,24 @@ class OfflineRepositoryImpl(
     private val preferenceStorage: PreferenceStorage,
     private val db: HcbDatabase
 ) : OfflineRepository {
-    private val detourDbSource = BehaviorSubject.create<List<DetourModel>>()
-    private val syncInfoSource = BehaviorSubject.createDefault<SyncInfo>(preferenceStorage.syncInfo)
+    private val _detoursSource = BehaviorSubject.create<List<DetourModel>>()
+    private val _syncInfoSource =
+        BehaviorSubject.createDefault<SyncInfo>(preferenceStorage.syncInfo)
+    private val _syncedItemsFinish = BehaviorSubject.create<String>()
+
+    override val detoursSource: Observable<List<DetourModel>>
+        get() = _detoursSource
+    override val syncInfoSource: Observable<SyncInfo>
+        get() = _syncInfoSource
+    override val syncedItemsFinish: Observable<String>
+        get() = _syncedItemsFinish
 
     private var _tempDirectory: File? = null
     private var _saveDirectory: File? = null
+
+    override fun signalFinishSyncingItem(id: String) {
+        _syncedItemsFinish.onNext(id)
+    }
 
     override fun insertDetours(models: List<DetourModel>): Completable {
         return db.detourItemDao().insertItem(models.map { toDetourItemDB(it) })
@@ -34,9 +47,9 @@ class OfflineRepositoryImpl(
         return db.detourItemDao().insertItem(toDetourItemDB(model))
     }
 
-    override fun getDetours(): Single<List<DetourModel>> {
+    override fun getDetoursAndRefreshSource(): Single<List<DetourModel>> {
         return db.detourItemDao().getItems().map { it -> it.map { fromDetourItemDB(it) } }.map {
-            detourDbSource.onNext(it)
+            _detoursSource.onNext(it)
             it
         }
     }
@@ -47,14 +60,6 @@ class OfflineRepositoryImpl(
 
     override fun getChangedDefects(): Single<List<DefectModel>> {
         return db.defectItemDao().getChangedItems().map { it -> it.map { fromDefectItemDB(it) } }
-    }
-
-    override fun getDetoursSource(): Observable<List<DetourModel>> {
-        return detourDbSource
-    }
-
-    override fun getSyncInfoSource(): Observable<SyncInfo> {
-        return syncInfoSource
     }
 
     override fun insertDefects(models: List<DefectModel>): Completable {
@@ -96,16 +101,16 @@ class OfflineRepositoryImpl(
     }
 
     override fun finishGetSync(date: Date) {
-        setSyncInfo(preferenceStorage.syncInfo.copy(getDate = date))
+        setSyncInfoAndRefreshSource(preferenceStorage.syncInfo.copy(getDate = date))
     }
 
     override fun finishSendSync(date: Date) {
-        setSyncInfo(preferenceStorage.syncInfo.copy(sendDate = date))
+        setSyncInfoAndRefreshSource(preferenceStorage.syncInfo.copy(sendDate = date))
     }
 
-    private fun setSyncInfo(syncInfo: SyncInfo) {
+    private fun setSyncInfoAndRefreshSource(syncInfo: SyncInfo) {
         preferenceStorage.syncInfo = syncInfo
-        syncInfoSource.onNext(syncInfo)
+        _syncInfoSource.onNext(syncInfo)
     }
 
     override fun saveEquipments(models: List<EquipmentModel>): Completable {
@@ -116,14 +121,14 @@ class OfflineRepositoryImpl(
         preferenceStorage.detourStatuses = DetourStatusHolder(list)
     }
 
-    override fun checkAndRefreshDb(): Completable {
+    override fun checkIfNeedsCleaningAndRefreshDetours(): Completable {
         preferenceStorage.syncInfo.getDate?.let {
             val diffInDays: Long = TimeUnit.MILLISECONDS.toDays(Date().time - it.time)
             if (diffInDays > preferenceStorage.saveInfoDuration) {
                 return cleanDbAndFiles()
             }
         }
-        return getDetours().flatMapCompletable {
+        return getDetoursAndRefreshSource().flatMapCompletable {
             Completable.complete()
         }
     }

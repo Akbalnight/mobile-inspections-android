@@ -55,7 +55,7 @@ class SyncFragment : BaseFragment(R.layout.fragment_sync) {
 
     override fun onResume() {
         super.onResume()
-        syncViewModel.getChangedDetours()
+        syncViewModel.getChangedDetoursAndDefects()
     }
 
     private fun setupToolbar() {

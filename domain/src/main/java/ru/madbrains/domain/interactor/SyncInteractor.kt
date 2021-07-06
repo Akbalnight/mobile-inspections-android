@@ -33,12 +33,9 @@ class SyncInteractor(
         return offlineRepository.deleteFile(file).subscribeOn(Schedulers.io())
     }
 
-    fun refreshDetoursDb(): Single<List<DetourModel>> {
-        return offlineRepository.getDetours().subscribeOn(Schedulers.io())
-    }
-
-    fun checkAndRefreshDb(): Completable {
-        return offlineRepository.checkAndRefreshDb().subscribeOn(Schedulers.io())
+    fun checkIfNeedsCleaningAndRefreshDetours(): Completable {
+        return offlineRepository.checkIfNeedsCleaningAndRefreshDetours()
+            .subscribeOn(Schedulers.io())
     }
 
     fun finishGetSync(date: Date) {
@@ -58,28 +55,28 @@ class SyncInteractor(
             .subscribeOn(Schedulers.io())
     }
 
-    fun saveEquipmentsDb(models: List<EquipmentModel>): Completable {
+    fun saveEquipments(models: List<EquipmentModel>): Completable {
         return offlineRepository.saveEquipments(models).subscribeOn(Schedulers.io())
     }
 
-    fun saveDetourDB(detour: DetourModel): Completable {
+    fun saveDetour(detour: DetourModel): Completable {
         return offlineRepository.insertDetour(detour)
             .subscribeOn(Schedulers.io())
     }
 
-    fun saveDetoursDb(models: List<DetourModel>): Completable {
+    fun saveDetours(models: List<DetourModel>): Completable {
         return offlineRepository.insertDetours(models).subscribeOn(Schedulers.io())
     }
 
-    fun saveDefectsDb(models: List<DefectModel>): Completable {
+    fun saveDefects(models: List<DefectModel>): Completable {
         return offlineRepository.insertDefects(models).subscribeOn(Schedulers.io())
     }
 
-    fun saveDefectDb(model: DefectModel): Completable {
+    fun saveDefect(model: DefectModel): Completable {
         return offlineRepository.insertDefect(model).subscribeOn(Schedulers.io())
     }
 
-    fun saveDefectTypicalDb(models: List<DefectTypicalModel>): Completable {
+    fun saveDefectTypical(models: List<DefectTypicalModel>): Completable {
         return offlineRepository.saveDefectsTypical(models).subscribeOn(Schedulers.io())
     }
 }

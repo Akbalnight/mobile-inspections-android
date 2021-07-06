@@ -55,7 +55,7 @@ class EquipmentSelectListViewModel(
 
     fun getEquipments() {
         if (deviceListModels.isNullOrEmpty()) {
-            offlineInteractor.getEquipmentsDb()
+            offlineInteractor.getEquipments()
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { _progressVisibility.postValue(true) }
                 .doAfterTerminate { _progressVisibility.postValue(false) }

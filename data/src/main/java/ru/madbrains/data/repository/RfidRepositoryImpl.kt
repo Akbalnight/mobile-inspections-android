@@ -1,16 +1,19 @@
-package ru.madbrains.data.utils
+package ru.madbrains.data.repository
 
 import android.os.Handler
 import android.os.Looper
 import androidx.core.os.HandlerCompat
 import com.pow.api.cls.RfidPower
 import com.uhf.api.cls.Reader
+import ru.madbrains.domain.repository.RfidListener
+import ru.madbrains.domain.repository.RfidProgressListener
+import ru.madbrains.domain.repository.RfidRepository
 import timber.log.Timber
 import java.io.FileOutputStream
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-class RfidReader : RfidDevice {
+class RfidRepositoryImpl : RfidRepository {
     private val handler = Handler()
     private var scanIsOn = false
     private val rPower = RfidPower(RfidPower.PDATYPE.ZoomSmart)

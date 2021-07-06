@@ -1,10 +1,10 @@
 package ru.madbrains.domain.interactor
 
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.BehaviorSubject
 import okhttp3.ResponseBody
 import retrofit2.Response
 import ru.madbrains.domain.model.*
@@ -13,17 +13,18 @@ import ru.madbrains.domain.repository.OfflineRepository
 import java.util.*
 
 class RemoteInteractor(
-    private val routesRepository: DetoursRepository,
+    private val detoursRepository: DetoursRepository,
     private val offlineRepository: OfflineRepository
 ) {
 
-    val syncedItemsRem = BehaviorSubject.create<String>()
+    val syncedItemsFinish: Observable<String>
+        get() = offlineRepository.syncedItemsFinish.subscribeOn(Schedulers.io())
 
     fun getDetours(): Single<List<DetourModel>> {
         val models = mutableListOf<DetourModel>()
-        return routesRepository.getDetoursStatuses().flatMap { statuses ->
+        return detoursRepository.getDetoursStatuses().flatMap { statuses ->
             offlineRepository.saveDetourStatuses(statuses)
-            routesRepository.getDetours(
+            detoursRepository.getDetours(
                 statuses = statuses.getStatusesByType(
                     arrayOf(
                         DetourStatusType.PAUSED,
@@ -34,7 +35,7 @@ class RemoteInteractor(
                 models.addAll(items)
                 val unfrozenIds = models.filter { it.frozen != true }.map { it.id }
                 if (unfrozenIds.isNotEmpty()) {
-                    routesRepository.freezeDetours(unfrozenIds)
+                    detoursRepository.freezeDetours(unfrozenIds)
                 } else {
                     Completable.complete()
                 }
@@ -46,27 +47,27 @@ class RemoteInteractor(
     }
 
     fun getCheckpoints(): Single<List<CheckpointModel>> {
-        return routesRepository.getCheckpoints()
+        return detoursRepository.getCheckpoints()
             .subscribeOn(Schedulers.io())
     }
 
     fun updateCheckpoint(id: String, rfidCode: String): Single<Any> {
-        return routesRepository.updateCheckpoint(id, rfidCode)
+        return detoursRepository.updateCheckpoint(id, rfidCode)
             .subscribeOn(Schedulers.io())
     }
 
     fun getDefectTypical(): Single<List<DefectTypicalModel>> {
-        return routesRepository.getDefectTypical()
+        return detoursRepository.getDefectTypical()
             .subscribeOn(Schedulers.io())
     }
 
     fun getEquipments(): Single<List<EquipmentModel>> {
-        return routesRepository.getEquipments(emptyList(), emptyList())
+        return detoursRepository.getEquipments(emptyList(), emptyList())
             .subscribeOn(Schedulers.io())
     }
 
     fun getFileArchive(fileIds: List<String>): Single<Response<ResponseBody>> {
-        return routesRepository.downloadFileArchive(fileIds)
+        return detoursRepository.downloadFileArchive(fileIds)
             .subscribeOn(Schedulers.io())
     }
 
@@ -81,7 +82,7 @@ class RemoteInteractor(
         equipmentIds: List<String>? = null,
         statusProcessId: String? = null
     ): Single<List<DefectModel>> {
-        return routesRepository.getDefects(
+        return detoursRepository.getDefects(
             id,
             codes,
             dateDetectStart,
@@ -104,10 +105,10 @@ class RemoteInteractor(
                 pair.first.let { list ->
                     if (list.isNotEmpty()) {
                         val detourTasks = list.map { item ->
-                            routesRepository.updateDetour(item).andThen(
+                            detoursRepository.updateDetour(item).andThen(
                                 offlineRepository.insertDetour(item.apply { changed = false })
                                     .doFinally {
-                                        syncedItemsRem.onNext(item.id)
+                                        offlineRepository.signalFinishSyncingItem(item.id)
                                     }
                             )
                         }
@@ -129,7 +130,7 @@ class RemoteInteractor(
                                             }
                                         }
                                     ).doFinally {
-                                        syncedItemsRem.onNext(item.id)
+                                        offlineRepository.signalFinishSyncingItem(item.id)
                                     }
                                 )
                         }
@@ -151,7 +152,7 @@ class RemoteInteractor(
                 AppDirType.Local
             )
         }
-        return routesRepository.saveDefect(model, files).subscribeOn(Schedulers.io())
+        return detoursRepository.saveDefect(model, files).subscribeOn(Schedulers.io())
     }
 
     private fun updateDefect(model: DefectModel): Single<String> {
@@ -161,6 +162,6 @@ class RemoteInteractor(
                 AppDirType.Local
             )
         }
-        return routesRepository.updateDefect(model, files).subscribeOn(Schedulers.io())
+        return detoursRepository.updateDefect(model, files).subscribeOn(Schedulers.io())
     }
 }

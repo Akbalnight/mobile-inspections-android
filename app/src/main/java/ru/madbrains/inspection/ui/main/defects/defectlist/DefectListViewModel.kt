@@ -57,7 +57,7 @@ class DefectListViewModel(
     fun getDefectList(deviceIds: List<String>?) {
         lastDeviceIds = deviceIds
         val single =
-            if (deviceIds != null) offlineInteractor.getActiveDefectsDb(equipmentIds = deviceIds) else offlineInteractor.getDefectsDb()
+            if (deviceIds != null) offlineInteractor.getActiveDefects(equipmentIds = deviceIds) else offlineInteractor.getDefects()
         single
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { _progressVisibility.postValue(true) }
@@ -136,7 +136,7 @@ class DefectListViewModel(
 
     fun eliminateDefect(deleteItem: DefectModel?) {
         deleteItem?.let { it ->
-            syncInteractor.saveDefectDb(it.copy(
+            syncInteractor.saveDefect(it.copy(
                 id = it.id,
                 statusProcessId = DefectStatus.ELIMINATED.id,
                 dateDetectDefect = Date()
