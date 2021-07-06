@@ -2,8 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.google.firebase.crashlytics'
 android {
     compileSdkVersion rootProject.compileSdkVersion
     buildToolsVersion rootProject.buildToolsVersion
@@ -129,12 +127,6 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:$rootProject.glideVersion"
     annotationProcessor "com.github.bumptech.glide:compiler:$rootProject.glideVersion"
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
-
-    // Firebase
-    implementation platform('com.google.firebase:firebase-bom:26.2.0')
-    implementation 'com.google.firebase:firebase-analytics-ktx'
-    implementation 'com.google.firebase:firebase-messaging-ktx'
-    implementation 'com.google.firebase:firebase-crashlytics-ktx'
 
     // CameraX
     implementation "androidx.camera:camera-core:$rootProject.cameraxVersion"
