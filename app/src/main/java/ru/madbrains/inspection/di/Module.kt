@@ -34,19 +34,19 @@ val appModule = module {
             get()
         )
     }
-    viewModel { MainViewModel(get(), get(), get()) }
-    viewModel { LockScreenViewModel(get(), get(), get()) }
-    viewModel { SyncViewModel(get(), get()) }
+    viewModel { MainViewModel(get(), get(), get(), get()) }
+    viewModel { LockScreenViewModel(get(), get(), get(), get()) }
+    viewModel { SyncViewModel(get(), get(), get(), get()) }
     viewModel { DetoursViewModel(get(), get()) }
     viewModel { RouteFiltersViewModel(get()) }
     viewModel { RouteCalendarViewModel() }
     viewModel { RoutePointsViewModel(get(), get()) }
     viewModel { RoutePointsMapViewModel(get()) }
     viewModel { TechOperationsViewModel(get(), get()) }
-    viewModel { DefectListViewModel(get()) }
-    viewModel { DefectDetailViewModel(get()) }
+    viewModel { DefectListViewModel(get(), get()) }
+    viewModel { DefectDetailViewModel(get(), get(), get()) }
     viewModel { EquipmentSelectListViewModel(get()) }
-    viewModel { CameraViewModel(get(), get()) }
+    viewModel { CameraViewModel(get()) }
     viewModel { BtServerSettingsViewModel(get(), get()) }
     viewModel { EquipmentViewModel(get()) }
     viewModel { EquipmentListViewModel(get()) }

@@ -3,7 +3,7 @@ package ru.madbrains.inspection.ui.main.routes.techoperations
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ru.madbrains.data.utils.RfidDevice
-import ru.madbrains.domain.interactor.DetoursInteractor
+import ru.madbrains.domain.interactor.RemoteInteractor
 import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.domain.model.RouteDataModel
 import ru.madbrains.domain.model.TechOperationModel
@@ -14,7 +14,7 @@ import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.TechOperationUiModel
 
 class TechOperationsViewModel(
-    private val detoursInteractor: DetoursInteractor,
+    private val remoteInteractor: RemoteInteractor,
     private val rfidDevice: RfidDevice
 ) :
     BaseViewModel() {

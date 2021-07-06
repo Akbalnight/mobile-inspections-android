@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
 import ru.madbrains.data.prefs.PreferenceStorage
-import ru.madbrains.domain.interactor.DetoursInteractor
+import ru.madbrains.domain.interactor.OfflineInteractor
 import ru.madbrains.domain.model.*
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
@@ -13,7 +13,7 @@ import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.DetourUiModel
 
 class DetoursViewModel(
-    private val detoursInteractor: DetoursInteractor,
+    offlineInteractor: OfflineInteractor,
     private val preferenceStorage: PreferenceStorage
 ) : BaseViewModel() {
 
@@ -33,7 +33,7 @@ class DetoursViewModel(
     var savedStatus: DetourStatus? = null
 
     init {
-        detoursInteractor.getDetoursSourceDb()
+        offlineInteractor.getDetoursSourceDb()
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext { routes ->
                 detourModels.clear()

@@ -4,18 +4,21 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
-import ru.madbrains.domain.interactor.DetoursInteractor
+import ru.madbrains.domain.interactor.OfflineInteractor
+import ru.madbrains.domain.interactor.RemoteInteractor
+import ru.madbrains.domain.interactor.SyncInteractor
 import ru.madbrains.domain.model.*
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.MediaUiModel
-import timber.log.Timber
 import java.io.File
 import java.util.*
 
 class DefectDetailViewModel(
-    private val detoursInteractor: DetoursInteractor
+    private val remoteInteractor: RemoteInteractor,
+    private val syncInteractor: SyncInteractor,
+    private val offlineInteractor: OfflineInteractor
 ) :
     BaseViewModel() {
 
@@ -86,7 +89,7 @@ class DefectDetailViewModel(
 
     fun getDefectTypicalList() {
         if (defectTypicalModels.isNullOrEmpty()) {
-            detoursInteractor.getDefectTypicalDb()
+            offlineInteractor.getDefectTypicalDb()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ items ->
                     defectTypicalModels.clear()
@@ -183,7 +186,7 @@ class DefectDetailViewModel(
                     }
                 }
                 files?.forEach { fileModel ->
-                        val file = detoursInteractor.getFileInFolder(
+                        val file = offlineInteractor.getFileInFolder(
                             fileModel.fileName,
                             if(fileModel.isNew) AppDirType.Local else AppDirType.Defects
                         )
@@ -248,7 +251,7 @@ class DefectDetailViewModel(
             created = true,
             changed = false
         )
-        detoursInteractor.saveDefectDb(model).observeOn(AndroidSchedulers.mainThread())
+        syncInteractor.saveDefectDb(model).observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { _progressVisibility.postValue(true) }
             .doAfterTerminate { _progressVisibility.postValue(false) }
             .subscribe({
@@ -269,7 +272,7 @@ class DefectDetailViewModel(
                 files = prepareFiles(),
                 changed = !defectModel.created
             )
-            detoursInteractor.saveDefectDb(model)
+            syncInteractor.saveDefectDb(model)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { _progressVisibility.postValue(true) }
                 .doAfterTerminate { _progressVisibility.postValue(false) }

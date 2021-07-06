@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
 import ru.madbrains.data.utils.RfidDevice
-import ru.madbrains.domain.interactor.DetoursInteractor
+import ru.madbrains.domain.interactor.RemoteInteractor
 import ru.madbrains.domain.model.CheckpointModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseViewModel
@@ -13,7 +13,7 @@ import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.ui.delegates.MediaUiModel
 
 class CheckpointDetailViewModel(
-    private val detoursInteractor: DetoursInteractor,
+    private val remoteInteractor: RemoteInteractor,
     private val rfidDevice: RfidDevice
 ) : BaseViewModel() {
 
@@ -72,7 +72,7 @@ class CheckpointDetailViewModel(
     fun sendUpdate() {
         _checkpointRawData?.let { model ->
             _rfidCode?.let { rfid ->
-                detoursInteractor.updateCheckpointRemote(model.id, rfid)
+                remoteInteractor.updateCheckpoint(model.id, rfid)
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnSubscribe { _rfidProgress.postValue(true) }
                     .doAfterTerminate { _rfidProgress.postValue(false) }

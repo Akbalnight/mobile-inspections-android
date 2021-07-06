@@ -1,25 +1,19 @@
 package ru.madbrains.inspection.ui.common.camera
 
 import android.content.ContentResolver
-import android.graphics.Bitmap
 import android.net.Uri
 import android.webkit.MimeTypeMap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import ru.madbrains.data.utils.FileUtil
-import ru.madbrains.domain.interactor.DetoursInteractor
+import ru.madbrains.domain.interactor.OfflineInteractor
 import ru.madbrains.domain.model.AppDirType
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import timber.log.Timber
 import java.io.*
-import java.text.SimpleDateFormat
-import java.util.*
-
 
 class CameraViewModel(
-    private val detoursInteractor: DetoursInteractor,
-    private val fileUtil: FileUtil
+    private val offlineInteractor: OfflineInteractor
 ) : BaseViewModel() {
 
     private val _cameraState = MutableLiveData<Event<CameraState>>()
@@ -41,16 +35,7 @@ class CameraViewModel(
     val popNav: LiveData<Event<Unit>> = _popNav
 
     fun startCapture() {
-//        fileUtil.createJpgFile(
-//           bitmap, detoursInteractor.getFileInFolder(
-//                "${System.currentTimeMillis()}.jpg",
-//                AppDirType.Local
-//           )
-//       )?.let{
-//           postFile(it)
-//       }
-
-        detoursInteractor.getFileInFolder(
+        offlineInteractor.getFileInFolder(
             "${System.currentTimeMillis()}.jpg",
             AppDirType.Local
         )?.let{
@@ -74,7 +59,7 @@ class CameraViewModel(
     }
 
     fun startRecord() {
-        detoursInteractor.getFileInFolder(
+        offlineInteractor.getFileInFolder(
             "${System.currentTimeMillis()}.mp4",
             AppDirType.Local
         )?.let {
@@ -86,7 +71,7 @@ class CameraViewModel(
         try {
             val type = contentResolver.getType(uri)
             val ext =  MimeTypeMap.getSingleton().getExtensionFromMimeType(type)
-            detoursInteractor.getFileInFolder(
+            offlineInteractor.getFileInFolder(
                 "${System.currentTimeMillis()}.$ext",
                 AppDirType.Local
             )?.let{ file->

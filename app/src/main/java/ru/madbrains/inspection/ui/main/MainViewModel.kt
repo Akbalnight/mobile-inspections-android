@@ -6,7 +6,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
 import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.domain.interactor.AuthInteractor
-import ru.madbrains.domain.interactor.DetoursInteractor
+import ru.madbrains.domain.interactor.RemoteInteractor
+import ru.madbrains.domain.interactor.SyncInteractor
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
@@ -19,7 +20,8 @@ import java.util.*
 class MainViewModel(
     private val preferenceStorage: PreferenceStorage,
     private val authInteractor: AuthInteractor,
-    private val detoursInteractor: DetoursInteractor
+    private val remoteInteractor: RemoteInteractor,
+    private val syncInteractor: SyncInteractor
 ) : BaseViewModel() {
 
     companion object{
@@ -104,13 +106,13 @@ class MainViewModel(
 
     fun logout() {
         val accessToken = preferenceStorage.token.orEmpty()
-        detoursInteractor.syncStartSendingData()
+        remoteInteractor.sendSyncDataAndRefreshDb()
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { _progressVisibility.postValue(Pair(true, R.string.sync)) }
             .andThen(authInteractor.logout(accessToken).doOnSubscribe {
                 _progressVisibility.postValue(Pair(true, null))
             })
-            .andThen(detoursInteractor.logoutClean())
+            .andThen(syncInteractor.logoutClean())
             .doFinally { _progressVisibility.postValue(Pair(false, null)) }
             .subscribe({
                 _navigateToAuthorization.postValue(Event(Unit))
@@ -125,7 +127,7 @@ class MainViewModel(
     }
 
     fun forceLogout(){
-        detoursInteractor.logoutClean()
+        syncInteractor.logoutClean()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 _navigateToAuthorization.postValue(Event(Unit))

@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
-import ru.madbrains.domain.interactor.DetoursInteractor
+import ru.madbrains.domain.interactor.OfflineInteractor
 import ru.madbrains.domain.model.AppDirType
 import ru.madbrains.domain.model.DetourModel
 import ru.madbrains.domain.model.RouteDataModel
@@ -16,7 +16,7 @@ import ru.madbrains.inspection.ui.delegates.RoutePointUiModel
 import java.io.File
 
 class RoutePointsMapViewModel(
-    private val detoursInteractor: DetoursInteractor
+    private val offlineInteractor: OfflineInteractor
 ) : BaseViewModel() {
     private val _mapLevels = MutableLiveData<List<MapLevelUiModel>>()
     val mapLevels: LiveData<List<MapLevelUiModel>> = _mapLevels
@@ -78,7 +78,7 @@ class RoutePointsMapViewModel(
     }
 
     fun loadImage(item: MapLevelUiModel) {
-        _mapImage.postValue(detoursInteractor.getFileInFolder(item.fileName, AppDirType.Docs))
+        _mapImage.postValue(offlineInteractor.getFileInFolder(item.fileName, AppDirType.Docs))
     }
 
     private fun updateData(points: List<RouteDataModel>) {
@@ -90,7 +90,7 @@ class RoutePointsMapViewModel(
             acc
         })
 
-        detoursInteractor.getEquipmentIdsWithDefectsDB(equipmentIds = deviceIds)
+        offlineInteractor.getEquipmentIdsWithDefectsDB(equipmentIds = deviceIds)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ ids ->
                 val defectsMap = ids.fold(mutableMapOf<String, Boolean>()){acc,id ->

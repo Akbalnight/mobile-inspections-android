@@ -7,7 +7,8 @@ import io.reactivex.rxkotlin.addTo
 import ru.madbrains.data.extensions.toDDMMYYYY
 import ru.madbrains.data.extensions.toHHmm
 import ru.madbrains.data.extensions.toddMMyyyyHHmm
-import ru.madbrains.domain.interactor.DetoursInteractor
+import ru.madbrains.domain.interactor.OfflineInteractor
+import ru.madbrains.domain.interactor.SyncInteractor
 import ru.madbrains.domain.model.AppDirType
 import ru.madbrains.domain.model.DefectModel
 import ru.madbrains.domain.model.DefectStatus
@@ -19,7 +20,10 @@ import ru.madbrains.inspection.ui.delegates.DefectListUiModel
 import ru.madbrains.inspection.ui.delegates.MediaUiModel
 import java.util.*
 
-class DefectListViewModel(private val detoursInteractor: DetoursInteractor) : BaseViewModel() {
+class DefectListViewModel(
+    private val syncInteractor: SyncInteractor,
+    private val offlineInteractor: OfflineInteractor
+) : BaseViewModel() {
 
     val defectListModels = mutableListOf<DefectModel>()
 
@@ -52,7 +56,7 @@ class DefectListViewModel(private val detoursInteractor: DetoursInteractor) : Ba
 
     fun getDefectList(deviceIds: List<String>?) {
         lastDeviceIds = deviceIds
-        val single = if(deviceIds!=null) detoursInteractor.getActiveDefectsDb(equipmentIds = deviceIds) else detoursInteractor.getDefectsDb()
+        val single = if(deviceIds!=null) offlineInteractor.getActiveDefectsDb(equipmentIds = deviceIds) else offlineInteractor.getDefectsDb()
         single
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { _progressVisibility.postValue(true) }
@@ -71,7 +75,7 @@ class DefectListViewModel(private val detoursInteractor: DetoursInteractor) : Ba
 
     fun deleteDefect(deleteItem: DefectModel?) {
         deleteItem?.let { item->
-            detoursInteractor.delDefectDb(item.id)
+            syncInteractor.delDefectDb(item.id)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { _progressVisibility.postValue(true) }
                 .doAfterTerminate { _progressVisibility.postValue(false) }
@@ -111,7 +115,7 @@ class DefectListViewModel(private val detoursInteractor: DetoursInteractor) : Ba
         val list: MutableList<MediaUiModel> = mutableListOf()
         files?.let {
             files.forEach { fileModel ->
-                val file =  detoursInteractor.getFileInFolder(
+                val file =  offlineInteractor.getFileInFolder(
                     fileModel.fileName,
                     if(fileModel.isNew) AppDirType.Local else AppDirType.Defects
                 )
@@ -131,7 +135,7 @@ class DefectListViewModel(private val detoursInteractor: DetoursInteractor) : Ba
 
     fun eliminateDefect(deleteItem: DefectModel?) {
         deleteItem?.let { it ->
-            detoursInteractor.saveDefectDb(it.copy(
+            syncInteractor.saveDefectDb(it.copy(
                 id = it.id,
                 statusProcessId = DefectStatus.ELIMINATED.id,
                 dateDetectDefect = Date()

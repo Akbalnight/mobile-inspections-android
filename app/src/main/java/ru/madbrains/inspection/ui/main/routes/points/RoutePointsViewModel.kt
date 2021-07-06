@@ -9,7 +9,8 @@ import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import ru.madbrains.data.extensions.toyyyyMMddTHHmmssXXX
 import ru.madbrains.data.prefs.PreferenceStorage
-import ru.madbrains.domain.interactor.DetoursInteractor
+import ru.madbrains.domain.interactor.RemoteInteractor
+import ru.madbrains.domain.interactor.SyncInteractor
 import ru.madbrains.domain.model.*
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
@@ -19,7 +20,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 class RoutePointsViewModel(
-    private val detoursInteractor: DetoursInteractor,
+    private val syncInteractor: SyncInteractor,
     private val preferenceStorage: PreferenceStorage
 ) : BaseViewModel() {
 
@@ -91,8 +92,8 @@ class RoutePointsViewModel(
             detour.dateFinishFact = Date().toyyyyMMddTHHmmssXXX()
             detour.statusId = currentStatus?.id
             detour.changed = true
-            detoursInteractor.saveDetourDB(detour)
-                .andThen(detoursInteractor.refreshDetoursDb())
+            syncInteractor.saveDetourDB(detour)
+                .andThen(syncInteractor.refreshDetoursDb())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { _progressVisibility.postValue(true) }
                 .doAfterTerminate { _progressVisibility.postValue(false) }
