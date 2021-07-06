@@ -1,11 +1,9 @@
 package ru.madbrains.inspection.ui.main
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isInvisible
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Observer
@@ -62,9 +60,9 @@ class LockScreenActivity : BaseActivity(R.layout.activity_lock_screen) {
             tvValidationError.isInvisible = false
         })
         lockScreenViewModel.showSnackBar.observe(this, EventObserver {
-            if(it is TextData.Str){
+            if (it is TextData.Str) {
                 showSnackBar(it.data)
-            } else if(it is TextData.ResId){
+            } else if (it is TextData.ResId) {
                 showSnackBar(strings[it.data])
             }
         })

@@ -18,9 +18,9 @@
         android:orientation="vertical">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:background="@color/colorPrimary"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/btnLeading"
@@ -29,10 +29,10 @@
                 android:layout_marginStart="8dp"
                 android:background="?attr/actionBarItemBackground"
                 android:padding="8dp"
+                android:tint="@color/elementWhite"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:tint="@color/elementWhite"
                 app:srcCompat="@drawable/ic_menu_sync" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -60,11 +60,11 @@
             android:layout_height="match_parent"
             android:indeterminate="true"
             android:indeterminateBehavior="repeat"
-            android:secondaryProgressTint="@color/accidentLight"
             android:indeterminateTint="@color/accidentYellow"
-            android:scaleY="5"
-            android:minHeight="5dp"
             android:maxHeight="5dp"
+            android:minHeight="5dp"
+            android:scaleY="5"
+            android:secondaryProgressTint="@color/accidentLight"
             app:layout_constraintBottom_toBottomOf="parent" />
     </LinearLayout>
 

@@ -9,7 +9,6 @@ import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.domain.interactor.AuthInteractor
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
-import timber.log.Timber
 import java.util.*
 
 class WebViewViewModel(

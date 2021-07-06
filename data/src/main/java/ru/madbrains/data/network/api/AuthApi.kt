@@ -16,7 +16,7 @@ interface AuthApi {
         @Field("code") authCode: String,
         @Field("code_verifier") codeVerifier: String
     ): Single<GetTokenResp>
-    
+
     @FormUrlEncoded
     @POST("/oauth/token")
     fun refreshToken(

@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.annotation.LayoutRes
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -37,11 +36,12 @@ abstract class BaseBottomSheetDialogFragment(@LayoutRes val layout: Int) :
                 dialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
             val bottomSheetBehavior = BottomSheetBehavior.from<FrameLayout?>(layout!!)
 
-            if(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 bottomSheetBehavior.skipCollapsed = true
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-            } else{
-                bottomSheetBehavior.state = if (isExpanded) BottomSheetBehavior.STATE_EXPANDED else BottomSheetBehavior.STATE_COLLAPSED
+            } else {
+                bottomSheetBehavior.state =
+                    if (isExpanded) BottomSheetBehavior.STATE_EXPANDED else BottomSheetBehavior.STATE_COLLAPSED
             }
             bottomSheetBehavior.addBottomSheetCallback(object :
                 BottomSheetBehavior.BottomSheetCallback() {

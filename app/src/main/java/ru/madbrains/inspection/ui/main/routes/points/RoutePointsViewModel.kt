@@ -9,7 +9,8 @@ import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import ru.madbrains.data.extensions.toyyyyMMddTHHmmssXXX
 import ru.madbrains.data.prefs.PreferenceStorage
-import ru.madbrains.domain.interactor.DetoursInteractor
+import ru.madbrains.domain.interactor.OfflineInteractor
+import ru.madbrains.domain.interactor.SyncInteractor
 import ru.madbrains.domain.model.*
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
@@ -19,7 +20,8 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 class RoutePointsViewModel(
-    private val detoursInteractor: DetoursInteractor,
+    private val syncInteractor: SyncInteractor,
+    private val offlineInteractor: OfflineInteractor,
     private val preferenceStorage: PreferenceStorage
 ) : BaseViewModel() {
 
@@ -58,7 +60,7 @@ class RoutePointsViewModel(
     private val _navigateToDefectList = MutableLiveData<Event<Boolean>>()
     val navigateToDefectList: LiveData<Event<Boolean>> = _navigateToDefectList
 
-    val editable get():Boolean = timerDispose != null;
+    val editable get():Boolean = timerDispose != null
 
     fun routePointClick(id: String?) {
         routeDataModels.find { data ->
@@ -70,7 +72,7 @@ class RoutePointsViewModel(
         return preferenceStorage.detourStatuses?.data?.isEditable(detourModel?.statusId) == true && editable
     }
 
-    fun navigateToDefectList(){
+    fun navigateToDefectList() {
         _navigateToDefectList.value = Event(editable)
     }
 
@@ -91,8 +93,8 @@ class RoutePointsViewModel(
             detour.dateFinishFact = Date().toyyyyMMddTHHmmssXXX()
             detour.statusId = currentStatus?.id
             detour.changed = true
-            detoursInteractor.saveDetourDB(detour)
-                .andThen(detoursInteractor.refreshDetoursDb())
+            syncInteractor.saveDetour(detour)
+                .andThen(offlineInteractor.getDetoursAndRefreshSource())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { _progressVisibility.postValue(true) }
                 .doAfterTerminate { _progressVisibility.postValue(false) }
@@ -110,7 +112,8 @@ class RoutePointsViewModel(
     }
 
     fun closeClick() {
-        val status =  preferenceStorage.detourStatuses?.data?.getStatusById(detourModel?.statusId)?.type
+        val status =
+            preferenceStorage.detourStatuses?.data?.getStatusById(detourModel?.statusId)?.type
         if (routeDataModels.all { it.completed } || status == DetourStatusType.COMPLETED ||
             detourModel?.startTime == null) {
             onBack()
@@ -137,7 +140,7 @@ class RoutePointsViewModel(
         val routePoints = mutableListOf<DiffItem>()
         val lastCompleted = routeDataModels.indexOfLast { it.completed }
         routeDataModels.mapIndexed { index, route ->
-            route.techMap?.let { techMap->
+            route.techMap?.let { techMap ->
                 val current = lastCompleted + 1 == index
                 val preserveOrder = detourModel?.saveOrderControlPoints == true
                 routePoints.add(
@@ -175,26 +178,26 @@ class RoutePointsViewModel(
     }
 
     private fun triggerTimer() {
-        val startTime = detourModel?.startTime?:Date()
-        if(detourModel?.startTime == null){
+        val startTime = detourModel?.startTime ?: Date()
+        if (detourModel?.startTime == null) {
             detourModel?.startTime = startTime
         }
-        if(timerDispose == null)
+        if (timerDispose == null)
             timerDispose = Observable.timer(1, TimeUnit.SECONDS)
-            .subscribeOn(Schedulers.io())
-            .repeat()
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe {
-                _durationTimer.value = 0L
-            }
-            .doOnDispose {
-                _durationTimer.value = null
-            }
-            .subscribe({
-                _durationTimer.value = (Date().time - startTime.time) / 1000
-            }, {
-                it.printStackTrace()
-            })
+                .subscribeOn(Schedulers.io())
+                .repeat()
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe {
+                    _durationTimer.value = 0L
+                }
+                .doOnDispose {
+                    _durationTimer.value = null
+                }
+                .subscribe({
+                    _durationTimer.value = (Date().time - startTime.time) / 1000
+                }, {
+                    it.printStackTrace()
+                })
     }
 
     private fun stopTimer() {

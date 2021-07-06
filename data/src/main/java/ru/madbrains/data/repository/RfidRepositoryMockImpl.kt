@@ -1,8 +1,11 @@
-package ru.madbrains.data.utils
+package ru.madbrains.data.repository
 
 import android.os.Handler
+import ru.madbrains.domain.repository.RfidListener
+import ru.madbrains.domain.repository.RfidProgressListener
+import ru.madbrains.domain.repository.RfidRepository
 
-class RfidMock : RfidDevice {
+class RfidRepositoryMockImpl : RfidRepository {
 
     private var dataListener: RfidListener? = null
     private var mProgressListener: RfidProgressListener? = null
@@ -16,9 +19,8 @@ class RfidMock : RfidDevice {
         handler.postDelayed({
             dataListener?.invoke("test_id_1")
             stopScan()
-        }, 5000);
+        }, 5000)
     }
-
 
     override fun stopScan() {
         mProgressListener?.invoke(false)

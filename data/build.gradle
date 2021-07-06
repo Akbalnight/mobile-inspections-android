@@ -42,43 +42,39 @@ dependencies {
     implementation project(':domain')
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
-    // Utils
+    // Android
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$rootProject.kotlinVersion"
     implementation "androidx.core:core-ktx:$rootProject.coreKtxVersion"
 
-    // OkHttp & Retrofit
+    // Android.Room
+    implementation "androidx.room:room-runtime:$rootProject.roomVersion"
+    implementation "androidx.room:room-ktx:$rootProject.roomVersion"
+    implementation "androidx.room:room-rxjava2:$rootProject.roomVersion"
+    kapt "androidx.room:room-compiler:$rootProject.roomVersion"
+
+    // Core
+    implementation "io.reactivex.rxjava2:rxkotlin:$rootProject.rxKotlinVersion"
+    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroidVersion"
+    implementation "org.koin:koin-androidx-scope:$rootProject.koin_version"
+    implementation "org.koin:koin-androidx-viewmodel:$rootProject.koin_version"
+    testImplementation "org.koin:koin-test:$rootProject.koin_version"
+
+    // Network
     implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$rootProject.retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
     implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.okHttpVersion"
     implementation "com.squareup.retrofit2:converter-moshi:$rootProject.retrofitVersion"
     implementation "com.squareup.retrofit2:converter-scalars:$rootProject.retrofitVersion"
+    implementation "org.conscrypt:conscrypt-android:$rootProject.conscrypt_android"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$rootProject.moshi_version"
-    implementation 'org.conscrypt:conscrypt-android:2.2.1'
-
-    // Moshi
     implementation "com.squareup.moshi:moshi-kotlin:$rootProject.moshi_version"
     implementation "com.squareup.moshi:moshi-adapters:$rootProject.moshi_version"
 
-    // Room
-    implementation "androidx.room:room-runtime:$rootProject.roomVersion"
-    implementation "androidx.room:room-ktx:$rootProject.roomVersion"
-    implementation "androidx.room:room-rxjava2:$rootProject.roomVersion"
-    kapt "androidx.room:room-compiler:$rootProject.roomVersion"
-
-    // Rx
-    implementation "io.reactivex.rxjava2:rxkotlin:$rootProject.rxKotlinVersion"
-    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroidVersion"
-
-    // Koin
-    implementation "org.koin:koin-androidx-scope:$rootProject.koin_version"
-    implementation "org.koin:koin-androidx-viewmodel:$rootProject.koin_version"
-    testImplementation "org.koin:koin-test:$rootProject.koin_version"
-
-    //RFID
-    compile files('libs/Module_Android_Power.jar')
-
-    // Timber
+    // Utils
     implementation "com.jakewharton.timber:timber:$rootProject.timberVersion"
+
+    // RFID
+    compile files('libs/Module_Android_Power.jar')
 }

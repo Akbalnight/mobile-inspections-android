@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ru.madbrains.data.extensions.toDDMMYYYY
 import ru.madbrains.data.extensions.toHHmmYYYYMMDD
-import ru.madbrains.domain.interactor.DetoursInteractor
+import ru.madbrains.domain.interactor.OfflineInteractor
 import ru.madbrains.domain.model.AppDirType
 import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.inspection.R
@@ -18,7 +18,9 @@ import ru.madbrains.inspection.ui.delegates.FilesUiModel
 import java.io.File
 
 
-class EquipmentViewModel(private val detoursInteractor: DetoursInteractor) : BaseViewModel() {
+class EquipmentViewModel(
+    private val offlineInteractor: OfflineInteractor
+) : BaseViewModel() {
     var savedEquipmentData: EquipmentModel? = null
 
     private val _equipmentImageList = MutableLiveData<List<DiffItem>>()
@@ -50,7 +52,7 @@ class EquipmentViewModel(private val detoursInteractor: DetoursInteractor) : Bas
         savedEquipmentData?.let { data ->
             data.getImageUrls().map {
                 EquipmentDetailMediaUiModel(
-                    detoursInteractor.getFileInFolder(
+                    offlineInteractor.getFileInFolder(
                         it.fileName,
                         AppDirType.Docs
                     )
@@ -107,7 +109,7 @@ class EquipmentViewModel(private val detoursInteractor: DetoursInteractor) : Bas
     }
 
     fun openFile(fileUI: FilesUiModel) {
-        detoursInteractor.getFileInFolder(fileUI.name, AppDirType.Docs)?.let { file ->
+        offlineInteractor.getFileInFolder(fileUI.name, AppDirType.Docs)?.let { file ->
             openFile(file, fileUI)
         } ?: run {
             _commonError.value = Event(Unit)

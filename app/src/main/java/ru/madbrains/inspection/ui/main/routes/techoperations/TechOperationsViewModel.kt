@@ -2,8 +2,7 @@ package ru.madbrains.inspection.ui.main.routes.techoperations
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import ru.madbrains.data.utils.RfidDevice
-import ru.madbrains.domain.interactor.DetoursInteractor
+import ru.madbrains.domain.interactor.RfidInteractor
 import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.domain.model.RouteDataModel
 import ru.madbrains.domain.model.TechOperationModel
@@ -14,8 +13,7 @@ import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.TechOperationUiModel
 
 class TechOperationsViewModel(
-    private val detoursInteractor: DetoursInteractor,
-    private val rfidDevice: RfidDevice
+    private val rfidInteractor: RfidInteractor
 ) :
     BaseViewModel() {
 
@@ -116,7 +114,7 @@ class TechOperationsViewModel(
     }
 
     fun checkRfidAndFinish() {
-        rfidDevice.startScan({
+        rfidInteractor.startScan({
             _rfidProgress.value = it
         }) { scannedCode ->
             savedRouteData?.rfidCode?.let { code ->
@@ -130,7 +128,7 @@ class TechOperationsViewModel(
     }
 
     fun stopRfidScan() {
-        rfidDevice.stopScan()
+        rfidInteractor.stopScan()
     }
 
     fun toEquipmentFragment() {

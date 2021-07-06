@@ -1,9 +1,9 @@
-package ru.madbrains.data.utils
+package ru.madbrains.domain.repository
 
 typealias RfidListener = (id: String) -> Unit
 typealias RfidProgressListener = (active: Boolean) -> Unit
 
-interface RfidDevice {
+interface RfidRepository {
     fun startScan(progressListener: RfidProgressListener, listener: RfidListener)
     fun stopScan()
 }

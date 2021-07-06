@@ -10,16 +10,18 @@ import java.io.File
 import java.util.*
 
 interface OfflineRepository {
-    companion object{
+    companion object {
         const val ARCHIVE_DOCS = "doc-archive.zip"
         const val ARCHIVE_DEFECTS_MEDIA = "defects-media-archive.zip"
     }
 
+    val detoursSource: Observable<List<DetourModel>>
+    val syncInfoSource: Observable<SyncInfo>
+    val syncedItemsFinish: Observable<String>
+
     fun insertDetours(models: List<DetourModel>): Completable
     fun insertDetour(model: DetourModel): Completable
-    fun getDetours(): Single<List<DetourModel>>
-    fun getDetoursSource(): Observable<List<DetourModel>>
-    fun getSyncInfoSource(): Observable<SyncInfo>
+    fun getDetoursAndRefreshSource(): Single<List<DetourModel>>
     fun insertDefects(models: List<DefectModel>): Completable
     fun getDefects(): Single<List<DefectModel>>
     fun getActiveDefects(equipmentIds: List<String>): Single<List<DefectModel>>
@@ -31,7 +33,7 @@ interface OfflineRepository {
     fun finishSendSync(date: Date)
     fun getDefectsTypical(): Single<List<DefectTypicalModel>>
     fun saveDefectsTypical(models: List<DefectTypicalModel>): Completable
-    fun checkAndRefreshDb(): Completable
+    fun checkIfNeedsCleaningAndRefreshDetours(): Completable
     fun cleanDbAndFiles(): Completable
     fun deleteFile(file: File?): Completable
     fun setDirectories(fileTempDir: File?, fileSaveDir: File?)
@@ -48,4 +50,5 @@ interface OfflineRepository {
     fun insertDefect(model: DefectModel): Completable
     fun deleteDefect(id: String): Completable
     fun getChangedDefects(): Single<List<DefectModel>>
+    fun signalFinishSyncingItem(id: String)
 }

@@ -6,7 +6,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
 import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.domain.interactor.AuthInteractor
-import ru.madbrains.domain.interactor.DetoursInteractor
+import ru.madbrains.domain.interactor.RemoteInteractor
+import ru.madbrains.domain.interactor.SyncInteractor
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
@@ -19,10 +20,11 @@ import java.util.*
 class MainViewModel(
     private val preferenceStorage: PreferenceStorage,
     private val authInteractor: AuthInteractor,
-    private val detoursInteractor: DetoursInteractor
+    private val remoteInteractor: RemoteInteractor,
+    private val syncInteractor: SyncInteractor
 ) : BaseViewModel() {
 
-    companion object{
+    companion object {
         private const val lockTime = 5 * 60 * 1000
     }
 
@@ -104,28 +106,28 @@ class MainViewModel(
 
     fun logout() {
         val accessToken = preferenceStorage.token.orEmpty()
-        detoursInteractor.syncStartSendingData()
+        remoteInteractor.sendSyncDataAndRefreshDb()
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { _progressVisibility.postValue(Pair(true, R.string.sync)) }
             .andThen(authInteractor.logout(accessToken).doOnSubscribe {
                 _progressVisibility.postValue(Pair(true, null))
             })
-            .andThen(detoursInteractor.logoutClean())
+            .andThen(syncInteractor.logoutClean())
             .doFinally { _progressVisibility.postValue(Pair(false, null)) }
             .subscribe({
                 _navigateToAuthorization.postValue(Event(Unit))
             }, {
-                if(it is UnknownHostException || it is SocketTimeoutException){
+                if (it is UnknownHostException || it is SocketTimeoutException) {
                     _showSnackBar.postValue(Event(TextData.ResId(R.string.server_unavailable)))
-                } else{
-                    _showSnackBar.postValue(Event(TextData.Str(it.message?:"")))
+                } else {
+                    _showSnackBar.postValue(Event(TextData.Str(it.message ?: "")))
                 }
             })
             .addTo(disposables)
     }
 
-    fun forceLogout(){
-        detoursInteractor.logoutClean()
+    fun forceLogout() {
+        syncInteractor.logoutClean()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 _navigateToAuthorization.postValue(Event(Unit))
@@ -141,7 +143,7 @@ class MainViewModel(
     }
 
     fun onResume() {
-        if(Date().time - lastActive.time > lockTime){
+        if (Date().time - lastActive.time > lockTime) {
             _navigateToLock.postValue(Event(Unit))
         }
     }

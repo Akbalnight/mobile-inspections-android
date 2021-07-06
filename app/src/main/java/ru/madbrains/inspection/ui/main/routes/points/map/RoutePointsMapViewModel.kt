@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
-import ru.madbrains.domain.interactor.DetoursInteractor
+import ru.madbrains.domain.interactor.OfflineInteractor
 import ru.madbrains.domain.model.AppDirType
 import ru.madbrains.domain.model.DetourModel
 import ru.madbrains.domain.model.RouteDataModel
@@ -16,7 +16,7 @@ import ru.madbrains.inspection.ui.delegates.RoutePointUiModel
 import java.io.File
 
 class RoutePointsMapViewModel(
-    private val detoursInteractor: DetoursInteractor
+    private val offlineInteractor: OfflineInteractor
 ) : BaseViewModel() {
     private val _mapLevels = MutableLiveData<List<MapLevelUiModel>>()
     val mapLevels: LiveData<List<MapLevelUiModel>> = _mapLevels
@@ -64,13 +64,13 @@ class RoutePointsMapViewModel(
     private fun filterMapPoints(map: MapLevelUiModel?) {
         if (map == null) return
 
-        detourModel.route.routesData?.let { list->
+        detourModel.route.routesData?.let { list ->
             updateData(list.filter { it.routeMapId == map.id })
         }
     }
 
     fun routePointClick(point: MapPointUiModel) {
-        detourModel.route.routesData?.let {routes->
+        detourModel.route.routesData?.let { routes ->
             routes.find { it.id == point.routeId }?.let {
                 _navigateToTechOperations.value = Event(it)
             }
@@ -78,22 +78,22 @@ class RoutePointsMapViewModel(
     }
 
     fun loadImage(item: MapLevelUiModel) {
-        _mapImage.postValue(detoursInteractor.getFileInFolder(item.fileName, AppDirType.Docs))
+        _mapImage.postValue(offlineInteractor.getFileInFolder(item.fileName, AppDirType.Docs))
     }
 
     private fun updateData(points: List<RouteDataModel>) {
-        val deviceIds = points.fold(mutableListOf<String>(), {acc, a ->
+        val deviceIds = points.fold(mutableListOf<String>(), { acc, a ->
             val ids = a.equipments?.map { it.id }
-            if (ids!=null){
+            if (ids != null) {
                 acc.addAll(ids)
             }
             acc
         })
 
-        detoursInteractor.getEquipmentIdsWithDefectsDB(equipmentIds = deviceIds)
+        offlineInteractor.getEquipmentIdsWithDefects(equipmentIds = deviceIds)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ ids ->
-                val defectsMap = ids.fold(mutableMapOf<String, Boolean>()){acc,id ->
+                val defectsMap = ids.fold(mutableMapOf<String, Boolean>()) { acc, id ->
                     acc[id] = true
                     acc
                 }
@@ -104,16 +104,21 @@ class RoutePointsMapViewModel(
             .addTo(disposables)
     }
 
-    private fun applyDefectDataAndUpdate(points: List<RouteDataModel>, defectsMap: MutableMap<String, Boolean>) {
+    private fun applyDefectDataAndUpdate(
+        points: List<RouteDataModel>,
+        defectsMap: MutableMap<String, Boolean>
+    ) {
         val mapPoints = mutableListOf<MapPointUiModel>()
         val lastCompleted = points.indexOfLast { it.completed }
         points.mapIndexed { index, route ->
-            route.techMap?.let { techMap->
+            route.techMap?.let { techMap ->
                 val current = lastCompleted + 1 == index
                 val preserveOrder = detourModel.saveOrderControlPoints == true
-                val haveDefects = route.equipments?.fold(false, {acc, a -> acc || defectsMap[a.id] == true})?:false
+                val haveDefects =
+                    route.equipments?.fold(false, { acc, a -> acc || defectsMap[a.id] == true })
+                        ?: false
 
-                val status = when{
+                val status = when {
                     current -> MapPointStatus.Current
                     route.completed && !haveDefects -> MapPointStatus.Completed
                     route.completed && haveDefects -> MapPointStatus.CompletedWithDefects
@@ -155,6 +160,6 @@ data class MapPointUiModel(
     override fun areContentsTheSame(newItem: DiffItem): Boolean = this == newItem
 }
 
-enum class MapPointStatus{
+enum class MapPointStatus {
     None, Current, CompletedWithDefects, Completed
 }

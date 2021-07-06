@@ -8,25 +8,19 @@ import ru.madbrains.data.database.HcbDatabase
 import ru.madbrains.data.network.IAuthenticator
 import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.data.prefs.SharedPreferenceStorage
-import ru.madbrains.data.repository.AuthRepositoryImpl
-import ru.madbrains.data.repository.DetoursRepositoryImpl
-import ru.madbrains.data.repository.OfflineRepositoryImpl
-import ru.madbrains.data.utils.FileUtil
-import ru.madbrains.data.utils.RfidDevice
-import ru.madbrains.data.utils.RfidMock
-import ru.madbrains.data.utils.RfidReader
+import ru.madbrains.data.repository.*
 import ru.madbrains.domain.interactor.AuthInteractor
 import ru.madbrains.domain.repository.AuthRepository
 import ru.madbrains.domain.repository.DetoursRepository
 import ru.madbrains.domain.repository.OfflineRepository
+import ru.madbrains.domain.repository.RfidRepository
 import timber.log.Timber
 
 val dataModule = module {
     single { getPreferenceStorage(androidContext()) }
-    single { getFileUtil(get()) }
-    single { getReader() }
     single { getDatabase(androidContext()) }
 
+    single { getRfidRepository() }
     single { getAuthRepository() }
     single { getIAuthenticator(androidContext(), get(), get()) }
     single { getDetoursRepository(get()) }
@@ -60,16 +54,12 @@ private fun getOfflineRepository(
     return OfflineRepositoryImpl(preferenceStorage, db)
 }
 
-private fun getFileUtil(context: Context): FileUtil {
-    return FileUtil(context)
-}
-
-private fun getReader(): RfidDevice {
+private fun getRfidRepository(): RfidRepository {
     return try {
-        RfidReader()
+        RfidRepositoryImpl()
     } catch (e: Throwable) {
         Timber.d("debug_dmm Rfid not supported! Running mock instead. $e")
-        RfidMock()
+        RfidRepositoryMockImpl()
     }
 }
 

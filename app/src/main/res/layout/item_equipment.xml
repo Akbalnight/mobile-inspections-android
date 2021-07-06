@@ -59,12 +59,12 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
-                tools:text="Питательный насос"
                 android:textColor="@color/textMain"
                 android:textSize="13sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/ivIcon"
-                app:layout_constraintTop_toBottomOf="@id/tvEquipmentTypeTitle" />
+                app:layout_constraintTop_toBottomOf="@id/tvEquipmentTypeTitle"
+                tools:text="Питательный насос" />
 
             <TextView
                 android:id="@+id/tvEquipmentNameTitle"
@@ -88,12 +88,12 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:paddingBottom="4dp"
-                tools:text="Питательный насос"
                 android:textColor="@color/textMain"
                 android:textSize="13sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/ivIcon"
-                app:layout_constraintTop_toBottomOf="@id/tvEquipmentNameTitle" />
+                app:layout_constraintTop_toBottomOf="@id/tvEquipmentNameTitle"
+                tools:text="Питательный насос" />
 
 
             <androidx.recyclerview.widget.RecyclerView
@@ -105,13 +105,13 @@
                 android:layout_marginEnd="8dp"
                 android:orientation="horizontal"
                 android:visibility="gone"
-                tools:visibility="visible"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.259"
                 app:layout_constraintStart_toEndOf="@+id/ivIcon"
                 app:layout_constraintTop_toBottomOf="@id/tvEquipmentName"
-                tools:listitem="@layout/item_media_equipment" />
+                tools:listitem="@layout/item_media_equipment"
+                tools:visibility="visible" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

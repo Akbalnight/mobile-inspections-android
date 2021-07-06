@@ -111,14 +111,17 @@ class CameraFragment : BaseFragment(R.layout.fragment_camera) {
                 val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile)
                     .setMetadata(metadata)
                     .build()
-                imageCapture.takePicture(outputOptions, cameraExecutor, object : ImageCapture.OnImageSavedCallback {
-                    override fun onError(exc: ImageCaptureException) {
-                    }
+                imageCapture.takePicture(
+                    outputOptions,
+                    cameraExecutor,
+                    object : ImageCapture.OnImageSavedCallback {
+                        override fun onError(exc: ImageCaptureException) {
+                        }
 
-                    override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                        cameraViewModel.postFile(photoFile)
-                    }
-                })
+                        override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                            cameraViewModel.postFile(photoFile)
+                        }
+                    })
             }
         })
         cameraViewModel.startRecording.observe(viewLifecycleOwner, EventObserver { videoFile ->
@@ -129,19 +132,22 @@ class CameraFragment : BaseFragment(R.layout.fragment_camera) {
                 val outputOptions = VideoCapture.OutputFileOptions.Builder(videoFile)
                     .setMetadata(metadata)
                     .build()
-                videoCapture.startRecording(outputOptions, cameraExecutor, object : VideoCapture.OnVideoSavedCallback {
-                    override fun onVideoSaved(outputFileResults: VideoCapture.OutputFileResults) {
-                        cameraViewModel.postFile(videoFile)
-                    }
+                videoCapture.startRecording(
+                    outputOptions,
+                    cameraExecutor,
+                    object : VideoCapture.OnVideoSavedCallback {
+                        override fun onVideoSaved(outputFileResults: VideoCapture.OutputFileResults) {
+                            cameraViewModel.postFile(videoFile)
+                        }
 
-                    override fun onError(
-                        videoCaptureError: Int,
-                        message: String,
-                        cause: Throwable?
-                    ) {
-                        Timber.d("debug_dmm message: ${message}")
-                    }
-                })
+                        override fun onError(
+                            videoCaptureError: Int,
+                            message: String,
+                            cause: Throwable?
+                        ) {
+                            Timber.d("debug_dmm message: ${message}")
+                        }
+                    })
             }
 
         })
@@ -182,7 +188,7 @@ class CameraFragment : BaseFragment(R.layout.fragment_camera) {
         if (requestCode == REQUEST_TAKE_PHOTO_FROM_GALLERY && resultCode == RESULT_OK) {
             val contentResolver = activity?.contentResolver
             val uri = data?.data
-            if(contentResolver!=null && uri!=null){
+            if (contentResolver != null && uri != null) {
                 cameraViewModel.getDataFromGallery(uri, contentResolver)
             }
         }
@@ -226,7 +232,8 @@ class CameraFragment : BaseFragment(R.layout.fragment_camera) {
         val screenAspectRatio = aspectRatio(metrics.widthPixels, metrics.heightPixels)
         val rotation = viewFinder.display.rotation
 
-        val cameraProvider = cameraProvider ?: throw IllegalStateException("Camera initialization failed.")
+        val cameraProvider =
+            cameraProvider ?: throw IllegalStateException("Camera initialization failed.")
         val cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
         preview = Preview.Builder()
             .setTargetAspectRatio(screenAspectRatio)
@@ -247,7 +254,13 @@ class CameraFragment : BaseFragment(R.layout.fragment_camera) {
         cameraProvider.unbindAll()
 
         try {
-            camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture, videoCapture)
+            camera = cameraProvider.bindToLifecycle(
+                this,
+                cameraSelector,
+                preview,
+                imageCapture,
+                videoCapture
+            )
             preview?.setSurfaceProvider(viewFinder.surfaceProvider)
         } catch (exc: Exception) {
             Timber.d("debug_dmm exc: $exc")
@@ -268,7 +281,8 @@ class CameraFragment : BaseFragment(R.layout.fragment_camera) {
     }
 
     private fun changeFacing() {
-        lensFacing = if (lensFacing == CameraSelector.LENS_FACING_BACK) CameraSelector.LENS_FACING_FRONT else CameraSelector.LENS_FACING_BACK
+        lensFacing =
+            if (lensFacing == CameraSelector.LENS_FACING_BACK) CameraSelector.LENS_FACING_FRONT else CameraSelector.LENS_FACING_BACK
         setUpCamera()
     }
 

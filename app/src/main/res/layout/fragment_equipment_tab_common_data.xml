@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="match_parent">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -19,30 +19,30 @@
                 android:id="@+id/rvEquipmentImages"
                 android:layout_width="match_parent"
                 android:layout_height="280dp"
-                tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_equipment_image"
-                tools:orientation="horizontal"
+                android:clipToPadding="false"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:clipToPadding="false" />
+                tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_equipment_image"
+                tools:orientation="horizontal" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvSpecs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/equipmentCommonData"
-                android:layout_marginTop="25dp"
                 android:layout_marginStart="60dp"
-                android:textSize="20sp"
+                android:layout_marginTop="25dp"
+                android:text="@string/equipmentCommonData"
                 android:textColor="@color/elementsBlue"
-                app:textAllCaps="true"
+                android:textSize="20sp"
                 android:visibility="gone"
+                app:textAllCaps="true"
                 tools:visibility="visible" />
 
             <TableLayout
                 android:id="@+id/tlSpecs"
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="75dp"
                 android:layout_marginTop="24dp"
                 android:shrinkColumns="*"
@@ -50,62 +50,62 @@
                 tools:visibility="visible">
 
                 <include
-                    tools:layout="@layout/fragment_equipment_tab_common_data_specs_preview"
-                    layout="@layout/empty_layout" />
+                    layout="@layout/empty_layout"
+                    tools:layout="@layout/fragment_equipment_tab_common_data_specs_preview" />
             </TableLayout>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvMeasurementPoints"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/equipmentMeasurementPoints"
-                android:layout_marginTop="30dp"
                 android:layout_marginStart="60dp"
-                android:textSize="20sp"
+                android:layout_marginTop="30dp"
+                android:text="@string/equipmentMeasurementPoints"
                 android:textColor="@color/elementsBlue"
-                app:textAllCaps="true"
+                android:textSize="20sp"
                 android:visibility="gone"
+                app:textAllCaps="true"
                 tools:visibility="visible" />
 
             <TableLayout
                 android:id="@+id/tlMeasurementPoints"
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="75dp"
                 android:layout_marginTop="24dp"
                 android:visibility="gone"
                 tools:visibility="visible">
 
                 <include
-                    tools:layout="@layout/fragment_equipment_tab_common_data_measurements_preview"
-                    layout="@layout/empty_layout" />
+                    layout="@layout/empty_layout"
+                    tools:layout="@layout/fragment_equipment_tab_common_data_measurements_preview" />
             </TableLayout>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvWarrantySpecs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/equipmentWarranty"
-                android:layout_marginTop="30dp"
                 android:layout_marginStart="60dp"
-                android:textSize="20sp"
+                android:layout_marginTop="30dp"
+                android:text="@string/equipmentWarranty"
                 android:textColor="@color/elementsBlue"
-                app:textAllCaps="true"
+                android:textSize="20sp"
                 android:visibility="gone"
+                app:textAllCaps="true"
                 tools:visibility="visible" />
 
             <TableLayout
                 android:id="@+id/tlWarrantySpecs"
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="75dp"
                 android:layout_marginTop="24dp"
                 android:visibility="gone"
                 tools:visibility="visible">
 
                 <include
-                    tools:layout="@layout/fragment_equipment_tab_common_data_waranty_preview"
-                    layout="@layout/empty_layout" />
+                    layout="@layout/empty_layout"
+                    tools:layout="@layout/fragment_equipment_tab_common_data_waranty_preview" />
             </TableLayout>
 
         </LinearLayout>

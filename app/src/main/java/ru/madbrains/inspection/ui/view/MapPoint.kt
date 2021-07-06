@@ -1,7 +1,6 @@
 package ru.madbrains.inspection.ui.view
 
 import android.content.Context
-import android.util.AttributeSet
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
@@ -10,7 +9,6 @@ import androidx.core.content.res.ResourcesCompat
 import kotlinx.android.synthetic.main.item_map_point.view.*
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.ui.main.routes.points.map.MapPointStatus
-import timber.log.Timber
 
 class MapPoint constructor(
     context: Context
@@ -33,7 +31,7 @@ class MapPoint constructor(
         container.layoutParams.height = 100
         container.layoutParams.width = 100
 
-        val color = when(status){
+        val color = when (status) {
             MapPointStatus.None -> R.drawable.ic_point_blue
             MapPointStatus.Current -> R.drawable.ic_point_blue
             MapPointStatus.CompletedWithDefects -> R.drawable.ic_point_red
@@ -49,7 +47,7 @@ class MapPoint constructor(
             )
         )
 
-        if(status == MapPointStatus.Current){
+        if (status == MapPointStatus.Current) {
             ivBackground.animation?.cancel()
             val animation: Animation = AlphaAnimation(1f, 0f)
             animation.duration = 1000
@@ -57,7 +55,7 @@ class MapPoint constructor(
             animation.repeatCount = Animation.INFINITE
             animation.repeatMode = Animation.REVERSE
             ivBackground.startAnimation(animation)
-        } else{
+        } else {
             ivBackground.animation?.cancel()
         }
     }

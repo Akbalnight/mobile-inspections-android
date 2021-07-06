@@ -134,9 +134,9 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
 
     private fun setupOnClickListener() {
 
-        if(routePointsViewModel.editable){
+        if (routePointsViewModel.editable) {
             layoutBottomButtonAddDefect.setOnClickListener { toDefectDetailFragment() }
-        } else{
+        } else {
             layoutBottomButtonAddDefect.isClickable = false
             layoutBottomButtonAddDefect.alpha = 0.5f
         }
@@ -167,15 +167,17 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
                 )
             )
         })
-        routePointsViewModel.navigateToDefectList.observe(viewLifecycleOwner, EventObserver { editable->
-            findNavController().navigate(
-                R.id.graph_defects, bundleOf(
-                    DefectListFragment.KEY_EQUIPMENTS_IDS_DEFECT_LIST to techOperationsViewModel.savedRouteData?.equipments?.map { it.id },
-                    DefectListFragment.KEY_IS_DEFECT_REGISTRY to false,
-                    DefectListFragment.KEY_IS_EDITABLE to editable
+        routePointsViewModel.navigateToDefectList.observe(
+            viewLifecycleOwner,
+            EventObserver { editable ->
+                findNavController().navigate(
+                    R.id.graph_defects, bundleOf(
+                        DefectListFragment.KEY_EQUIPMENTS_IDS_DEFECT_LIST to techOperationsViewModel.savedRouteData?.equipments?.map { it.id },
+                        DefectListFragment.KEY_IS_DEFECT_REGISTRY to false,
+                        DefectListFragment.KEY_IS_EDITABLE to editable
+                    )
                 )
-            )
-        })
+            })
     }
 
     private fun getEquipments(): List<EquipmentModel>? {

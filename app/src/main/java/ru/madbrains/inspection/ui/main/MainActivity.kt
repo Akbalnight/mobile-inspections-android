@@ -92,9 +92,9 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             this.finish()
         })
         mainViewModel.showSnackBar.observe(this, EventObserver {
-            if(it is TextData.Str){
+            if (it is TextData.Str) {
                 showSnackBar(it.data)
-            } else if(it is TextData.ResId){
+            } else if (it is TextData.ResId) {
                 showSnackBar(strings[it.data])
             }
         })
@@ -113,8 +113,11 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         syncViewModel.initAction(
             externalCacheDir, getExternalFilesDir("")
         )
-        LocalBroadcastManager.getInstance(this).registerReceiver(forceLogoutReceiver, IntentFilter(
-            IAuthenticator.ACTION_FORCE_LOGOUT))
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+            forceLogoutReceiver, IntentFilter(
+                IAuthenticator.ACTION_FORCE_LOGOUT
+            )
+        )
     }
 
     private fun setupMenu() {

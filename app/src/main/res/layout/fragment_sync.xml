@@ -39,33 +39,33 @@
                     android:id="@+id/clSyncPanelWrap"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="parent"
                     android:layout_marginStart="10dp"
-                    android:layout_marginTop="20dp">
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
                         android:id="@+id/syncDateTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:layout_constraintTop_toTopOf="parent"
                         android:text="@string/fragment_sync_last_sync"
-                        android:textColor="@color/textMain" />
+                        android:textColor="@color/textMain"
+                        app:layout_constraintTop_toTopOf="parent" />
 
 
                     <LinearLayout
-                        app:layout_constraintTop_toBottomOf="@+id/syncDateTitle"
-                        app:layout_constraintStart_toStartOf="parent"
-                        android:layout_marginTop="5dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:baselineAligned="false"
                         android:orientation="horizontal"
-                        android:baselineAligned="false">
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/syncDateTitle">
 
                         <LinearLayout
                             android:id="@+id/llGetDateWrap"
                             android:layout_width="0dp"
-                            android:layout_weight="1"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:orientation="horizontal">
 
                             <TextView
@@ -79,16 +79,16 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="5dp"
-                                tools:text="2019-09-17 09:00"
-                                android:textColor="@color/elementsBlue" />
+                                android:textColor="@color/elementsBlue"
+                                tools:text="2019-09-17 09:00" />
 
                         </LinearLayout>
 
                         <LinearLayout
                             android:id="@+id/llSendDateWrap"
                             android:layout_width="0dp"
-                            android:layout_weight="1"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:orientation="horizontal">
 
                             <TextView
@@ -112,11 +112,11 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvRoutes"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintTop_toBottomOf="@+id/clSyncPanelWrap"
-                    android:nestedScrollingEnabled="false"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:nestedScrollingEnabled="false"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintTop_toBottomOf="@+id/clSyncPanelWrap"
                     tools:itemCount="5"
                     tools:listitem="@layout/item_detour" />
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -169,10 +169,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:alpha="0.5"
+                android:background="?android:attr/selectableItemBackground"
                 android:clickable="false"
                 android:focusable="false"
-                android:background="?android:attr/selectableItemBackground"
-                android:alpha="0.5"
                 android:orientation="vertical">
 
                 <ImageView

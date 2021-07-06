@@ -86,6 +86,7 @@ class SharedPreferenceStorage(
     override fun clearData() {
         prefs.edit { clear() }
     }
+
     override fun clearLogout() {
         CookieManager.getInstance().removeAllCookies(null)
         clearData()

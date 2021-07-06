@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<merge xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="@layout/fragment_equipment_tab_common_data">
 
     <ru.madbrains.inspection.ui.view.EquipmentSpecsTableRow
+        app:greyStyle="true"
         app:labelText="@string/equipment_specs_warranty_start"
-        app:valueText="0"
-        app:greyStyle="true" />
+        app:valueText="0" />
 
     <ru.madbrains.inspection.ui.view.EquipmentSpecsTableRow
+        app:greyStyle="true"
         app:labelText="@string/equipment_specs_warranty_end"
-        app:valueText="0"
-        app:greyStyle="true" />
+        app:valueText="0" />
 </merge>

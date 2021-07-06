@@ -1,6 +1,5 @@
 package ru.madbrains.inspection.ui.auth.dialogs
 
-import android.content.Context
 import ru.madbrains.data.network.ApiData
 import ru.madbrains.data.network.IAuthenticator
 import ru.madbrains.data.network.OAuthData

@@ -3,7 +3,8 @@ package ru.madbrains.domain.model
 enum class RootDirType {
     Temp, Save
 }
-enum class AppDirType(val value:String) {
+
+enum class AppDirType(val value: String) {
     Docs(DIR_DOCS), Defects(DIR_DEFECTS_MEDIA), Local(DIR_LOCAL)
 }
 

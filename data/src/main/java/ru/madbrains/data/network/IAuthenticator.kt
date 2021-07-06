@@ -25,18 +25,18 @@ class IAuthenticator constructor(
         var refreshTokenSource: BehaviorSubject<UserInfoModel>? = null
     }
 
-    private fun sendForceLogoutSignal(){
+    private fun sendForceLogoutSignal() {
         val intent = Intent(ACTION_FORCE_LOGOUT)
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
     }
 
     override fun authenticate(route: Route?, response: Response): Request? {
         val expiredToken = preferenceStorage.refreshToken
-        if(expiredToken != null){
+        if (expiredToken != null) {
             try {
                 val source = refreshTokenSource
                 val model: UserInfoModel
-                if(source==null){
+                if (source == null) {
                     refreshTokenSource = BehaviorSubject.create<UserInfoModel>()
                     model = authInteractor.refreshToken(expiredToken).blockingGet()
                     preferenceStorage.apply {
@@ -50,15 +50,24 @@ class IAuthenticator constructor(
                     }
                     refreshTokenSource?.onNext(model)
                     refreshTokenSource = null
-                } else{
+                } else {
                     model = source.blockingFirst()
                 }
                 return response.request.newBuilder()
-                    .header(SessionInterceptor.KEY_TOKEN, String.format(SessionInterceptor.VALUE_TOKEN, model.accessToken))
-                    .header(SessionInterceptor.KEY_USER_ID, String.format(SessionInterceptor.VALUE_USER_ID, model.userId))
-                    .header(SessionInterceptor.KEY_COOKIE, String.format(SessionInterceptor.VALUE_COOKIE, model.codeChallenge))
+                    .header(
+                        SessionInterceptor.KEY_TOKEN,
+                        String.format(SessionInterceptor.VALUE_TOKEN, model.accessToken)
+                    )
+                    .header(
+                        SessionInterceptor.KEY_USER_ID,
+                        String.format(SessionInterceptor.VALUE_USER_ID, model.userId)
+                    )
+                    .header(
+                        SessionInterceptor.KEY_COOKIE,
+                        String.format(SessionInterceptor.VALUE_COOKIE, model.codeChallenge)
+                    )
                     .build()
-            }  catch(e: Throwable) {
+            } catch (e: Throwable) {
                 Timber.d("debug_dmm refresh token error: $e")
             }
         }

@@ -66,8 +66,9 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
         super.onActivityCreated(savedInstanceState)
 
         val deviceIds = arguments?.getStringArrayList(KEY_EQUIPMENTS_IDS_DEFECT_LIST)
-        defectListViewModel.isDefectRegistry = arguments?.getBoolean(KEY_IS_DEFECT_REGISTRY, true)?:true
-        defectListViewModel.isEditable = arguments?.getBoolean(KEY_IS_EDITABLE, true)?:true
+        defectListViewModel.isDefectRegistry =
+            arguments?.getBoolean(KEY_IS_DEFECT_REGISTRY, true) ?: true
+        defectListViewModel.isEditable = arguments?.getBoolean(KEY_IS_EDITABLE, true) ?: true
         if (defectListViewModel.isDefectRegistry) {
             setupRegisterDefects()
         } else {

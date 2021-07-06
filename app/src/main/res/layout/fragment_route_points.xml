@@ -62,11 +62,11 @@
         android:layout_marginBottom="24dp"
         android:backgroundTint="@color/accidentYellow"
         android:gravity="center_vertical"
-        app:iconSize="32dp"
-        app:iconPadding="0dp"
         android:text="начать"
         android:visibility="invisible"
         app:icon="@drawable/ic_detour_in_progress"
+        app:iconPadding="0dp"
+        app:iconSize="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -78,10 +78,10 @@
         android:layout_marginBottom="24dp"
         android:backgroundTint="@color/accidentYellow"
         android:gravity="center_vertical"
-        android:visibility="invisible"
-        app:iconPadding="8dp"
         android:text="@string/proceed"
+        android:visibility="invisible"
         app:icon="@drawable/ic_fab_continue"
+        app:iconPadding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -93,11 +93,11 @@
         android:layout_marginBottom="24dp"
         android:backgroundTint="@color/accidentYellow"
         android:gravity="center_vertical"
-        app:iconSize="32dp"
-        android:visibility="invisible"
-        app:iconPadding="0dp"
         android:text="завершить"
+        android:visibility="invisible"
         app:icon="@drawable/ic_detour_completed"
+        app:iconPadding="0dp"
+        app:iconSize="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

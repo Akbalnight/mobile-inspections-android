@@ -3,7 +3,6 @@ package ru.madbrains.inspection.ui.main.sync
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_sync.*
-import kotlinx.android.synthetic.main.fragment_sync.rvRoutes
 import kotlinx.android.synthetic.main.toolbar_with_menu.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import ru.madbrains.data.extensions.toyyyyMMddHHmm
@@ -56,7 +55,7 @@ class SyncFragment : BaseFragment(R.layout.fragment_sync) {
 
     override fun onResume() {
         super.onResume()
-        syncViewModel.getChangedDetours()
+        syncViewModel.getChangedDetoursAndDefects()
     }
 
     private fun setupToolbar() {

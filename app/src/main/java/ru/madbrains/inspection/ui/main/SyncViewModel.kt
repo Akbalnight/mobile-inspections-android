@@ -9,9 +9,10 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.rxkotlin.addTo
-import ru.madbrains.data.extensions.toyyyyMMddTHHmmssXXX
 import ru.madbrains.data.prefs.PreferenceStorage
-import ru.madbrains.domain.interactor.DetoursInteractor
+import ru.madbrains.domain.interactor.OfflineInteractor
+import ru.madbrains.domain.interactor.RemoteInteractor
+import ru.madbrains.domain.interactor.SyncInteractor
 import ru.madbrains.domain.model.*
 import ru.madbrains.domain.repository.OfflineRepository.Companion.ARCHIVE_DEFECTS_MEDIA
 import ru.madbrains.domain.repository.OfflineRepository.Companion.ARCHIVE_DOCS
@@ -24,7 +25,9 @@ import java.io.File
 import java.util.*
 
 class SyncViewModel(
-    private val detoursInteractor: DetoursInteractor,
+    private val remoteInteractor: RemoteInteractor,
+    private val syncInteractor: SyncInteractor,
+    private val offlineInteractor: OfflineInteractor,
     private val preferenceStorage: PreferenceStorage
 ) : BaseViewModel() {
 
@@ -66,17 +69,17 @@ class SyncViewModel(
     private val observables = CompositeDisposable()
 
     init {
-        detoursInteractor.getSyncInfoSource()
+        offlineInteractor.syncInfoSource
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 _syncInfo.postValue(it)
             }, {
                 it.printStackTrace()
-            })
-            .addTo(observables)
-        detoursInteractor.changedItemsRem
+            }).addTo(observables)
+
+        remoteInteractor.syncedItemsFinish
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ id->
+            .subscribe({ id ->
                 _changedItems.postValue(_changedItems.value?.filter { it.id != id })
             }, {
                 it.printStackTrace()
@@ -87,9 +90,8 @@ class SyncViewModel(
     }
 
     fun initAction(fileTempDir: File?, fileSaveDir: File?) {
-        detoursInteractor.setDirectories(fileTempDir, fileSaveDir)
-
-        detoursInteractor.checkAndRefreshDb()
+        syncInteractor.setDirectories(fileTempDir, fileSaveDir)
+        syncInteractor.checkIfNeedsCleaningAndRefreshDetours()
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { _globalProgress.postValue(true) }
             .doAfterTerminate { _globalProgress.postValue(false) }
@@ -154,8 +156,8 @@ class SyncViewModel(
 
     private fun doSyncEtc(): Single<EtcAsyncResponse> {
         return Single.zip(
-            detoursInteractor.getEquipmentsRemote(),
-            detoursInteractor.getDefectTypicalRemote(),
+            remoteInteractor.getEquipments(),
+            remoteInteractor.getDefectTypical(),
             BiFunction { b1: List<EquipmentModel>,
                          b2: List<DefectTypicalModel> ->
                 EtcAsyncResponse(b1, b2)
@@ -167,14 +169,14 @@ class SyncViewModel(
 
 
     private fun getDetourRemote(): Single<List<DetourModel>> {
-        return detoursInteractor.getDetoursRemote()
+        return remoteInteractor.getDetours()
             .doOnSubscribe { _detourSyncStatus.postValue(Event(ProgressState.PROGRESS)) }
             .doOnError { _detourSyncStatus.postValue(Event(ProgressState.FAILED)) }
             .doOnSuccess { _detourSyncStatus.postValue(Event(ProgressState.DONE)) }
     }
 
     private fun getDefectsRemote(routes: List<DetourModel>): Single<List<DefectModel>> {
-        return detoursInteractor.getDefectsRemote(
+        return remoteInteractor.getDefects(
             detourIds = routes.map { it.id }
         )
             .doOnSubscribe { _defectsSyncStatus.postValue(Event(ProgressState.PROGRESS)) }
@@ -185,10 +187,10 @@ class SyncViewModel(
     private fun getDocFilesArchive(routes: List<DetourModel>?): Single<FileEnvelope> {
         val ids = routes?.getAllFilesIds()
         val single: Single<FileEnvelope> = if (ids?.isNotEmpty() == true) {
-            detoursInteractor.getFileArchive(
+            remoteInteractor.getFileArchive(
                 fileIds = ids
             ).flatMap { it ->
-                detoursInteractor.saveFileFromBody(it, ARCHIVE_DOCS, RootDirType.Temp).map {
+                syncInteractor.saveFileFromBody(it, ARCHIVE_DOCS, RootDirType.Temp).map {
                     FileEnvelope(
                         it
                     )
@@ -206,10 +208,10 @@ class SyncViewModel(
     private fun getDefectsMediaFilesArchive(defects: List<DefectModel>?): Single<FileEnvelope> {
         val ids = defects?.getAllFilesIds()
         val single: Single<FileEnvelope> = if (ids?.isNotEmpty() == true) {
-            detoursInteractor.getFileArchive(
+            remoteInteractor.getFileArchive(
                 fileIds = ids
             ).flatMap { it ->
-                detoursInteractor.saveFileFromBody(
+                syncInteractor.saveFileFromBody(
                     it,
                     ARCHIVE_DEFECTS_MEDIA,
                     RootDirType.Temp
@@ -233,8 +235,8 @@ class SyncViewModel(
 
         Completable.merge(
             arrayListOf(
-                detoursInteractor.deleteFile(_pendingDataDb?.docArchive),
-                detoursInteractor.deleteFile(_pendingDataDb?.mediaArchive)
+                syncInteractor.deleteFile(_pendingDataDb?.docArchive),
+                syncInteractor.deleteFile(_pendingDataDb?.mediaArchive)
             )
         )
             .doOnSubscribe { _globalProgress.postValue(true) }
@@ -251,32 +253,32 @@ class SyncViewModel(
         _pendingDataDb?.let { data ->
             val observables = arrayListOf<Completable>()
             data.routes?.let {
-                observables.add(detoursInteractor.saveDetoursDb(it))
+                observables.add(syncInteractor.saveDetours(it))
             }
             data.defects?.let {
-                observables.add(detoursInteractor.saveDefectsDb(it))
+                observables.add(syncInteractor.saveDefects(it))
             }
             data.equipment?.let {
-                observables.add(detoursInteractor.saveEquipmentsDb(it))
+                observables.add(syncInteractor.saveEquipments(it))
             }
             data.defectsTypical?.let {
-                observables.add(detoursInteractor.saveDefectTypicalDb(it))
+                observables.add(syncInteractor.saveDefectTypical(it))
             }
             data.docArchive?.let {
-                observables.add(detoursInteractor.unzipFiles(it, AppDirType.Docs))
+                observables.add(syncInteractor.unzipFiles(it, AppDirType.Docs))
             }
             data.mediaArchive?.let {
-                observables.add(detoursInteractor.unzipFiles(it, AppDirType.Defects))
+                observables.add(syncInteractor.unzipFiles(it, AppDirType.Defects))
             }
-            detoursInteractor.cleanDbAndFiles()
+            syncInteractor.cleanDbAndFiles()
                 .andThen(Completable.merge(observables))
                 .observeOn(AndroidSchedulers.mainThread())
-                .andThen(detoursInteractor.refreshDetoursDb())
+                .andThen(offlineInteractor.getDetoursAndRefreshSource())
                 .doOnSubscribe { _globalProgress.postValue(true) }
                 .doAfterTerminate { _globalProgress.postValue(false) }
                 .subscribe({
-                    detoursInteractor.finishGetSync(Date())
-                    getChangedDetours()
+                    syncInteractor.finishGetSync(Date())
+                    getChangedDetoursAndDefects()
                 }, {
                     _showSnackBar.postValue(Event(R.string.error))
                     it.printStackTrace()
@@ -285,13 +287,11 @@ class SyncViewModel(
         }
     }
 
-    fun getChangedDetours(){
-        Single.zip(detoursInteractor.getChangedDetoursDb(), detoursInteractor.getChangedDefectsDb(),
-            BiFunction { b1: List<DetourModel>, b2: List<DefectModel> -> Pair(b1, b2) })
-            .observeOn(AndroidSchedulers.mainThread())
+    fun getChangedDetoursAndDefects() {
+        offlineInteractor.getChangedDetoursAndDefects().observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { _globalProgress.postValue(true) }
             .doAfterTerminate { _globalProgress.postValue(false) }
-            .subscribe({ pair->
+            .subscribe({ pair ->
                 val detours = pair.first.map { detour ->
                     DetourUiModel(
                         id = detour.id,
@@ -317,11 +317,11 @@ class SyncViewModel(
 
 
     fun startSendingData() {
-        detoursInteractor.syncStartSendingData()
+        remoteInteractor.sendSyncDataAndRefreshDb()
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { _globalProgress.postValue(true) }
             .doAfterTerminate { _globalProgress.postValue(false) }
-            .subscribe ({},{
+            .subscribe({}, {
                 _showSnackBar.postValue(Event(R.string.fragment_sync_send_data_error))
             })
             .addTo(disposables)
