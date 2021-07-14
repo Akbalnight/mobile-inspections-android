@@ -7,7 +7,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
-import ru.madbrains.data.extensions.toyyyyMMddTHHmmssXXX
+import ru.madbrains.data.extensions.toyyyyMMddTHHmmss
 import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.domain.interactor.OfflineInteractor
 import ru.madbrains.domain.interactor.SyncInteractor
@@ -89,8 +89,8 @@ class RoutePointsViewModel(
         stopTimer()
         detourModel?.let { detour ->
             val currentStatus = preferenceStorage.detourStatuses?.data?.getStatusByType(type)
-            detour.dateStartFact = detour.startTime?.toyyyyMMddTHHmmssXXX()
-            detour.dateFinishFact = Date().toyyyyMMddTHHmmssXXX()
+            detour.dateStartFact = detour.startTime?.toyyyyMMddTHHmmss()
+            detour.dateFinishFact = Date().toyyyyMMddTHHmmss()
             detour.statusId = currentStatus?.id
             detour.changed = true
             syncInteractor.saveDetour(detour)
