@@ -5,10 +5,12 @@ import androidx.core.view.isVisible
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
 import kotlinx.android.synthetic.main.item_detour.view.*
 import org.joda.time.DateTime
+import ru.madbrains.data.extensions.toyyyyMMddHHmmss
 import ru.madbrains.domain.model.DetourStatus
 import ru.madbrains.domain.model.DetourStatusType
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.model.DiffItem
+import java.util.*
 
 fun detourDelegate(clickListener: (DetourUiModel) -> Unit) =
     adapterDelegateLayoutContainer<DetourUiModel, DiffItem>(R.layout.item_detour) {
@@ -36,7 +38,7 @@ fun detourDelegate(clickListener: (DetourUiModel) -> Unit) =
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-                tvDate.text = item.date?.replace("T", " ")
+                tvDate.text = item.date?.toyyyyMMddHHmmss()
             }
         }
     }
@@ -45,7 +47,7 @@ data class DetourUiModel(
     val id: String,
     val name: String,
     val status: DetourStatus?,
-    val date: String?
+    val date: Date?
 ) : DiffItem {
 
     override fun areItemsTheSame(newItem: DiffItem): Boolean =

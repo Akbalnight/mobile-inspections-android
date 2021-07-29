@@ -297,7 +297,7 @@ class SyncViewModel(
                         id = detour.id,
                         name = detour.name.orEmpty(),
                         status = preferenceStorage.detourStatuses?.data?.getStatusById(detour.statusId),
-                        date = detour.dateStartPlan.orEmpty()
+                        date = detour.dateStartPlan
                     )
                 }
                 val defects = pair.second.map { defect ->

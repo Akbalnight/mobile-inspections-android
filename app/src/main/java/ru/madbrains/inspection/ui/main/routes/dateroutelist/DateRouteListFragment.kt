@@ -7,24 +7,25 @@ import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_route_list_date.*
 import kotlinx.android.synthetic.main.toolbar_with_back.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import ru.madbrains.data.extensions.toYYYYMMDD
 import ru.madbrains.domain.model.DetourModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
+import ru.madbrains.inspection.extensions.toLocalDate
 import ru.madbrains.inspection.ui.adapters.DetourAdapter
 import ru.madbrains.inspection.ui.delegates.DetourUiModel
 import ru.madbrains.inspection.ui.main.routes.DetoursViewModel
 import ru.madbrains.inspection.ui.main.routes.points.RoutePointsFragment
+import java.util.*
 
 class DateRouteListFragment : BaseFragment(R.layout.fragment_route_list_date) {
 
     companion object {
-        const val KEY_TOOLBAR_TITLE = "toolbar_title"
+        const val KEY_TOOLBAR_ARG = "KEY_TOOLBAR_ARG"
     }
 
     private val detoursViewModel: DetoursViewModel by sharedViewModel()
-
-    private var date: String? = null
 
     private val routesAdapter by lazy {
         DetourAdapter(
@@ -37,26 +38,25 @@ class DateRouteListFragment : BaseFragment(R.layout.fragment_route_list_date) {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        requireNotNull(arguments).run {
-            date = getString(KEY_TOOLBAR_TITLE)
-            setupToolbar()
-        }
+        val date = (requireNotNull(arguments).getSerializable(KEY_TOOLBAR_ARG) as Date)
+        setupToolbar(date)
 
         rvRoutes.adapter = routesAdapter
 
         detoursViewModel.detours.observe(viewLifecycleOwner, Observer {
             routesAdapter.items = it.filterIsInstance<DetourUiModel>().filter { route ->
-                route.date?.split("T")?.firstOrNull() == date
+                route.date?.toLocalDate() == date.toLocalDate()
             }
         })
+
 
         detoursViewModel.navigateToDateRoutePoints.observe(viewLifecycleOwner, EventObserver {
             openRoutePointsFragment(it)
         })
     }
 
-    private fun setupToolbar() {
-        toolbarLayout.tvTitle.text = date.orEmpty()
+    private fun setupToolbar(date: Date) {
+        toolbarLayout.tvTitle.text = date.toYYYYMMDD()
         toolbarLayout.btnLeading.setOnClickListener {
             findNavController().popBackStack()
         }

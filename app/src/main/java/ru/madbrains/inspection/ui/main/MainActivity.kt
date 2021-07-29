@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.menu_navigation_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.madbrains.data.network.IAuthenticator
+import ru.madbrains.inspection.BuildConfig
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseActivity
 import ru.madbrains.inspection.base.EventObserver
@@ -145,6 +146,9 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             llLogout.setOnClickListener {
                 mainViewModel.logoutClick()
             }
+            val versionCode = BuildConfig.VERSION_CODE
+            val versionName = BuildConfig.VERSION_NAME
+            tvVersionName.text = getString(R.string.version_inline, "$versionName ($versionCode)")
         }
     }
 

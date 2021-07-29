@@ -7,7 +7,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.ResponseBody
 import retrofit2.Response
-import ru.madbrains.data.extensions.toyyyyMMddTHHmmss
+import ru.madbrains.data.extensions.toyyyyMMddTHHmmssXXX
 import ru.madbrains.data.network.ApiData
 import ru.madbrains.data.network.mappers.*
 import ru.madbrains.data.network.request.*
@@ -126,7 +126,7 @@ class DetoursRepositoryImpl(
             staffDetectId = preferenceStorage.userId.orEmpty(),
             defectTypicalId = model.defectTypicalId,
             description = model.description,
-            dateDetectDefect = model.dateDetectDefect?.toyyyyMMddTHHmmss(),
+            dateDetectDefect = model.dateDetectDefect?.toyyyyMMddTHHmmssXXX(),
             statusProcessId = model.statusProcessId
         )
         var multiParts: List<MultipartBody.Part>? = null
@@ -152,7 +152,7 @@ class DetoursRepositoryImpl(
             id = model.id,
             statusProcessId = model.statusProcessId,
             extraData = UpdateExtraDefectReq(
-                dateDetectDefect = model.dateDetectDefect?.toyyyyMMddTHHmmss(),
+                dateDetectDefect = model.dateDetectDefect?.toyyyyMMddTHHmmssXXX(),
                 staffDetectId = preferenceStorage.userId.orEmpty(),
                 description = model.description,
                 detoursId = model.detourId
