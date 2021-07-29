@@ -41,7 +41,6 @@ class RemoteInteractor(
                 }
             }.toSingle {
                 models.filter { it.statusId != null }
-                    .filter { it -> it.route.routesData?.all { it.techMap != null } == true }
             }
         }.subscribeOn(Schedulers.io())
     }
