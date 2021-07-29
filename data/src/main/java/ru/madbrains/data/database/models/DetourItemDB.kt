@@ -3,6 +3,7 @@ package ru.madbrains.data.database.models
 import androidx.room.Entity
 import androidx.room.TypeConverters
 import ru.madbrains.domain.model.RouteModel
+import java.util.*
 
 @Entity(primaryKeys = ["id"])
 @TypeConverters(Converters::class)
@@ -17,10 +18,10 @@ data class DetourItemDB(
     val routeName: String?,
     val name: String?,
     val staffName: String?,
-    val dateStartPlan: String?,
-    val dateFinishPlan: String?,
-    val dateStartFact: String?,
-    val dateFinishFact: String?,
+    val dateStartPlan: Date?,
+    val dateFinishPlan: Date?,
+    val dateStartFact: Date?,
+    val dateFinishFact: Date?,
     val saveOrderControlPoints: Boolean?,
     val takeIntoAccountTimeLocation: Boolean?,
     val takeIntoAccountDateStart: Boolean?,

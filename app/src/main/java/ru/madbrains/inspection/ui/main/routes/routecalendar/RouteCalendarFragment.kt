@@ -64,7 +64,7 @@ class RouteCalendarFragment : BaseFragment(R.layout.fragment_route_calendar) {
                 container.view.isInvisible = day.owner != DayOwner.THIS_MONTH
                 container.tvDay.text = day.date.dayOfMonth.toString()
                 container.haveRoutesDot.isInvisible =
-                    !routeCalendarViewModel.routeDates.contains(day.date.toString())
+                    !routeCalendarViewModel.routeDates.contains(day.date)
 
                 val timeNow = Calendar.getInstance().time
                 val dateNow: String = timeNow.toYYYYMMDD()
@@ -78,7 +78,7 @@ class RouteCalendarFragment : BaseFragment(R.layout.fragment_route_calendar) {
                 }
 
                 container.view.setOnClickListener {
-                    routeCalendarViewModel.dateClick(day.date.toString())
+                    routeCalendarViewModel.dateClick(day.date)
                 }
             }
         }
@@ -106,9 +106,9 @@ class RouteCalendarFragment : BaseFragment(R.layout.fragment_route_calendar) {
         calendarView.scrollToMonth(currentMonth)
     }
 
-    private fun openDateRouteList(date: String) {
+    private fun openDateRouteList(date: Date) {
         val args = bundleOf(
-            DateRouteListFragment.KEY_TOOLBAR_TITLE to date
+            DateRouteListFragment.KEY_TOOLBAR_ARG to date
         )
         findNavController().navigate(R.id.action_DetoursFragment_to_dateRouteListFragment, args)
     }
