@@ -222,7 +222,7 @@ class OfflineRepositoryImpl(
                     if (!dir.isDirectory && !dir.mkdirs()) throw FileNotFoundException(
                         "Failed to ensure directory: " + dir.absolutePath
                     )
-                    if (ze.isDirectory) continue
+                    if (file.isDirectory) continue
                     FileOutputStream(file).use { fileStream ->
                         var count: Int
                         val buffer = ByteArray(8192)
