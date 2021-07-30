@@ -92,7 +92,7 @@ class RoutePointsViewModel(
             detour.dateFinishFact = Date()
             detour.statusId = currentStatus?.id
             detour.changed = true
-            syncInteractor.saveDetour(detour)
+            syncInteractor.insertDetour(detour)
                 .andThen(offlineInteractor.getDetoursAndRefreshSource())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { _progressVisibility.postValue(true) }

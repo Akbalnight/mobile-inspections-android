@@ -23,7 +23,7 @@ class RemoteInteractor(
     fun getDetours(): Single<List<DetourModel>> {
         val models = mutableListOf<DetourModel>()
         return detoursRepository.getDetoursStatuses().flatMap { statuses ->
-            offlineRepository.saveDetourStatuses(statuses)
+            offlineRepository.insertDetourStatuses(statuses)
             detoursRepository.getDetours(
                 statuses = statuses.getStatusesByType(
                     arrayOf(

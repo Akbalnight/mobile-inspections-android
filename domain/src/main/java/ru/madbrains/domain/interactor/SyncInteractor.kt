@@ -55,32 +55,31 @@ class SyncInteractor(
             .subscribeOn(Schedulers.io())
     }
 
-    fun saveEquipments(models: List<EquipmentModel>): Completable {
-        return offlineRepository.saveEquipments(models).subscribeOn(Schedulers.io())
+    fun insertEquipments(models: List<EquipmentModel>): Completable {
+        return offlineRepository.insertEquipments(models).subscribeOn(Schedulers.io())
     }
 
-    fun saveDetour(detour: DetourModel): Completable {
-        return offlineRepository.insertDetour(detour)
-            .subscribeOn(Schedulers.io())
+    fun insertDetour(detour: DetourModel): Completable {
+        return offlineRepository.insertDetour(detour).subscribeOn(Schedulers.io())
     }
 
-    fun saveDetours(models: List<DetourModel>): Completable {
+    fun insertDetours(models: List<DetourModel>): Completable {
         return offlineRepository.insertDetours(models).subscribeOn(Schedulers.io())
     }
 
-    fun saveDefects(models: List<DefectModel>): Completable {
+    fun insertDefects(models: List<DefectModel>): Completable {
         return offlineRepository.insertDefects(models).subscribeOn(Schedulers.io())
     }
 
-    fun saveDefect(model: DefectModel): Completable {
+    fun insertDefect(model: DefectModel): Completable {
         return offlineRepository.insertDefect(model).subscribeOn(Schedulers.io())
     }
 
-    fun saveDefectTypical(models: List<DefectTypicalModel>): Completable {
-        return offlineRepository.saveDefectsTypical(models).subscribeOn(Schedulers.io())
+    fun insertDefectTypical(models: List<DefectTypicalModel>): Completable {
+        return offlineRepository.insertDefectsTypical(models).subscribeOn(Schedulers.io())
     }
 
-    fun saveCheckpoints(models: List<CheckpointModel>): Completable {
-        return offlineRepository.saveCheckpoints(models).subscribeOn(Schedulers.io())
+    fun insertCheckpoints(models: List<CheckpointModel>): Completable {
+        return offlineRepository.insertCheckpoints(models).subscribeOn(Schedulers.io())
     }
 }

@@ -257,19 +257,19 @@ class SyncViewModel(
         _pendingDataDb?.let { data ->
             val observables = arrayListOf<Completable>()
             data.routes?.let {
-                observables.add(syncInteractor.saveDetours(it))
+                observables.add(syncInteractor.insertDetours(it))
             }
             data.defects?.let {
-                observables.add(syncInteractor.saveDefects(it))
+                observables.add(syncInteractor.insertDefects(it))
             }
             data.equipment?.let {
-                observables.add(syncInteractor.saveEquipments(it))
+                observables.add(syncInteractor.insertEquipments(it))
             }
             data.defectsTypical?.let {
-                observables.add(syncInteractor.saveDefectTypical(it))
+                observables.add(syncInteractor.insertDefectTypical(it))
             }
             data.checkpoints?.let {
-                observables.add(syncInteractor.saveCheckpoints(it))
+                observables.add(syncInteractor.insertCheckpoints(it))
             }
             data.docArchive?.let {
                 observables.add(syncInteractor.unzipFiles(it, AppDirType.Docs))

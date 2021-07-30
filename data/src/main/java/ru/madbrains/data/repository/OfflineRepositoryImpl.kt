@@ -74,11 +74,11 @@ class OfflineRepositoryImpl(
         return db.defectItemDao().del(id)
     }
 
-    override fun saveDefectsTypical(models: List<DefectTypicalModel>): Completable {
+    override fun insertDefectsTypical(models: List<DefectTypicalModel>): Completable {
         return db.defectTypicalDao().insertItem(models.map { toDefectTypicalDB(it) })
     }
 
-    override fun saveCheckpoints(models: List<CheckpointModel>): Completable {
+    override fun insertCheckpoints(models: List<CheckpointModel>): Completable {
         return db.checkpointItemDao().insertItem(models.map { toCheckpointItemDB(it) })
     }
 
@@ -117,11 +117,11 @@ class OfflineRepositoryImpl(
         _syncInfoSource.onNext(syncInfo)
     }
 
-    override fun saveEquipments(models: List<EquipmentModel>): Completable {
+    override fun insertEquipments(models: List<EquipmentModel>): Completable {
         return db.equipmentItemDao().insertItem(models.map { toEquipmentItemDB(it) })
     }
 
-    override fun saveDetourStatuses(list: List<DetourStatus>) {
+    override fun insertDetourStatuses(list: List<DetourStatus>) {
         preferenceStorage.detourStatuses = DetourStatusHolder(list)
     }
 
