@@ -1,13 +1,7 @@
 package ru.madbrains.data.network.mappers
 
-import ru.madbrains.data.database.models.DefectItemDB
-import ru.madbrains.data.database.models.DefectTypicalDB
-import ru.madbrains.data.database.models.DetourItemDB
-import ru.madbrains.data.database.models.EquipmentItemDB
-import ru.madbrains.domain.model.DefectModel
-import ru.madbrains.domain.model.DefectTypicalModel
-import ru.madbrains.domain.model.DetourModel
-import ru.madbrains.domain.model.EquipmentModel
+import ru.madbrains.data.database.models.*
+import ru.madbrains.domain.model.*
 
 fun fromDetourItemDB(resp: DetourItemDB): DetourModel {
     return with(resp) {
@@ -187,6 +181,30 @@ fun toDefectTypicalDB(resp: DefectTypicalModel): DefectTypicalDB {
             id = id,
             name = name,
             code = code
+        )
+    }
+}
+
+fun toCheckpointItemDB(resp: CheckpointModel): CheckpointItemDB {
+    return with(resp) {
+        CheckpointItemDB(
+            id = id,
+            code = code,
+            name = name,
+            rfidCode = rfidCode,
+            changed = changed
+        )
+    }
+}
+
+fun fromCheckpointItemDB(resp: CheckpointItemDB): CheckpointModel {
+    return with(resp) {
+        CheckpointModel(
+            id = id,
+            code = code,
+            name = name,
+            rfidCode = rfidCode,
+            changed = changed
         )
     }
 }

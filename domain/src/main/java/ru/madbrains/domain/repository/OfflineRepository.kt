@@ -17,7 +17,6 @@ interface OfflineRepository {
 
     val detoursSource: Observable<List<DetourModel>>
     val syncInfoSource: Observable<SyncInfo>
-    val syncedItemsFinish: Observable<String>
 
     fun insertDetours(models: List<DetourModel>): Completable
     fun insertDetour(model: DetourModel): Completable
@@ -26,13 +25,13 @@ interface OfflineRepository {
     fun getDefects(): Single<List<DefectModel>>
     fun getActiveDefects(equipmentIds: List<String>): Single<List<DefectModel>>
     fun getEquipmentIdsWithDefects(equipmentIds: List<String>): Single<List<String>>
-    fun saveDetourStatuses(list: List<DetourStatus>)
-    fun saveEquipments(models: List<EquipmentModel>): Completable
+    fun insertDetourStatuses(list: List<DetourStatus>)
+    fun insertEquipments(models: List<EquipmentModel>): Completable
     fun getEquipments(): Single<List<EquipmentModel>>
     fun finishGetSync(date: Date)
     fun finishSendSync(date: Date)
     fun getDefectsTypical(): Single<List<DefectTypicalModel>>
-    fun saveDefectsTypical(models: List<DefectTypicalModel>): Completable
+    fun insertDefectsTypical(models: List<DefectTypicalModel>): Completable
     fun checkIfNeedsCleaningAndRefreshDetours(): Completable
     fun cleanDbAndFiles(): Completable
     fun deleteFile(file: File?): Completable
@@ -50,5 +49,8 @@ interface OfflineRepository {
     fun insertDefect(model: DefectModel): Completable
     fun deleteDefect(id: String): Completable
     fun getChangedDefects(): Single<List<DefectModel>>
-    fun signalFinishSyncingItem(id: String)
+    fun getCheckpoints(): Single<List<CheckpointModel>>
+    fun insertCheckpoint(model: CheckpointModel): Completable
+    fun insertCheckpoints(models: List<CheckpointModel>): Completable
+    fun getChangedCheckpoints(): Single<List<CheckpointModel>>
 }

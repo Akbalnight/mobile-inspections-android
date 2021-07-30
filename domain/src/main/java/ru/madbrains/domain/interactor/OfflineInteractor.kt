@@ -2,7 +2,7 @@ package ru.madbrains.domain.interactor
 
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.functions.BiFunction
+import io.reactivex.functions.Function3
 import io.reactivex.schedulers.Schedulers
 import ru.madbrains.domain.model.*
 import ru.madbrains.domain.repository.OfflineRepository
@@ -39,14 +39,25 @@ class OfflineInteractor(
         return offlineRepository.getEquipments().subscribeOn(Schedulers.io())
     }
 
+    fun getCheckpoints(): Single<List<CheckpointModel>> {
+        return offlineRepository.getCheckpoints().subscribeOn(Schedulers.io())
+    }
+
     fun getDefectTypical(): Single<List<DefectTypicalModel>> {
         return offlineRepository.getDefectsTypical().subscribeOn(Schedulers.io())
     }
 
-    fun getChangedDetoursAndDefects(): Single<Pair<List<DetourModel>, List<DefectModel>>> {
+    fun getChangedDataForSync(): Single<WrapChangedData> {
         return Single.zip(offlineRepository.getChangedDetours(),
             offlineRepository.getChangedDefects(),
-            BiFunction { b1: List<DetourModel>, b2: List<DefectModel> -> Pair(b1, b2) })
+            offlineRepository.getChangedCheckpoints(),
+            Function3 { b1: List<DetourModel>, b2: List<DefectModel>, b3: List<CheckpointModel> ->
+                WrapChangedData(
+                    b1,
+                    b2,
+                    b3
+                )
+            })
             .subscribeOn(Schedulers.io())
     }
 

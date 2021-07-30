@@ -18,8 +18,8 @@ fun detourDelegate(clickListener: (DetourUiModel) -> Unit) =
         bind {
             itemView.apply {
 
-                val isExpired = if (item.date != null) {
-                    DateTime(item.date).isBeforeNow
+                val isExpired = if (item.dateStartPlan != null) {
+                    DateTime(item.dateStartPlan).isBeforeNow
                 } else {
                     false
                 }
@@ -29,7 +29,7 @@ fun detourDelegate(clickListener: (DetourUiModel) -> Unit) =
                     clickListener.invoke(item)
                 }
                 tvName.text = item.name
-                ivDetourStatus.setImageResource(item.status?.type?.icon() ?: 0)
+                ivIcon.setImageResource(item.status?.type?.icon() ?: 0)
                 ivExpired.isVisible = isExpired
                 ivExpired.setOnClickListener {
                     Toast.makeText(
@@ -38,7 +38,7 @@ fun detourDelegate(clickListener: (DetourUiModel) -> Unit) =
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-                tvDate.text = item.date?.toyyyyMMddHHmmss()
+                tvDate.text = item.dateStartPlan?.toyyyyMMddHHmmss()
             }
         }
     }
@@ -47,7 +47,7 @@ data class DetourUiModel(
     val id: String,
     val name: String,
     val status: DetourStatus?,
-    val date: Date?
+    val dateStartPlan: Date?
 ) : DiffItem {
 
     override fun areItemsTheSame(newItem: DiffItem): Boolean =

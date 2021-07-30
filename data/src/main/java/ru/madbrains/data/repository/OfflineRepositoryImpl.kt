@@ -20,24 +20,18 @@ class OfflineRepositoryImpl(
     private val preferenceStorage: PreferenceStorage,
     private val db: HcbDatabase
 ) : OfflineRepository {
-    private val _detoursSource = BehaviorSubject.create<List<DetourModel>>()
-    private val _syncInfoSource =
-        BehaviorSubject.createDefault<SyncInfo>(preferenceStorage.syncInfo)
-    private val _syncedItemsFinish = BehaviorSubject.create<String>()
 
+    private val _detoursSource = BehaviorSubject.create<List<DetourModel>>()
     override val detoursSource: Observable<List<DetourModel>>
         get() = _detoursSource
+
+    private val _syncInfoSource =
+        BehaviorSubject.createDefault<SyncInfo>(preferenceStorage.syncInfo)
     override val syncInfoSource: Observable<SyncInfo>
         get() = _syncInfoSource
-    override val syncedItemsFinish: Observable<String>
-        get() = _syncedItemsFinish
 
     private var _tempDirectory: File? = null
     private var _saveDirectory: File? = null
-
-    override fun signalFinishSyncingItem(id: String) {
-        _syncedItemsFinish.onNext(id)
-    }
 
     override fun insertDetours(models: List<DetourModel>): Completable {
         return db.detourItemDao().insertItem(models.map { toDetourItemDB(it) })
@@ -62,6 +56,11 @@ class OfflineRepositoryImpl(
         return db.defectItemDao().getChangedItems().map { it -> it.map { fromDefectItemDB(it) } }
     }
 
+    override fun getChangedCheckpoints(): Single<List<CheckpointModel>> {
+        return db.checkpointItemDao().getChangedItems()
+            .map { it -> it.map { fromCheckpointItemDB(it) } }
+    }
+
     override fun insertDefects(models: List<DefectModel>): Completable {
         return db.defectItemDao().insertItem(models.map { toDefectItemDB(it) })
     }
@@ -74,8 +73,20 @@ class OfflineRepositoryImpl(
         return db.defectItemDao().del(id)
     }
 
-    override fun saveDefectsTypical(models: List<DefectTypicalModel>): Completable {
+    override fun insertDefectsTypical(models: List<DefectTypicalModel>): Completable {
         return db.defectTypicalDao().insertItem(models.map { toDefectTypicalDB(it) })
+    }
+
+    override fun insertCheckpoint(model: CheckpointModel): Completable {
+        return db.checkpointItemDao().insertItem(toCheckpointItemDB(model))
+    }
+
+    override fun insertCheckpoints(models: List<CheckpointModel>): Completable {
+        return db.checkpointItemDao().insertItem(models.map { toCheckpointItemDB(it) })
+    }
+
+    override fun getCheckpoints(): Single<List<CheckpointModel>> {
+        return db.checkpointItemDao().getItems().map { it -> it.map { fromCheckpointItemDB(it) } }
     }
 
     override fun getDefects(): Single<List<DefectModel>> {
@@ -113,11 +124,11 @@ class OfflineRepositoryImpl(
         _syncInfoSource.onNext(syncInfo)
     }
 
-    override fun saveEquipments(models: List<EquipmentModel>): Completable {
+    override fun insertEquipments(models: List<EquipmentModel>): Completable {
         return db.equipmentItemDao().insertItem(models.map { toEquipmentItemDB(it) })
     }
 
-    override fun saveDetourStatuses(list: List<DetourStatus>) {
+    override fun insertDetourStatuses(list: List<DetourStatus>) {
         preferenceStorage.detourStatuses = DetourStatusHolder(list)
     }
 
@@ -146,6 +157,7 @@ class OfflineRepositoryImpl(
                 db.defectItemDao().clean(),
                 db.defectTypicalDao().clean(),
                 db.detourItemDao().clean(),
+                db.checkpointItemDao().clean(),
                 deleteFile(File(_saveDirectory, AppDirType.Defects.value)),
                 deleteFile(File(_saveDirectory, AppDirType.Docs.value))
             )

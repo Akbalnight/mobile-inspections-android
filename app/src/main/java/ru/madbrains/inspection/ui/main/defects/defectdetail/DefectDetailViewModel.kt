@@ -253,7 +253,7 @@ class DefectDetailViewModel(
             created = true,
             changed = false
         )
-        syncInteractor.saveDefect(model).observeOn(AndroidSchedulers.mainThread())
+        syncInteractor.insertDefect(model).observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { _progressVisibility.postValue(true) }
             .doAfterTerminate { _progressVisibility.postValue(false) }
             .subscribe({
@@ -274,7 +274,7 @@ class DefectDetailViewModel(
                 files = prepareFiles(),
                 changed = !defectModel.created
             )
-            syncInteractor.saveDefect(model)
+            syncInteractor.insertDefect(model)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { _progressVisibility.postValue(true) }
                 .doAfterTerminate { _progressVisibility.postValue(false) }

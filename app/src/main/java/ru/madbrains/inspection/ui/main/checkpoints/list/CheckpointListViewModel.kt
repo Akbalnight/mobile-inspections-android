@@ -4,13 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
-import ru.madbrains.domain.interactor.RemoteInteractor
+import ru.madbrains.domain.interactor.OfflineInteractor
 import ru.madbrains.domain.model.CheckpointModel
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.ui.delegates.CheckpointUiModel
 
-class CheckpointListViewModel(private val remoteInteractor: RemoteInteractor) : BaseViewModel() {
+class CheckpointListViewModel(private val offlineInteractor: OfflineInteractor) : BaseViewModel() {
     private var _checkpointRawData: List<CheckpointModel>? = null
     private val _checkPointList = MutableLiveData<List<CheckpointUiModel>>()
     val checkPointList: LiveData<List<CheckpointUiModel>> = _checkPointList
@@ -22,7 +22,7 @@ class CheckpointListViewModel(private val remoteInteractor: RemoteInteractor) : 
     val navigateToDetails: LiveData<Event<CheckpointModel>> = _navigateToDetails
 
     fun getCheckpoints() {
-        remoteInteractor.getCheckpoints()
+        offlineInteractor.getCheckpoints()
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { _progressVisibility.postValue(true) }
             .doAfterTerminate { _progressVisibility.postValue(false) }

@@ -136,7 +136,7 @@ class DefectListViewModel(
 
     fun eliminateDefect(deleteItem: DefectModel?) {
         deleteItem?.let { it ->
-            syncInteractor.saveDefect(it.copy(
+            syncInteractor.insertDefect(it.copy(
                 id = it.id,
                 statusProcessId = DefectStatus.ELIMINATED.id,
                 dateDetectDefect = Date()

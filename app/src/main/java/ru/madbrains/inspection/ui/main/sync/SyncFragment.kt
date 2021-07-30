@@ -10,7 +10,7 @@ import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.extensions.clickWithDebounce
 import ru.madbrains.inspection.extensions.strings
-import ru.madbrains.inspection.ui.adapters.DetourAdapter
+import ru.madbrains.inspection.ui.adapters.ChangedItemAdapter
 import ru.madbrains.inspection.ui.main.MainViewModel
 import ru.madbrains.inspection.ui.main.SyncViewModel
 
@@ -19,10 +19,8 @@ class SyncFragment : BaseFragment(R.layout.fragment_sync) {
     private val mainViewModel: MainViewModel by sharedViewModel()
     private val syncViewModel: SyncViewModel by sharedViewModel()
 
-    private val routesAdapter by lazy {
-        DetourAdapter(
-            onDetourClick = {}
-        )
+    private val listAdapter by lazy {
+        ChangedItemAdapter(onClick = {})
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -30,10 +28,10 @@ class SyncFragment : BaseFragment(R.layout.fragment_sync) {
 
         setupToolbar()
 
-        rvRoutes.adapter = routesAdapter
+        rvRoutes.adapter = listAdapter
 
         syncViewModel.changedItems.observe(viewLifecycleOwner, Observer {
-            routesAdapter.items = it
+            listAdapter.items = it
             val sendDataAvailable = it.isNotEmpty()
             llBottomSendData.isClickable = sendDataAvailable
             llBottomSendData.isFocusable = sendDataAvailable
