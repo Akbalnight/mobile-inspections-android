@@ -42,11 +42,6 @@ class RemoteInteractor(
         }.subscribeOn(Schedulers.io())
     }
 
-    fun updateCheckpoint(id: String, rfidCode: String): Single<Any> {
-        return remoteRepository.updateCheckpoint(id, rfidCode)
-            .subscribeOn(Schedulers.io())
-    }
-
     fun getEquipments(): Single<List<EquipmentModel>> {
         return remoteRepository.getEquipments(emptyList(), emptyList())
             .subscribeOn(Schedulers.io())
@@ -211,5 +206,10 @@ class RemoteInteractor(
             )
         }
         return remoteRepository.updateDefect(model, files).subscribeOn(Schedulers.io())
+    }
+
+    private fun updateCheckpoint(id: String, rfidCode: String): Single<Any> {
+        return remoteRepository.updateCheckpoint(id, rfidCode)
+            .subscribeOn(Schedulers.io())
     }
 }

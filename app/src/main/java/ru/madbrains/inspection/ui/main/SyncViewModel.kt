@@ -20,7 +20,10 @@ import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.ProgressState
 import ru.madbrains.inspection.extensions.changeProgressWith
 import ru.madbrains.inspection.extensions.changeProgressWithB
-import ru.madbrains.inspection.ui.delegates.DetourUiModel
+import ru.madbrains.inspection.ui.delegates.ChangedItemUiCheckpoint
+import ru.madbrains.inspection.ui.delegates.ChangedItemUiDefect
+import ru.madbrains.inspection.ui.delegates.ChangedItemUiDetour
+import ru.madbrains.inspection.ui.delegates.ChangedItemUiModel
 import java.io.File
 
 class SyncViewModel(
@@ -57,8 +60,8 @@ class SyncViewModel(
     private val _globalProgress = MutableLiveData<Boolean>()
     val globalProgress: LiveData<Boolean> = _globalProgress
 
-    private val _changedItems = MutableLiveData<List<DetourUiModel>>()
-    val changedItems: LiveData<List<DetourUiModel>> = _changedItems
+    private val _changedItems = MutableLiveData<List<ChangedItemUiModel>>()
+    val changedItems: LiveData<List<ChangedItemUiModel>> = _changedItems
 
     private var _pendingDataSync: WrapPendingDataSync? = null
 
@@ -182,26 +185,32 @@ class SyncViewModel(
     }
 
     fun getChangedDetoursAndDefects() {
-        offlineInteractor.getChangedDetoursAndDefects()
+        offlineInteractor.getChangedDataForSync()
             .observeOn(AndroidSchedulers.mainThread()).changeProgressWithB(_globalProgress)
-            .subscribe({ pair ->
-                val detours = pair.first.map { detour ->
-                    DetourUiModel(
+            .subscribe({ wrap ->
+                val detours = wrap.detours.map { detour ->
+                    ChangedItemUiDetour(
                         id = detour.id,
                         name = detour.name.orEmpty(),
                         status = preferenceStorage.detourStatuses?.data?.getStatusById(detour.statusId),
-                        date = detour.dateStartPlan
+                        dateStartPlan = detour.dateStartPlan
                     )
                 }
-                val defects = pair.second.map { defect ->
-                    DetourUiModel(
+                val defects = wrap.defects.map { defect ->
+                    ChangedItemUiDefect(
                         id = defect.id,
                         name = defect.defectName.orEmpty(),
-                        status = null,
-                        date = null
+                        dateDetectDefect = defect.dateDetectDefect
                     )
                 }
-                _changedItems.postValue(detours + defects)
+                val checkpoints = wrap.checkpoints.map { checkpoint ->
+                    ChangedItemUiCheckpoint(
+                        id = checkpoint.id,
+                        name = checkpoint.name,
+                        rfidCode = checkpoint.rfidCode
+                    )
+                }
+                _changedItems.postValue(detours + defects + checkpoints)
             }, {
                 it.printStackTrace()
             })
