@@ -59,13 +59,13 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
         super.onActivityCreated(savedInstanceState)
 
         arguments?.let {
-            defectDetailViewModel.setEquipments(it.getSerializable(DefectDetailFragment.KEY_EQUIPMENT_LIST) as? List<EquipmentModel>)
-            defectDetailViewModel.setDetourId(it.getString(DefectDetailFragment.KEY_DETOUR_ID))
+            defectDetailViewModel.setEquipments(it.getSerializable(KEY_EQUIPMENT_LIST) as? List<EquipmentModel>)
+            defectDetailViewModel.setDetourId(it.getString(KEY_DETOUR_ID))
             val currentDefect =
-                it.getSerializable(DefectDetailFragment.KEY_DETAIL_DEFECT) as? DefectModel
+                it.getSerializable(KEY_DETAIL_DEFECT) as? DefectModel
             defectDetailViewModel.setDefect(currentDefect)
             val currentStatus =
-                it.getSerializable(DefectDetailFragment.KEY_DEFECT_TARGET_STATUS) as? DefectStatus
+                it.getSerializable(KEY_DEFECT_TARGET_STATUS) as? DefectStatus
             defectDetailViewModel.setDefectStatus(currentStatus)
             currentDefect?.let {
                 currentStatus?.let {

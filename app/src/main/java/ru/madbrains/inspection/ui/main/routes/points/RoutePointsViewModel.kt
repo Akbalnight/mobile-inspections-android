@@ -42,13 +42,15 @@ class RoutePointsViewModel(
     private val _routePoints = MutableLiveData<List<DiffItem>>()
     val routePoints: LiveData<List<DiffItem>> = _routePoints
 
-    private val _routeStatus = MutableLiveData<Event<RouteStatus>>()
-    val routeStatus: LiveData<Event<RouteStatus>> = _routeStatus
+    private val _routeStatus = MutableLiveData<RouteStatus>()
+    val routeStatus: LiveData<RouteStatus> = _routeStatus
 
     private var _durationTimer = MutableLiveData<Long?>(null)
     val durationTimer: LiveData<Long?> = _durationTimer
 
     var detourModel: DetourModel? = null
+        private set
+
     private var timerDispose: Disposable? = null
     private val routeDataModels
         get() = detourModel?.route?.routesData?.sortedBy { it.position } ?: emptyList()
@@ -75,12 +77,22 @@ class RoutePointsViewModel(
         _navigateToDefectList.value = Event(editable)
     }
 
-    fun completeTechMap(route: RouteDataModel) {
-        route.completed = true
-        updateData()
+    fun completeTechMap(item: RouteDataModel) {
+        detourModel?.let { model ->
+            val index = routeDataModels.indexOfFirst { item.id == it.id }
+            if (index > -1) {
+                detourModel = model.copy(
+                    route = model.route.copy(
+                        routesData = model.route.routesData?.toMutableList()
+                            ?.apply { this[index] = item.copy(completed = true) }
+                    )
+                )
+                updateData()
+                if (routeDataModels.all { it.completed }) {
+                    _navigateToFinishDialog.value = Event(Unit)
+                }
 
-        if (routeDataModels.all { it.completed }) {
-            _navigateToFinishDialog.value = Event(Unit)
+            }
         }
     }
 
@@ -88,11 +100,14 @@ class RoutePointsViewModel(
         stopTimer()
         detourModel?.let { detour ->
             val currentStatus = preferenceStorage.detourStatuses?.data?.getStatusByType(type)
-            detour.dateStartFact = detour.startTime
-            detour.dateFinishFact = Date()
-            detour.statusId = currentStatus?.id
-            detour.changed = true
-            syncInteractor.insertDetour(detour)
+            syncInteractor.insertDetour(
+                detour.copy(
+                    dateStartFact = detour.startTime,
+                    dateFinishFact = Date(),
+                    statusId = currentStatus?.id,
+                    changed = true
+                )
+            )
                 .andThen(offlineInteractor.getDetoursAndRefreshSource())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { _progressVisibility.postValue(true) }
@@ -138,7 +153,7 @@ class RoutePointsViewModel(
         setRouteStatus()
         val routePoints = mutableListOf<DiffItem>()
         val lastCompleted = routeDataModels.indexOfLast { it.completed }
-        routeDataModels.mapIndexed { index, route ->
+        routeDataModels.forEachIndexed { index, route ->
             route.techMap?.let { techMap ->
                 val current = lastCompleted + 1 == index
                 val preserveOrder = detourModel?.saveOrderControlPoints == true
@@ -165,22 +180,20 @@ class RoutePointsViewModel(
         val allPoints = routeDataModels.count()
         _routeStatus.value = when {
             allPoints == completedPoints -> {
-                Event(RouteStatus.COMPLETED)
+                RouteStatus.COMPLETED
             }
             completedPoints == 0 -> {
-                Event(RouteStatus.NOT_STARTED)
+                RouteStatus.NOT_STARTED
             }
             else -> {
-                Event(RouteStatus.IN_PROGRESS)
+                RouteStatus.IN_PROGRESS
             }
         }
     }
 
     private fun triggerTimer() {
         val startTime = detourModel?.startTime ?: Date()
-        if (detourModel?.startTime == null) {
-            detourModel?.startTime = startTime
-        }
+        detourModel = detourModel?.copy(startTime = startTime)
         if (timerDispose == null)
             timerDispose = Observable.timer(1, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
