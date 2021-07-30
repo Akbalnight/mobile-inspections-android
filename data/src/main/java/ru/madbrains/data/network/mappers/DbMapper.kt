@@ -191,7 +191,20 @@ fun toCheckpointItemDB(resp: CheckpointModel): CheckpointItemDB {
             id = id,
             code = code,
             name = name,
-            rfidCode = rfidCode
+            rfidCode = rfidCode,
+            changed = changed
+        )
+    }
+}
+
+fun fromCheckpointItemDB(resp: CheckpointItemDB): CheckpointModel {
+    return with(resp) {
+        CheckpointModel(
+            id = id,
+            code = code,
+            name = name,
+            rfidCode = rfidCode,
+            changed = changed
         )
     }
 }

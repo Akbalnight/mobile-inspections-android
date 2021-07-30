@@ -56,6 +56,11 @@ class OfflineRepositoryImpl(
         return db.defectItemDao().getChangedItems().map { it -> it.map { fromDefectItemDB(it) } }
     }
 
+    override fun getChangedCheckpoints(): Single<List<CheckpointModel>> {
+        return db.checkpointItemDao().getChangedItems()
+            .map { it -> it.map { fromCheckpointItemDB(it) } }
+    }
+
     override fun insertDefects(models: List<DefectModel>): Completable {
         return db.defectItemDao().insertItem(models.map { toDefectItemDB(it) })
     }
@@ -72,8 +77,16 @@ class OfflineRepositoryImpl(
         return db.defectTypicalDao().insertItem(models.map { toDefectTypicalDB(it) })
     }
 
+    override fun insertCheckpoint(model: CheckpointModel): Completable {
+        return db.checkpointItemDao().insertItem(toCheckpointItemDB(model))
+    }
+
     override fun insertCheckpoints(models: List<CheckpointModel>): Completable {
         return db.checkpointItemDao().insertItem(models.map { toCheckpointItemDB(it) })
+    }
+
+    override fun getCheckpoints(): Single<List<CheckpointModel>> {
+        return db.checkpointItemDao().getItems().map { it -> it.map { fromCheckpointItemDB(it) } }
     }
 
     override fun getDefects(): Single<List<DefectModel>> {

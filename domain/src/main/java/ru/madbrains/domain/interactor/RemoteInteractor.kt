@@ -3,7 +3,6 @@ package ru.madbrains.domain.interactor
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.functions.BiFunction
 import io.reactivex.functions.Function3
 import io.reactivex.schedulers.Schedulers
 import ru.madbrains.domain.model.*
@@ -43,11 +42,6 @@ class RemoteInteractor(
         }.subscribeOn(Schedulers.io())
     }
 
-    fun getCheckpoints(): Single<List<CheckpointModel>> {
-        return remoteRepository.getCheckpoints()
-            .subscribeOn(Schedulers.io())
-    }
-
     fun updateCheckpoint(id: String, rfidCode: String): Single<Any> {
         return remoteRepository.updateCheckpoint(id, rfidCode)
             .subscribeOn(Schedulers.io())
@@ -83,46 +77,62 @@ class RemoteInteractor(
             .subscribeOn(Schedulers.io())
     }
 
+
     fun sendSyncDataAndRefreshDb(): Completable {
         return Single.zip(offlineRepository.getChangedDetours(),
             offlineRepository.getChangedDefects(),
-            BiFunction { b1: List<DetourModel>, b2: List<DefectModel> -> Pair(b1, b2) })
-            .flatMapCompletable { pair ->
+            offlineRepository.getChangedCheckpoints(),
+            Function3 { b1: List<DetourModel>, b2: List<DefectModel>, b3: List<CheckpointModel> ->
+                WrapChangedData(
+                    b1,
+                    b2,
+                    b3
+                )
+            })
+            .flatMapCompletable { wrap ->
                 val tasks = arrayListOf<Completable>()
-                pair.first.let { list ->
-                    if (list.isNotEmpty()) {
-                        val detourTasks = list.map { item ->
-                            remoteRepository.updateDetour(item).andThen(
-                                offlineRepository.insertDetour(item.apply { changed = false })
-                                    .doFinally {
-                                        remoteRepository.signalFinishSyncingItem(item.id)
-                                    }
-                            )
-                        }
-                        tasks.addAll(detourTasks)
-                    }
+                wrap.detours.map { item ->
+                    remoteRepository.updateDetour(item).andThen(
+                        offlineRepository.insertDetour(item.apply { changed = false })
+                            .doFinally {
+                                remoteRepository.signalFinishSyncingItem(item.id)
+                            }
+                    )
+                }.run {
+                    tasks.addAll(this)
                 }
-                pair.second.let { list ->
-                    if (list.isNotEmpty()) {
-                        val defectsTasks = list.map { item ->
-                            val single = if (item.changed) updateDefect(item) else saveDefect(item)
-                            single.flatMapCompletable { Completable.complete() }
-                                .andThen(
-                                    offlineRepository.insertDefect(
-                                        item.apply {
-                                            changed = false
-                                            created = false
-                                            files = files?.map {
-                                                it.copy(isNew = false)
-                                            }
-                                        }
-                                    ).doFinally {
-                                        remoteRepository.signalFinishSyncingItem(item.id)
+                wrap.defects.map { item ->
+                    val single = if (item.changed) updateDefect(item) else saveDefect(item)
+                    single.flatMapCompletable { Completable.complete() }
+                        .andThen(
+                            offlineRepository.insertDefect(
+                                item.apply {
+                                    changed = false
+                                    created = false
+                                    files = files?.map {
+                                        it.copy(isNew = false)
                                     }
-                                )
-                        }
-                        tasks.addAll(defectsTasks)
+                                }
+                            ).doFinally {
+                                remoteRepository.signalFinishSyncingItem(item.id)
+                            }
+                        )
+                }.run {
+                    tasks.addAll(this)
+                }
+                wrap.checkpoints.map { item ->
+                    if (item.rfidCode != null) {
+                        val single = updateCheckpoint(item.id, item.rfidCode)
+                        Completable.fromSingle(single)
+                            .andThen(
+                                offlineRepository.insertCheckpoint(item.copy(changed = false))
+                                    .doFinally { remoteRepository.signalFinishSyncingItem(item.id) }
+                            )
+                    } else {
+                        Completable.complete()
                     }
+                }.run {
+                    tasks.addAll(this)
                 }
                 Completable.merge(tasks)
             }

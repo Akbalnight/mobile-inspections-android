@@ -9,5 +9,6 @@ data class CheckpointItemDB(
     val id: String,
     val code: Int,
     val name: String,
-    val rfidCode: String?
+    val rfidCode: String?,
+    val changed: Boolean = false
 )

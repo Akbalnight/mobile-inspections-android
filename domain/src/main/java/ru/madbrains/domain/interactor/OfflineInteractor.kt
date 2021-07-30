@@ -39,6 +39,10 @@ class OfflineInteractor(
         return offlineRepository.getEquipments().subscribeOn(Schedulers.io())
     }
 
+    fun getCheckpoints(): Single<List<CheckpointModel>> {
+        return offlineRepository.getCheckpoints().subscribeOn(Schedulers.io())
+    }
+
     fun getDefectTypical(): Single<List<DefectTypicalModel>> {
         return offlineRepository.getDefectsTypical().subscribeOn(Schedulers.io())
     }

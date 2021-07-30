@@ -41,6 +41,10 @@ class SyncInteractor(
         return offlineRepository.insertDefect(model).subscribeOn(Schedulers.io())
     }
 
+    fun insertCheckpoint(model: CheckpointModel): Completable {
+        return offlineRepository.insertCheckpoint(model).subscribeOn(Schedulers.io())
+    }
+
     fun syncPendingDataAndRefresh(dataWrap: WrapPendingDataSync): Completable {
         val observables = arrayListOf<Completable>()
         dataWrap.routes?.let {

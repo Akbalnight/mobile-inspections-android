@@ -120,6 +120,7 @@ class SyncViewModel(
             BiFunction { b1: WrapPendingDataSync, b2: WrapEtcSync ->
                 b1.equipment = b2.equipment
                 b1.defectsTypical = b2.defectsTypical
+                b1.checkpoints = b2.checkpoints
                 b1
             })
     }

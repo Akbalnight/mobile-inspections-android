@@ -21,4 +21,7 @@ interface CheckpointItemDao {
 
     @Query("DELETE FROM CheckpointItemDB")
     fun clean(): Completable
+
+    @Query("SELECT * FROM CheckpointItemDB WHERE changed = 1")
+    fun getChangedItems(): Single<List<CheckpointItemDB>>
 }
