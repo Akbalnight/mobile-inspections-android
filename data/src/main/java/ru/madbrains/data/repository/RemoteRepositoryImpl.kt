@@ -1,7 +1,9 @@
 package ru.madbrains.data.repository
 
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.subjects.BehaviorSubject
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -13,12 +15,20 @@ import ru.madbrains.data.network.mappers.*
 import ru.madbrains.data.network.request.*
 import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.domain.model.*
-import ru.madbrains.domain.repository.DetoursRepository
+import ru.madbrains.domain.repository.RemoteRepository
 import java.io.File
 
-class DetoursRepositoryImpl(
+class RemoteRepositoryImpl(
     private val preferenceStorage: PreferenceStorage
-) : DetoursRepository {
+) : RemoteRepository {
+
+    private val _syncedItemsFinish = BehaviorSubject.create<String>()
+    override val syncedItemsFinish: Observable<String>
+        get() = _syncedItemsFinish
+
+    override fun signalFinishSyncingItem(id: String) {
+        _syncedItemsFinish.onNext(id)
+    }
 
     override fun getDetours(statuses: List<DetourStatus>): Single<List<DetourModel>> {
         val request = GetDetoursReq(

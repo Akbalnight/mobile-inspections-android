@@ -7,7 +7,6 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
-import io.reactivex.functions.Function3
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.rxkotlin.addTo
 import ru.madbrains.data.prefs.PreferenceStorage
@@ -15,15 +14,14 @@ import ru.madbrains.domain.interactor.OfflineInteractor
 import ru.madbrains.domain.interactor.RemoteInteractor
 import ru.madbrains.domain.interactor.SyncInteractor
 import ru.madbrains.domain.model.*
-import ru.madbrains.domain.repository.OfflineRepository.Companion.ARCHIVE_DEFECTS_MEDIA
-import ru.madbrains.domain.repository.OfflineRepository.Companion.ARCHIVE_DOCS
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.ProgressState
+import ru.madbrains.inspection.extensions.changeProgressWith
+import ru.madbrains.inspection.extensions.changeProgressWithB
 import ru.madbrains.inspection.ui.delegates.DetourUiModel
 import java.io.File
-import java.util.*
 
 class SyncViewModel(
     private val remoteInteractor: RemoteInteractor,
@@ -62,7 +60,7 @@ class SyncViewModel(
     private val _changedItems = MutableLiveData<List<DetourUiModel>>()
     val changedItems: LiveData<List<DetourUiModel>> = _changedItems
 
-    private var _pendingDataDb: PendingDataDb? = null
+    private var _pendingDataSync: WrapPendingDataSync? = null
 
     private val _showSnackBar = MutableLiveData<Event<Int>>()
     val showSnackBar: LiveData<Event<Int>> = _showSnackBar
@@ -94,8 +92,7 @@ class SyncViewModel(
         syncInteractor.setDirectories(fileTempDir, fileSaveDir)
         syncInteractor.checkIfNeedsCleaningAndRefreshDetours()
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { _globalProgress.postValue(true) }
-            .doAfterTerminate { _globalProgress.postValue(false) }
+            .changeProgressWith(_globalProgress)
             .subscribe({ }, {
                 it.printStackTrace()
                 _showSnackBar.postValue(Event(R.string.error))
@@ -103,150 +100,65 @@ class SyncViewModel(
             .addTo(disposables)
     }
 
-    override fun onCleared() {
-        observables.dispose()
-        super.onCleared()
-    }
-
     fun startSync() {
         _detourSyncStatus.postValue(Event(ProgressState.PROGRESS))
         _openSyncDialog.value = Event(Unit)
-        doSync()
+        getSyncData().changeProgressWith(_allSyncProgress)
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { _allSyncProgress.postValue(Event(ProgressState.PROGRESS)) }
             .subscribe({
-                _allSyncProgress.postValue(Event(ProgressState.DONE))
-                _pendingDataDb = it
+                _pendingDataSync = it
             }, {
-                _allSyncProgress.postValue(Event(ProgressState.FAILED))
                 it.printStackTrace()
             })
             .addTo(disposables)
     }
 
-    private fun doSync(): Single<PendingDataDb> {
+    private fun getSyncData(): Single<WrapPendingDataSync> {
         return Single.zip(
-            doSyncMain(),
-            doSyncEtc(), BiFunction { b1: PendingDataDb, b2: EtcAsyncResponse ->
+            getDefectsAndMediaFiles(),
+            remoteInteractor.getSyncEtcData().changeProgressWith(_etcSyncStatus),
+            BiFunction { b1: WrapPendingDataSync, b2: WrapEtcSync ->
                 b1.equipment = b2.equipment
                 b1.defectsTypical = b2.defectsTypical
                 b1
             })
     }
 
-    private fun doSyncMain(): Single<PendingDataDb> {
-        val pending = PendingDataDb()
-        return getDetourRemote()
+    private fun getDefectsAndMediaFiles(): Single<WrapPendingDataSync> {
+        val wrap = WrapPendingDataSync()
+        return remoteInteractor.getDetours().changeProgressWith(_detourSyncStatus)
             .flatMap { routes ->
-                pending.routes = routes
+                wrap.routes = routes
                 Single.zip(
-                    getDefectsRemote(routes).flatMap {
-                        pending.defects = it
-                        getDefectsMediaFilesArchive(it)
-                    },
-                    getDocFilesArchive(routes),
-                    BiFunction { b1: FileEnvelope, b2: FileEnvelope -> Pair(b1, b2) }
+                    remoteInteractor.getDefects(detourIds = routes.map { it.id })
+                        .changeProgressWith(_defectsSyncStatus)
+                        .flatMap {
+                            wrap.defects = it
+                            remoteInteractor.downloadDefectsMediaFilesArchive(it)
+                                .changeProgressWith(_mediaSyncStatus)
+                        },
+                    remoteInteractor.downloadDocFilesArchive(routes)
+                        .changeProgressWith(_docSyncStatus),
+                    BiFunction { b1: WrapFile, b2: WrapFile ->
+                        wrap.mediaArchive = b1.file
+                        wrap.docArchive = b2.file
+                        wrap
+                    }
                 )
             }
-            .map { pair ->
-                pending.mediaArchive = pair.first.file
-                pending.docArchive = pair.second.file
-                pending
-            }
-    }
-
-    private fun doSyncEtc(): Single<EtcAsyncResponse> {
-        return Single.zip(
-            remoteInteractor.getEquipments(),
-            remoteInteractor.getDefectTypical(),
-            remoteInteractor.getCheckpoints(),
-            Function3 { b1: List<EquipmentModel>,
-                        b2: List<DefectTypicalModel>,
-                        b3: List<CheckpointModel>
-                ->
-                EtcAsyncResponse(b1, b2, b3)
-            })
-            .doOnSubscribe { _etcSyncStatus.postValue(Event(ProgressState.PROGRESS)) }
-            .doOnError { _etcSyncStatus.postValue(Event(ProgressState.FAILED)) }
-            .doOnSuccess { _etcSyncStatus.postValue(Event(ProgressState.DONE)) }
-    }
-
-
-    private fun getDetourRemote(): Single<List<DetourModel>> {
-        return remoteInteractor.getDetours()
-            .doOnSubscribe { _detourSyncStatus.postValue(Event(ProgressState.PROGRESS)) }
-            .doOnError { _detourSyncStatus.postValue(Event(ProgressState.FAILED)) }
-            .doOnSuccess { _detourSyncStatus.postValue(Event(ProgressState.DONE)) }
-    }
-
-    private fun getDefectsRemote(routes: List<DetourModel>): Single<List<DefectModel>> {
-        return remoteInteractor.getDefects(
-            detourIds = routes.map { it.id }
-        )
-            .doOnSubscribe { _defectsSyncStatus.postValue(Event(ProgressState.PROGRESS)) }
-            .doOnError { _defectsSyncStatus.postValue(Event(ProgressState.FAILED)) }
-            .doOnSuccess { _defectsSyncStatus.postValue(Event(ProgressState.DONE)) }
-    }
-
-    private fun getDocFilesArchive(routes: List<DetourModel>?): Single<FileEnvelope> {
-        val ids = routes?.getAllFilesIds()
-        val single: Single<FileEnvelope> = if (ids?.isNotEmpty() == true) {
-            remoteInteractor.getFileArchive(
-                fileIds = ids
-            ).flatMap { it ->
-                syncInteractor.saveFileFromBody(it, ARCHIVE_DOCS, RootDirType.Temp).map {
-                    FileEnvelope(
-                        it
-                    )
-                }
-            }
-        } else {
-            Single.just(FileEnvelope(null))
-        }
-        return single
-            .doOnSubscribe { _docSyncStatus.postValue(Event(ProgressState.PROGRESS)) }
-            .doOnError { _docSyncStatus.postValue(Event(ProgressState.FAILED)) }
-            .doOnSuccess { _docSyncStatus.postValue(Event(ProgressState.DONE)) }
-    }
-
-    private fun getDefectsMediaFilesArchive(defects: List<DefectModel>?): Single<FileEnvelope> {
-        val ids = defects?.getAllFilesIds()
-        val single: Single<FileEnvelope> = if (ids?.isNotEmpty() == true) {
-            remoteInteractor.getFileArchive(
-                fileIds = ids
-            ).flatMap { it ->
-                syncInteractor.saveFileFromBody(
-                    it,
-                    ARCHIVE_DEFECTS_MEDIA,
-                    RootDirType.Temp
-                ).map {
-                    FileEnvelope(
-                        it
-                    )
-                }
-            }
-        } else {
-            Single.just(FileEnvelope(null))
-        }
-        return single
-            .doOnSubscribe { _mediaSyncStatus.postValue(Event(ProgressState.PROGRESS)) }
-            .doOnError { _mediaSyncStatus.postValue(Event(ProgressState.FAILED)) }
-            .doOnSuccess { _mediaSyncStatus.postValue(Event(ProgressState.DONE)) }
     }
 
     fun cancelSync() {
         disposables.clear()
-
         Completable.merge(
             arrayListOf(
-                syncInteractor.deleteFile(_pendingDataDb?.docArchive),
-                syncInteractor.deleteFile(_pendingDataDb?.mediaArchive)
+                syncInteractor.deleteFile(_pendingDataSync?.docArchive),
+                syncInteractor.deleteFile(_pendingDataSync?.mediaArchive)
             )
         )
-            .doOnSubscribe { _globalProgress.postValue(true) }
-            .doAfterTerminate { _globalProgress.postValue(false) }
+            .changeProgressWith(_globalProgress)
             .subscribe({
-                _pendingDataDb = null
+                _pendingDataSync = null
             }, {
                 it.printStackTrace()
             })
@@ -254,37 +166,11 @@ class SyncViewModel(
     }
 
     fun applySyncToDb() {
-        _pendingDataDb?.let { data ->
-            val observables = arrayListOf<Completable>()
-            data.routes?.let {
-                observables.add(syncInteractor.insertDetours(it))
-            }
-            data.defects?.let {
-                observables.add(syncInteractor.insertDefects(it))
-            }
-            data.equipment?.let {
-                observables.add(syncInteractor.insertEquipments(it))
-            }
-            data.defectsTypical?.let {
-                observables.add(syncInteractor.insertDefectTypical(it))
-            }
-            data.checkpoints?.let {
-                observables.add(syncInteractor.insertCheckpoints(it))
-            }
-            data.docArchive?.let {
-                observables.add(syncInteractor.unzipFiles(it, AppDirType.Docs))
-            }
-            data.mediaArchive?.let {
-                observables.add(syncInteractor.unzipFiles(it, AppDirType.Defects))
-            }
-            syncInteractor.cleanDbAndFiles()
-                .andThen(Completable.merge(observables))
+        _pendingDataSync?.let { data ->
+            syncInteractor.syncPendingDataAndRefresh(data)
                 .observeOn(AndroidSchedulers.mainThread())
-                .andThen(offlineInteractor.getDetoursAndRefreshSource())
-                .doOnSubscribe { _globalProgress.postValue(true) }
-                .doAfterTerminate { _globalProgress.postValue(false) }
+                .changeProgressWith(_globalProgress)
                 .subscribe({
-                    syncInteractor.finishGetSync(Date())
                     getChangedDetoursAndDefects()
                 }, {
                     _showSnackBar.postValue(Event(R.string.error))
@@ -295,9 +181,8 @@ class SyncViewModel(
     }
 
     fun getChangedDetoursAndDefects() {
-        offlineInteractor.getChangedDetoursAndDefects().observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { _globalProgress.postValue(true) }
-            .doAfterTerminate { _globalProgress.postValue(false) }
+        offlineInteractor.getChangedDetoursAndDefects()
+            .observeOn(AndroidSchedulers.mainThread()).changeProgressWithB(_globalProgress)
             .subscribe({ pair ->
                 val detours = pair.first.map { detour ->
                     DetourUiModel(
@@ -322,33 +207,18 @@ class SyncViewModel(
             .addTo(disposables)
     }
 
-
     fun startSendingData() {
         remoteInteractor.sendSyncDataAndRefreshDb()
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { _globalProgress.postValue(true) }
-            .doAfterTerminate { _globalProgress.postValue(false) }
+            .changeProgressWith(_globalProgress)
             .subscribe({}, {
                 _showSnackBar.postValue(Event(R.string.fragment_sync_send_data_error))
             })
             .addTo(disposables)
     }
+
+    override fun onCleared() {
+        observables.dispose()
+        super.onCleared()
+    }
 }
-
-data class PendingDataDb(
-    var routes: List<DetourModel>? = null,
-    var defects: List<DefectModel>? = null,
-    var equipment: List<EquipmentModel>? = null,
-    var defectsTypical: List<DefectTypicalModel>? = null,
-    var checkpoints: List<CheckpointModel>? = null,
-    var mediaArchive: File? = null,
-    var docArchive: File? = null
-)
-
-data class EtcAsyncResponse(
-    var equipment: List<EquipmentModel>,
-    var defectsTypical: List<DefectTypicalModel>,
-    var checkpoints: List<CheckpointModel>
-)
-
-data class FileEnvelope(val file: File?)

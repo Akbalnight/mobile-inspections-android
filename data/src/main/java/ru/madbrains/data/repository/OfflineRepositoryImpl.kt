@@ -20,24 +20,18 @@ class OfflineRepositoryImpl(
     private val preferenceStorage: PreferenceStorage,
     private val db: HcbDatabase
 ) : OfflineRepository {
-    private val _detoursSource = BehaviorSubject.create<List<DetourModel>>()
-    private val _syncInfoSource =
-        BehaviorSubject.createDefault<SyncInfo>(preferenceStorage.syncInfo)
-    private val _syncedItemsFinish = BehaviorSubject.create<String>()
 
+    private val _detoursSource = BehaviorSubject.create<List<DetourModel>>()
     override val detoursSource: Observable<List<DetourModel>>
         get() = _detoursSource
+
+    private val _syncInfoSource =
+        BehaviorSubject.createDefault<SyncInfo>(preferenceStorage.syncInfo)
     override val syncInfoSource: Observable<SyncInfo>
         get() = _syncInfoSource
-    override val syncedItemsFinish: Observable<String>
-        get() = _syncedItemsFinish
 
     private var _tempDirectory: File? = null
     private var _saveDirectory: File? = null
-
-    override fun signalFinishSyncingItem(id: String) {
-        _syncedItemsFinish.onNext(id)
-    }
 
     override fun insertDetours(models: List<DetourModel>): Completable {
         return db.detourItemDao().insertItem(models.map { toDetourItemDB(it) })

@@ -17,7 +17,6 @@ interface OfflineRepository {
 
     val detoursSource: Observable<List<DetourModel>>
     val syncInfoSource: Observable<SyncInfo>
-    val syncedItemsFinish: Observable<String>
 
     fun insertDetours(models: List<DetourModel>): Completable
     fun insertDetour(model: DetourModel): Completable
@@ -50,6 +49,5 @@ interface OfflineRepository {
     fun insertDefect(model: DefectModel): Completable
     fun deleteDefect(id: String): Completable
     fun getChangedDefects(): Single<List<DefectModel>>
-    fun signalFinishSyncingItem(id: String)
     fun insertCheckpoints(models: List<CheckpointModel>): Completable
 }

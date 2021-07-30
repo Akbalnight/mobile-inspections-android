@@ -11,8 +11,8 @@ import ru.madbrains.data.prefs.SharedPreferenceStorage
 import ru.madbrains.data.repository.*
 import ru.madbrains.domain.interactor.AuthInteractor
 import ru.madbrains.domain.repository.AuthRepository
-import ru.madbrains.domain.repository.DetoursRepository
 import ru.madbrains.domain.repository.OfflineRepository
+import ru.madbrains.domain.repository.RemoteRepository
 import ru.madbrains.domain.repository.RfidRepository
 import timber.log.Timber
 
@@ -23,7 +23,7 @@ val dataModule = module {
     single { getRfidRepository() }
     single { getAuthRepository() }
     single { getIAuthenticator(androidContext(), get(), get()) }
-    single { getDetoursRepository(get()) }
+    single { getRemoteRepository(get()) }
     single { getOfflineRepository(get(), get()) }
 }
 
@@ -43,8 +43,8 @@ private fun getAuthRepository(): AuthRepository {
     return AuthRepositoryImpl()
 }
 
-private fun getDetoursRepository(preferenceStorage: PreferenceStorage): DetoursRepository {
-    return DetoursRepositoryImpl(preferenceStorage)
+private fun getRemoteRepository(preferenceStorage: PreferenceStorage): RemoteRepository {
+    return RemoteRepositoryImpl(preferenceStorage)
 }
 
 private fun getOfflineRepository(

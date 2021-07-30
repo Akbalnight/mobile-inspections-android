@@ -1,13 +1,16 @@
 package ru.madbrains.domain.repository
 
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
 import okhttp3.ResponseBody
 import retrofit2.Response
 import ru.madbrains.domain.model.*
 import java.io.File
 
-interface DetoursRepository {
+interface RemoteRepository {
+    val syncedItemsFinish: Observable<String>
+
     fun getDetours(statuses: List<DetourStatus>): Single<List<DetourModel>>
 
     fun updateDetour(detour: DetourModel): Completable
@@ -46,4 +49,5 @@ interface DetoursRepository {
     fun getDetoursStatuses(): Single<List<DetourStatus>>
 
     fun downloadFileArchive(ids: List<String>): Single<Response<ResponseBody>>
+    fun signalFinishSyncingItem(id: String)
 }

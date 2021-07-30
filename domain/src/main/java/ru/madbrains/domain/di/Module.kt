@@ -7,6 +7,6 @@ val domainModule = module {
     factory { AuthInteractor(get()) }
     factory { RemoteInteractor(get(), get()) }
     factory { OfflineInteractor(get()) }
-    factory { SyncInteractor(get()) }
+    factory { SyncInteractor(get(), get()) }
     factory { RfidInteractor(get()) }
 }
