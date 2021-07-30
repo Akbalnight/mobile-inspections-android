@@ -12,7 +12,7 @@
     android:paddingBottom="20dp">
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/ivDetourStatus"
+        android:id="@+id/ivIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
@@ -30,10 +30,10 @@
         android:layout_marginTop="4dp"
         android:textColor="@color/elementsBlue"
         android:textSize="9sp"
-        app:layout_constraintBottom_toBottomOf="@+id/ivDetourStatus"
-        app:layout_constraintEnd_toEndOf="@+id/ivDetourStatus"
-        app:layout_constraintStart_toStartOf="@+id/ivDetourStatus"
-        app:layout_constraintTop_toTopOf="@+id/ivDetourStatus"
+        app:layout_constraintBottom_toBottomOf="@+id/ivIcon"
+        app:layout_constraintEnd_toEndOf="@+id/ivIcon"
+        app:layout_constraintStart_toStartOf="@+id/ivIcon"
+        app:layout_constraintTop_toTopOf="@+id/ivIcon"
         app:textAllCaps="true"
         tools:text="txt" />
 
@@ -46,8 +46,8 @@
         android:textColor="@color/textMain"
         android:textSize="15sp"
         app:layout_constraintBottom_toTopOf="@id/tvDate"
-        app:layout_constraintStart_toEndOf="@+id/ivDetourStatus"
-        app:layout_constraintTop_toTopOf="@+id/ivDetourStatus"
+        app:layout_constraintStart_toEndOf="@+id/ivIcon"
+        app:layout_constraintTop_toTopOf="@+id/ivIcon"
         tools:text="Name" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -57,8 +57,8 @@
         android:layout_marginStart="25dp"
         android:textColor="@color/black50"
         android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="@+id/ivDetourStatus"
-        app:layout_constraintStart_toEndOf="@+id/ivDetourStatus"
+        app:layout_constraintBottom_toBottomOf="@+id/ivIcon"
+        app:layout_constraintStart_toEndOf="@+id/ivIcon"
         app:layout_constraintTop_toBottomOf="@+id/tvName"
         tools:text="Date" />
 

@@ -66,7 +66,7 @@ class DetoursViewModel(
                             id = detour.id,
                             name = detour.name.orEmpty(),
                             status = preferenceStorage.detourStatuses?.data?.getStatusById(detour.statusId),
-                            date = detour.dateStartPlan
+                            dateStartPlan = detour.dateStartPlan
                         )
                     )
                 }
@@ -77,7 +77,7 @@ class DetoursViewModel(
                             id = detour.id,
                             name = detour.name.orEmpty(),
                             status = preferenceStorage.detourStatuses?.data?.getStatusById(detour.statusId),
-                            date = detour.dateStartPlan
+                            dateStartPlan = detour.dateStartPlan
                         )
                     )
                 }

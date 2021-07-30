@@ -45,7 +45,7 @@ class DateRouteListFragment : BaseFragment(R.layout.fragment_route_list_date) {
 
         detoursViewModel.detours.observe(viewLifecycleOwner, Observer {
             routesAdapter.items = it.filterIsInstance<DetourUiModel>().filter { route ->
-                route.date?.toLocalDate() == date.toLocalDate()
+                route.dateStartPlan?.toLocalDate() == date.toLocalDate()
             }
         })
 
