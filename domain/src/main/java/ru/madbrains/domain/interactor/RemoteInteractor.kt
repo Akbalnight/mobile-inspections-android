@@ -88,7 +88,7 @@ class RemoteInteractor(
                 val tasks = arrayListOf<Completable>()
                 wrap.detours.map { item ->
                     remoteRepository.updateDetour(item).andThen(
-                        offlineRepository.insertDetour(item.apply { changed = false })
+                        offlineRepository.insertDetour(item.copy(changed = false))
                             .doFinally {
                                 remoteRepository.signalFinishSyncingItem(item.id)
                             }
@@ -101,13 +101,11 @@ class RemoteInteractor(
                     single.flatMapCompletable { Completable.complete() }
                         .andThen(
                             offlineRepository.insertDefect(
-                                item.apply {
-                                    changed = false
-                                    created = false
-                                    files = files?.map {
-                                        it.copy(isNew = false)
-                                    }
-                                }
+                                item.copy(
+                                    changed = false,
+                                    created = false,
+                                    files = item.files?.map { it.copy(isNew = false) }
+                                )
                             ).doFinally {
                                 remoteRepository.signalFinishSyncingItem(item.id)
                             }

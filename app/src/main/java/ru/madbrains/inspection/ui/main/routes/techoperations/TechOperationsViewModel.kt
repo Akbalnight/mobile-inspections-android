@@ -54,8 +54,10 @@ class TechOperationsViewModel(
 
 
     fun finishTechMap() {
-        savedRouteData?.let { _completeTechMapEvent.value = Event(it) }
-        _navigatePop.value = Event(Unit)
+        savedRouteData?.let { data ->
+            _completeTechMapEvent.value = Event(data)
+            _navigatePop.value = Event(Unit)
+        }
     }
 
     fun checkAvailableFinishTechMap() {
@@ -88,10 +90,17 @@ class TechOperationsViewModel(
 
     fun onTechDataInput(techOperationId: String, dataValue: String) {
         savedRouteData?.let { routeData ->
-            routeData.techMap?.techOperations?.find { it.id == techOperationId }
-                ?.let { techOperation ->
-                    techOperation.valueInputData = dataValue
+            routeData.techMap?.techOperations?.let { list ->
+                val index = list.indexOfFirst { it.id == techOperationId }
+                val mutableList = list.toMutableList()
+                if (index != -1) {
+                    val item = mutableList[index]
+                    mutableList[index] = item.copy(valueInputData = dataValue)
+                    savedRouteData = savedRouteData?.copy(
+                        techMap = routeData.techMap?.copy(techOperations = mutableList)
+                    )
                 }
+            }
         }
     }
 

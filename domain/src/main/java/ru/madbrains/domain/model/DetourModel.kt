@@ -9,15 +9,15 @@ data class DetourModel(
     val routeId: String?,
     val staffId: String?,
     val repeaterId: String?,
-    var statusId: String?,
+    val statusId: String?,
     val statusName: String?,
     val routeName: String?,
     val name: String?,
     val staffName: String?,
     val dateStartPlan: Date?,
     val dateFinishPlan: Date?,
-    var dateStartFact: Date?,
-    var dateFinishFact: Date?,
+    val dateStartFact: Date?,
+    val dateFinishFact: Date?,
     val saveOrderControlPoints: Boolean?,
     val takeIntoAccountTimeLocation: Boolean?,
     val takeIntoAccountDateStart: Boolean?,
@@ -27,12 +27,10 @@ data class DetourModel(
     val possibleDeviationDateFinish: Int?,
     val isDefectExist: Int?,
     val frozen: Boolean?,
-    var route: RouteModel,
-    var changed: Boolean
+    val route: RouteModel,
+    val changed: Boolean,
+    val startTime: Date? = null
 ) : Serializable {
-    @Transient
-    var startTime: Date? = null
-
     fun getAllFilesIds(): List<String> {
         val res = arrayListOf<FileModel>()
         route.routeMaps?.let {
@@ -85,8 +83,8 @@ data class RouteDataModel(
     val yLocation: Int?,
     val position: Int?,
     val equipments: List<EquipmentModel>?,
-    var techMap: TechMapModel?,
-    var completed: Boolean
+    val techMap: TechMapModel?,
+    val completed: Boolean
 ) : Serializable
 
 data class TechMapModel(
@@ -106,7 +104,7 @@ data class TechOperationModel(
     val code: Int?,
     val needInputData: Boolean?,
     val labelInputData: String?,
-    var valueInputData: String?,
+    val valueInputData: String?,
     val equipmentStop: Boolean?,
     val increasedDanger: Boolean?,
     val duration: Int?,

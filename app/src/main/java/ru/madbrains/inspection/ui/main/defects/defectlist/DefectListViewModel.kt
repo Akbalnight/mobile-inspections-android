@@ -136,13 +136,14 @@ class DefectListViewModel(
 
     fun eliminateDefect(deleteItem: DefectModel?) {
         deleteItem?.let { it ->
-            syncInteractor.insertDefect(it.copy(
-                id = it.id,
-                statusProcessId = DefectStatus.ELIMINATED.id,
-                dateDetectDefect = Date()
-            ).apply {
-                changed = true
-            })
+            syncInteractor.insertDefect(
+                it.copy(
+                    id = it.id,
+                    statusProcessId = DefectStatus.ELIMINATED.id,
+                    dateDetectDefect = Date(),
+                    changed = true
+                )
+            )
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     getDefectList(lastDeviceIds)

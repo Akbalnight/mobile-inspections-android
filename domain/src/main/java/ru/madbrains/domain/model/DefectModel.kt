@@ -11,13 +11,13 @@ data class DefectModel(
     val description: String?,
     val dateDetectDefect: Date?,
     val detourId: String?,
-    var files: List<FileModel>?,
+    val files: List<FileModel>?,
     val defectName: String?,
     val equipmentName: String?,
     val statusProcessId: String?,
     val extraData: List<ExtraDataModel>?,
-    var created: Boolean,
-    var changed: Boolean
+    val created: Boolean,
+    val changed: Boolean
 ) : Serializable {
 
     fun getLastDateConfirm(): Date? {

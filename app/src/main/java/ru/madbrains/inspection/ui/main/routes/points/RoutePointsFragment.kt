@@ -3,10 +3,9 @@ package ru.madbrains.inspection.ui.main.routes.points
 import android.os.Bundle
 import androidx.activity.addCallback
 import androidx.core.os.bundleOf
-import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.fragment_route_points.*
 import kotlinx.android.synthetic.main.toolbar_with_close.view.*
@@ -34,22 +33,10 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
     private val routePointsViewModel: RoutePointsViewModel by sharedViewModel()
     private val techOperationsViewModel: TechOperationsViewModel by sharedViewModel()
 
-    private val stateFabs = mutableListOf<ExtendedFloatingActionButton>()
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        requireNotNull(arguments).run {
-            val detour = getSerializable(KEY_DETOUR) as? DetourModel
-            detour?.let {
-                setupToolbar(it.name)
-                routePointsViewModel.setDetour(it)
-            }
-        }
-
-        stateFabs.add(fabStart)
-        stateFabs.add(fabContinue)
-        stateFabs.add(fabFinish)
+        setupToolbar(routePointsViewModel.detourModel?.name)
 
         setupViewPager()
 
@@ -66,16 +53,15 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
         routePointsViewModel.progressVisibility.observe(viewLifecycleOwner, Observer {
             progressView.changeVisibility(it)
         })
+
         techOperationsViewModel.completeTechMapEvent.observe(viewLifecycleOwner, EventObserver {
             routePointsViewModel.completeTechMap(it)
         })
-        routePointsViewModel.routeStatus.observe(viewLifecycleOwner, EventObserver { status ->
-            stateFabs.map { it.isInvisible = true }
-            when (status) {
-                RoutePointsViewModel.RouteStatus.NOT_STARTED -> fabStart.isInvisible = false
-                RoutePointsViewModel.RouteStatus.IN_PROGRESS -> fabContinue.isInvisible = false
-                RoutePointsViewModel.RouteStatus.COMPLETED -> fabFinish.isInvisible = false
-            }
+
+        routePointsViewModel.routeStatus.observe(viewLifecycleOwner, Observer { status ->
+            fabStart.isVisible = status == RoutePointsViewModel.RouteStatus.NOT_STARTED
+            fabContinue.isVisible = status == RoutePointsViewModel.RouteStatus.IN_PROGRESS
+            fabFinish.isVisible = status == RoutePointsViewModel.RouteStatus.COMPLETED
         })
         routePointsViewModel.navigateToBack.observe(viewLifecycleOwner, EventObserver {
             findNavController().popBackStack()
@@ -108,6 +94,17 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
             routePointsViewModel.closeClick()
         }
     }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        requireNotNull(arguments).run {
+            val detour = getSerializable(KEY_DETOUR) as? DetourModel
+            detour?.let {
+                routePointsViewModel.setDetour(it)
+            }
+        }
+        super.onCreate(savedInstanceState)
+    }
+
 
     private fun openTechOperationsFragment(routeData: RouteDataModel) {
         val args = bundleOf(
