@@ -79,4 +79,8 @@ class SyncInteractor(
     fun saveDefectTypical(models: List<DefectTypicalModel>): Completable {
         return offlineRepository.saveDefectsTypical(models).subscribeOn(Schedulers.io())
     }
+
+    fun saveCheckpoints(models: List<CheckpointModel>): Completable {
+        return offlineRepository.saveCheckpoints(models).subscribeOn(Schedulers.io())
+    }
 }

@@ -78,6 +78,10 @@ class OfflineRepositoryImpl(
         return db.defectTypicalDao().insertItem(models.map { toDefectTypicalDB(it) })
     }
 
+    override fun saveCheckpoints(models: List<CheckpointModel>): Completable {
+        return db.checkpointItemDao().insertItem(models.map { toCheckpointItemDB(it) })
+    }
+
     override fun getDefects(): Single<List<DefectModel>> {
         return db.defectItemDao().getItems().map { it -> it.map { fromDefectItemDB(it) } }
     }
@@ -146,6 +150,7 @@ class OfflineRepositoryImpl(
                 db.defectItemDao().clean(),
                 db.defectTypicalDao().clean(),
                 db.detourItemDao().clean(),
+                db.checkpointItemDao().clean(),
                 deleteFile(File(_saveDirectory, AppDirType.Defects.value)),
                 deleteFile(File(_saveDirectory, AppDirType.Docs.value))
             )

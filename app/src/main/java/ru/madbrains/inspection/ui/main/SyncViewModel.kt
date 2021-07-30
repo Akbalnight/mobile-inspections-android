@@ -7,6 +7,7 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
+import io.reactivex.functions.Function3
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.rxkotlin.addTo
 import ru.madbrains.data.prefs.PreferenceStorage
@@ -158,9 +159,12 @@ class SyncViewModel(
         return Single.zip(
             remoteInteractor.getEquipments(),
             remoteInteractor.getDefectTypical(),
-            BiFunction { b1: List<EquipmentModel>,
-                         b2: List<DefectTypicalModel> ->
-                EtcAsyncResponse(b1, b2)
+            remoteInteractor.getCheckpoints(),
+            Function3 { b1: List<EquipmentModel>,
+                        b2: List<DefectTypicalModel>,
+                        b3: List<CheckpointModel>
+                ->
+                EtcAsyncResponse(b1, b2, b3)
             })
             .doOnSubscribe { _etcSyncStatus.postValue(Event(ProgressState.PROGRESS)) }
             .doOnError { _etcSyncStatus.postValue(Event(ProgressState.FAILED)) }
@@ -264,6 +268,9 @@ class SyncViewModel(
             data.defectsTypical?.let {
                 observables.add(syncInteractor.saveDefectTypical(it))
             }
+            data.checkpoints?.let {
+                observables.add(syncInteractor.saveCheckpoints(it))
+            }
             data.docArchive?.let {
                 observables.add(syncInteractor.unzipFiles(it, AppDirType.Docs))
             }
@@ -333,13 +340,15 @@ data class PendingDataDb(
     var defects: List<DefectModel>? = null,
     var equipment: List<EquipmentModel>? = null,
     var defectsTypical: List<DefectTypicalModel>? = null,
+    var checkpoints: List<CheckpointModel>? = null,
     var mediaArchive: File? = null,
     var docArchive: File? = null
 )
 
 data class EtcAsyncResponse(
     var equipment: List<EquipmentModel>,
-    var defectsTypical: List<DefectTypicalModel>
+    var defectsTypical: List<DefectTypicalModel>,
+    var checkpoints: List<CheckpointModel>
 )
 
 data class FileEnvelope(val file: File?)

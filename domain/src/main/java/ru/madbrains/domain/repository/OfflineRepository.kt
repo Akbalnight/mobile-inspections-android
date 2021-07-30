@@ -51,4 +51,5 @@ interface OfflineRepository {
     fun deleteDefect(id: String): Completable
     fun getChangedDefects(): Single<List<DefectModel>>
     fun signalFinishSyncingItem(id: String)
+    fun saveCheckpoints(models: List<CheckpointModel>): Completable
 }
