@@ -32,7 +32,7 @@ class SyncFragment : BaseFragment(R.layout.fragment_sync) {
 
         syncViewModel.changedItems.observe(viewLifecycleOwner, Observer {
             listAdapter.items = it
-            val sendDataAvailable = it.isNotEmpty()
+            val sendDataAvailable = !it.isNullOrEmpty()
             llBottomSendData.isClickable = sendDataAvailable
             llBottomSendData.isFocusable = sendDataAvailable
             llBottomSendData.alpha = if (sendDataAvailable) 1.0f else 0.5f
