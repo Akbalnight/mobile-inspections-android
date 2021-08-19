@@ -75,6 +75,7 @@ data class RouteDataModel(
     val id: String?,
     val techMapId: String?,
     val controlPointId: String?,
+    val controlPointName: String?,
     val rfidCode: String?,
     val routeMapId: String?,
     val routeId: String?,
