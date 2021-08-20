@@ -15,6 +15,7 @@ import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.RoutePointUiModel
+import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -137,6 +138,7 @@ class RoutePointsViewModel(
     }
 
     fun setDetour(detour: DetourModel) {
+        Timber.d("debug_dmm setDetour")
         stopTimer()
         detourModel = detour
         updateData()
@@ -151,6 +153,7 @@ class RoutePointsViewModel(
     }
 
     private fun updateData() {
+        Timber.d("debug_dmm updateData")
         setRouteStatus()
         val routePoints = mutableListOf<DiffItem>()
         val lastCompleted = routeDataModels.indexOfLast { it.completed }
@@ -176,11 +179,16 @@ class RoutePointsViewModel(
     private fun setRouteStatus() {
         val type =
             preferenceStorage.detourStatuses?.data?.getStatusById(detourModel?.statusId)?.type
-        if (type == DetourStatusType.COMPLETED || type == DetourStatusType.COMPLETED_AHEAD) return
+        val completed =
+            type == DetourStatusType.COMPLETED || type == DetourStatusType.COMPLETED_AHEAD
         val completedPoints = routeDataModels.filter { it.completed }.count()
         val allPoints = routeDataModels.count()
+        val allPointsCompleted = allPoints == completedPoints
         _routeStatus.value = when {
-            allPoints == completedPoints -> {
+            allPointsCompleted && !completed -> {
+                RouteStatus.FINISHED_NOT_COMPLETED
+            }
+            allPointsCompleted && completed -> {
                 RouteStatus.COMPLETED
             }
             completedPoints == 0 -> {
@@ -223,6 +231,7 @@ class RoutePointsViewModel(
     enum class RouteStatus {
         NOT_STARTED,
         IN_PROGRESS,
+        FINISHED_NOT_COMPLETED,
         COMPLETED
     }
 }

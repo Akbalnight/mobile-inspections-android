@@ -55,7 +55,7 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
         routePointsViewModel.routeStatus.observe(viewLifecycleOwner, Observer { status ->
             fabStart.isVisible = status == RoutePointsViewModel.RouteStatus.NOT_STARTED
             fabContinue.isVisible = status == RoutePointsViewModel.RouteStatus.IN_PROGRESS
-            fabFinish.isVisible = status == RoutePointsViewModel.RouteStatus.COMPLETED
+            fabFinish.isVisible = status == RoutePointsViewModel.RouteStatus.FINISHED_NOT_COMPLETED
         })
         routePointsViewModel.navigateToBack.observe(viewLifecycleOwner, EventObserver {
             findNavController().popBackStack()
