@@ -3,6 +3,7 @@ package ru.madbrains.inspection.ui.main.routes.techoperations
 import android.content.DialogInterface
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
@@ -11,6 +12,7 @@ import kotlinx.android.synthetic.main.fragment_tech_operations.*
 import kotlinx.android.synthetic.main.toolbar_with_back.view.*
 import kotlinx.android.synthetic.main.toolbar_with_close.view.tvTitle
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.domain.model.RouteDataModel
 import ru.madbrains.inspection.R
@@ -30,15 +32,13 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
         const val KEY_ROUTE_DATA = "KEY_ROUTE_DATA"
     }
 
-    private val techOperationsViewModel: TechOperationsViewModel by sharedViewModel()
+    private val techOperationsViewModel: TechOperationsViewModel by viewModel()
     private val routePointsViewModel: RoutePointsViewModel by sharedViewModel()
 
     private val techOperationsAdapter by lazy {
-        TechOperationAdapter(
-            routePointsViewModel.isDetourEditable(),
-            onDataInput = {
-                techOperationsViewModel.onTechDataInput(it.id, it.inputData)
-            }
+        TechOperationAdapter(onDataInput = {
+            techOperationsViewModel.onTechDataInput(it.id, it.inputData)
+        }
         )
     }
 
@@ -49,21 +49,16 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
             progressView.changeVisibility(it)
         })
 
+        techOperationsViewModel.uiMode.observe(viewLifecycleOwner, Observer {
+            setupUI(it)
+        })
+
         requireNotNull(arguments).run {
             val routeDataModel = (getSerializable(KEY_ROUTE_DATA) as? RouteDataModel)
             routeDataModel?.let {
-                techOperationsViewModel.setRouteData(it)
+                techOperationsViewModel.initDetour(it, routePointsViewModel.isDetourEditable())
                 setupToolbar(it.position)
-                setupUI(it)
             }
-        }
-
-        fabTechOperationsScanRFID.setOnClickListener {
-            techOperationsViewModel.checkRfidAndFinish()
-        }
-
-        fabTechOperationsSave.setOnClickListener {
-            techOperationsViewModel.checkAvailableFinishTechMap()
         }
 
         rvTechOperations.adapter = techOperationsAdapter
@@ -97,6 +92,10 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
             progressView.changeTextVisibility(it)
         })
 
+        techOperationsViewModel.completeTechMapEvent.observe(viewLifecycleOwner, EventObserver {
+            routePointsViewModel.completeTechMap(it)
+        })
+
         techOperationsViewModel.showDialog.observe(viewLifecycleOwner, EventObserver {
             val alertDialog: AlertDialog? = activity?.let { activity ->
                 val builder = AlertDialog.Builder(activity)
@@ -111,15 +110,48 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
         })
     }
 
-    private fun setupUI(routeDataModel: RouteDataModel) {
-        val rfidVisible = routeDataModel.rfidCode != null
-        val isEditable = routePointsViewModel.isDetourEditable()
-        fabTechOperationsScanRFID.isVisible = rfidVisible && isEditable
-        fabTechOperationsSave.isVisible = !rfidVisible && isEditable
+    private fun setupUI(it: TechUIMode) {
+        val drawableId: Int?
+        when (it) {
+            TechUIMode.Started -> {
+                drawableId = R.drawable.ic_fab_save
+                fabTechOperations.setOnClickListener {
+                    techOperationsViewModel.checkAvailableFinishTechMap()
+                }
+            }
+            TechUIMode.StartedRfid -> {
+                drawableId = R.drawable.ic_fab_rfid
+                fabTechOperations.setOnClickListener {
+                    techOperationsViewModel.checkRfidAndFinish()
+                }
+            }
+            TechUIMode.Stopped -> {
+                drawableId = R.drawable.ic_fab_continue_round
+                fabTechOperations.setOnClickListener {
+                    techOperationsViewModel.startEdit()
+                }
+            }
+            else -> {
+                drawableId = null
+                fabTechOperations.setOnClickListener(null)
+            }
+        }
+        fabTechOperations.isVisible = it != TechUIMode.Disabled
+        if (it == TechUIMode.Started || it == TechUIMode.StartedRfid) {
+            layoutBottomButtonAddDefect.setOnClickListener { toDefectDetailFragment() }
+            layoutBottomButtonAddDefect.isClickable = true
+            layoutBottomButtonAddDefect.alpha = 1f
+        } else {
+            layoutBottomButtonAddDefect.setOnClickListener(null)
+            layoutBottomButtonAddDefect.isClickable = false
+            layoutBottomButtonAddDefect.alpha = 0.5f
+        }
+        drawableId?.let { id ->
+            fabTechOperations.setImageDrawable(ContextCompat.getDrawable(context, id))
+        }
     }
 
     private fun setupToolbar(positionPoint: Int?) {
-
         toolbarLayout.apply {
             var toolBarTitle = strings[R.string.fragment_tech_operations_app_bar]
             positionPoint?.let {
@@ -133,15 +165,6 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
     }
 
     private fun setupOnClickListener() {
-
-        if (routePointsViewModel.editable) {
-            layoutBottomButtonAddDefect.setOnClickListener { toDefectDetailFragment() }
-        } else {
-            layoutBottomButtonAddDefect.isClickable = false
-            layoutBottomButtonAddDefect.alpha = 0.5f
-        }
-
-
         layoutBottomButtonDefect.setOnClickListener {
             routePointsViewModel.navigateToDefectList()
         }
@@ -151,7 +174,6 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
     }
 
     private fun setupNavigation() {
-
         techOperationsViewModel.navigateToEquipment.observe(viewLifecycleOwner, EventObserver {
             findNavController().navigate(
                 R.id.action_techOperationsFragment_to_equipmentFragment, bundleOf(

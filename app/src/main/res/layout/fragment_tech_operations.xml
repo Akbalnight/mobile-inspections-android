@@ -165,37 +165,16 @@
             tools:listitem="@layout/item_tech_operations" />
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/fabTechOperationsSave"
+            android:id="@+id/fabTechOperations"
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="40dp"
-            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_fab_save" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/fabTechOperationsScanRFID"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="40dp"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_fab_scan" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/fabTechOperationsStart"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="40dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_fab_continue" />
+            tools:srcCompat="@drawable/ic_fab_continue_round"
+            tools:visibility="visible" />
 
         <ru.madbrains.inspection.ui.view.ProgressView
             android:id="@+id/progressView"

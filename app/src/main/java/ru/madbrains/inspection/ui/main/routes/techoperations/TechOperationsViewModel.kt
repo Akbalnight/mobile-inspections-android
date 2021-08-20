@@ -17,6 +17,11 @@ class TechOperationsViewModel(
 ) :
     BaseViewModel() {
 
+    private var _detourIsEditable: Boolean = false
+
+    private val _uiMode = MutableLiveData<TechUIMode>()
+    val uiMode: LiveData<TechUIMode> = _uiMode
+
     private val _progressVisibility = MutableLiveData<Boolean>()
     val progressVisibility: LiveData<Boolean> = _progressVisibility
 
@@ -52,7 +57,6 @@ class TechOperationsViewModel(
     private val _showDialog = MutableLiveData<Event<Int>>()
     val showDialog: LiveData<Event<Int>> = _showDialog
 
-
     fun finishTechMap() {
         savedRouteData?.let { data ->
             _completeTechMapEvent.value = Event(data)
@@ -74,8 +78,8 @@ class TechOperationsViewModel(
         }
     }
 
-    fun setRouteData(routeDataModel: RouteDataModel) {
-
+    fun initDetour(routeDataModel: RouteDataModel, detourEditable: Boolean) {
+        _detourIsEditable = detourEditable
         savedRouteData = routeDataModel
 
         routeDataModel.techMap?.techOperations?.let {
@@ -85,7 +89,7 @@ class TechOperationsViewModel(
 
         _titleTechOperations.value = routeDataModel.techMap?.name
 
-        updateData()
+        updateData(pointStarted = false)
     }
 
     fun onTechDataInput(techOperationId: String, dataValue: String) {
@@ -104,7 +108,7 @@ class TechOperationsViewModel(
         }
     }
 
-    private fun updateData() {
+    private fun updateData(pointStarted: Boolean) {
         val operations = mutableListOf<DiffItem>().apply {
             operationsModels.map { operation ->
                 add(
@@ -114,12 +118,30 @@ class TechOperationsViewModel(
                         labelInputData = operation.labelInputData.orEmpty(),
                         valueInputData = operation.valueInputData.orEmpty(),
                         needInputData = operation.needInputData,
-                        position = operation.position
+                        position = operation.position,
+                        editable = _detourIsEditable && pointStarted
                     )
                 )
             }
         }
         _techOperations.value = operations
+
+        val isRfid = savedRouteData?.rfidCode != null
+        val status = when {
+            !_detourIsEditable -> {
+                TechUIMode.Disabled
+            }
+            !pointStarted -> {
+                TechUIMode.Stopped
+            }
+            isRfid -> {
+                TechUIMode.StartedRfid
+            }
+            else -> {
+                TechUIMode.Started
+            }
+        }
+        _uiMode.postValue(status)
     }
 
     fun checkRfidAndFinish() {
@@ -149,4 +171,12 @@ class TechOperationsViewModel(
             }
         }
     }
+
+    fun startEdit() {
+        updateData(pointStarted = true)
+    }
+}
+
+enum class TechUIMode {
+    Disabled, Stopped, Started, StartedRfid
 }

@@ -15,7 +15,6 @@ import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.RoutePointUiModel
-import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -62,7 +61,7 @@ class RoutePointsViewModel(
     private val _navigateToDefectList = MutableLiveData<Event<Boolean>>()
     val navigateToDefectList: LiveData<Event<Boolean>> = _navigateToDefectList
 
-    val editable get():Boolean = timerDispose != null
+    private val timerStarted get():Boolean = timerDispose != null
 
     fun routePointClick(id: String?) {
         routeDataModels.find { data ->
@@ -71,11 +70,11 @@ class RoutePointsViewModel(
     }
 
     fun isDetourEditable(): Boolean {
-        return preferenceStorage.detourStatuses?.data?.isEditable(detourModel?.statusId) == true && editable
+        return preferenceStorage.detourStatuses?.data?.isEditable(detourModel?.statusId) == true && timerStarted
     }
 
     fun navigateToDefectList() {
-        _navigateToDefectList.value = Event(editable)
+        _navigateToDefectList.value = Event(timerStarted)
     }
 
     fun completeTechMap(item: RouteDataModel) {
@@ -138,7 +137,6 @@ class RoutePointsViewModel(
     }
 
     fun setDetour(detour: DetourModel) {
-        Timber.d("debug_dmm setDetour")
         stopTimer()
         detourModel = detour
         updateData()

@@ -9,7 +9,6 @@ import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.model.DiffItem
 
 fun techOperationDelegate(
-    isDataEditable: Boolean?,
     onDataInput: (TechOperationUiModel) -> Unit
 ) = adapterDelegateLayoutContainer<TechOperationUiModel, DiffItem>(R.layout.item_tech_operations) {
 
@@ -27,7 +26,7 @@ fun techOperationDelegate(
                         tvInputData.text = label
                         etInputData.visibility = View.VISIBLE
                         etInputData.inputType =
-                            if (isDataEditable == true) InputType.TYPE_CLASS_TEXT else InputType.TYPE_NULL
+                            if (item.editable) InputType.TYPE_CLASS_TEXT else InputType.TYPE_NULL
                         etInputData.setText(item.valueInputData)
                         etInputData.doAfterTextChanged { inputData ->
                             item.inputData = inputData.toString()
@@ -49,7 +48,8 @@ data class TechOperationUiModel(
     val needInputData: Boolean?,
     val labelInputData: String?,
     val valueInputData: String?,
-    val position: Int?
+    val position: Int?,
+    val editable: Boolean
 ) : DiffItem {
 
     var inputData: String = ""
