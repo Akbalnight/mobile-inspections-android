@@ -55,6 +55,7 @@ private fun mapGetRoutesDataResp(remote: RouteDataRemote): RouteDataModel {
             id = id,
             techMapId = techMapId,
             controlPointId = controlPointId,
+            controlPointName = controlPointName,
             rfidCode = rfidCode,
             routeMapId = routeMapId,
             routeId = routeId,

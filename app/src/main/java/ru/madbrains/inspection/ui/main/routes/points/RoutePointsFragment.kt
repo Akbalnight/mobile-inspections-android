@@ -20,18 +20,16 @@ import ru.madbrains.inspection.extensions.strings
 import ru.madbrains.inspection.ui.main.routes.points.list.RoutePointsListFragment
 import ru.madbrains.inspection.ui.main.routes.points.map.RoutePointsMapFragment
 import ru.madbrains.inspection.ui.main.routes.techoperations.TechOperationsFragment
-import ru.madbrains.inspection.ui.main.routes.techoperations.TechOperationsViewModel
 
 class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
 
     companion object {
-        const val KEY_DETOUR = "detour"
+        const val KEY_DETOUR = "KEY_DETOUR"
     }
 
     private lateinit var routePointsTabAdapter: RoutePointsTabAdapter
 
     private val routePointsViewModel: RoutePointsViewModel by sharedViewModel()
-    private val techOperationsViewModel: TechOperationsViewModel by sharedViewModel()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -54,14 +52,10 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
             progressView.changeVisibility(it)
         })
 
-        techOperationsViewModel.completeTechMapEvent.observe(viewLifecycleOwner, EventObserver {
-            routePointsViewModel.completeTechMap(it)
-        })
-
         routePointsViewModel.routeStatus.observe(viewLifecycleOwner, Observer { status ->
             fabStart.isVisible = status == RoutePointsViewModel.RouteStatus.NOT_STARTED
             fabContinue.isVisible = status == RoutePointsViewModel.RouteStatus.IN_PROGRESS
-            fabFinish.isVisible = status == RoutePointsViewModel.RouteStatus.COMPLETED
+            fabFinish.isVisible = status == RoutePointsViewModel.RouteStatus.FINISHED_NOT_COMPLETED
         })
         routePointsViewModel.navigateToBack.observe(viewLifecycleOwner, EventObserver {
             findNavController().popBackStack()
@@ -101,6 +95,7 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
             detour?.let {
                 routePointsViewModel.setDetour(it)
             }
+            clear()
         }
         super.onCreate(savedInstanceState)
     }

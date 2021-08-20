@@ -47,6 +47,7 @@ data class RouteDataRemote(
     @field:Json(name = "id") val id: String?,
     @field:Json(name = "techMapId") val techMapId: String?,
     @field:Json(name = "controlPointId") val controlPointId: String?,
+    @field:Json(name = "controlPointName") val controlPointName: String?,
     @field:Json(name = "rfidCode") val rfidCode: String?,
     @field:Json(name = "routeMapId") val routeMapId: String?,
     @field:Json(name = "routeId") val routeId: String?,

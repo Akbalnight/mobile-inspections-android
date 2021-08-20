@@ -97,11 +97,6 @@ class RoutePointsMapFragment : BaseFragment(R.layout.fragment_route_points_map) 
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        routePointsViewModel.clean()
-    }
-
     private fun calculatePoints(rectF: RectF, list: List<MapPointUiModel>) {
         val image = bitmap ?: return
         val pointSize = 100

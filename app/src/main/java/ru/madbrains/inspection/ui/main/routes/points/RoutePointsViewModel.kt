@@ -61,7 +61,7 @@ class RoutePointsViewModel(
     private val _navigateToDefectList = MutableLiveData<Event<Boolean>>()
     val navigateToDefectList: LiveData<Event<Boolean>> = _navigateToDefectList
 
-    val editable get():Boolean = timerDispose != null
+    private val timerStarted get():Boolean = timerDispose != null
 
     fun routePointClick(id: String?) {
         routeDataModels.find { data ->
@@ -70,28 +70,31 @@ class RoutePointsViewModel(
     }
 
     fun isDetourEditable(): Boolean {
-        return preferenceStorage.detourStatuses?.data?.isEditable(detourModel?.statusId) == true && editable
+        return preferenceStorage.detourStatuses?.data?.isEditable(detourModel?.statusId) == true && timerStarted
     }
 
     fun navigateToDefectList() {
-        _navigateToDefectList.value = Event(editable)
+        _navigateToDefectList.value = Event(timerStarted)
     }
 
     fun completeTechMap(item: RouteDataModel) {
-        detourModel?.let { model ->
-            val index = routeDataModels.indexOfFirst { item.id == it.id }
-            if (index > -1) {
-                detourModel = model.copy(
-                    route = model.route.copy(
-                        routesData = model.route.routesData?.toMutableList()
-                            ?.apply { this[index] = item.copy(completed = true) }
+        val model = detourModel
+        model?.run {
+            route.routesData?.toMutableList()?.let { list ->
+                val index = list.indexOfFirst { item.id == it.id }
+                if (index > -1) {
+                    detourModel = copy(
+                        route = route.copy(
+                            routesData = list.apply {
+                                this[index] = item.copy(completed = true)
+                            }
+                        )
                     )
-                )
-                updateData()
-                if (routeDataModels.all { it.completed }) {
-                    _navigateToFinishDialog.value = Event(Unit)
+                    updateData()
+                    if (routeDataModels.all { it.completed }) {
+                        _navigateToFinishDialog.value = Event(Unit)
+                    }
                 }
-
             }
         }
     }
@@ -137,6 +140,7 @@ class RoutePointsViewModel(
     }
 
     fun setDetour(detour: DetourModel) {
+        stopTimer()
         detourModel = detour
         updateData()
     }
@@ -175,11 +179,16 @@ class RoutePointsViewModel(
     private fun setRouteStatus() {
         val type =
             preferenceStorage.detourStatuses?.data?.getStatusById(detourModel?.statusId)?.type
-        if (type == DetourStatusType.COMPLETED || type == DetourStatusType.COMPLETED_AHEAD) return
+        val completed =
+            type == DetourStatusType.COMPLETED || type == DetourStatusType.COMPLETED_AHEAD
         val completedPoints = routeDataModels.filter { it.completed }.count()
         val allPoints = routeDataModels.count()
+        val allPointsCompleted = allPoints == completedPoints
         _routeStatus.value = when {
-            allPoints == completedPoints -> {
+            allPointsCompleted && !completed -> {
+                RouteStatus.FINISHED_NOT_COMPLETED
+            }
+            allPointsCompleted && completed -> {
                 RouteStatus.COMPLETED
             }
             completedPoints == 0 -> {
@@ -219,13 +228,10 @@ class RoutePointsViewModel(
         }
     }
 
-    fun clean() {
-        _routePoints.value = null
-    }
-
     enum class RouteStatus {
         NOT_STARTED,
         IN_PROGRESS,
+        FINISHED_NOT_COMPLETED,
         COMPLETED
     }
 }
