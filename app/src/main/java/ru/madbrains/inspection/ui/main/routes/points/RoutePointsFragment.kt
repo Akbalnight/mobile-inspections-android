@@ -101,6 +101,7 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
             detour?.let {
                 routePointsViewModel.setDetour(it)
             }
+            clear()
         }
         super.onCreate(savedInstanceState)
     }

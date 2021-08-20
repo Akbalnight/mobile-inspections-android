@@ -15,6 +15,7 @@ import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.RoutePointUiModel
+import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -137,6 +138,8 @@ class RoutePointsViewModel(
     }
 
     fun setDetour(detour: DetourModel) {
+        Timber.d("debug_dmm setDetour")
+        stopTimer()
         detourModel = detour
         updateData()
     }
@@ -217,10 +220,6 @@ class RoutePointsViewModel(
             timerDispose?.dispose()
             timerDispose = null
         }
-    }
-
-    fun clean() {
-        _routePoints.value = null
     }
 
     enum class RouteStatus {
