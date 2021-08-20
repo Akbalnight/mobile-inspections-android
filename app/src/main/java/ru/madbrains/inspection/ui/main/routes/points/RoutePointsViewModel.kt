@@ -15,7 +15,6 @@ import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.RoutePointUiModel
-import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -79,20 +78,23 @@ class RoutePointsViewModel(
     }
 
     fun completeTechMap(item: RouteDataModel) {
-        detourModel?.let { model ->
-            val index = routeDataModels.indexOfFirst { item.id == it.id }
-            if (index > -1) {
-                detourModel = model.copy(
-                    route = model.route.copy(
-                        routesData = model.route.routesData?.toMutableList()
-                            ?.apply { this[index] = item.copy(completed = true) }
+        val model = detourModel
+        model?.run {
+            route.routesData?.toMutableList()?.let { list ->
+                val index = list.indexOfFirst { item.id == it.id }
+                if (index > -1) {
+                    detourModel = copy(
+                        route = route.copy(
+                            routesData = list.apply {
+                                this[index] = item.copy(completed = true)
+                            }
+                        )
                     )
-                )
-                updateData()
-                if (routeDataModels.all { it.completed }) {
-                    _navigateToFinishDialog.value = Event(Unit)
+                    updateData()
+                    if (routeDataModels.all { it.completed }) {
+                        _navigateToFinishDialog.value = Event(Unit)
+                    }
                 }
-
             }
         }
     }
@@ -138,7 +140,6 @@ class RoutePointsViewModel(
     }
 
     fun setDetour(detour: DetourModel) {
-        Timber.d("debug_dmm setDetour")
         stopTimer()
         detourModel = detour
         updateData()
@@ -153,7 +154,6 @@ class RoutePointsViewModel(
     }
 
     private fun updateData() {
-        Timber.d("debug_dmm updateData")
         setRouteStatus()
         val routePoints = mutableListOf<DiffItem>()
         val lastCompleted = routeDataModels.indexOfLast { it.completed }
