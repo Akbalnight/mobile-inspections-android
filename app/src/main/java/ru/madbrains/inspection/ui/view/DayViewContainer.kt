@@ -9,5 +9,6 @@ import ru.madbrains.inspection.R
 class DayViewContainer(view: View) : ViewContainer(view) {
     val tvDay: TextView = view.findViewById(R.id.tvDay)
     val haveRoutesDot: View = view.findViewById(R.id.haveRoutesDot)
+    val haveRoutesDotContrast: View = view.findViewById(R.id.haveRoutesDotContrast)
     val clDate: ConstraintLayout = view.findViewById(R.id.clDate)
 }
