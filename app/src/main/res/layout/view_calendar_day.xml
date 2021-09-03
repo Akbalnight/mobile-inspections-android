@@ -32,10 +32,21 @@
             android:layout_width="8dp"
             android:layout_height="8dp"
             android:background="@drawable/light_blue_circle"
-            android:visibility="invisible"
+            android:visibility="gone"
             app:layout_constraintStart_toEndOf="@+id/tvDay"
             app:layout_constraintTop_toBottomOf="@+id/tvDay"
             tools:visibility="visible" />
+
+        <View
+            android:id="@+id/haveRoutesDotContrast"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:background="@drawable/light_white_circle"
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@+id/tvDay"
+            app:layout_constraintTop_toBottomOf="@+id/tvDay"
+            tools:visibility="visible" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

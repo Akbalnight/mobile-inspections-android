@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.kizitonwose.calendarview.model.CalendarDay
@@ -39,6 +40,8 @@ class RouteCalendarFragment : BaseFragment(R.layout.fragment_route_calendar) {
 
     private var nextMonth: YearMonth? = null
     private var previousMonth: YearMonth? = null
+    private val timeNow = Calendar.getInstance().time.toYYYYMMDD()
+
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -63,13 +66,14 @@ class RouteCalendarFragment : BaseFragment(R.layout.fragment_route_calendar) {
             override fun bind(container: DayViewContainer, day: CalendarDay) {
                 container.view.isInvisible = day.owner != DayOwner.THIS_MONTH
                 container.tvDay.text = day.date.dayOfMonth.toString()
-                container.haveRoutesDot.isInvisible =
-                    !routeCalendarViewModel.routeDates.contains(day.date)
 
-                val timeNow = Calendar.getInstance().time
-                val dateNow: String = timeNow.toYYYYMMDD()
+                val haveRoutes = routeCalendarViewModel.routeDates.contains(day.date)
+                val isNow = day.date.toString() == timeNow
 
-                if (day.date.toString() == dateNow) {
+                container.haveRoutesDot.isVisible = !isNow && haveRoutes
+                container.haveRoutesDotContrast.isVisible = isNow && haveRoutes
+
+                if (isNow) {
                     container.clDate.background = drawables[R.drawable.light_blue_circle]
                     container.tvDay.setTextColor(colors[R.color.textWhite])
                 } else {
