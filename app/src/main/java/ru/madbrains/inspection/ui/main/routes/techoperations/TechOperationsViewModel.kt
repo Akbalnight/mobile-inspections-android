@@ -57,6 +57,7 @@ class TechOperationsViewModel(
     private val _showDialog = MutableLiveData<Event<Int>>()
     val showDialog: LiveData<Event<Int>> = _showDialog
 
+
     fun finishTechMap() {
         savedRouteData?.let { data ->
             _completeTechMapEvent.value = Event(data)
@@ -64,7 +65,7 @@ class TechOperationsViewModel(
         }
     }
 
-    fun checkAvailableFinishTechMap() {
+    private fun checkAvailableFinishTechMap() {
         savedRouteData?.let { routeData ->
             routeData.techMap?.techOperations?.filter {
                 (it.needInputData == true) && it.valueInputData.isNullOrEmpty()
@@ -89,7 +90,8 @@ class TechOperationsViewModel(
 
         _titleTechOperations.value = routeDataModel.techMap?.name
 
-        updateData(pointStarted = false)
+        val isRfid = savedRouteData?.rfidCode != null
+        updateData(rfidBlocked = isRfid)
     }
 
     fun onTechDataInput(techOperationId: String, dataValue: String) {
@@ -108,7 +110,7 @@ class TechOperationsViewModel(
         }
     }
 
-    private fun updateData(pointStarted: Boolean) {
+    private fun updateData(rfidBlocked: Boolean) {
         val operations = mutableListOf<DiffItem>().apply {
             operationsModels.map { operation ->
                 add(
@@ -119,41 +121,35 @@ class TechOperationsViewModel(
                         valueInputData = operation.valueInputData.orEmpty(),
                         needInputData = operation.needInputData,
                         position = operation.position,
-                        editable = _detourIsEditable && pointStarted
+                        editable = _detourIsEditable && !rfidBlocked
                     )
                 )
             }
         }
         _techOperations.value = operations
 
-        val isRfid = savedRouteData?.rfidCode != null
         val status = when {
             !_detourIsEditable -> {
                 TechUIMode.Disabled
             }
-            !pointStarted -> {
-                TechUIMode.Stopped
-            }
-            isRfid -> {
-                TechUIMode.StartedRfid
+            rfidBlocked -> {
+                TechUIMode.RfidBlocked
             }
             else -> {
-                TechUIMode.Started
+                TechUIMode.Enabled
             }
         }
         _uiMode.postValue(status)
     }
 
-    fun checkRfidAndFinish() {
+    private fun checkRfidAndUnblock() {
         rfidInteractor.startScan({
             _rfidProgress.value = it
         }) { scannedCode ->
-            savedRouteData?.rfidCode?.let { code ->
-                if (scannedCode == code) {
-                    finishTechMap()
-                } else {
-                    _showDialog.value = Event(R.string.fragment_tech_mark_is_different)
-                }
+            if (scannedCode == savedRouteData?.rfidCode) {
+                updateData(rfidBlocked = false)
+            } else {
+                _showDialog.value = Event(R.string.fragment_tech_mark_is_different)
             }
         }
     }
@@ -172,11 +168,16 @@ class TechOperationsViewModel(
         }
     }
 
-    fun startEdit() {
-        updateData(pointStarted = true)
+    fun fabClick() {
+        when (_uiMode.value) {
+            TechUIMode.RfidBlocked -> checkRfidAndUnblock()
+            TechUIMode.Enabled -> checkAvailableFinishTechMap()
+            else -> {
+            }
+        }
     }
 }
 
 enum class TechUIMode {
-    Disabled, Stopped, Started, StartedRfid
+    Disabled, RfidBlocked, Enabled
 }

@@ -3,7 +3,6 @@ package ru.madbrains.inspection.ui.main.routes.techoperations
 import android.content.DialogInterface
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
@@ -110,34 +109,16 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
         })
     }
 
-    private fun setupUI(it: TechUIMode) {
-        val drawableId: Int?
-        when (it) {
-            TechUIMode.Started -> {
-                drawableId = R.drawable.ic_fab_save
-                fabTechOperations.setOnClickListener {
-                    techOperationsViewModel.checkAvailableFinishTechMap()
-                }
-            }
-            TechUIMode.StartedRfid -> {
-                drawableId = R.drawable.ic_fab_rfid
-                fabTechOperations.setOnClickListener {
-                    techOperationsViewModel.checkRfidAndFinish()
-                }
-            }
-            TechUIMode.Stopped -> {
-                drawableId = R.drawable.ic_fab_continue_round
-                fabTechOperations.setOnClickListener {
-                    techOperationsViewModel.startEdit()
-                }
-            }
-            else -> {
-                drawableId = null
-                fabTechOperations.setOnClickListener(null)
-            }
+    private fun setupUI(mode: TechUIMode) {
+        when (mode) {
+            TechUIMode.Enabled -> R.drawable.ic_fab_save
+            TechUIMode.RfidBlocked -> R.drawable.ic_fab_rfid
+            else -> null
+        }?.let { id ->
+            fabTechOperations.setImageResource(id)
         }
-        fabTechOperations.isVisible = it != TechUIMode.Disabled
-        if (it == TechUIMode.Started || it == TechUIMode.StartedRfid) {
+        fabTechOperations.isVisible = mode != TechUIMode.Disabled
+        if (mode == TechUIMode.Enabled) {
             layoutBottomButtonAddDefect.setOnClickListener { toDefectDetailFragment() }
             layoutBottomButtonAddDefect.isClickable = true
             layoutBottomButtonAddDefect.alpha = 1f
@@ -145,9 +126,6 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
             layoutBottomButtonAddDefect.setOnClickListener(null)
             layoutBottomButtonAddDefect.isClickable = false
             layoutBottomButtonAddDefect.alpha = 0.5f
-        }
-        drawableId?.let { id ->
-            fabTechOperations.setImageDrawable(ContextCompat.getDrawable(context, id))
         }
     }
 
@@ -170,6 +148,9 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
         }
         layoutBottomButtonDevice.setOnClickListener {
             techOperationsViewModel.toEquipmentFragment()
+        }
+        fabTechOperations.setOnClickListener {
+            techOperationsViewModel.fabClick()
         }
     }
 
