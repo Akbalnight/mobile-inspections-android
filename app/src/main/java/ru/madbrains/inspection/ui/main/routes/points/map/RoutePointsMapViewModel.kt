@@ -65,7 +65,10 @@ class RoutePointsMapViewModel(
         if (map == null) return
 
         detourModel.route.routesData?.let { list ->
-            updateData(list.filter { it.routeMapId == map.id })
+            val currentIndex = list.indexOfFirst { it.completed } + 1
+            val currentId = list[currentIndex].id
+
+            updateData(list.filter { it.routeMapId == map.id }, currentId)
         }
     }
 
@@ -81,7 +84,7 @@ class RoutePointsMapViewModel(
         _mapImage.postValue(offlineInteractor.getFileInFolder(item.fileName, AppDirType.Docs))
     }
 
-    private fun updateData(points: List<RouteDataModel>) {
+    private fun updateData(points: List<RouteDataModel>, currentId: String?) {
         val deviceIds = points.fold(mutableListOf<String>(), { acc, a ->
             val ids = a.equipments?.map { it.id }
             if (ids != null) {
@@ -97,7 +100,7 @@ class RoutePointsMapViewModel(
                     acc[id] = true
                     acc
                 }
-                applyDefectDataAndUpdate(points, defectsMap)
+                applyDefectDataAndUpdate(points, defectsMap, currentId)
             }, {
                 it.printStackTrace()
             })
@@ -106,20 +109,20 @@ class RoutePointsMapViewModel(
 
     private fun applyDefectDataAndUpdate(
         points: List<RouteDataModel>,
-        defectsMap: MutableMap<String, Boolean>
+        defectsMap: MutableMap<String, Boolean>,
+        currentId: String?
     ) {
         val mapPoints = mutableListOf<MapPointUiModel>()
-        val lastCompleted = points.indexOfLast { it.completed }
-        points.mapIndexed { index, route ->
+        points.map { route ->
             route.techMap?.let { techMap ->
-                val current = lastCompleted + 1 == index
+                val isCurrent = currentId == route.id
                 val preserveOrder = detourModel.saveOrderControlPoints == true
                 val haveDefects =
                     route.equipments?.fold(false, { acc, a -> acc || defectsMap[a.id] == true })
                         ?: false
 
                 val status = when {
-                    current -> MapPointStatus.Current
+                    isCurrent -> MapPointStatus.Current
                     route.completed && !haveDefects -> MapPointStatus.Completed
                     route.completed && haveDefects -> MapPointStatus.CompletedWithDefects
                     else -> MapPointStatus.None
@@ -134,9 +137,10 @@ class RoutePointsMapViewModel(
                         name = techMap.name.orEmpty(),
                         position = route.position,
                         status = status,
-                        clickable = !preserveOrder || route.completed || current
+                        clickable = !preserveOrder || route.completed || isCurrent
                     )
                 )
+
             }
         }
         _mapPoints.value = mapPoints
