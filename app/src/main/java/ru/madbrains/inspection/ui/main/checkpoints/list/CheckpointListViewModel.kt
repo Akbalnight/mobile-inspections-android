@@ -12,6 +12,7 @@ import ru.madbrains.inspection.ui.delegates.CheckpointUiModel
 
 class CheckpointListViewModel(private val offlineInteractor: OfflineInteractor) : BaseViewModel() {
     private var _checkpointRawData: List<CheckpointModel>? = null
+    private var _checkpointUIData: List<CheckpointUiModel>? = null
     private val _checkPointList = MutableLiveData<List<CheckpointUiModel>>()
     val checkPointList: LiveData<List<CheckpointUiModel>> = _checkPointList
 
@@ -28,13 +29,14 @@ class CheckpointListViewModel(private val offlineInteractor: OfflineInteractor) 
             .doAfterTerminate { _progressVisibility.postValue(false) }
             .subscribe({ items ->
                 _checkpointRawData = items
-                _checkPointList.value = items.map {
+                _checkpointUIData = items.map {
                     CheckpointUiModel(
                         id = it.id,
                         name = it.name,
                         hasRfid = it.rfidCode != null
                     )
                 }
+                _checkPointList.postValue(_checkpointUIData)
             }, {
                 it.printStackTrace()
             })
@@ -47,5 +49,10 @@ class CheckpointListViewModel(private val offlineInteractor: OfflineInteractor) 
         }?.run {
             _navigateToDetails.value = Event(this)
         }
+    }
+
+    fun searchText(text: String) {
+        val items = _checkpointUIData?.filter { it.name.contains(text, ignoreCase = true) }
+        _checkPointList.postValue(items)
     }
 }

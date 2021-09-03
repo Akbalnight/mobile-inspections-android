@@ -62,7 +62,9 @@ class CheckpointListFragment : BaseFragment(R.layout.fragment_checkpoint_list) {
             btnLeading.setOnClickListener {
                 findNavController().popBackStack()
             }
-            setupSearch(context.drawables[R.drawable.ic_back], {})
+            setupSearch(context.drawables[R.drawable.ic_back], {
+                checkpointListViewModel.searchText(it)
+            })
         }
     }
 }

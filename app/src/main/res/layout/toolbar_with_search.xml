@@ -46,7 +46,6 @@
             app:layout_constraintEnd_toStartOf="@id/btnAction"
             app:layout_constraintStart_toEndOf="@+id/btnLeading"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_goneMarginStart="16dp"
             tools:text="Заголовок" />
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -73,7 +72,9 @@
             android:textColor="@color/textWhite"
             android:textColorHint="@color/greyLight"
             android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="@+id/tvTitle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnAction"
+            app:layout_constraintStart_toEndOf="@+id/btnLeading"
             app:layout_constraintTop_toTopOf="parent" />
 
 
