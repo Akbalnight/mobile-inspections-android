@@ -52,8 +52,7 @@ class RoutePointsViewModel(
         private set
 
     private var timerDispose: Disposable? = null
-    private val routeDataModels
-        get() = detourModel?.route?.routesData?.sortedBy { it.position } ?: emptyList()
+    private val routeDataModels get() = detourModel?.route?.routesDataSorted ?: listOf()
 
     private val _navigateToTechOperations = MutableLiveData<Event<RouteDataModel>>()
     val navigateToTechOperations: LiveData<Event<RouteDataModel>> = _navigateToTechOperations
@@ -80,7 +79,7 @@ class RoutePointsViewModel(
     fun completeTechMap(item: RouteDataModel) {
         val model = detourModel
         model?.run {
-            route.routesData?.toMutableList()?.let { list ->
+            route.routesDataSorted.toMutableList().let { list ->
                 val index = list.indexOfFirst { item.id == it.id }
                 if (index > -1) {
                     detourModel = copy(
@@ -156,10 +155,10 @@ class RoutePointsViewModel(
     private fun updateData() {
         setRouteStatus()
         val routePoints = mutableListOf<DiffItem>()
-        val lastCompleted = routeDataModels.indexOfLast { it.completed }
-        routeDataModels.forEachIndexed { index, route ->
+        val currentId = detourModel?.route?.getCurrentRouteId()
+        routeDataModels.forEach { route ->
             route.techMap?.let { techMap ->
-                val current = lastCompleted + 1 == index
+                val current = route.id == currentId
                 val preserveOrder = detourModel?.saveOrderControlPoints == true
                 routePoints.add(
                     RoutePointUiModel(

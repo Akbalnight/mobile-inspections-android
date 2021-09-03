@@ -41,7 +41,7 @@ private fun mapGetRouteReq(resp: RouteModel): RouteRemote {
             name = name,
             code = code,
             duration = duration,
-            routesData = routesData?.map { mapGetRoutesDataReq(it) },
+            routesData = routesDataSorted.map { mapGetRoutesDataReq(it) },
             routeMaps = routeMaps?.map { mapGetFileReq(it) }
         )
     }

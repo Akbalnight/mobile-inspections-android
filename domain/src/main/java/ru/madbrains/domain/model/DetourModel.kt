@@ -36,16 +36,14 @@ data class DetourModel(
         route.routeMaps?.let {
             res.addAll(it)
         }
-        route.routesData?.let { routes ->
-            for (data in routes) {
-                data.equipments?.let { equipment ->
-                    for (item in equipment) {
-                        item.attachmentFiles?.let {
-                            res.addAll(it)
-                        }
-                        item.warrantyFiles?.let {
-                            res.addAll(it)
-                        }
+        for (data in route.routesDataSorted) {
+            data.equipments?.let { equipment ->
+                for (item in equipment) {
+                    item.attachmentFiles?.let {
+                        res.addAll(it)
+                    }
+                    item.warrantyFiles?.let {
+                        res.addAll(it)
                     }
                 }
             }
@@ -69,7 +67,22 @@ data class RouteModel(
     val duration: Int?,
     val routesData: List<RouteDataModel>?,
     val routeMaps: List<FileModel>?
-) : Serializable
+) : Serializable {
+
+    val routesDataSorted: List<RouteDataModel>
+        get() = routesData?.sortedBy { it.position } ?: listOf()
+
+    fun getCurrentRouteId(): String? {
+        val list = routesDataSorted
+        val lastCompleted = list.indexOfLast { it.completed }
+        val currentIndex = if (lastCompleted == list.lastIndex) {
+            list.indexOfFirst { !it.completed }
+        } else {
+            lastCompleted + 1
+        }
+        return if (currentIndex != -1) list[currentIndex].id else null
+    }
+}
 
 data class RouteDataModel(
     val id: String?,
