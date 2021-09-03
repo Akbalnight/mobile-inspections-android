@@ -64,16 +64,17 @@ class RoutePointsMapViewModel(
     private fun filterMapPoints(map: MapLevelUiModel?) {
         if (map == null) return
 
-        detourModel.route.routesData?.let { list ->
-            val currentIndex = list.indexOfFirst { it.completed } + 1
-            val currentId = list[currentIndex].id
-
-            updateData(list.filter { it.routeMapId == map.id }, currentId)
+        detourModel.route.routesDataSorted.let { list ->
+            val currentId = detourModel.route.getCurrentRouteId()
+            updateData(
+                list.filter { it.routeMapId == map.id },
+                currentId
+            )
         }
     }
 
     fun routePointClick(point: MapPointUiModel) {
-        detourModel.route.routesData?.let { routes ->
+        detourModel.route.routesDataSorted.let { routes ->
             routes.find { it.id == point.routeId }?.let {
                 _navigateToTechOperations.value = Event(it)
             }
