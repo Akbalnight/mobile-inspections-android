@@ -104,7 +104,6 @@ class RoutePointsViewModel(
             val currentStatus = preferenceStorage.detourStatuses?.data?.getStatusByType(type)
             syncInteractor.insertDetour(
                 detour.copy(
-                    dateStartFact = detour.startTime,
                     dateFinishFact = Date(),
                     statusId = currentStatus?.id,
                     changed = true
@@ -131,7 +130,7 @@ class RoutePointsViewModel(
         val status =
             preferenceStorage.detourStatuses?.data?.getStatusById(detourModel?.statusId)?.type
         if (routeDataModels.all { it.completed } || status == DetourStatusType.COMPLETED ||
-            detourModel?.startTime == null) {
+            detourModel?.dateStartFact == null) {
             onBack()
         } else {
             _navigateToCloseDialog.value = Event(Unit)
@@ -200,8 +199,8 @@ class RoutePointsViewModel(
     }
 
     private fun triggerTimer() {
-        val startTime = detourModel?.startTime ?: Date()
-        detourModel = detourModel?.copy(startTime = startTime)
+        val startTime = detourModel?.dateStartFact ?: Date()
+        detourModel = detourModel?.copy(dateStartFact = startTime)
         if (timerDispose == null)
             timerDispose = Observable.timer(1, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
