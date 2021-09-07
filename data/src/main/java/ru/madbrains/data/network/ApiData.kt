@@ -42,7 +42,7 @@ object ApiData {
         inspectionApi = Retrofit.Builder()
             .baseUrl(preferenceStorage.apiUrl ?: "")
             .client(getInspectionOkHttpClient(preferenceStorage, authenticator))
-            .addConverterFactory(MoshiConverterFactory.create(getMoshi()))
+            .addConverterFactory(MoshiConverterFactory.create(getMoshi()).withNullSerialization())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
             .create(InspectionApi::class.java)
