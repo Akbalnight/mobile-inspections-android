@@ -21,7 +21,7 @@ val dataModule = module {
     single { getDatabase(androidContext()) }
 
     single { getRfidRepository() }
-    single { getAuthRepository() }
+    single { getAuthRepository(get()) }
     single { getIAuthenticator(androidContext(), get(), get()) }
     single { getRemoteRepository(get()) }
     single { getOfflineRepository(get(), get()) }
@@ -39,8 +39,8 @@ private fun getIAuthenticator(
     return IAuthenticator(context, authInteractor, preferenceStorage)
 }
 
-private fun getAuthRepository(): AuthRepository {
-    return AuthRepositoryImpl()
+private fun getAuthRepository(preferenceStorage: PreferenceStorage): AuthRepository {
+    return AuthRepositoryImpl(preferenceStorage)
 }
 
 private fun getRemoteRepository(preferenceStorage: PreferenceStorage): RemoteRepository {

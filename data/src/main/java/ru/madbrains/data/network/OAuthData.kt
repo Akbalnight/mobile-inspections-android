@@ -18,16 +18,18 @@ object OAuthData {
 
     lateinit var authApi: AuthApi
 
-    var oauthUrl = "https://oauth.dias-dev.ru"
-
     var clientId = "System-Service-Dias"
     var clientSecret = "24U7tcNLHRSvvjrr9sFEXGyMTpzk59mG"
 
-    fun getAuthorizeUrl(codeVerifier: String): String {
-        return "$oauthUrl/oauth/authorize" +
+    fun getAuthorizeUrl(
+        apiUrl: String,
+        authUrl: String,
+        codeVerifier: String
+    ): String {
+        return "$authUrl/oauth/authorize" +
                 "?response_type=code" +
                 "&client_id=$clientId" +
-                "&redirect_uri=${ApiData.apiUrl}/authorization_code" +
+                "&redirect_uri=$apiUrl/authorization_code" +
                 "&scope=read&code_challenge=${codeVerifier.toBase64HashWith256()}" +
                 "&code_challenge_method=s256"
     }
@@ -49,7 +51,7 @@ object OAuthData {
 
     fun initApi(preferenceStorage: PreferenceStorage) {
         authApi = Retrofit.Builder()
-            .baseUrl(oauthUrl)
+            .baseUrl(preferenceStorage.authUrl ?: "")
             .client(getAuthOkHttpClient(preferenceStorage))
             .addConverterFactory(MoshiConverterFactory.create(getMoshi()))
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
