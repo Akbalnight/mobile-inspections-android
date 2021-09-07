@@ -2,8 +2,8 @@ package ru.madbrains.inspection.ui.main.checkpoints.detail
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
+import io.reactivex.schedulers.Schedulers
 import ru.madbrains.domain.interactor.RfidInteractor
 import ru.madbrains.domain.interactor.SyncInteractor
 import ru.madbrains.domain.model.CheckpointModel
@@ -71,7 +71,7 @@ class CheckpointDetailViewModel(
         _checkpointRawData?.let { model ->
             _rfidCode?.let { rfid ->
                 syncInteractor.insertCheckpoint(model.copy(rfidCode = rfid, changed = true))
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .observeOn(Schedulers.io())
                     .doOnSubscribe { _rfidProgress.postValue(true) }
                     .doAfterTerminate { _rfidProgress.postValue(false) }
                     .subscribe({

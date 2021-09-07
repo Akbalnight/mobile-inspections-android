@@ -2,8 +2,8 @@ package ru.madbrains.inspection.ui.main.defects.defectdetail
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
+import io.reactivex.schedulers.Schedulers
 import ru.madbrains.domain.interactor.OfflineInteractor
 import ru.madbrains.domain.interactor.RemoteInteractor
 import ru.madbrains.domain.interactor.SyncInteractor
@@ -90,7 +90,7 @@ class DefectDetailViewModel(
     fun getDefectTypicalList() {
         if (defectTypicalModels.isNullOrEmpty()) {
             offlineInteractor.getDefectTypical()
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .subscribe({ items ->
                     defectTypicalModels.clear()
                     defectTypicalModels.addAll(items)
@@ -253,7 +253,7 @@ class DefectDetailViewModel(
             created = true,
             changed = false
         )
-        syncInteractor.insertDefect(model).observeOn(AndroidSchedulers.mainThread())
+        syncInteractor.insertDefect(model).observeOn(Schedulers.io())
             .doOnSubscribe { _progressVisibility.postValue(true) }
             .doAfterTerminate { _progressVisibility.postValue(false) }
             .subscribe({
@@ -275,7 +275,7 @@ class DefectDetailViewModel(
                 changed = !defectModel.created
             )
             syncInteractor.insertDefect(model)
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .doOnSubscribe { _progressVisibility.postValue(true) }
                 .doAfterTerminate { _progressVisibility.postValue(false) }
                 .subscribe({

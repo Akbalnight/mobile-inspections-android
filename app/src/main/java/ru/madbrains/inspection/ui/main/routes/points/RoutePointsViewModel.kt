@@ -3,7 +3,6 @@ package ru.madbrains.inspection.ui.main.routes.points
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
@@ -110,7 +109,7 @@ class RoutePointsViewModel(
                 )
             )
                 .andThen(offlineInteractor.getDetoursAndRefreshSource())
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .doOnSubscribe { _progressVisibility.postValue(true) }
                 .doAfterTerminate { _progressVisibility.postValue(false) }
                 .subscribe({
@@ -205,7 +204,7 @@ class RoutePointsViewModel(
             timerDispose = Observable.timer(1, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .repeat()
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .doOnSubscribe {
                     _durationTimer.value = 0L
                 }

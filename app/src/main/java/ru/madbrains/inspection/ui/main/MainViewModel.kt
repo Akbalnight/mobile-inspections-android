@@ -2,8 +2,8 @@ package ru.madbrains.inspection.ui.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
+import io.reactivex.schedulers.Schedulers
 import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.domain.interactor.AuthInteractor
 import ru.madbrains.domain.interactor.RemoteInteractor
@@ -107,7 +107,7 @@ class MainViewModel(
     fun logout() {
         val accessToken = preferenceStorage.token.orEmpty()
         remoteInteractor.sendSyncDataAndRefreshDb()
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(Schedulers.io())
             .doOnSubscribe { _progressVisibility.postValue(Pair(true, R.string.sync)) }
             .andThen(authInteractor.logout(accessToken).doOnSubscribe {
                 _progressVisibility.postValue(Pair(true, null))
@@ -128,7 +128,7 @@ class MainViewModel(
 
     fun forceLogout() {
         syncInteractor.logoutClean()
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(Schedulers.io())
             .subscribe({
                 _navigateToAuthorization.postValue(Event(Unit))
             }, {

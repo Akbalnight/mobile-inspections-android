@@ -2,8 +2,8 @@ package ru.madbrains.inspection.ui.main.defects.defectdetail.equipmentselectlist
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
+import io.reactivex.schedulers.Schedulers
 import ru.madbrains.domain.interactor.OfflineInteractor
 import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.inspection.base.BaseViewModel
@@ -56,7 +56,7 @@ class EquipmentSelectListViewModel(
     fun getEquipments() {
         if (deviceListModels.isNullOrEmpty()) {
             offlineInteractor.getEquipments()
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .doOnSubscribe { _progressVisibility.postValue(true) }
                 .doAfterTerminate { _progressVisibility.postValue(false) }
                 .subscribe({ items ->

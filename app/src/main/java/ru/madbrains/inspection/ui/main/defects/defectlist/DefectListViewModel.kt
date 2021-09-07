@@ -2,8 +2,8 @@ package ru.madbrains.inspection.ui.main.defects.defectlist
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
+import io.reactivex.schedulers.Schedulers
 import ru.madbrains.data.extensions.toDDMMYYYY
 import ru.madbrains.data.extensions.toHHmm
 import ru.madbrains.data.extensions.toddMMyyyyHHmm
@@ -59,7 +59,7 @@ class DefectListViewModel(
         val single =
             if (deviceIds != null) offlineInteractor.getActiveDefects(equipmentIds = deviceIds) else offlineInteractor.getDefects()
         single
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(Schedulers.io())
             .doOnSubscribe { _progressVisibility.postValue(true) }
             .doAfterTerminate { _progressVisibility.postValue(false) }
             .subscribe({ items ->
@@ -77,7 +77,7 @@ class DefectListViewModel(
     fun deleteDefect(deleteItem: DefectModel?) {
         deleteItem?.let { item ->
             syncInteractor.delDefectDb(item.id)
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .doOnSubscribe { _progressVisibility.postValue(true) }
                 .doAfterTerminate { _progressVisibility.postValue(false) }
                 .subscribe({
@@ -144,7 +144,7 @@ class DefectListViewModel(
                     changed = true
                 )
             )
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .subscribe({
                     getDefectList(lastDeviceIds)
                 }, {

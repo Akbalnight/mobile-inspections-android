@@ -4,8 +4,8 @@ import android.graphics.Bitmap
 import android.graphics.RectF
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
+import io.reactivex.schedulers.Schedulers
 import ru.madbrains.domain.interactor.OfflineInteractor
 import ru.madbrains.domain.model.AppDirType
 import ru.madbrains.domain.model.DetourModel
@@ -99,7 +99,7 @@ class RoutePointsMapViewModel(
         })
 
         offlineInteractor.getEquipmentIdsWithDefects(equipmentIds = deviceIds)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(Schedulers.io())
             .subscribe({ ids ->
                 val defectsMap = ids.fold(mutableMapOf<String, Boolean>()) { acc, id ->
                     acc[id] = true

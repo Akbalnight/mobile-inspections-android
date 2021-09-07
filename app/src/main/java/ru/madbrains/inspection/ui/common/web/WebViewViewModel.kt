@@ -2,8 +2,8 @@ package ru.madbrains.inspection.ui.common.web
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
+import io.reactivex.schedulers.Schedulers
 import ru.madbrains.data.extensions.toBase64HashWith256
 import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.domain.interactor.AuthInteractor
@@ -25,7 +25,7 @@ class WebViewViewModel(
     fun getToken(authCode: String) {
         val codeVerifier = preferenceStorage.codeVerifier.orEmpty()
         authInteractor.getToken(authCode, codeVerifier)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(Schedulers.io())
             .doOnSubscribe { _progressVisibility.value = true }
             .doAfterTerminate { _progressVisibility.value = false }
             .subscribe({
