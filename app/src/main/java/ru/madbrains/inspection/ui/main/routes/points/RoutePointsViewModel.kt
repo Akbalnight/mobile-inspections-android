@@ -87,7 +87,7 @@ class RoutePointsViewModel(
                                 this[index] = item.copy(completed = true)
                             }
                         )
-                    )
+                    ).saveChangesToDb()
                     updateData()
                     if (routeDataModels.all { it.completed }) {
                         _navigateToFinishDialog.value = Event(Unit)
@@ -119,6 +119,18 @@ class RoutePointsViewModel(
                 })
                 .addTo(disposables)
         }
+    }
+
+    private fun DetourModel.saveChangesToDb(): DetourModel {
+        val data = this.copy(changed = true)
+        syncInteractor.insertDetour(data)
+            .observeOn(Schedulers.io())
+            .subscribe({
+            }, {
+                it.printStackTrace()
+            })
+            .addTo(disposables)
+        return data
     }
 
     private fun onBack() {
@@ -199,7 +211,7 @@ class RoutePointsViewModel(
 
     private fun triggerTimer() {
         val startTime = detourModel?.dateStartFact ?: Date()
-        detourModel = detourModel?.copy(dateStartFact = startTime)
+        detourModel = detourModel?.copy(dateStartFact = startTime)?.saveChangesToDb()
         if (timerDispose == null)
             timerDispose = Observable.timer(1, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
