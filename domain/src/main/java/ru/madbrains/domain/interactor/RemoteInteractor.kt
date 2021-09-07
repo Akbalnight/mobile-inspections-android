@@ -48,27 +48,9 @@ class RemoteInteractor(
     }
 
     fun getDefects(
-        id: String? = null,
-        codes: List<String>? = null,
-        dateDetectStart: String? = null,
-        dateDetectEnd: String? = null,
-        detourIds: List<String>? = null,
-        defectNames: List<String>? = null,
-        equipmentNames: List<String>? = null,
-        equipmentIds: List<String>? = null,
-        statusProcessId: String? = null
+        detourIds: List<String>
     ): Single<List<DefectModel>> {
-        return remoteRepository.getDefects(
-            id,
-            codes,
-            dateDetectStart,
-            dateDetectEnd,
-            detourIds,
-            defectNames,
-            equipmentNames,
-            equipmentIds,
-            statusProcessId
-        )
+        return remoteRepository.getDefects(detourIds)
             .subscribeOn(Schedulers.io())
     }
 

@@ -29,17 +29,7 @@ interface RemoteRepository {
 
     fun updateCheckpoint(id: String, rfidCode: String): Single<Any>
 
-    fun getDefects(
-        id: String?,
-        codes: List<String>?,
-        dateDetectStart: String?,
-        dateDetectEnd: String?,
-        detourIds: List<String>?,
-        defectNames: List<String>?,
-        equipmentNames: List<String>?,
-        equipmentIds: List<String>?,
-        statusProcessId: String?
-    ): Single<List<DefectModel>>
+    fun getDefects(detourIds: List<String>): Single<List<DefectModel>>
 
 
     fun saveDefect(model: DefectModel, files: List<File>?): Single<String>

@@ -5,7 +5,6 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class GetDetoursReq(
-    @field:Json(name = "id") val id: String? = null,
     @field:Json(name = "staffIds") val staffIds: List<String>,
     @field:Json(name = "statusIds") val statusIds: List<String>? = null,
     @field:Json(name = "dateBegin") val dateBegin: String? = null,

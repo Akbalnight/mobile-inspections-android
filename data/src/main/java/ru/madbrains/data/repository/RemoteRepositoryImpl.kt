@@ -101,28 +101,8 @@ class RemoteRepositoryImpl(
         return ApiData.inspectionApi.updateCheckpoint(CheckpointUpdateReq(id, rfidCode))
     }
 
-    override fun getDefects(
-        id: String?,
-        codes: List<String>?,
-        dateDetectStart: String?,
-        dateDetectEnd: String?,
-        detourIds: List<String>?,
-        defectNames: List<String>?,
-        equipmentNames: List<String>?,
-        equipmentIds: List<String>?,
-        statusProcessId: String?
-    ): Single<List<DefectModel>> {
-        val request = GetDefectsReq(
-            id = id,
-            codes = codes,
-            dateDetectStart = dateDetectStart,
-            dateDetectEnd = dateDetectEnd,
-            detourIds = detourIds,
-            defectNames = defectNames,
-            equipmentNames = equipmentNames,
-            equipmentIds = equipmentIds,
-            statusProcessId = statusProcessId
-        )
+    override fun getDefects(detourIds: List<String>): Single<List<DefectModel>> {
+        val request = GetDefectsReq(detourIds)
         return ApiData.inspectionApi.getDefects(request).map { resp ->
             resp.map { mapGetDefectsResp(it) }
         }
