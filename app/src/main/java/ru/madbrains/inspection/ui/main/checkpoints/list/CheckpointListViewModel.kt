@@ -2,8 +2,8 @@ package ru.madbrains.inspection.ui.main.checkpoints.list
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
+import io.reactivex.schedulers.Schedulers
 import ru.madbrains.domain.interactor.OfflineInteractor
 import ru.madbrains.domain.model.CheckpointModel
 import ru.madbrains.inspection.base.BaseViewModel
@@ -24,7 +24,7 @@ class CheckpointListViewModel(private val offlineInteractor: OfflineInteractor) 
 
     fun getCheckpoints() {
         offlineInteractor.getCheckpoints()
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(Schedulers.io())
             .doOnSubscribe { _progressVisibility.postValue(true) }
             .doAfterTerminate { _progressVisibility.postValue(false) }
             .subscribe({ items ->
@@ -47,7 +47,7 @@ class CheckpointListViewModel(private val offlineInteractor: OfflineInteractor) 
         _checkpointRawData?.find {
             it.id == model.id
         }?.run {
-            _navigateToDetails.value = Event(this)
+            _navigateToDetails.postValue(Event(this))
         }
     }
 

@@ -21,7 +21,7 @@ class RouteFiltersViewModel(
     var currentFilter: DetourStatus? = null
 
     init {
-        _availableStatuses.value = preferenceStorage.detourStatuses?.data
+        _availableStatuses.postValue(preferenceStorage.detourStatuses?.data)
     }
 
     fun setFilter(type: DetourStatusType?) {
@@ -29,6 +29,6 @@ class RouteFiltersViewModel(
     }
 
     fun applyFilter() {
-        _selectedFilter.value = currentFilter
+        _selectedFilter.postValue(currentFilter)
     }
 }

@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.Completable
 import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.rxkotlin.addTo
+import io.reactivex.schedulers.Schedulers
 import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.domain.interactor.OfflineInteractor
 import ru.madbrains.domain.interactor.RemoteInteractor
@@ -72,7 +72,7 @@ class SyncViewModel(
 
     init {
         offlineInteractor.syncInfoSource
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(Schedulers.io())
             .subscribe({
                 _syncInfo.postValue(it)
             }, {
@@ -80,7 +80,7 @@ class SyncViewModel(
             }).addTo(observables)
 
         remoteInteractor.syncedItemsFinish
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(Schedulers.io())
             .subscribe({ id ->
                 _changedItems.postValue(_changedItems.value?.filter { it.id != id })
             }, {
@@ -94,7 +94,7 @@ class SyncViewModel(
     fun initAction(fileTempDir: File?, fileSaveDir: File?) {
         syncInteractor.setDirectories(fileTempDir, fileSaveDir)
         syncInteractor.checkIfNeedsCleaningAndRefreshDetours()
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(Schedulers.io())
             .changeProgressWith(_globalProgress)
             .subscribe({ }, {
                 it.printStackTrace()
@@ -105,9 +105,9 @@ class SyncViewModel(
 
     fun startSync() {
         _detourSyncStatus.postValue(Event(ProgressState.PROGRESS))
-        _openSyncDialog.value = Event(Unit)
+        _openSyncDialog.postValue(Event(Unit))
         getSyncData().changeProgressWith(_allSyncProgress)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(Schedulers.io())
             .subscribe({
                 _pendingDataSync = it
             }, {
@@ -172,7 +172,7 @@ class SyncViewModel(
     fun applySyncToDb() {
         _pendingDataSync?.let { data ->
             syncInteractor.syncPendingDataAndRefresh(data)
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .changeProgressWith(_globalProgress)
                 .subscribe({
                     getChangedDetoursAndDefects()
@@ -186,7 +186,7 @@ class SyncViewModel(
 
     fun getChangedDetoursAndDefects() {
         offlineInteractor.getChangedDataForSync()
-            .observeOn(AndroidSchedulers.mainThread()).changeProgressWithB(_globalProgress)
+            .observeOn(Schedulers.io()).changeProgressWithB(_globalProgress)
             .subscribe({ wrap ->
                 val detours = wrap.detours.map { detour ->
                     ChangedItemUiDetour(
@@ -219,7 +219,7 @@ class SyncViewModel(
 
     fun startSendingData() {
         remoteInteractor.sendSyncDataAndRefreshDb()
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(Schedulers.io())
             .changeProgressWith(_globalProgress)
             .subscribe({}, {
                 _showSnackBar.postValue(Event(R.string.fragment_sync_send_data_error))

@@ -2,8 +2,8 @@ package ru.madbrains.inspection.ui.main.routes
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
+import io.reactivex.schedulers.Schedulers
 import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.domain.interactor.OfflineInteractor
 import ru.madbrains.domain.model.*
@@ -35,7 +35,7 @@ class DetoursViewModel(
 
     init {
         offlineInteractor.detoursSource
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(Schedulers.io())
             .doOnNext { routes ->
                 detourModels.clear()
                 detourModels.addAll(routes)
@@ -93,11 +93,11 @@ class DetoursViewModel(
 
     fun dateRouteClick(id: String) {
         val detour = detourModels.find { detourModel -> detourModel.id == id }
-        detour?.let { _navigateToDateRoutePoints.value = Event(it) }
+        detour?.let { _navigateToDateRoutePoints.postValue(Event(it)) }
     }
 
     fun routeClick(id: String) {
         val detour = detourModels.find { detourModel -> detourModel.id == id }
-        detour?.let { _navigateToRoutePoints.value = Event(it) }
+        detour?.let { _navigateToRoutePoints.postValue(Event(it)) }
     }
 }

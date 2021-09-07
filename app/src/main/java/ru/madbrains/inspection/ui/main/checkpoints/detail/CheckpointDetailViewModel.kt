@@ -2,8 +2,8 @@ package ru.madbrains.inspection.ui.main.checkpoints.detail
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
+import io.reactivex.schedulers.Schedulers
 import ru.madbrains.domain.interactor.RfidInteractor
 import ru.madbrains.domain.interactor.SyncInteractor
 import ru.madbrains.domain.model.CheckpointModel
@@ -58,29 +58,28 @@ class CheckpointDetailViewModel(
 
     fun setRawData(data: CheckpointModel?) {
         _checkpointRawData = data
-        _rfidDataReceiver.value = Event(data?.rfidCode ?: "-")
+        _rfidDataReceiver.postValue(Event(data?.rfidCode ?: "-"))
         _rfidCode = data?.rfidCode
     }
 
     fun changeDescription(text: CharSequence?) {
         _descriptionText = text?.toString()
-        _isChanged.value = true
+        _isChanged.postValue(true)
     }
 
     fun sendUpdate() {
         _checkpointRawData?.let { model ->
             _rfidCode?.let { rfid ->
                 syncInteractor.insertCheckpoint(model.copy(rfidCode = rfid, changed = true))
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .observeOn(Schedulers.io())
                     .doOnSubscribe { _rfidProgress.postValue(true) }
                     .doAfterTerminate { _rfidProgress.postValue(false) }
                     .subscribe({
-                        _showSnackBar.value =
-                            Event(R.string.fragment_checkpoint_detail_saved_success)
-                        _popAndRefresh.value = Event(Unit)
+                        _showSnackBar.postValue(Event(R.string.fragment_checkpoint_detail_saved_success))
+                        _popAndRefresh.postValue(Event(Unit))
                     }, {
                         it.printStackTrace()
-                        _showError.value = Event(it)
+                        _showError.postValue(Event(it))
                     })
                     .addTo(disposables)
             }
@@ -90,25 +89,25 @@ class CheckpointDetailViewModel(
 
     fun checkAndSave() {
         if (_isChanged.value == true) {
-            _showDialogConfirmChangedFields.value = Event(Unit)
+            _showDialogConfirmChangedFields.postValue(Event(Unit))
         }
     }
 
     fun checkPopBack() {
         if (_isChanged.value == true) {
-            _showDialogChangedFields.value = Event(Unit)
+            _showDialogChangedFields.postValue(Event(Unit))
         } else {
-            _popNavigation.value = Event(Unit)
+            _popNavigation.postValue(Event(Unit))
         }
     }
 
     fun startRfidScan() {
         rfidInteractor.startScan({
-            _rfidProgress.value = it
+            _rfidProgress.postValue(it)
         }) {
-            _rfidDataReceiver.value = Event(it)
+            _rfidDataReceiver.postValue(Event(it))
             _rfidCode = it
-            _isChanged.value = true
+            _isChanged.postValue(true)
         }
     }
 

@@ -21,13 +21,13 @@ class LauncherViewModel(
         initApi(preferenceStorage, authenticator)
         when {
             !preferenceStorage.loginHash.isNullOrEmpty() -> {
-                _launchDestination.value = Event(LaunchDestination.LockScreen)
+                _launchDestination.postValue(Event(LaunchDestination.LockScreen))
             }
             preferenceStorage.token.isNullOrEmpty() -> {
-                _launchDestination.value = Event(LaunchDestination.Authorization)
+                _launchDestination.postValue(Event(LaunchDestination.Authorization))
             }
             else -> {
-                _launchDestination.value = Event(LaunchDestination.Main)
+                _launchDestination.postValue(Event(LaunchDestination.Main))
             }
         }
     }

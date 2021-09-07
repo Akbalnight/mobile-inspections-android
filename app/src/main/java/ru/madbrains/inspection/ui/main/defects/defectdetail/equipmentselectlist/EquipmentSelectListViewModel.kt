@@ -2,8 +2,8 @@ package ru.madbrains.inspection.ui.main.defects.defectdetail.equipmentselectlist
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
+import io.reactivex.schedulers.Schedulers
 import ru.madbrains.domain.interactor.OfflineInteractor
 import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.inspection.base.BaseViewModel
@@ -32,11 +32,11 @@ class EquipmentSelectListViewModel(
 
     fun deviceSelectClick(equipment: EquipmentModel?) {
         equipment?.let {
-            _checkedDevice.value = Event(it)
-            _navigateToDefectDetail.value = Event(it)
+            _checkedDevice.postValue(Event(it))
+            _navigateToDefectDetail.postValue(Event(it))
             deviceListModels.clear()
             currentDevice = null
-            _deviceList.value = null
+            _deviceList.postValue(null)
 
         }
     }
@@ -56,7 +56,7 @@ class EquipmentSelectListViewModel(
     fun getEquipments() {
         if (deviceListModels.isNullOrEmpty()) {
             offlineInteractor.getEquipments()
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .doOnSubscribe { _progressVisibility.postValue(true) }
                 .doAfterTerminate { _progressVisibility.postValue(false) }
                 .subscribe({ items ->
@@ -80,7 +80,7 @@ class EquipmentSelectListViewModel(
                     isSelected = it.id == currentDevice?.id
                 )
             }
-        _deviceList.value = items
+        _deviceList.postValue(items)
     }
 
     private fun updateDeviceList() {
@@ -95,7 +95,7 @@ class EquipmentSelectListViewModel(
                 )
             }
         }
-        _deviceList.value = items
+        _deviceList.postValue(items)
     }
 
 }

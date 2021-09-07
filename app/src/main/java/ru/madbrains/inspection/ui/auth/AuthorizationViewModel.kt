@@ -35,11 +35,11 @@ class AuthorizationViewModel(
                 preferenceStorage.authUrl ?: "",
                 it
             )
-            _navigateToAuth.value = Event(authUrl)
+            _navigateToAuth.postValue(Event(authUrl))
         }
     }
 
     fun serverSettingsClick() {
-        _navigateToServerSettings.value = Event(Unit)
+        _navigateToServerSettings.postValue(Event(Unit))
     }
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
+import io.reactivex.schedulers.Schedulers
 import ru.madbrains.data.extensions.toBase64HashWith256
 import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.domain.interactor.AuthInteractor
@@ -54,14 +55,14 @@ class LockScreenViewModel(
                     _progressVisibility.postValue(Pair(false, null))
                 }, {}).addTo(disposables)
         } else {
-            _showError.value = Event(R.string.login_and_password_do_not_match)
+            _showError.postValue(Event(R.string.login_and_password_do_not_match))
         }
     }
 
     fun logout() {
         val accessToken = preferenceStorage.token.orEmpty()
         remoteInteractor.sendSyncDataAndRefreshDb()
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(Schedulers.io())
             .doOnSubscribe { _progressVisibility.postValue(Pair(true, R.string.sync)) }
             .andThen(authInteractor.logout(accessToken).doOnSubscribe {
                 _progressVisibility.postValue(Pair(true, null))

@@ -3,7 +3,6 @@ package ru.madbrains.inspection.ui.main.routes.points
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
@@ -65,7 +64,7 @@ class RoutePointsViewModel(
     fun routePointClick(id: String?) {
         routeDataModels.find { data ->
             data.id == id
-        }?.let { _navigateToTechOperations.value = Event(it) }
+        }?.let { _navigateToTechOperations.postValue(Event(it)) }
     }
 
     fun isDetourEditable(): Boolean {
@@ -73,7 +72,7 @@ class RoutePointsViewModel(
     }
 
     fun navigateToDefectList() {
-        _navigateToDefectList.value = Event(timerStarted)
+        _navigateToDefectList.postValue(Event(timerStarted))
     }
 
     fun completeTechMap(item: RouteDataModel) {
@@ -88,10 +87,10 @@ class RoutePointsViewModel(
                                 this[index] = item.copy(completed = true)
                             }
                         )
-                    )
+                    ).saveChangesToDb()
                     updateData()
                     if (routeDataModels.all { it.completed }) {
-                        _navigateToFinishDialog.value = Event(Unit)
+                        _navigateToFinishDialog.postValue(Event(Unit))
                     }
                 }
             }
@@ -110,7 +109,7 @@ class RoutePointsViewModel(
                 )
             )
                 .andThen(offlineInteractor.getDetoursAndRefreshSource())
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .doOnSubscribe { _progressVisibility.postValue(true) }
                 .doAfterTerminate { _progressVisibility.postValue(false) }
                 .subscribe({
@@ -122,8 +121,20 @@ class RoutePointsViewModel(
         }
     }
 
+    private fun DetourModel.saveChangesToDb(): DetourModel {
+        val data = this.copy(changed = true)
+        syncInteractor.insertDetour(data)
+            .observeOn(Schedulers.io())
+            .subscribe({
+            }, {
+                it.printStackTrace()
+            })
+            .addTo(disposables)
+        return data
+    }
+
     private fun onBack() {
-        _navigateToBack.value = Event(Unit)
+        _navigateToBack.postValue(Event(Unit))
     }
 
     fun closeClick() {
@@ -133,7 +144,7 @@ class RoutePointsViewModel(
             detourModel?.dateStartFact == null) {
             onBack()
         } else {
-            _navigateToCloseDialog.value = Event(Unit)
+            _navigateToCloseDialog.postValue(Event(Unit))
         }
     }
 
@@ -147,7 +158,7 @@ class RoutePointsViewModel(
         triggerTimer()
         val route = routeDataModels.firstOrNull { !it.completed }
         route?.let {
-            _navigateToNextRoute.value = Event(route)
+            _navigateToNextRoute.postValue(Event(route))
         }
     }
 
@@ -171,7 +182,7 @@ class RoutePointsViewModel(
                 )
             }
         }
-        _routePoints.value = routePoints
+        _routePoints.postValue(routePoints)
     }
 
     private fun setRouteStatus() {
@@ -182,38 +193,40 @@ class RoutePointsViewModel(
         val completedPoints = routeDataModels.filter { it.completed }.count()
         val allPoints = routeDataModels.count()
         val allPointsCompleted = allPoints == completedPoints
-        _routeStatus.value = when {
-            allPointsCompleted && !completed -> {
-                RouteStatus.FINISHED_NOT_COMPLETED
+        _routeStatus.postValue(
+            when {
+                allPointsCompleted && !completed -> {
+                    RouteStatus.FINISHED_NOT_COMPLETED
+                }
+                allPointsCompleted && completed -> {
+                    RouteStatus.COMPLETED
+                }
+                completedPoints == 0 -> {
+                    RouteStatus.NOT_STARTED
+                }
+                else -> {
+                    RouteStatus.IN_PROGRESS
+                }
             }
-            allPointsCompleted && completed -> {
-                RouteStatus.COMPLETED
-            }
-            completedPoints == 0 -> {
-                RouteStatus.NOT_STARTED
-            }
-            else -> {
-                RouteStatus.IN_PROGRESS
-            }
-        }
+        )
     }
 
     private fun triggerTimer() {
         val startTime = detourModel?.dateStartFact ?: Date()
-        detourModel = detourModel?.copy(dateStartFact = startTime)
+        detourModel = detourModel?.copy(dateStartFact = startTime)?.saveChangesToDb()
         if (timerDispose == null)
             timerDispose = Observable.timer(1, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .repeat()
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .doOnSubscribe {
-                    _durationTimer.value = 0L
+                    _durationTimer.postValue(0L)
                 }
                 .doOnDispose {
-                    _durationTimer.value = null
+                    _durationTimer.postValue(null)
                 }
                 .subscribe({
-                    _durationTimer.value = (Date().time - startTime.time) / 1000
+                    _durationTimer.postValue((Date().time - startTime.time) / 1000)
                 }, {
                     it.printStackTrace()
                 })

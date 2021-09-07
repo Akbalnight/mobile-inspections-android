@@ -34,13 +34,13 @@ class EquipmentListViewModel(
                 )
             }
         }
-        _equipmentList.value = equipments
+        _equipmentList.postValue(equipments)
         itemList = list
     }
 
     fun toEquipmentFragment(item: EquipmentListUiModel) {
         itemList?.find { item.id == it.id }?.let {
-            _navigateToEquipment.value = Event(it)
+            _navigateToEquipment.postValue(Event(it))
         }
     }
 }
