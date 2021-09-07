@@ -28,8 +28,7 @@ data class DetourModel(
     val isDefectExist: Int?,
     val frozen: Boolean?,
     val route: RouteModel,
-    val changed: Boolean,
-    val startTime: Date? = null
+    val changed: Boolean
 ) : Serializable {
     fun getAllFilesIds(): List<String> {
         val res = arrayListOf<FileModel>()

@@ -30,7 +30,6 @@ class RoutePointsMapFragment : BaseFragment(R.layout.fragment_route_points_map) 
     private val routePointsMapViewModel: RoutePointsMapViewModel by sharedViewModel()
     private var imageScale: Float = 1f
     private var scaleStep: Float = 0.3f
-    private var bitmap: Bitmap? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -74,11 +73,14 @@ class RoutePointsMapFragment : BaseFragment(R.layout.fragment_route_points_map) 
             findNavController().navigate(R.id.action_routePointsFragment_to_mapsLevelListFragment)
         }
 
-        routePointsMapViewModel.mapPoints.observe(viewLifecycleOwner) { list ->
-            calculatePoints(list)
-            mapIV.setOnMatrixChangeListener { rect ->
-                calculatePoints(rect, list)
-            }
+        mapIV.displayRect?.let {
+            routePointsMapViewModel.setRectF(it)
+        }
+        mapIV.setOnMatrixChangeListener { rect ->
+            routePointsMapViewModel.setRectF(rect)
+        }
+        routePointsMapViewModel.mapData.observe(viewLifecycleOwner) {
+            calculatePoints(it.rectF, it.points, it.bitmap)
         }
     }
 
@@ -91,27 +93,11 @@ class RoutePointsMapFragment : BaseFragment(R.layout.fragment_route_points_map) 
     override fun onResume() {
         super.onResume()
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
-        calculatePoints()
     }
 
-    private fun calculatePoints() {
-        routePointsMapViewModel.mapPoints.value?.let { list ->
-            mapIV.displayRect?.let { rect ->
-                calculatePoints(rect, list)
-            }
-        }
-    }
-
-    private fun calculatePoints(list: List<MapPointUiModel>) {
-        mapIV.displayRect?.let { rect ->
-            calculatePoints(rect, list)
-        }
-    }
-
-    private fun calculatePoints(rectF: RectF, list: List<MapPointUiModel>) {
-        val image = bitmap ?: return
+    private fun calculatePoints(rectF: RectF, list: List<MapPointUiModel>, bitmap: Bitmap) {
         val pointSize = 100
-        val scaleFactor: Double = rectF.width() / image.width.toDouble()
+        val scaleFactor: Double = rectF.width() / bitmap.width.toDouble()
         pointsContainer.removeAllViews()
 
         list.forEach { point ->
@@ -137,7 +123,7 @@ class RoutePointsMapFragment : BaseFragment(R.layout.fragment_route_points_map) 
             .load(file)
             .into(object : SimpleTarget<Bitmap>() {
                 override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                    bitmap = resource
+                    routePointsMapViewModel.setBitmap(resource)
                     tvError.isVisible = false
                     progressView.changeVisibility(false)
                     mapIV.isVisible = true

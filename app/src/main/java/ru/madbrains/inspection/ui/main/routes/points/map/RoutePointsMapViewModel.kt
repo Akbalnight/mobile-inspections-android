@@ -1,5 +1,7 @@
 package ru.madbrains.inspection.ui.main.routes.points.map
 
+import android.graphics.Bitmap
+import android.graphics.RectF
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -18,11 +20,13 @@ import java.io.File
 class RoutePointsMapViewModel(
     private val offlineInteractor: OfflineInteractor
 ) : BaseViewModel() {
+
+    private val mapDataMutable = MapDataMutable()
+    private val _mapData = MutableLiveData<MapData>()
+    val mapData: LiveData<MapData> = _mapData
+
     private val _mapLevels = MutableLiveData<List<MapLevelUiModel>>()
     val mapLevels: LiveData<List<MapLevelUiModel>> = _mapLevels
-
-    private val _mapPoints = MutableLiveData<List<MapPointUiModel>>()
-    val mapPoints: LiveData<List<MapPointUiModel>> = _mapPoints
 
     private val _navigateToTechOperations = MutableLiveData<Event<RouteDataModel>>()
     val navigateToTechOperations: LiveData<Event<RouteDataModel>> = _navigateToTechOperations
@@ -144,7 +148,31 @@ class RoutePointsMapViewModel(
 
             }
         }
-        _mapPoints.value = mapPoints
+        setPoints(mapPoints)
+    }
+
+    fun setRectF(rectF: RectF) {
+        mapDataMutable.rectF = rectF
+        checkAndEmitMapData()
+    }
+
+    private fun setPoints(points: List<MapPointUiModel>) {
+        mapDataMutable.points = points
+        checkAndEmitMapData()
+    }
+
+    fun setBitmap(bitmap: Bitmap) {
+        mapDataMutable.bitmap = bitmap
+        checkAndEmitMapData()
+    }
+
+    private fun checkAndEmitMapData() {
+        val bitmap = mapDataMutable.bitmap
+        val rectF = mapDataMutable.rectF
+        val points = mapDataMutable.points
+        if (bitmap != null && points != null && rectF != null) {
+            _mapData.postValue(MapData(bitmap, rectF, points))
+        }
     }
 }
 
@@ -168,3 +196,15 @@ data class MapPointUiModel(
 enum class MapPointStatus {
     None, Current, CompletedWithDefects, Completed
 }
+
+data class MapDataMutable(
+    var bitmap: Bitmap? = null,
+    var rectF: RectF? = null,
+    var points: List<MapPointUiModel>? = null
+)
+
+data class MapData(
+    val bitmap: Bitmap,
+    val rectF: RectF,
+    val points: List<MapPointUiModel>
+)
