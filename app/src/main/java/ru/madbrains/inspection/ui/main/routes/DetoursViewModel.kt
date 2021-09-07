@@ -93,11 +93,11 @@ class DetoursViewModel(
 
     fun dateRouteClick(id: String) {
         val detour = detourModels.find { detourModel -> detourModel.id == id }
-        detour?.let { _navigateToDateRoutePoints.value = Event(it) }
+        detour?.let { _navigateToDateRoutePoints.postValue(Event(it)) }
     }
 
     fun routeClick(id: String) {
         val detour = detourModels.find { detourModel -> detourModel.id == id }
-        detour?.let { _navigateToRoutePoints.value = Event(it) }
+        detour?.let { _navigateToRoutePoints.postValue(Event(it)) }
     }
 }

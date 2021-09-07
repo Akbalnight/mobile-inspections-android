@@ -26,8 +26,8 @@ class WebViewViewModel(
         val codeVerifier = preferenceStorage.codeVerifier.orEmpty()
         authInteractor.getToken(authCode, codeVerifier)
             .observeOn(Schedulers.io())
-            .doOnSubscribe { _progressVisibility.value = true }
-            .doAfterTerminate { _progressVisibility.value = false }
+            .doOnSubscribe { _progressVisibility.postValue(true) }
+            .doAfterTerminate { _progressVisibility.postValue(false) }
             .subscribe({
                 preferenceStorage.apply {
                     token = it.accessToken
@@ -38,7 +38,7 @@ class WebViewViewModel(
                     isAdmin = it.isAdmin
                     isCreator = it.isCreator
                 }
-                _navigateToMain.value = Event(Unit)
+                _navigateToMain.postValue(Event(Unit))
             }, {
                 it.printStackTrace()
             })

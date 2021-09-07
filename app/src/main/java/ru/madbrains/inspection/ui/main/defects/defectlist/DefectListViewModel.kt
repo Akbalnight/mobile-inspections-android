@@ -47,11 +47,11 @@ class DefectListViewModel(
     private var lastDeviceIds: List<String>? = null
 
     fun editDefect(defect: DefectModel?) {
-        defect?.let { _navigateToEditDefect.value = Event(it) }
+        defect?.let { _navigateToEditDefect.postValue(Event(it)) }
     }
 
     fun confirmDefect(defect: DefectModel?) {
-        defect?.let { _navigateToConfirmDefect.value = Event(it) }
+        defect?.let { _navigateToConfirmDefect.postValue(Event(it)) }
     }
 
     fun getDefectList(deviceIds: List<String>?) {
@@ -109,7 +109,7 @@ class DefectListViewModel(
                 )
             }
         }
-        _defectList.value = defects
+        _defectList.postValue(defects)
     }
 
     private fun getMediaListItem(files: List<FileModel>?): List<MediaUiModel> {

@@ -32,11 +32,11 @@ class EquipmentSelectListViewModel(
 
     fun deviceSelectClick(equipment: EquipmentModel?) {
         equipment?.let {
-            _checkedDevice.value = Event(it)
-            _navigateToDefectDetail.value = Event(it)
+            _checkedDevice.postValue(Event(it))
+            _navigateToDefectDetail.postValue(Event(it))
             deviceListModels.clear()
             currentDevice = null
-            _deviceList.value = null
+            _deviceList.postValue(null)
 
         }
     }
@@ -80,7 +80,7 @@ class EquipmentSelectListViewModel(
                     isSelected = it.id == currentDevice?.id
                 )
             }
-        _deviceList.value = items
+        _deviceList.postValue(items)
     }
 
     private fun updateDeviceList() {
@@ -95,7 +95,7 @@ class EquipmentSelectListViewModel(
                 )
             }
         }
-        _deviceList.value = items
+        _deviceList.postValue(items)
     }
 
 }

@@ -47,13 +47,13 @@ class RoutePointsMapViewModel(
                 isActive = i == 0
             )
         }.also {
-            if (it != null) _mapLevels.value = it
+            if (it != null) _mapLevels.postValue(it)
         }
         filterMapPoints(levels?.find { it.isActive })
     }
 
     fun setActiveMap(map: MapLevelUiModel) {
-        _mapLevels.value = _mapLevels.value?.map {
+        _mapLevels.postValue(_mapLevels.value?.map {
             MapLevelUiModel(
                 id = it.id,
                 fileName = it.fileName,
@@ -61,7 +61,7 @@ class RoutePointsMapViewModel(
                 url = it.url,
                 isActive = map.id == it.id
             )
-        }
+        })
         filterMapPoints(map)
     }
 
@@ -80,7 +80,7 @@ class RoutePointsMapViewModel(
     fun routePointClick(point: MapPointUiModel) {
         detourModel.route.routesDataSorted.let { routes ->
             routes.find { it.id == point.routeId }?.let {
-                _navigateToTechOperations.value = Event(it)
+                _navigateToTechOperations.postValue(Event(it))
             }
         }
     }

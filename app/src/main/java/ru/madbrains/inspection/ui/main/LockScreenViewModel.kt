@@ -55,7 +55,7 @@ class LockScreenViewModel(
                     _progressVisibility.postValue(Pair(false, null))
                 }, {}).addTo(disposables)
         } else {
-            _showError.value = Event(R.string.login_and_password_do_not_match)
+            _showError.postValue(Event(R.string.login_and_password_do_not_match))
         }
     }
 

@@ -47,7 +47,7 @@ class CheckpointListViewModel(private val offlineInteractor: OfflineInteractor) 
         _checkpointRawData?.find {
             it.id == model.id
         }?.run {
-            _navigateToDetails.value = Event(this)
+            _navigateToDetails.postValue(Event(this))
         }
     }
 

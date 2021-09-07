@@ -121,8 +121,8 @@ class DefectDetailViewModel(
         equipmentModelList = equipments
         if (equipmentModelList?.size == 1) {
             currentDeviceModel = equipmentModelList!!.get(index = 0)
-            _deviceName.value = equipmentModelList!!.get(index = 0).name
-            _disableEquipmentField.value = Event(Unit)
+            _deviceName.postValue(equipmentModelList!!.get(index = 0).name)
+            _disableEquipmentField.postValue(Event(Unit))
         }
     }
 
@@ -133,7 +133,7 @@ class DefectDetailViewModel(
 
     fun changeCurrentDefectDevice(model: EquipmentModel) {
         currentDeviceModel = model
-        _deviceName.value = model.name
+        _deviceName.postValue(model.name)
         isChangedDefect = true
     }
 
@@ -166,23 +166,23 @@ class DefectDetailViewModel(
                 )
             }
         }
-        _defectTypicalList.value = items
+        _defectTypicalList.postValue(items)
     }
 
     private fun updateDefect() {
         defect?.let { defect ->
             defect.apply {
                 equipmentName?.let {
-                    _deviceName.value = it
-                    _disableEquipmentField.value = Event(Unit)
+                    _deviceName.postValue(it)
+                    _disableEquipmentField.postValue(Event(Unit))
                 }
                 defectName?.let {
-                    _disableTypicalDefectField.value = Event(it)
+                    _disableTypicalDefectField.postValue(Event(it))
                 }
                 description?.let {
                     if (descriptionDefect == null) {
                         descriptionDefect = it
-                        _descriptionObserver.value = it
+                        _descriptionObserver.postValue(it)
                     }
                 }
                 files?.forEach { fileModel ->
@@ -207,9 +207,9 @@ class DefectDetailViewModel(
     }
 
     private fun updateMediaList() {
-        _mediaList.value = mutableListOf<MediaUiModel>().apply {
+        _mediaList.postValue(mutableListOf<MediaUiModel>().apply {
             addAll(uiFiles)
-        }
+        })
     }
 
     fun addFile(file: File) {
@@ -233,7 +233,7 @@ class DefectDetailViewModel(
 
     fun photoVideoClick() {
         if (uiFiles.size < 8)
-            _navigateToCamera.value = Event(Unit)
+            _navigateToCamera.postValue(Event(Unit))
     }
 
     fun saveDefectDb() {
@@ -257,8 +257,8 @@ class DefectDetailViewModel(
             .doOnSubscribe { _progressVisibility.postValue(true) }
             .doAfterTerminate { _progressVisibility.postValue(false) }
             .subscribe({
-                _showSnackBar.value = Event(Unit)
-                _popNavigation.value = Event(Unit)
+                _showSnackBar.postValue(Event(Unit))
+                _popNavigation.postValue(Event(Unit))
             }, {
                 it.printStackTrace()
             })
@@ -279,7 +279,7 @@ class DefectDetailViewModel(
                 .doOnSubscribe { _progressVisibility.postValue(true) }
                 .doAfterTerminate { _progressVisibility.postValue(false) }
                 .subscribe({
-                    _popNavigation.value = Event(Unit)
+                    _popNavigation.postValue(Event(Unit))
                 }, {
                     it.printStackTrace()
                 })
@@ -309,15 +309,15 @@ class DefectDetailViewModel(
             if (checkIsNoEmptyRequiredFields()) {
                 if (checkIsNotEmptyFields()) {
                     if (detourId.isNullOrEmpty()) {
-                        _showDialogSaveNoLinkedDetour.value = Event(Unit)
+                        _showDialogSaveNoLinkedDetour.postValue(Event(Unit))
                     } else {
                         saveDefectDb()
                     }
                 } else {
-                    _showDialogBlankFields.value = Event(detourId.isNullOrEmpty())
+                    _showDialogBlankFields.postValue(Event(detourId.isNullOrEmpty()))
                 }
             } else {
-                _showDialogBlankRequiredFields.value = Event(Unit)
+                _showDialogBlankRequiredFields.postValue(Event(Unit))
             }
         } else {
             when {
@@ -325,10 +325,10 @@ class DefectDetailViewModel(
                     updateDefectDb()
                 }
                 isChangedDefect -> {
-                    _showDialogConfirmChangedFields.value = Event(true)
+                    _showDialogConfirmChangedFields.postValue(Event(true))
                 }
                 else -> {
-                    _popNavigation.value = Event(Unit)
+                    _popNavigation.postValue(Event(Unit))
                 }
             }
         }
@@ -349,9 +349,9 @@ class DefectDetailViewModel(
 
     fun checkPopBack() {
         if (isChangedDefect) {
-            _showDialogChangedFields.value = Event(Unit)
+            _showDialogChangedFields.postValue(Event(Unit))
         } else {
-            _popNavigation.value = Event(Unit)
+            _popNavigation.postValue(Event(Unit))
         }
     }
 

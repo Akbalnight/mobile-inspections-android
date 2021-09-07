@@ -105,7 +105,7 @@ class SyncViewModel(
 
     fun startSync() {
         _detourSyncStatus.postValue(Event(ProgressState.PROGRESS))
-        _openSyncDialog.value = Event(Unit)
+        _openSyncDialog.postValue(Event(Unit))
         getSyncData().changeProgressWith(_allSyncProgress)
             .observeOn(Schedulers.io())
             .subscribe({

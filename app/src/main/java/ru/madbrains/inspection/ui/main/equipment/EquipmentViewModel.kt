@@ -58,37 +58,42 @@ class EquipmentViewModel(
                     )
                 )
             }.let { images ->
-                _equipmentImageList.value =
+                _equipmentImageList.postValue(
                     if (images.isNotEmpty()) images else arrayListOf(
                         EquipmentDetailMediaUiModel(
                             null
                         )
                     )
+                )
             }
 
-            _commonSpecsList.value = mapOf(
-                R.string.equipment_specs_type_equipment to data.typeEquipment,
-                R.string.equipment_specs_id_sap to data.sapId,
-                R.string.equipment_specs_name to data.name,
-                R.string.equipment_specs_code_tech_place to data.techPlacePath,
-                R.string.equipment_specs_name_tech_place to data.techPlace,
-                R.string.equipment_specs_construction_type to data.constructionType,
-                R.string.equipment_specs_material to data.material,
-                R.string.equipment_specs_size to data.size,
-                R.string.equipment_specs_weight to data.weight,
-                R.string.equipment_specs_manufacturer to data.manufacturer,
-                R.string.equipment_specs_del_mark to if (data.deleted == true) R.string.yes else R.string.no,
-                R.string.equipment_specs_valid_by to data.dateFinish?.toDDMMYYYY()
+            _commonSpecsList.postValue(
+                mapOf(
+                    R.string.equipment_specs_type_equipment to data.typeEquipment,
+                    R.string.equipment_specs_id_sap to data.sapId,
+                    R.string.equipment_specs_name to data.name,
+                    R.string.equipment_specs_code_tech_place to data.techPlacePath,
+                    R.string.equipment_specs_name_tech_place to data.techPlace,
+                    R.string.equipment_specs_construction_type to data.constructionType,
+                    R.string.equipment_specs_material to data.material,
+                    R.string.equipment_specs_size to data.size,
+                    R.string.equipment_specs_weight to data.weight,
+                    R.string.equipment_specs_manufacturer to data.manufacturer,
+                    R.string.equipment_specs_del_mark to if (data.deleted == true) R.string.yes else R.string.no,
+                    R.string.equipment_specs_valid_by to data.dateFinish?.toDDMMYYYY()
+                )
             )
 
             if (data.measuringPoints != null) {
-                _measuringPointsList.value = data.measuringPoints
+                _measuringPointsList.postValue(data.measuringPoints)
             }
 
             if (data.dateWarrantyStart != null) {
-                _warrantyData.value = mapOf(
-                    R.string.equipment_specs_warranty_start to data.dateWarrantyStart?.toDDMMYYYY(),
-                    R.string.equipment_specs_warranty_end to data.dateWarrantyFinish?.toDDMMYYYY()
+                _warrantyData.postValue(
+                    mapOf(
+                        R.string.equipment_specs_warranty_start to data.dateWarrantyStart?.toDDMMYYYY(),
+                        R.string.equipment_specs_warranty_end to data.dateWarrantyFinish?.toDDMMYYYY()
+                    )
                 )
             }
         }
@@ -96,7 +101,7 @@ class EquipmentViewModel(
 
     fun prepareFiles() {
         savedEquipmentData?.let { data ->
-            _files.value = data.getAllDocs().map {
+            _files.postValue(data.getAllDocs().map {
                 FilesUiModel(
                     id = it.id,
                     url = it.url,
@@ -104,7 +109,7 @@ class EquipmentViewModel(
                     extension = it.extension,
                     date = it.date?.toHHmmYYYYMMDD() ?: "-"
                 )
-            }
+            })
         }
     }
 
@@ -112,21 +117,21 @@ class EquipmentViewModel(
         offlineInteractor.getFileInFolder(fileUI.name, AppDirType.Docs)?.let { file ->
             openFile(file, fileUI)
         } ?: run {
-            _commonError.value = Event(Unit)
+            _commonError.postValue(Event(Unit))
         }
     }
 
     fun showError() {
-        _commonError.value = Event(Unit)
+        _commonError.postValue(Event(Unit))
     }
 
     private fun openFile(file: File, fileUI: FilesUiModel) {
         val myMime = MimeTypeMap.getSingleton()
         val mimeType = myMime.getMimeTypeFromExtension(fileUI.extension)
         try {
-            _startIntent.value = Event(Pair(file, mimeType))
+            _startIntent.postValue(Event(Pair(file, mimeType)))
         } catch (e: ActivityNotFoundException) {
-            _commonError.value = Event(Unit)
+            _commonError.postValue(Event(Unit))
         }
     }
 }

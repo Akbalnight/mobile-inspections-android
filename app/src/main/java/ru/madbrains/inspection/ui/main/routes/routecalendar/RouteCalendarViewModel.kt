@@ -28,7 +28,7 @@ class RouteCalendarViewModel : BaseViewModel() {
     fun dateClick(date: LocalDate) {
         if (routeDates.contains(date)) {
 
-            _navigateToDateRouteList.value = Event(date.toDate())
+            _navigateToDateRouteList.postValue(Event(date.toDate()))
         }
         Log.d("myLog", "vm date: $date EXISTS: ${routeDates.contains(date)}")
     }

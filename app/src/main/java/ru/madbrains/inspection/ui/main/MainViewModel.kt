@@ -73,35 +73,35 @@ class MainViewModel(
     val showExitDialog: LiveData<Event<Unit>> = _showExitDialog
 
     fun menuClick() {
-        _navigateToMenu.value = Event(Unit)
+        _navigateToMenu.postValue(Event(Unit))
     }
 
     fun routesClick() {
-        _navigateToRoutes.value = Event(Unit)
+        _navigateToRoutes.postValue(Event(Unit))
     }
 
     fun defectsClick() {
-        _navigateToDefects.value = Event(Unit)
+        _navigateToDefects.postValue(Event(Unit))
     }
 
     fun marksClick() {
-        _navigateToMarks.value = Event(Unit)
+        _navigateToMarks.postValue(Event(Unit))
     }
 
     fun syncClick() {
-        _navigateToSync.value = Event(Unit)
+        _navigateToSync.postValue(Event(Unit))
     }
 
     fun settingsClick() {
-        _navigateToSettings.value = Event(Unit)
+        _navigateToSettings.postValue(Event(Unit))
     }
 
     fun openSnackBar(text: String) {
-        _showSnackBar.value = Event(TextData.Str(text))
+        _showSnackBar.postValue(Event(TextData.Str(text)))
     }
 
     fun logoutClick() {
-        _showExitDialog.value = Event(Unit)
+        _showExitDialog.postValue(Event(Unit))
     }
 
     fun logout() {

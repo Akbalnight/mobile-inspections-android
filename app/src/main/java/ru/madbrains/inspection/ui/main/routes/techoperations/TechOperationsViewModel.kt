@@ -60,8 +60,8 @@ class TechOperationsViewModel(
 
     fun finishTechMap() {
         savedRouteData?.let { data ->
-            _completeTechMapEvent.value = Event(data)
-            _navigatePop.value = Event(Unit)
+            _completeTechMapEvent.postValue(Event(data))
+            _navigatePop.postValue(Event(Unit))
         }
     }
 
@@ -73,7 +73,7 @@ class TechOperationsViewModel(
                 if (filterList.isNullOrEmpty()) {
                     finishTechMap()
                 } else {
-                    _showDialogBlankFields.value = Event(Unit)
+                    _showDialogBlankFields.postValue(Event(Unit))
                 }
             }
         }
@@ -88,7 +88,7 @@ class TechOperationsViewModel(
             operationsModels.addAll(it)
         }
 
-        _titleTechOperations.value = routeDataModel.techMap?.name
+        _titleTechOperations.postValue(routeDataModel.techMap?.name)
 
         val isRfid = savedRouteData?.rfidCode != null
         updateData(rfidBlocked = isRfid)
@@ -126,7 +126,7 @@ class TechOperationsViewModel(
                 )
             }
         }
-        _techOperations.value = operations
+        _techOperations.postValue(operations)
 
         val status = when {
             !_detourIsEditable -> {
@@ -144,12 +144,12 @@ class TechOperationsViewModel(
 
     private fun checkRfidAndUnblock() {
         rfidInteractor.startScan({
-            _rfidProgress.value = it
+            _rfidProgress.postValue(it)
         }) { scannedCode ->
             if (scannedCode == savedRouteData?.rfidCode) {
                 updateData(rfidBlocked = false)
             } else {
-                _showDialog.value = Event(R.string.fragment_tech_mark_is_different)
+                _showDialog.postValue(Event(R.string.fragment_tech_mark_is_different))
             }
         }
     }
@@ -161,9 +161,9 @@ class TechOperationsViewModel(
     fun toEquipmentFragment() {
         savedRouteData?.equipments?.let {
             if (it.size == 1) {
-                _navigateToEquipment.value = Event(it[0])
+                _navigateToEquipment.postValue(Event(it[0]))
             } else if (it.size > 1) {
-                _navigateToEquipmentList.value = Event(it)
+                _navigateToEquipmentList.postValue(Event(it))
             }
         }
     }
