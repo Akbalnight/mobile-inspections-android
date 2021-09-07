@@ -9,6 +9,8 @@ import androidx.core.content.edit
 import com.google.gson.Gson
 import com.google.gson.JsonIOException
 import com.google.gson.JsonSyntaxException
+import ru.madbrains.domain.AppConst.defaultAuthUrl
+import ru.madbrains.domain.AppConst.defaultUrl
 import ru.madbrains.domain.model.DetourStatusHolder
 import ru.madbrains.domain.model.SyncInfo
 import java.io.Serializable
@@ -30,6 +32,8 @@ interface PreferenceStorage {
     var syncInfo: SyncInfo
     var loginHash: String?
     var passwordHash: String?
+    var apiUrl: String?
+    var authUrl: String?
     fun clearData()
     fun clearLogout()
 }
@@ -41,47 +45,32 @@ class SharedPreferenceStorage(
     context: Context
 ) : PreferenceStorage {
 
-    private companion object {
-        const val PREFS_NAME = "inspection"
-        const val PREF_TOKEN = "pref_token"
-        const val PREF_REFRESH_TOKEN = "pref_refresh_token"
-        const val PREF_CODE_VERIFIER = "pref_code_verifier"
-        const val PREF_USERNAME = "pref_username"
-        const val PREF_USER_ID = "pref_user_id"
-        const val PREF_CODE_CHALLENGE = "pref_code_challenge"
-        const val PREF_SAVE_INFO_DURATION = "PREF_SAVE_INFO_DURATION"
-        const val PREF_IS_ADMIN = "PREF_IS_ADMIN"
-        const val PREF_IS_CREATOR = "PREF_IS_CREATOR"
-        const val PREF_DETOUR_STATUSES = "PREF_DETOUR_STATUSES"
-        const val PREF_SYNC_INFO = "PREF_SYNC_INFO"
-        const val PREF_LOGIN_HASH = "PREF_LOGIN_HASH"
-        const val PREF_PASSWORD_HASH = "PREF_PASSWORD_HASH"
-    }
+    private val prefs = context.applicationContext.getSharedPreferences("inspection", MODE_PRIVATE)
 
-    private val prefs = context.applicationContext.getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-
-    override var token by StringPreference(prefs, PREF_TOKEN, "")
-    override var refreshToken by StringPreference(prefs, PREF_REFRESH_TOKEN, "")
-    override var codeVerifier by StringPreference(prefs, PREF_CODE_VERIFIER, "")
-    override var username by StringPreference(prefs, PREF_USERNAME, "")
-    override var userId by StringPreference(prefs, PREF_USER_ID, "")
-    override var codeChallenge by StringPreference(prefs, PREF_CODE_CHALLENGE, "")
-    override var saveInfoDuration by IntPreference(prefs, PREF_SAVE_INFO_DURATION, 5)
-    override var isAdmin by BooleanPreference(prefs, PREF_IS_ADMIN, false)
-    override var isCreator by BooleanPreference(prefs, PREF_IS_CREATOR, false)
+    override var token by StringPreference(prefs, "PREF_TOKEN", "")
+    override var refreshToken by StringPreference(prefs, "PREF_REFRESH_TOKEN", "")
+    override var codeVerifier by StringPreference(prefs, "PREF_CODE_VERIFIER", "")
+    override var username by StringPreference(prefs, "PREF_USERNAME", "")
+    override var userId by StringPreference(prefs, "PREF_USER_ID", "")
+    override var codeChallenge by StringPreference(prefs, "PREF_CODE_CHALLENGE", "")
+    override var saveInfoDuration by IntPreference(prefs, "PREF_SAVE_INFO_DURATION", 5)
+    override var isAdmin by BooleanPreference(prefs, "PREF_IS_ADMIN", false)
+    override var isCreator by BooleanPreference(prefs, "PREF_IS_CREATOR", false)
     override var detourStatuses by SerializablePreference<DetourStatusHolder>(
         prefs,
-        PREF_DETOUR_STATUSES,
+        "PREF_DETOUR_STATUSES",
         DetourStatusHolder::class.java
     )
     override var syncInfo by SerializablePreferenceNotNullable(
         prefs,
-        PREF_SYNC_INFO,
+        "PREF_SYNC_INFO",
         SyncInfo::class.java,
         SyncInfo()
     )
-    override var loginHash by StringPreference(prefs, PREF_LOGIN_HASH, null)
-    override var passwordHash by StringPreference(prefs, PREF_PASSWORD_HASH, null)
+    override var loginHash by StringPreference(prefs, "PREF_LOGIN_HASH", null)
+    override var passwordHash by StringPreference(prefs, "PREF_PASSWORD_HASH", null)
+    override var apiUrl by StringPreference(prefs, "PREF_API_URL", defaultUrl)
+    override var authUrl by StringPreference(prefs, "PREF_AUTH_URL", defaultAuthUrl)
 
     override fun clearData() {
         prefs.edit { clear() }

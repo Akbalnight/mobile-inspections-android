@@ -17,8 +17,6 @@ import java.util.concurrent.TimeUnit
 
 object ApiData {
 
-    var apiUrl = "https://mobinspect.dias-dev.ru"
-
     lateinit var inspectionApi: InspectionApi
 
     private fun getInspectionOkHttpClient(
@@ -42,7 +40,7 @@ object ApiData {
 
     fun initApi(preferenceStorage: PreferenceStorage, authenticator: IAuthenticator) {
         inspectionApi = Retrofit.Builder()
-            .baseUrl(apiUrl)
+            .baseUrl(preferenceStorage.apiUrl ?: "")
             .client(getInspectionOkHttpClient(preferenceStorage, authenticator))
             .addConverterFactory(MoshiConverterFactory.create(getMoshi()))
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

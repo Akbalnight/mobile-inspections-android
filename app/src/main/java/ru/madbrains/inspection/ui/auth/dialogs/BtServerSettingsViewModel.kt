@@ -11,9 +11,12 @@ class BtServerSettingsViewModel(
     private val authenticator: IAuthenticator
 ) : BaseViewModel() {
 
+    val currentApiUrl = preferenceStorage.apiUrl
+    val currentAuthUrl = preferenceStorage.authUrl
+
     fun applyClick(authServer: String, portalServer: String) {
-        ApiData.apiUrl = portalServer
-        OAuthData.oauthUrl = authServer
+        preferenceStorage.apiUrl = portalServer
+        preferenceStorage.authUrl = authServer
         initApi(preferenceStorage)
     }
 

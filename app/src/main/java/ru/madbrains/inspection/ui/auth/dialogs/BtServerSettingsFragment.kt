@@ -3,8 +3,6 @@ package ru.madbrains.inspection.ui.auth.dialogs
 import android.os.Bundle
 import kotlinx.android.synthetic.main.fragment_bt_server_settings.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import ru.madbrains.data.network.ApiData
-import ru.madbrains.data.network.OAuthData
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseBottomSheetDialogFragment
 
@@ -16,8 +14,8 @@ class BtServerSettingsFragment :
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        etServerAuth.append(OAuthData.oauthUrl)
-        etServerPortal.append(ApiData.apiUrl)
+        etServerPortal.append(serverSettingsViewModel.currentApiUrl)
+        etServerAuth.append(serverSettingsViewModel.currentAuthUrl)
 
         btnCancel.setOnClickListener {
             this.dismiss()

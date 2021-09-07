@@ -30,7 +30,11 @@ class AuthorizationViewModel(
 
     fun authClick() {
         preferenceStorage.codeVerifier?.let {
-            val authUrl = OAuthData.getAuthorizeUrl(it)
+            val authUrl = OAuthData.getAuthorizeUrl(
+                preferenceStorage.apiUrl ?: "",
+                preferenceStorage.authUrl ?: "",
+                it
+            )
             _navigateToAuth.value = Event(authUrl)
         }
     }
