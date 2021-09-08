@@ -30,8 +30,13 @@ class OfflineInteractor(
         return offlineRepository.getActiveDefects(equipmentIds).subscribeOn(Schedulers.io())
     }
 
-    fun getEquipmentIdsWithDefects(equipmentIds: List<String>): Single<List<String>> {
+    fun getEquipmentIdsWithDefects(equipmentIds: List<String>): Single<Set<String>> {
         return offlineRepository.getEquipmentIdsWithDefects(equipmentIds)
+            .map { list ->
+                val set = mutableSetOf<String>()
+                list.forEach { set.add(it) }
+                set.toSet()
+            }
             .subscribeOn(Schedulers.io())
     }
 

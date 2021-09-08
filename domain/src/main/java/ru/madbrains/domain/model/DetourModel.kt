@@ -100,6 +100,16 @@ data class RouteDataModel(
     val completed: Boolean
 ) : Serializable
 
+fun List<RouteDataModel>.getAllEquipmentIds(): List<String> {
+    return this.fold(mutableListOf(), { acc, a ->
+        val ids = a.equipments?.map { it.id }
+        if (ids != null) {
+            acc.addAll(ids)
+        }
+        acc
+    })
+}
+
 data class TechMapModel(
     val id: String,
     val name: String?,

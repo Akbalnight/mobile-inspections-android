@@ -10,6 +10,7 @@ import ru.madbrains.domain.interactor.OfflineInteractor
 import ru.madbrains.domain.model.AppDirType
 import ru.madbrains.domain.model.DetourModel
 import ru.madbrains.domain.model.RouteDataModel
+import ru.madbrains.domain.model.getAllEquipmentIds
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
@@ -90,41 +91,31 @@ class RoutePointsMapViewModel(
     }
 
     private fun updateData(points: List<RouteDataModel>, currentId: String?) {
-        val deviceIds = points.fold(mutableListOf<String>(), { acc, a ->
-            val ids = a.equipments?.map { it.id }
-            if (ids != null) {
-                acc.addAll(ids)
-            }
-            acc
-        })
-
-        offlineInteractor.getEquipmentIdsWithDefects(equipmentIds = deviceIds)
+        offlineInteractor.getEquipmentIdsWithDefects(equipmentIds = points.getAllEquipmentIds())
             .observeOn(Schedulers.io())
-            .subscribe({ ids ->
-                val defectsMap = ids.fold(mutableMapOf<String, Boolean>()) { acc, id ->
-                    acc[id] = true
-                    acc
-                }
-                applyDefectDataAndUpdate(points, defectsMap, currentId)
+            .subscribe({ equipmentWithDefect ->
+                applyDefectDataAndUpdate(points, equipmentWithDefect, currentId)
             }, {
                 it.printStackTrace()
             })
             .addTo(disposables)
     }
 
+    private fun Set<String>.isRouteHaveDefect(route: RouteDataModel): Boolean {
+        return route.equipments?.fold(false, { acc, a -> acc || contains(a.id) })
+            ?: false
+    }
+
     private fun applyDefectDataAndUpdate(
         points: List<RouteDataModel>,
-        defectsMap: MutableMap<String, Boolean>,
+        equipmentWithDefect: Set<String>,
         currentId: String?
     ) {
-        val mapPoints = mutableListOf<MapPointUiModel>()
-        points.map { route ->
+        val mapPoints = points.mapNotNull { route ->
             route.techMap?.let { techMap ->
                 val isCurrent = currentId == route.id
                 val preserveOrder = detourModel.saveOrderControlPoints == true
-                val haveDefects =
-                    route.equipments?.fold(false, { acc, a -> acc || defectsMap[a.id] == true })
-                        ?: false
+                val haveDefects = equipmentWithDefect.isRouteHaveDefect(route)
 
                 val status = when {
                     isCurrent -> MapPointStatus.Current
@@ -133,19 +124,16 @@ class RoutePointsMapViewModel(
                     else -> MapPointStatus.None
                 }
 
-                mapPoints.add(
-                    MapPointUiModel(
-                        techMapId = techMap.id,
-                        routeId = route.id,
-                        xLocation = route.xLocation,
-                        yLocation = route.yLocation,
-                        name = techMap.name.orEmpty(),
-                        position = route.position,
-                        status = status,
-                        clickable = !preserveOrder || route.completed || isCurrent
-                    )
+                MapPointUiModel(
+                    techMapId = techMap.id,
+                    routeId = route.id,
+                    xLocation = route.xLocation,
+                    yLocation = route.yLocation,
+                    name = techMap.name.orEmpty(),
+                    position = route.position,
+                    status = status,
+                    clickable = !preserveOrder || route.completed || isCurrent
                 )
-
             }
         }
         setPoints(mapPoints)
