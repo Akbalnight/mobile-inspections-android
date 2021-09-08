@@ -20,7 +20,7 @@ class RoutePointsListFragment : BaseFragment(R.layout.fragment_route_points_list
     private val routePointsAdapter by lazy {
         RoutePointAdapter(
             onRoutePointClick = {
-                routePointsViewModel.routePointClick(it.parentId)
+                routePointsViewModel.routePointClick(it.routeDataId)
             }
         )
     }

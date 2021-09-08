@@ -7,10 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import ru.madbrains.domain.interactor.OfflineInteractor
-import ru.madbrains.domain.model.AppDirType
-import ru.madbrains.domain.model.DetourModel
-import ru.madbrains.domain.model.RouteDataModel
-import ru.madbrains.domain.model.getAllEquipmentIds
+import ru.madbrains.domain.model.*
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
@@ -29,15 +26,16 @@ class RoutePointsMapViewModel(
     private val _mapLevels = MutableLiveData<List<MapLevelUiModel>>()
     val mapLevels: LiveData<List<MapLevelUiModel>> = _mapLevels
 
-    private val _navigateToTechOperations = MutableLiveData<Event<RouteDataModel>>()
-    val navigateToTechOperations: LiveData<Event<RouteDataModel>> = _navigateToTechOperations
+    private val _navigateToTechOperations = MutableLiveData<Event<RouteDataModelWithDetourId>>()
+    val navigateToTechOperations: LiveData<Event<RouteDataModelWithDetourId>> =
+        _navigateToTechOperations
 
     private val _mapImage = MutableLiveData<File>()
     val mapImage: LiveData<File> = _mapImage
 
     private lateinit var detourModel: DetourModel
 
-    fun setData(detour: DetourModel) {
+    fun setNavData(detour: DetourModel) {
         detourModel = detour
         val levels = detour.route.routeMaps?.mapIndexed { i, map ->
             MapLevelUiModel(
@@ -72,6 +70,7 @@ class RoutePointsMapViewModel(
         detourModel.route.routesDataSorted.let { list ->
             val currentId = detourModel.route.getCurrentRouteId()
             updateData(
+                detourModel.id,
                 list.filter { it.routeMapId == map.id },
                 currentId
             )
@@ -81,7 +80,14 @@ class RoutePointsMapViewModel(
     fun routePointClick(point: MapPointUiModel) {
         detourModel.route.routesDataSorted.let { routes ->
             routes.find { it.id == point.routeId }?.let {
-                _navigateToTechOperations.postValue(Event(it))
+                _navigateToTechOperations.postValue(
+                    Event(
+                        RouteDataModelWithDetourId(
+                            detourModel.id,
+                            it
+                        )
+                    )
+                )
             }
         }
     }
@@ -90,37 +96,33 @@ class RoutePointsMapViewModel(
         _mapImage.postValue(offlineInteractor.getFileInFolder(item.fileName, AppDirType.Docs))
     }
 
-    private fun updateData(points: List<RouteDataModel>, currentId: String?) {
-        offlineInteractor.getEquipmentIdsWithDefects(equipmentIds = points.getAllEquipmentIds())
+    private fun updateData(detourId: String, points: List<RouteDataModel>, currentId: String?) {
+        offlineInteractor.getRoutesWithDefects(detourId, points)
             .observeOn(Schedulers.io())
-            .subscribe({ equipmentWithDefect ->
-                applyDefectDataAndUpdate(points, equipmentWithDefect, currentId)
+            .subscribe({
+                applyDefectDataAndUpdate(it, currentId)
             }, {
                 it.printStackTrace()
             })
             .addTo(disposables)
     }
 
-    private fun Set<String>.isRouteHaveDefect(route: RouteDataModel): Boolean {
-        return route.equipments?.fold(false, { acc, a -> acc || contains(a.id) })
-            ?: false
-    }
+
 
     private fun applyDefectDataAndUpdate(
-        points: List<RouteDataModel>,
-        equipmentWithDefect: Set<String>,
+        points: List<RouteDataWithDefect>,
         currentId: String?
     ) {
-        val mapPoints = points.mapNotNull { route ->
-            route.techMap?.let { techMap ->
+        val mapPoints = points.mapNotNull { data ->
+            data.route.techMap?.let { techMap ->
+                val route = data.route
                 val isCurrent = currentId == route.id
                 val preserveOrder = detourModel.saveOrderControlPoints == true
-                val haveDefects = equipmentWithDefect.isRouteHaveDefect(route)
 
                 val status = when {
                     isCurrent -> MapPointStatus.Current
-                    route.completed && !haveDefects -> MapPointStatus.Completed
-                    route.completed && haveDefects -> MapPointStatus.CompletedWithDefects
+                    route.completed && !data.haveDefect -> MapPointStatus.Completed
+                    route.completed && data.haveDefect -> MapPointStatus.CompletedWithDefects
                     else -> MapPointStatus.None
                 }
 

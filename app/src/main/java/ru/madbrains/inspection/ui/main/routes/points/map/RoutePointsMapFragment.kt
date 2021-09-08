@@ -15,7 +15,7 @@ import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import kotlinx.android.synthetic.main.fragment_route_points_map.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import ru.madbrains.domain.model.RouteDataModel
+import ru.madbrains.domain.model.RouteDataModelWithDetourId
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
@@ -34,7 +34,7 @@ class RoutePointsMapFragment : BaseFragment(R.layout.fragment_route_points_map) 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         routePointsViewModel.detourModel?.let {
-            routePointsMapViewModel.setData(it)
+            routePointsMapViewModel.setNavData(it)
         }
         routePointsMapViewModel.mapLevels.observe(viewLifecycleOwner) { list ->
             list.find { it.isActive }?.let { item ->
@@ -152,9 +152,9 @@ class RoutePointsMapFragment : BaseFragment(R.layout.fragment_route_points_map) 
             })
     }
 
-    private fun openTechOperationsFragment(routeData: RouteDataModel) {
+    private fun openTechOperationsFragment(routeData: RouteDataModelWithDetourId) {
         val args = bundleOf(
-            TechOperationsFragment.KEY_ROUTE_DATA to routeData
+            TechOperationsFragment.KEY_ROUTE_DATA_WITH_DETOUR to routeData
         )
         findNavController().navigate(
             R.id.action_routePointsFragment_to_techOperationsFragment,

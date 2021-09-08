@@ -22,20 +22,62 @@ class OfflineInteractor(
         return offlineRepository.getFileInFolder(name, folder)
     }
 
-    fun getDefects(): Single<List<DefectModel>> {
+    fun getAllDefects(): Single<List<DefectModel>> {
         return offlineRepository.getDefects().subscribeOn(Schedulers.io())
     }
 
-    fun getActiveDefects(equipmentIds: List<String>): Single<List<DefectModel>> {
-        return offlineRepository.getActiveDefects(equipmentIds).subscribeOn(Schedulers.io())
+    fun getActiveDefects(detourId: String?, equipmentIds: List<String>): Single<List<DefectModel>> {
+        return offlineRepository.getActiveDefects(detourId, equipmentIds)
+            .subscribeOn(Schedulers.io())
     }
 
-    fun getEquipmentIdsWithDefects(equipmentIds: List<String>): Single<Set<String>> {
-        return offlineRepository.getEquipmentIdsWithDefects(equipmentIds)
-            .map { list ->
-                val set = mutableSetOf<String>()
-                list.forEach { set.add(it) }
-                set.toSet()
+    private fun RouteDataModel.isRouteHaveDefect(set: Set<String>): Boolean {
+        if (this.equipments != null) {
+            for (equipment in this.equipments) {
+                if (set.contains(equipment.id)) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    private fun RouteDataModel.countRouteDefect(map: Map<String, Int>): Int {
+        var res = 0
+        if (this.equipments != null) {
+            for (equipment in this.equipments) {
+                val count = map.getOrDefault(equipment.id, 0)
+                res += count
+            }
+        }
+        return res
+    }
+
+    fun getRoutesWithDefects(
+        detourId: String,
+        routes: List<RouteDataModel>
+    ): Single<List<RouteDataWithDefect>> {
+        return offlineRepository.getEquipmentIdsWithDefects(detourId, routes.getAllEquipmentIds())
+            .map { set ->
+                routes.map {
+                    RouteDataWithDefect(it, it.isRouteHaveDefect(set))
+                }
+            }
+            .subscribeOn(Schedulers.io())
+    }
+
+    fun getRoutesWithDefectCount(
+        detourId: String,
+        routes: List<RouteDataModel>
+    ): Single<List<RouteDataWithDefectCount>> {
+        return offlineRepository.getEquipmentsWithDefectsCount(
+            detourId,
+            routes.getAllEquipmentIds()
+        )
+            .map { map ->
+                routes.map {
+                    RouteDataWithDefectCount(it, it.countRouteDefect(map))
+                }
             }
             .subscribeOn(Schedulers.io())
     }

@@ -100,6 +100,21 @@ data class RouteDataModel(
     val completed: Boolean
 ) : Serializable
 
+data class RouteDataModelWithDetourId(
+    val detourId: String,
+    val routeData: RouteDataModel
+) : Serializable
+
+data class RouteDataWithDefect(
+    val route: RouteDataModel,
+    val haveDefect: Boolean
+)
+
+data class RouteDataWithDefectCount(
+    val route: RouteDataModel,
+    val defectCount: Int
+)
+
 fun List<RouteDataModel>.getAllEquipmentIds(): List<String> {
     return this.fold(mutableListOf(), { acc, a ->
         val ids = a.equipments?.map { it.id }

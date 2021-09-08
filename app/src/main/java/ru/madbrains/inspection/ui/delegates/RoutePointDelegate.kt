@@ -41,7 +41,7 @@ fun routePointDelegate(clickListener: (RoutePointUiModel) -> Unit) =
 
 data class RoutePointUiModel(
     val id: String,
-    val parentId: String?,
+    val routeDataId: String?,
     val name: String,
     val position: Int?,
     val completed: Boolean = false,

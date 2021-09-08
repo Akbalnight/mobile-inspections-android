@@ -26,11 +26,8 @@ class RoutePointsViewModel(
     private val _progressVisibility = MutableLiveData<Boolean>()
     val progressVisibility: LiveData<Boolean> = _progressVisibility
 
-    private val _navigateToNextRoute = MutableLiveData<Event<RouteDataModel>>()
-    val navigateToNextRoute: LiveData<Event<RouteDataModel>> = _navigateToNextRoute
-
-    private val _navigateToBack = MutableLiveData<Event<Unit>>()
-    val navigateToBack: LiveData<Event<Unit>> = _navigateToBack
+    private val _navigatePop = MutableLiveData<Event<Unit>>()
+    val navigatePop: LiveData<Event<Unit>> = _navigatePop
 
     private val _navigateToCloseDialog = MutableLiveData<Event<Unit>>()
     val navigateToCloseDialog: LiveData<Event<Unit>> = _navigateToCloseDialog
@@ -53,26 +50,40 @@ class RoutePointsViewModel(
     private var timerDispose: Disposable? = null
     private val routeDataModels get() = detourModel?.route?.routesDataSorted ?: listOf()
 
-    private val _navigateToTechOperations = MutableLiveData<Event<RouteDataModel>>()
-    val navigateToTechOperations: LiveData<Event<RouteDataModel>> = _navigateToTechOperations
+    private val _navigateToTechOperations = MutableLiveData<Event<RouteDataModelWithDetourId>>()
+    val navigateToTechOperations: LiveData<Event<RouteDataModelWithDetourId>> =
+        _navigateToTechOperations
 
-    private val _navigateToDefectList = MutableLiveData<Event<Boolean>>()
-    val navigateToDefectList: LiveData<Event<Boolean>> = _navigateToDefectList
+    val timerStarted get():Boolean = timerDispose != null
 
-    private val timerStarted get():Boolean = timerDispose != null
+    fun routePointClick(routeDataId: String?) {
+        routeDataModels.find { it.id == routeDataId }?.let { routeData ->
+            navigateToTechOperation(routeData)
+        }
+    }
 
-    fun routePointClick(id: String?) {
-        routeDataModels.find { data ->
-            data.id == id
-        }?.let { _navigateToTechOperations.postValue(Event(it)) }
+    fun startNextRoute() {
+        triggerTimer()
+        routeDataModels.firstOrNull { !it.completed }?.let {
+            navigateToTechOperation(it)
+        }
+    }
+
+    private fun navigateToTechOperation(routeData: RouteDataModel) {
+        detourModel?.let { detour ->
+            _navigateToTechOperations.postValue(
+                Event(
+                    RouteDataModelWithDetourId(
+                        detour.id,
+                        routeData
+                    )
+                )
+            )
+        }
     }
 
     fun isDetourEditable(): Boolean {
         return preferenceStorage.detourStatuses?.data?.isEditable(detourModel?.statusId) == true && timerStarted
-    }
-
-    fun navigateToDefectList() {
-        _navigateToDefectList.postValue(Event(timerStarted))
     }
 
     fun completeTechMap(item: RouteDataModel) {
@@ -88,7 +99,7 @@ class RoutePointsViewModel(
                             }
                         )
                     ).saveChangesToDb()
-                    updateData()
+                    refreshData()
                     if (routeDataModels.all { it.completed }) {
                         _navigateToFinishDialog.postValue(Event(Unit))
                     }
@@ -98,7 +109,6 @@ class RoutePointsViewModel(
     }
 
     fun finishDetourAndSave(type: DetourStatusType) {
-        stopTimer()
         detourModel?.let { detour ->
             val currentStatus = preferenceStorage.detourStatuses?.data?.getStatusByType(type)
             syncInteractor.insertDetour(
@@ -113,7 +123,7 @@ class RoutePointsViewModel(
                 .doOnSubscribe { _progressVisibility.postValue(true) }
                 .doAfterTerminate { _progressVisibility.postValue(false) }
                 .subscribe({
-                    onBack()
+                    navigatePop()
                 }, {
                     it.printStackTrace()
                 })
@@ -133,8 +143,8 @@ class RoutePointsViewModel(
         return data
     }
 
-    private fun onBack() {
-        _navigateToBack.postValue(Event(Unit))
+    private fun navigatePop() {
+        _navigatePop.postValue(Event(Unit))
     }
 
     fun closeClick() {
@@ -142,43 +152,47 @@ class RoutePointsViewModel(
             preferenceStorage.detourStatuses?.data?.getStatusById(detourModel?.statusId)?.type
         if (routeDataModels.all { it.completed } || status == DetourStatusType.COMPLETED ||
             detourModel?.dateStartFact == null) {
-            onBack()
+            navigatePop()
         } else {
             _navigateToCloseDialog.postValue(Event(Unit))
         }
     }
 
-    fun setDetour(detour: DetourModel) {
-        stopTimer()
+    fun setNavData(detour: DetourModel) {
         detourModel = detour
-        updateData()
+        refreshData()
     }
 
-    fun startNextRoute() {
-        triggerTimer()
-        val route = routeDataModels.firstOrNull { !it.completed }
-        route?.let {
-            _navigateToNextRoute.postValue(Event(route))
+    fun refreshData() {
+        setRouteStatus()
+        detourModel?.let { detour ->
+            offlineInteractor.getRoutesWithDefectCount(detour.id, detour.route.routesDataSorted)
+                .observeOn(Schedulers.io())
+                .subscribe({ data ->
+                    val currentId = detour.route.getCurrentRouteId()
+                    applyDefectData(data, currentId)
+                }, {
+                    it.printStackTrace()
+                })
+                .addTo(disposables)
+
         }
     }
 
-    private fun updateData() {
-        setRouteStatus()
-        val routePoints = mutableListOf<DiffItem>()
-        val currentId = detourModel?.route?.getCurrentRouteId()
-        routeDataModels.forEach { route ->
+    private fun applyDefectData(routes: List<RouteDataWithDefectCount>, currentId: String?) {
+        val routePoints = routes.mapNotNull { data ->
+            val route = data.route
             route.techMap?.let { techMap ->
                 val current = route.id == currentId
                 val preserveOrder = detourModel?.saveOrderControlPoints == true
-                routePoints.add(
-                    RoutePointUiModel(
-                        id = techMap.id,
-                        parentId = route.id,
-                        name = techMap.name.orEmpty(),
-                        position = route.position,
-                        completed = route.completed,
-                        clickable = !preserveOrder || route.completed || current
-                    )
+                RoutePointUiModel(
+                    id = techMap.id,
+                    routeDataId = route.id,
+                    name = techMap.name.orEmpty(),
+                    position = route.position,
+                    completed = route.completed,
+                    clickable = !preserveOrder || route.completed || current,
+                    defectCount = data.defectCount
                 )
             }
         }
@@ -237,6 +251,15 @@ class RoutePointsViewModel(
             timerDispose?.dispose()
             timerDispose = null
         }
+    }
+
+    fun doClean() {
+        stopTimer()
+        _routePoints.postValue(null)
+        _routeStatus.postValue(null)
+        _durationTimer.postValue(null)
+        _durationTimer.postValue(null)
+        detourModel = null
     }
 
     enum class RouteStatus {

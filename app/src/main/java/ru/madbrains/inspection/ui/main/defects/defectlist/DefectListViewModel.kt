@@ -44,7 +44,8 @@ class DefectListViewModel(
     private val _navigateToConfirmDefect = MutableLiveData<Event<DefectModel>>()
     val navigateToConfirmDefect: LiveData<Event<DefectModel>> = _navigateToConfirmDefect
 
-    private var lastDeviceIds: List<String>? = null
+    private var savedEquipmentIds: List<String>? = null
+    private var savedDetourId: String? = null
 
     fun editDefect(defect: DefectModel?) {
         defect?.let { _navigateToEditDefect.postValue(Event(it)) }
@@ -54,10 +55,21 @@ class DefectListViewModel(
         defect?.let { _navigateToConfirmDefect.postValue(Event(it)) }
     }
 
-    fun getDefectList(deviceIds: List<String>?) {
-        lastDeviceIds = deviceIds
+    fun initData(detourId: String? = null, equipmentIds: List<String>? = null) {
+        savedEquipmentIds = equipmentIds
+        savedDetourId = detourId
+
+        getDefectList()
+    }
+
+    private fun getDefectList() {
+        val equipmentIds = savedEquipmentIds
+        val detourId = savedDetourId
         val single =
-            if (deviceIds != null) offlineInteractor.getActiveDefects(equipmentIds = deviceIds) else offlineInteractor.getDefects()
+            if (equipmentIds != null) offlineInteractor.getActiveDefects(
+                detourId,
+                equipmentIds
+            ) else offlineInteractor.getAllDefects()
         single
             .observeOn(Schedulers.io())
             .doOnSubscribe { _progressVisibility.postValue(true) }
@@ -81,7 +93,7 @@ class DefectListViewModel(
                 .doOnSubscribe { _progressVisibility.postValue(true) }
                 .doAfterTerminate { _progressVisibility.postValue(false) }
                 .subscribe({
-                    getDefectList(lastDeviceIds)
+                    getDefectList()
                 }, {
                     it.printStackTrace()
                 })
@@ -146,7 +158,7 @@ class DefectListViewModel(
             )
                 .observeOn(Schedulers.io())
                 .subscribe({
-                    getDefectList(lastDeviceIds)
+                    getDefectList()
                 }, {
                     it.printStackTrace()
                 })

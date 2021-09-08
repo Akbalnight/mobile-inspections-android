@@ -54,9 +54,9 @@ class EquipmentTabDefectsFragment : BaseFragment(R.layout.fragment_equipment_tab
         setupRVList()
 
         equipmentViewModel.savedEquipmentData?.let {
-            defectListViewModel.getDefectList(listOf(it.id))
+            defectListViewModel.initData(equipmentIds = listOf(it.id))
         } ?: run {
-            defectListViewModel.getDefectList(null)
+            defectListViewModel.initData()
         }
 
         defectListViewModel.progressVisibility.observe(viewLifecycleOwner, Observer {

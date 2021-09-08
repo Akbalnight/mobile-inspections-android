@@ -23,8 +23,17 @@ interface OfflineRepository {
     fun getDetoursAndRefreshSource(): Single<List<DetourModel>>
     fun insertDefects(models: List<DefectModel>): Completable
     fun getDefects(): Single<List<DefectModel>>
-    fun getActiveDefects(equipmentIds: List<String>): Single<List<DefectModel>>
-    fun getEquipmentIdsWithDefects(equipmentIds: List<String>): Single<List<String>>
+    fun getActiveDefects(detourId: String?, equipmentIds: List<String>): Single<List<DefectModel>>
+    fun getEquipmentIdsWithDefects(
+        detourId: String,
+        equipmentIds: List<String>
+    ): Single<Set<String>>
+
+    fun getEquipmentsWithDefectsCount(
+        detourId: String,
+        equipmentIds: List<String>
+    ): Single<Map<String, Int>>
+
     fun insertDetourStatuses(list: List<DetourStatus>)
     fun insertEquipments(models: List<EquipmentModel>): Completable
     fun getEquipments(): Single<List<EquipmentModel>>
