@@ -29,9 +29,9 @@ class DetoursViewModel(
     private val _detours = MutableLiveData<List<DiffItem>>()
     val detours: LiveData<List<DiffItem>> = _detours
 
-    private val detourModels = mutableListOf<DetourModel>()
+    private val detourModels = mutableListOf<DetourModelWithDefectCount>()
 
-    private var savedStatus: DetourStatus? = null
+    private var savedFilter: DetourStatus? = null
 
     init {
         offlineInteractor.detoursSource
@@ -39,7 +39,7 @@ class DetoursViewModel(
             .doOnNext { routes ->
                 detourModels.clear()
                 detourModels.addAll(routes)
-                updateData(detourModels, savedStatus)
+                updateData(detourModels, savedFilter)
             }
             .subscribe({}, {
                 it.printStackTrace()
@@ -56,48 +56,34 @@ class DetoursViewModel(
         )?.map { it.id } ?: arrayListOf()
     }
 
-    private fun updateData(models: List<DetourModel>, status: DetourStatus?) {
-        val detours = mutableListOf<DiffItem>().apply {
-            status?.let { status ->
-                val filteredModels = status.let { models.filter { it.statusId == status.id } }
-                filteredModels.map { detour ->
-                    add(
-                        DetourUiModel(
-                            id = detour.id,
-                            name = detour.name.orEmpty(),
-                            status = preferenceStorage.detourStatuses?.data?.getStatusById(detour.statusId),
-                            dateStartPlan = detour.dateStartPlan
-                        )
-                    )
-                }
-            } ?: run {
-                models.map { detour ->
-                    add(
-                        DetourUiModel(
-                            id = detour.id,
-                            name = detour.name.orEmpty(),
-                            status = preferenceStorage.detourStatuses?.data?.getStatusById(detour.statusId),
-                            dateStartPlan = detour.dateStartPlan
-                        )
-                    )
-                }
-            }
+    private fun updateData(_routes: List<DetourModelWithDefectCount>, filter: DetourStatus?) {
+        val routes = if (filter != null) {
+            _routes.filter { it.data.statusId == filter.id }
+        } else _routes
+        val uiData = routes.map {
+            DetourUiModel(
+                id = it.data.id,
+                name = it.data.name.orEmpty(),
+                status = preferenceStorage.detourStatuses?.data?.getStatusById(it.data.statusId),
+                dateStartPlan = it.data.dateStartPlan,
+                defectCount = it.defectCount
+            )
         }
-        _detours.postValue(detours)
+        _detours.postValue(uiData)
     }
 
-    fun saveFilter(status: DetourStatus?) {
-        savedStatus = status
-        updateData(detourModels, status)
+    fun saveFilter(filter: DetourStatus?) {
+        savedFilter = filter
+        updateData(detourModels, filter)
     }
 
     fun dateRouteClick(id: String) {
-        val detour = detourModels.find { detourModel -> detourModel.id == id }
-        detour?.let { _navigateToDateRoutePoints.postValue(Event(it)) }
+        val detour = detourModels.find { detourModel -> detourModel.data.id == id }
+        detour?.let { _navigateToDateRoutePoints.postValue(Event(it.data)) }
     }
 
     fun routeClick(id: String) {
-        val detour = detourModels.find { detourModel -> detourModel.id == id }
-        detour?.let { _navigateToRoutePoints.postValue(Event(it)) }
+        val detour = detourModels.find { detourModel -> detourModel.data.id == id }
+        detour?.let { _navigateToRoutePoints.postValue(Event(it.data)) }
     }
 }

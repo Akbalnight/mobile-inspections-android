@@ -1,6 +1,7 @@
 package ru.madbrains.inspection.ui.delegates
 
 import android.widget.Toast
+import androidx.appcompat.widget.TooltipCompat
 import androidx.core.view.isVisible
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
 import kotlinx.android.synthetic.main.item_detour.view.*
@@ -31,6 +32,11 @@ fun detourDelegate(clickListener: (DetourUiModel) -> Unit) =
                 tvName.text = item.name
                 ivIcon.setImageResource(item.status?.type?.icon() ?: 0)
                 ivExpired.isVisible = isExpired
+                ivDefects.isVisible = item.defectCount > 0
+                TooltipCompat.setTooltipText(
+                    ivDefects,
+                    getString(R.string.defect_num, item.defectCount)
+                )
                 ivExpired.setOnClickListener {
                     Toast.makeText(
                         itemView.context,
@@ -47,7 +53,8 @@ data class DetourUiModel(
     val id: String,
     val name: String,
     val status: DetourStatus?,
-    val dateStartPlan: Date?
+    val dateStartPlan: Date?,
+    val defectCount: Int
 ) : DiffItem {
 
     override fun areItemsTheSame(newItem: DiffItem): Boolean =
