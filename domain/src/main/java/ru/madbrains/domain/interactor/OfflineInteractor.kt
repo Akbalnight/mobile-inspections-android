@@ -12,7 +12,7 @@ class OfflineInteractor(
     private val offlineRepository: OfflineRepository
 ) {
 
-    val detoursSource: Observable<List<DetourModelWithDefectCount>>
+    val detoursSource: Observable<List<DetourModel>>
         get() = offlineRepository.detoursSource.subscribeOn(Schedulers.io())
 
     val syncInfoSource: Observable<SyncInfo>
@@ -61,7 +61,7 @@ class OfflineInteractor(
             .subscribeOn(Schedulers.io())
     }
 
-    fun getDetoursAndRefreshSource(): Single<List<DetourModelWithDefectCount>> {
+    fun getDetoursAndRefreshSource(): Single<List<DetourModel>> {
         return offlineRepository.getDetoursAndRefreshSource().subscribeOn(Schedulers.io())
     }
 }

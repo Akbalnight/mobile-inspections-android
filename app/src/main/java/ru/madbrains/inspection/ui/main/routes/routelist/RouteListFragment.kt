@@ -45,7 +45,6 @@ class RouteListFragment : BaseFragment(R.layout.fragment_route_list) {
             routesAdapter.items = it
             ivGetData.isVisible = it.isEmpty()
             btnGetData.isVisible = it.isEmpty()
-
         })
         detoursViewModel.navigateToRoutePoints.observe(viewLifecycleOwner, EventObserver {
             openRoutePointsFragment(it)
