@@ -20,8 +20,8 @@ interface DetourItemDao {
     @Query("SELECT * FROM DetourItemDB ORDER BY dateStartPlan DESC")
     fun getItems(): Single<List<DetourItemDB>>
 
-    @Query("SELECT r.*, COUNT(d.id) as defectCount FROM DetourItemDB as r JOIN DefectItemDB as d ON d.detourId = r.id GROUP BY r.id ORDER BY r.dateStartPlan DESC")
-    fun getItemsWithDefectCount(): Single<List<DetourWithDefectCountItemDB>>
+    @Query("SELECT r.*, COUNT(d.id) as defectCount FROM DetourItemDB as r LEFT JOIN DefectItemDB as d ON d.detourId = r.id WHERE d.statusProcessId!=:eliminatedId GROUP BY r.id ORDER BY r.dateStartPlan DESC")
+    fun getItemsWithDefectCount(eliminatedId: String): Single<List<DetourWithDefectCountItemDB>>
 
     @Query("SELECT * FROM DetourItemDB WHERE changed = 1 ORDER BY dateStartPlan DESC")
     fun getChangedItems(): Single<List<DetourItemDB>>

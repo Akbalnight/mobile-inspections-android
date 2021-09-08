@@ -42,11 +42,11 @@ class OfflineRepositoryImpl(
     }
 
     override fun getDetoursAndRefreshSource(): Single<List<DetourModelWithDefectCount>> {
-        return db.detourItemDao().getItemsWithDefectCount()
+        return db.detourItemDao().getItemsWithDefectCount(DefectStatus.ELIMINATED.id)
             .map { it -> it.map { fromDetourWithDefectCountItemDB(it) } }.map {
-            _detoursSource.onNext(it)
-            it
-        }
+                _detoursSource.onNext(it)
+                it
+            }
     }
 
     override fun getChangedDetours(): Single<List<DetourModel>> {
