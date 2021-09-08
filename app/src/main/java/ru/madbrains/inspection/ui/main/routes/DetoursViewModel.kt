@@ -11,6 +11,7 @@ import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.DetourUiModel
+import timber.log.Timber
 
 class DetoursViewModel(
     offlineInteractor: OfflineInteractor,
@@ -29,9 +30,9 @@ class DetoursViewModel(
     private val _detours = MutableLiveData<List<DiffItem>>()
     val detours: LiveData<List<DiffItem>> = _detours
 
-    private val detourModels = mutableListOf<DetourModel>()
+    private val detourModels = mutableListOf<DetourModelWithDefectCount>()
 
-    private var savedStatus: DetourStatus? = null
+    private var savedFilter: DetourStatus? = null
 
     init {
         offlineInteractor.detoursSource
@@ -39,7 +40,7 @@ class DetoursViewModel(
             .doOnNext { routes ->
                 detourModels.clear()
                 detourModels.addAll(routes)
-                updateData(detourModels, savedStatus)
+                updateData(detourModels, savedFilter)
             }
             .subscribe({}, {
                 it.printStackTrace()
@@ -56,48 +57,48 @@ class DetoursViewModel(
         )?.map { it.id } ?: arrayListOf()
     }
 
-    private fun updateData(models: List<DetourModel>, status: DetourStatus?) {
-        val detours = mutableListOf<DiffItem>().apply {
-            status?.let { status ->
-                val filteredModels = status.let { models.filter { it.statusId == status.id } }
-                filteredModels.map { detour ->
-                    add(
-                        DetourUiModel(
-                            id = detour.id,
-                            name = detour.name.orEmpty(),
-                            status = preferenceStorage.detourStatuses?.data?.getStatusById(detour.statusId),
-                            dateStartPlan = detour.dateStartPlan
-                        )
+    private fun updateData(routes: List<DetourModelWithDefectCount>, _filter: DetourStatus?) {
+        val detours = mutableListOf<DiffItem>()
+        _filter?.let { filter ->
+            val filteredModels = filter.let { routes.filter { it.data.statusId == filter.id } }
+            filteredModels.map { detour ->
+                detours.add(
+                    DetourUiModel(
+                        id = detour.data.id,
+                        name = detour.data.name.orEmpty(),
+                        status = preferenceStorage.detourStatuses?.data?.getStatusById(detour.data.statusId),
+                        dateStartPlan = detour.data.dateStartPlan
                     )
-                }
-            } ?: run {
-                models.map { detour ->
-                    add(
-                        DetourUiModel(
-                            id = detour.id,
-                            name = detour.name.orEmpty(),
-                            status = preferenceStorage.detourStatuses?.data?.getStatusById(detour.statusId),
-                            dateStartPlan = detour.dateStartPlan
-                        )
+                )
+            }
+        } ?: run {
+            routes.map { detour ->
+                Timber.d("debug_dmm detour.defectCount ${detour.defectCount}")
+                detours.add(
+                    DetourUiModel(
+                        id = detour.data.id,
+                        name = detour.data.name.orEmpty(),
+                        status = preferenceStorage.detourStatuses?.data?.getStatusById(detour.data.statusId),
+                        dateStartPlan = detour.data.dateStartPlan
                     )
-                }
+                )
             }
         }
         _detours.postValue(detours)
     }
 
-    fun saveFilter(status: DetourStatus?) {
-        savedStatus = status
-        updateData(detourModels, status)
+    fun saveFilter(filter: DetourStatus?) {
+        savedFilter = filter
+        updateData(detourModels, filter)
     }
 
     fun dateRouteClick(id: String) {
-        val detour = detourModels.find { detourModel -> detourModel.id == id }
-        detour?.let { _navigateToDateRoutePoints.postValue(Event(it)) }
+        val detour = detourModels.find { detourModel -> detourModel.data.id == id }
+        detour?.let { _navigateToDateRoutePoints.postValue(Event(it.data)) }
     }
 
     fun routeClick(id: String) {
-        val detour = detourModels.find { detourModel -> detourModel.id == id }
-        detour?.let { _navigateToRoutePoints.postValue(Event(it)) }
+        val detour = detourModels.find { detourModel -> detourModel.data.id == id }
+        detour?.let { _navigateToRoutePoints.postValue(Event(it.data)) }
     }
 }

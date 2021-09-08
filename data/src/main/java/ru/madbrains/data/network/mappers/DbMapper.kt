@@ -3,6 +3,16 @@ package ru.madbrains.data.network.mappers
 import ru.madbrains.data.database.models.*
 import ru.madbrains.domain.model.*
 
+fun fromDetourWithDefectCountItemDB(resp: DetourWithDefectCountItemDB): DetourModelWithDefectCount {
+    return with(resp) {
+        DetourModelWithDefectCount(
+            data = fromDetourItemDB(data),
+            defectCount = defectCount
+        )
+    }
+}
+
+
 fun fromDetourItemDB(resp: DetourItemDB): DetourModel {
     return with(resp) {
         DetourModel(
@@ -66,6 +76,7 @@ fun toDetourItemDB(resp: DetourModel): DetourItemDB {
         )
     }
 }
+
 
 fun fromDefectItemDB(resp: DefectItemDB): DefectModel {
     return with(resp) {

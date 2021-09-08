@@ -7,6 +7,7 @@ import androidx.room.Query
 import io.reactivex.Completable
 import io.reactivex.Single
 import ru.madbrains.data.database.models.DetourItemDB
+import ru.madbrains.data.database.models.DetourWithDefectCountItemDB
 
 @Dao
 interface DetourItemDao {
@@ -18,6 +19,9 @@ interface DetourItemDao {
 
     @Query("SELECT * FROM DetourItemDB ORDER BY dateStartPlan DESC")
     fun getItems(): Single<List<DetourItemDB>>
+
+    @Query("SELECT r.*, COUNT(d.id) as defectCount FROM DetourItemDB as r JOIN DefectItemDB as d ON d.detourId = r.id GROUP BY r.id ORDER BY r.dateStartPlan DESC")
+    fun getItemsWithDefectCount(): Single<List<DetourWithDefectCountItemDB>>
 
     @Query("SELECT * FROM DetourItemDB WHERE changed = 1 ORDER BY dateStartPlan DESC")
     fun getChangedItems(): Single<List<DetourItemDB>>

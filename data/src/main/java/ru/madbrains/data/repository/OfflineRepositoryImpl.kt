@@ -21,8 +21,8 @@ class OfflineRepositoryImpl(
     private val db: HcbDatabase
 ) : OfflineRepository {
 
-    private val _detoursSource = BehaviorSubject.create<List<DetourModel>>()
-    override val detoursSource: Observable<List<DetourModel>>
+    private val _detoursSource = BehaviorSubject.create<List<DetourModelWithDefectCount>>()
+    override val detoursSource: Observable<List<DetourModelWithDefectCount>>
         get() = _detoursSource
 
     private val _syncInfoSource =
@@ -41,8 +41,9 @@ class OfflineRepositoryImpl(
         return db.detourItemDao().insertItem(toDetourItemDB(model))
     }
 
-    override fun getDetoursAndRefreshSource(): Single<List<DetourModel>> {
-        return db.detourItemDao().getItems().map { it -> it.map { fromDetourItemDB(it) } }.map {
+    override fun getDetoursAndRefreshSource(): Single<List<DetourModelWithDefectCount>> {
+        return db.detourItemDao().getItemsWithDefectCount()
+            .map { it -> it.map { fromDetourWithDefectCountItemDB(it) } }.map {
             _detoursSource.onNext(it)
             it
         }
