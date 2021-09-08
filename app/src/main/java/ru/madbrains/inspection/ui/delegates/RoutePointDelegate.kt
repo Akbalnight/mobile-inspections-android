@@ -1,5 +1,7 @@
 package ru.madbrains.inspection.ui.delegates
 
+import androidx.appcompat.widget.TooltipCompat
+import androidx.core.view.isVisible
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
 import kotlinx.android.synthetic.main.item_route_point.view.*
 import ru.madbrains.inspection.R
@@ -28,6 +30,11 @@ fun routePointDelegate(clickListener: (RoutePointUiModel) -> Unit) =
                 if (item.completed) tvPointNumber.setTextColor(context.colors[R.color.textWhite])
                 else tvPointNumber.setTextColor(context.colors[R.color.textMain])
 
+                ivDefects.isVisible = item.defectCount > 0
+                TooltipCompat.setTooltipText(
+                    ivDefects,
+                    getString(R.string.defect_num, item.defectCount)
+                )
             }
         }
     }
@@ -38,7 +45,8 @@ data class RoutePointUiModel(
     val name: String,
     val position: Int?,
     val completed: Boolean = false,
-    val clickable: Boolean
+    val clickable: Boolean,
+    val defectCount: Int
 ) : DiffItem {
 
     override fun areItemsTheSame(newItem: DiffItem): Boolean =
