@@ -11,7 +11,6 @@ import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
 import ru.madbrains.inspection.ui.delegates.DetourUiModel
-import timber.log.Timber
 
 class DetoursViewModel(
     offlineInteractor: OfflineInteractor,
@@ -57,34 +56,20 @@ class DetoursViewModel(
         )?.map { it.id } ?: arrayListOf()
     }
 
-    private fun updateData(routes: List<DetourModelWithDefectCount>, _filter: DetourStatus?) {
-        val detours = mutableListOf<DiffItem>()
-        _filter?.let { filter ->
-            val filteredModels = filter.let { routes.filter { it.data.statusId == filter.id } }
-            filteredModels.map { detour ->
-                detours.add(
-                    DetourUiModel(
-                        id = detour.data.id,
-                        name = detour.data.name.orEmpty(),
-                        status = preferenceStorage.detourStatuses?.data?.getStatusById(detour.data.statusId),
-                        dateStartPlan = detour.data.dateStartPlan
-                    )
-                )
-            }
-        } ?: run {
-            routes.map { detour ->
-                Timber.d("debug_dmm detour.defectCount ${detour.defectCount}")
-                detours.add(
-                    DetourUiModel(
-                        id = detour.data.id,
-                        name = detour.data.name.orEmpty(),
-                        status = preferenceStorage.detourStatuses?.data?.getStatusById(detour.data.statusId),
-                        dateStartPlan = detour.data.dateStartPlan
-                    )
-                )
-            }
+    private fun updateData(_routes: List<DetourModelWithDefectCount>, filter: DetourStatus?) {
+        val routes = if (filter != null) {
+            _routes.filter { it.data.statusId == filter.id }
+        } else _routes
+        val uiData = routes.map {
+            DetourUiModel(
+                id = it.data.id,
+                name = it.data.name.orEmpty(),
+                status = preferenceStorage.detourStatuses?.data?.getStatusById(it.data.statusId),
+                dateStartPlan = it.data.dateStartPlan,
+                defectCount = it.defectCount
+            )
         }
-        _detours.postValue(detours)
+        _detours.postValue(uiData)
     }
 
     fun saveFilter(filter: DetourStatus?) {
