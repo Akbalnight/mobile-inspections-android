@@ -13,6 +13,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.madbrains.domain.model.DefectModel
 import ru.madbrains.domain.model.DefectStatus
+import ru.madbrains.domain.model.RouteDataModelWithDetourId
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
@@ -24,7 +25,7 @@ import ru.madbrains.inspection.ui.main.defects.defectdetail.DefectDetailFragment
 class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
 
     companion object {
-        const val KEY_EQUIPMENTS_IDS_DEFECT_LIST = "KEY_EQUIPMENTS_IDS_DEFECT_LIST"
+        const val KEY_ROUTE_DATA_WITH_DETOUR = "KEY_ROUTE_DATA_WITH_DETOUR"
         const val KEY_IS_DEFECT_REGISTRY = "KEY_IS_DEFECT_REGISTRY"
         const val KEY_IS_EDITABLE = "KEY_IS_EDITABLE"
     }
@@ -65,7 +66,6 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val deviceIds = arguments?.getStringArrayList(KEY_EQUIPMENTS_IDS_DEFECT_LIST)
         defectListViewModel.isDefectRegistry =
             arguments?.getBoolean(KEY_IS_DEFECT_REGISTRY, true) ?: true
         defectListViewModel.isEditable = arguments?.getBoolean(KEY_IS_EDITABLE, true) ?: true
@@ -77,7 +77,12 @@ class DefectListFragment : BaseFragment(R.layout.fragment_defect_list) {
 
         setupRVList()
 
-        defectListViewModel.getDefectList(deviceIds)
+        val detourData =
+            arguments?.getSerializable(KEY_ROUTE_DATA_WITH_DETOUR) as? RouteDataModelWithDetourId
+        val detourId = detourData?.detourId
+        val equipmentIds = detourData?.routeData?.equipments?.map { it.id }
+
+        defectListViewModel.initData(detourId, equipmentIds)
 
         defectListViewModel.progressVisibility.observe(viewLifecycleOwner, Observer {
             progressView.changeVisibility(it)

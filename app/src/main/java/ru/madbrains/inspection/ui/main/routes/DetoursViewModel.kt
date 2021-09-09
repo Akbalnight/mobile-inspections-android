@@ -29,7 +29,7 @@ class DetoursViewModel(
     private val _detours = MutableLiveData<List<DiffItem>>()
     val detours: LiveData<List<DiffItem>> = _detours
 
-    private val detourModels = mutableListOf<DetourModelWithDefectCount>()
+    private val detourModels = mutableListOf<DetourModel>()
 
     private var savedFilter: DetourStatus? = null
 
@@ -56,17 +56,16 @@ class DetoursViewModel(
         )?.map { it.id } ?: arrayListOf()
     }
 
-    private fun updateData(_routes: List<DetourModelWithDefectCount>, filter: DetourStatus?) {
+    private fun updateData(_routes: List<DetourModel>, filter: DetourStatus?) {
         val routes = if (filter != null) {
-            _routes.filter { it.data.statusId == filter.id }
+            _routes.filter { it.statusId == filter.id }
         } else _routes
         val uiData = routes.map {
             DetourUiModel(
-                id = it.data.id,
-                name = it.data.name.orEmpty(),
-                status = preferenceStorage.detourStatuses?.data?.getStatusById(it.data.statusId),
-                dateStartPlan = it.data.dateStartPlan,
-                defectCount = it.defectCount
+                id = it.id,
+                name = it.name.orEmpty(),
+                status = preferenceStorage.detourStatuses?.data?.getStatusById(it.statusId),
+                dateStartPlan = it.dateStartPlan
             )
         }
         _detours.postValue(uiData)
@@ -78,12 +77,12 @@ class DetoursViewModel(
     }
 
     fun dateRouteClick(id: String) {
-        val detour = detourModels.find { detourModel -> detourModel.data.id == id }
-        detour?.let { _navigateToDateRoutePoints.postValue(Event(it.data)) }
+        val detour = detourModels.find { detourModel -> detourModel.id == id }
+        detour?.let { _navigateToDateRoutePoints.postValue(Event(it)) }
     }
 
     fun routeClick(id: String) {
-        val detour = detourModels.find { detourModel -> detourModel.data.id == id }
-        detour?.let { _navigateToRoutePoints.postValue(Event(it.data)) }
+        val detour = detourModels.find { detourModel -> detourModel.id == id }
+        detour?.let { _navigateToRoutePoints.postValue(Event(it)) }
     }
 }

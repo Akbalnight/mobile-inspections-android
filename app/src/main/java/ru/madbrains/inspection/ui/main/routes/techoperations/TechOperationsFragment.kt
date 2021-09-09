@@ -12,8 +12,7 @@ import kotlinx.android.synthetic.main.toolbar_with_back.view.*
 import kotlinx.android.synthetic.main.toolbar_with_close.view.tvTitle
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import ru.madbrains.domain.model.EquipmentModel
-import ru.madbrains.domain.model.RouteDataModel
+import ru.madbrains.domain.model.RouteDataModelWithDetourId
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
@@ -28,7 +27,7 @@ import ru.madbrains.inspection.ui.main.routes.points.RoutePointsViewModel
 class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
 
     companion object {
-        const val KEY_ROUTE_DATA = "KEY_ROUTE_DATA"
+        const val KEY_ROUTE_DATA_WITH_DETOUR = "KEY_ROUTE_DATA_WITH_DETOUR"
     }
 
     private val techOperationsViewModel: TechOperationsViewModel by viewModel()
@@ -53,10 +52,11 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
         })
 
         requireNotNull(arguments).run {
-            val routeDataModel = (getSerializable(KEY_ROUTE_DATA) as? RouteDataModel)
-            routeDataModel?.let {
-                techOperationsViewModel.initDetour(it, routePointsViewModel.isDetourEditable())
-                setupToolbar(it.position)
+            val routeDataModel =
+                (getSerializable(KEY_ROUTE_DATA_WITH_DETOUR) as? RouteDataModelWithDetourId)
+            routeDataModel?.let { data ->
+                techOperationsViewModel.initDetour(data, routePointsViewModel.isDetourEditable())
+                setupToolbar(data.routeData.position)
             }
         }
 
@@ -119,7 +119,7 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
         }
         fabTechOperations.isVisible = mode != TechUIMode.Disabled
         if (mode == TechUIMode.Enabled) {
-            layoutBottomButtonAddDefect.setOnClickListener { toDefectDetailFragment() }
+            layoutBottomButtonAddDefect.setOnClickListener { techOperationsViewModel.addDefectClick() }
             layoutBottomButtonAddDefect.isClickable = true
             layoutBottomButtonAddDefect.alpha = 1f
         } else {
@@ -144,7 +144,7 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
 
     private fun setupOnClickListener() {
         layoutBottomButtonDefect.setOnClickListener {
-            routePointsViewModel.navigateToDefectList()
+            techOperationsViewModel.navigateToDefectList()
         }
         layoutBottomButtonDevice.setOnClickListener {
             techOperationsViewModel.toEquipmentFragment()
@@ -170,33 +170,26 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
                 )
             )
         })
-        routePointsViewModel.navigateToDefectList.observe(
+        techOperationsViewModel.navigateToDefectDetailFragment.observe(
             viewLifecycleOwner,
-            EventObserver { editable ->
+            EventObserver {
                 findNavController().navigate(
-                    R.id.graph_defects, bundleOf(
-                        DefectListFragment.KEY_EQUIPMENTS_IDS_DEFECT_LIST to techOperationsViewModel.savedRouteData?.equipments?.map { it.id },
-                        DefectListFragment.KEY_IS_DEFECT_REGISTRY to false,
-                        DefectListFragment.KEY_IS_EDITABLE to editable
+                    R.id.action_techOperationsFragment_to_addDefectFragment, bundleOf(
+                        DefectDetailFragment.KEY_ROUTE_DATA_WITH_DETOUR to it
                     )
                 )
             })
-    }
-
-    private fun getEquipments(): List<EquipmentModel>? {
-        techOperationsViewModel.savedRouteData?.equipments?.let {
-            return it
-        }
-        return null
-    }
-
-    private fun toDefectDetailFragment() {
-        findNavController().navigate(
-            R.id.action_techOperationsFragment_to_addDefectFragment, bundleOf(
-                DefectDetailFragment.KEY_EQUIPMENT_LIST to getEquipments(),
-                DefectDetailFragment.KEY_DETOUR_ID to routePointsViewModel.detourModel?.id
-            )
-        )
+        techOperationsViewModel.navigateToDefectList.observe(
+            viewLifecycleOwner,
+            EventObserver { data ->
+                findNavController().navigate(
+                    R.id.graph_defects, bundleOf(
+                        DefectListFragment.KEY_ROUTE_DATA_WITH_DETOUR to data,
+                        DefectListFragment.KEY_IS_DEFECT_REGISTRY to false,
+                        DefectListFragment.KEY_IS_EDITABLE to routePointsViewModel.timerStarted
+                    )
+                )
+            })
     }
 
     private fun showDialogBlankFields() {

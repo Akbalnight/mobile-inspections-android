@@ -21,8 +21,8 @@ class OfflineRepositoryImpl(
     private val db: HcbDatabase
 ) : OfflineRepository {
 
-    private val _detoursSource = BehaviorSubject.create<List<DetourModelWithDefectCount>>()
-    override val detoursSource: Observable<List<DetourModelWithDefectCount>>
+    private val _detoursSource = BehaviorSubject.create<List<DetourModel>>()
+    override val detoursSource: Observable<List<DetourModel>>
         get() = _detoursSource
 
     private val _syncInfoSource =
@@ -41,12 +41,11 @@ class OfflineRepositoryImpl(
         return db.detourItemDao().insertItem(toDetourItemDB(model))
     }
 
-    override fun getDetoursAndRefreshSource(): Single<List<DetourModelWithDefectCount>> {
-        return db.detourItemDao().getItemsWithDefectCount(DefectStatus.ELIMINATED.id)
-            .map { it -> it.map { fromDetourWithDefectCountItemDB(it) } }.map {
-                _detoursSource.onNext(it)
-                it
-            }
+    override fun getDetoursAndRefreshSource(): Single<List<DetourModel>> {
+        return db.detourItemDao().getItems().map { it -> it.map { fromDetourItemDB(it) } }.map {
+            _detoursSource.onNext(it)
+            it
+        }
     }
 
     override fun getChangedDetours(): Single<List<DetourModel>> {
@@ -94,14 +93,38 @@ class OfflineRepositoryImpl(
         return db.defectItemDao().getItems().map { it -> it.map { fromDefectItemDB(it) } }
     }
 
-    override fun getActiveDefects(equipmentIds: List<String>): Single<List<DefectModel>> {
-        return db.defectItemDao().getActiveItems(equipmentIds, DefectStatus.ELIMINATED.id)
+    override fun getActiveDefects(
+        detourId: String?,
+        equipmentIds: List<String>
+    ): Single<List<DefectModel>> {
+        return db.defectItemDao().getActiveItems(detourId, equipmentIds, DefectStatus.ELIMINATED.id)
             .map { it -> it.map { fromDefectItemDB(it) } }
     }
 
-    override fun getEquipmentIdsWithDefects(equipmentIds: List<String>): Single<List<String>> {
+    override fun getEquipmentIdsWithDefects(
+        detourId: String,
+        equipmentIds: List<String>
+    ): Single<Set<String>> {
         return db.defectItemDao()
-            .getEquipmentIdsWithDefects(equipmentIds, DefectStatus.ELIMINATED.id)
+            .getEquipmentIdsWithDefects(detourId, equipmentIds, DefectStatus.ELIMINATED.id)
+            .map {
+                it.toSet()
+            }
+    }
+
+    override fun getEquipmentsWithDefectsCount(
+        detourId: String,
+        equipmentIds: List<String>
+    ): Single<Map<String, Int>> {
+        return db.defectItemDao()
+            .getEquipmentsWithDefectsCount(detourId, equipmentIds, DefectStatus.ELIMINATED.id)
+            .map { list ->
+                val map = mutableMapOf<String, Int>()
+                list.forEach {
+                    map[it.id] = it.defectCount
+                }
+                map
+            }
     }
 
     override fun getEquipments(): Single<List<EquipmentModel>> {

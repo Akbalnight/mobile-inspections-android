@@ -83,6 +83,9 @@ class DefectDetailViewModel(
     private val _showSnackBar = MutableLiveData<Event<Unit>>()
     val showSnackBar: LiveData<Event<Unit>> = _showSnackBar
 
+    private val _refreshPointsList = MutableLiveData<Event<Unit>>()
+    val refreshPointsList: LiveData<Event<Unit>> = _refreshPointsList
+
     fun getCurrentDevice(): EquipmentModel? {
         return currentDeviceModel
     }
@@ -258,6 +261,7 @@ class DefectDetailViewModel(
             .doAfterTerminate { _progressVisibility.postValue(false) }
             .subscribe({
                 _showSnackBar.postValue(Event(Unit))
+                _refreshPointsList.postValue(Event(Unit))
                 _popNavigation.postValue(Event(Unit))
             }, {
                 it.printStackTrace()

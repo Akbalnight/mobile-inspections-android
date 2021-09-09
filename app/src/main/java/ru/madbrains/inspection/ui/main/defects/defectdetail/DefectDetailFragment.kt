@@ -17,7 +17,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.madbrains.domain.model.DefectModel
 import ru.madbrains.domain.model.DefectStatus
-import ru.madbrains.domain.model.EquipmentModel
+import ru.madbrains.domain.model.RouteDataModelWithDetourId
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
@@ -29,13 +29,13 @@ import ru.madbrains.inspection.ui.common.camera.CameraViewModel
 import ru.madbrains.inspection.ui.delegates.MediaUiModel
 import ru.madbrains.inspection.ui.main.MainViewModel
 import ru.madbrains.inspection.ui.main.defects.defectdetail.equipmentselectlist.EquipmentSelectListViewModel
+import ru.madbrains.inspection.ui.main.routes.points.RoutePointsViewModel
 
 class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
 
     companion object {
-        const val KEY_EQUIPMENT_LIST = "equipment_list_defect_detail_fragment"
+        const val KEY_ROUTE_DATA_WITH_DETOUR = "KEY_ROUTE_DATA_WITH_DETOUR"
         const val KEY_DETAIL_DEFECT = "defect_model_defect_detail_fragment"
-        const val KEY_DETOUR_ID = "detour_id_defect_detail_fragment"
         const val KEY_DEFECT_TARGET_STATUS = "target_status_defect_detail_fragment"
     }
 
@@ -50,6 +50,7 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
         )
     }
 
+    private val routePointsViewModel: RoutePointsViewModel by sharedViewModel()
     private val defectDetailViewModel: DefectDetailViewModel by viewModel()
     private val cameraViewModel: CameraViewModel by sharedViewModel()
     private val equipmentSelectViewModel: EquipmentSelectListViewModel by sharedViewModel()
@@ -59,8 +60,9 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
         super.onActivityCreated(savedInstanceState)
 
         arguments?.let {
-            defectDetailViewModel.setEquipments(it.getSerializable(KEY_EQUIPMENT_LIST) as? List<EquipmentModel>)
-            defectDetailViewModel.setDetourId(it.getString(KEY_DETOUR_ID))
+            val data = it.getSerializable(KEY_ROUTE_DATA_WITH_DETOUR) as RouteDataModelWithDetourId
+            defectDetailViewModel.setEquipments(data.routeData.equipments)
+            defectDetailViewModel.setDetourId(data.detourId)
             val currentDefect =
                 it.getSerializable(KEY_DETAIL_DEFECT) as? DefectModel
             defectDetailViewModel.setDefect(currentDefect)
@@ -104,6 +106,9 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
 
         defectDetailViewModel.descriptionObserver.observe(viewLifecycleOwner, Observer {
             etAddDefectDescription.setText(it)
+        })
+        defectDetailViewModel.refreshPointsList.observe(viewLifecycleOwner, EventObserver {
+            routePointsViewModel.refreshData()
         })
     }
 

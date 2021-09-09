@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import ru.madbrains.domain.interactor.RfidInteractor
 import ru.madbrains.domain.model.EquipmentModel
 import ru.madbrains.domain.model.RouteDataModel
+import ru.madbrains.domain.model.RouteDataModelWithDetourId
 import ru.madbrains.domain.model.TechOperationModel
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseViewModel
@@ -39,6 +40,14 @@ class TechOperationsViewModel(
     private val _navigateToEquipmentList = MutableLiveData<Event<List<EquipmentModel>>>()
     val navigateToEquipmentList: LiveData<Event<List<EquipmentModel>>> = _navigateToEquipmentList
 
+    private val _navigateToDefectDetailFragment =
+        MutableLiveData<Event<RouteDataModelWithDetourId>>()
+    val navigateToDefectDetailFragment: LiveData<Event<RouteDataModelWithDetourId>> =
+        _navigateToDefectDetailFragment
+
+    private val _navigateToDefectList = MutableLiveData<Event<RouteDataModelWithDetourId>>()
+    val navigateToDefectList: LiveData<Event<RouteDataModelWithDetourId>> = _navigateToDefectList
+
     private val _completeTechMapEvent = MutableLiveData<Event<RouteDataModel>>()
     val completeTechMapEvent: LiveData<Event<RouteDataModel>> = _completeTechMapEvent
 
@@ -48,7 +57,8 @@ class TechOperationsViewModel(
     private val _showDialogBlankFields = MutableLiveData<Event<Unit>>()
     val showDialogBlankFields: LiveData<Event<Unit>> = _showDialogBlankFields
 
-    var savedRouteData: RouteDataModel? = null
+    private var savedRouteDataWrap: RouteDataModelWithDetourId? = null
+    private val savedRouteData: RouteDataModel? get() = savedRouteDataWrap?.routeData
 
     //Models LiveData
     private val _rfidProgress = MutableLiveData<Boolean>()
@@ -79,18 +89,18 @@ class TechOperationsViewModel(
         }
     }
 
-    fun initDetour(routeDataModel: RouteDataModel, detourEditable: Boolean) {
+    fun initDetour(data: RouteDataModelWithDetourId, detourEditable: Boolean) {
         _detourIsEditable = detourEditable
-        savedRouteData = routeDataModel
-
-        routeDataModel.techMap?.techOperations?.let {
+        savedRouteDataWrap = data
+        val routeData = data.routeData
+        routeData.techMap?.techOperations?.let {
             operationsModels.clear()
             operationsModels.addAll(it)
         }
 
-        _titleTechOperations.postValue(routeDataModel.techMap?.name)
+        _titleTechOperations.postValue(routeData.techMap?.name)
 
-        val isRfid = savedRouteData?.rfidCode != null
+        val isRfid = routeData.rfidCode != null
         updateData(rfidBlocked = isRfid)
     }
 
@@ -102,8 +112,10 @@ class TechOperationsViewModel(
                 if (index != -1) {
                     val item = mutableList[index]
                     mutableList[index] = item.copy(valueInputData = dataValue)
-                    savedRouteData = savedRouteData?.copy(
-                        techMap = routeData.techMap?.copy(techOperations = mutableList)
+                    savedRouteDataWrap = savedRouteDataWrap?.copy(
+                        routeData = routeData.copy(
+                            techMap = routeData.techMap?.copy(techOperations = mutableList)
+                        )
                     )
                 }
             }
@@ -174,6 +186,21 @@ class TechOperationsViewModel(
             TechUIMode.Enabled -> checkAvailableFinishTechMap()
             else -> {
             }
+        }
+    }
+
+    fun addDefectClick() {
+        savedRouteDataWrap?.let {
+            _navigateToDefectDetailFragment.postValue(Event(it))
+        }
+
+    }
+
+    fun navigateToDefectList() {
+        val data = savedRouteDataWrap
+        if (data != null) {
+            _navigateToDefectList.postValue(Event(data))
+
         }
     }
 }

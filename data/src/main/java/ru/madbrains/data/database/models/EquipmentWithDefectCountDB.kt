@@ -1,11 +1,11 @@
 package ru.madbrains.data.database.models
 
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
 
 @Entity(primaryKeys = ["id"])
-@TypeConverters(Converters::class)
-data class DetourWithDefectCountItemDB(
-    @Embedded val data: DetourItemDB,
+data class EquipmentWithDefectCountDB(
+    val id: String,
     @ColumnInfo(name = "defectCount", defaultValue = "0")
     val defectCount: Int
 )

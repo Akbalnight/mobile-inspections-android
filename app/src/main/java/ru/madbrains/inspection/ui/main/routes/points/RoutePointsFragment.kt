@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.toolbar_with_close.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import ru.madbrains.domain.model.DetourModel
 import ru.madbrains.domain.model.DetourStatusType
-import ru.madbrains.domain.model.RouteDataModel
+import ru.madbrains.domain.model.RouteDataModelWithDetourId
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.base.EventObserver
@@ -57,7 +57,7 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
             fabContinue.isVisible = status == RoutePointsViewModel.RouteStatus.IN_PROGRESS
             fabFinish.isVisible = status == RoutePointsViewModel.RouteStatus.FINISHED_NOT_COMPLETED
         })
-        routePointsViewModel.navigateToBack.observe(viewLifecycleOwner, EventObserver {
+        routePointsViewModel.navigatePop.observe(viewLifecycleOwner, EventObserver {
             findNavController().popBackStack()
         })
         routePointsViewModel.navigateToCloseDialog.observe(viewLifecycleOwner, EventObserver {
@@ -66,16 +66,6 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
         routePointsViewModel.navigateToFinishDialog.observe(viewLifecycleOwner, EventObserver {
             openFinishDialog()
         })
-
-        routePointsViewModel.navigateToNextRoute.observe(
-            viewLifecycleOwner,
-            EventObserver { routeData ->
-                val techMap = routeData.techMap
-                techMap?.let {
-                    openTechOperationsFragment(routeData)
-                }
-            }
-        )
 
         routePointsViewModel.navigateToTechOperations.observe(
             viewLifecycleOwner,
@@ -93,17 +83,23 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
         requireNotNull(arguments).run {
             val detour = getSerializable(KEY_DETOUR) as? DetourModel
             detour?.let {
-                routePointsViewModel.setDetour(it)
+                routePointsViewModel.setNavData(it)
             }
             clear()
         }
         super.onCreate(savedInstanceState)
     }
 
+    override fun onDestroy() {
 
-    private fun openTechOperationsFragment(routeData: RouteDataModel) {
+        routePointsViewModel.doClean()
+        super.onDestroy()
+    }
+
+
+    private fun openTechOperationsFragment(routeData: RouteDataModelWithDetourId) {
         val args = bundleOf(
-            TechOperationsFragment.KEY_ROUTE_DATA to routeData
+            TechOperationsFragment.KEY_ROUTE_DATA_WITH_DETOUR to routeData
         )
         findNavController().navigate(
             R.id.action_routePointsFragment_to_techOperationsFragment,
