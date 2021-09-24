@@ -40,6 +40,18 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
         )
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        requireNotNull(arguments).run {
+            val routeDataModel =
+                (getSerializable(KEY_ROUTE_DATA_WITH_DETOUR) as? RouteDataModelWithDetourId)
+            routeDataModel?.let { data ->
+                techOperationsViewModel.init(data, routePointsViewModel.isRouteStarted)
+            }
+            clear()
+        }
+        super.onCreate(savedInstanceState)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -51,14 +63,7 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
             setupUI(it)
         })
 
-        requireNotNull(arguments).run {
-            val routeDataModel =
-                (getSerializable(KEY_ROUTE_DATA_WITH_DETOUR) as? RouteDataModelWithDetourId)
-            routeDataModel?.let { data ->
-                techOperationsViewModel.init(data, routePointsViewModel.isRouteStarted)
-                setupToolbar(data.routeData.position)
-            }
-        }
+        setupToolbar(techOperationsViewModel.savedRouteData?.position)
 
         rvTechOperations.adapter = techOperationsAdapter
 

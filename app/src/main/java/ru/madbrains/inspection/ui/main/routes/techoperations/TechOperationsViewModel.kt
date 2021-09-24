@@ -58,7 +58,7 @@ class TechOperationsViewModel(
     val showDialogBlankFields: LiveData<Event<Unit>> = _showDialogBlankFields
 
     private var savedRouteDataWrap: RouteDataModelWithDetourId? = null
-    private val savedRouteData: RouteDataModel? get() = savedRouteDataWrap?.routeData
+    val savedRouteData: RouteDataModel? get() = savedRouteDataWrap?.routeData
 
     //Models LiveData
     private val _rfidProgress = MutableLiveData<Boolean>()
