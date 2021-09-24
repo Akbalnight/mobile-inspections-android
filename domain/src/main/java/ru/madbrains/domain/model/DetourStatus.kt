@@ -24,27 +24,34 @@ data class DetourStatus(
 
 data class DetourStatusHolder(
     val data: List<DetourStatus>
-) : Serializable
-
-fun List<DetourStatus>.getStatusById(id: String?): DetourStatus? {
-    return find { it.id == id }
-}
-
-fun List<DetourStatus>.isEditable(id: String?): Boolean {
-    val type = getStatusById(id)?.type
-    val completedStatuses = arrayOf(DetourStatusType.COMPLETED_AHEAD, DetourStatusType.COMPLETED)
-    return type !in completedStatuses
-}
-
-fun List<DetourStatus>.getStatusesByType(listTypes: Array<DetourStatusType>): List<DetourStatus> {
-    return filter {
-        it.type in listTypes
+) : Serializable {
+    private fun isInStatus(id: String?, statuses: Set<DetourStatusType>): Boolean {
+        val type = getStatusById(id)?.type
+        return type in statuses
     }
-}
 
-fun List<DetourStatus>.getStatusByType(type: DetourStatusType?): DetourStatus? {
-    return find {
-        it.type == type
+    fun isNew(id: String?): Boolean {
+        return isInStatus(id, setOf(DetourStatusType.NEW))
+    }
+
+    fun isCompleted(id: String?): Boolean {
+        return isInStatus(id, setOf(DetourStatusType.COMPLETED_AHEAD, DetourStatusType.COMPLETED))
+    }
+
+    fun getStatusById(id: String?): DetourStatus? {
+        return data.find { it.id == id }
+    }
+
+    fun getStatusByType(type: DetourStatusType?): DetourStatus? {
+        return data.find {
+            it.type == type
+        }
+    }
+
+    fun getStatusesByType(listTypes: Array<DetourStatusType>): List<DetourStatus> {
+        return data.filter {
+            it.type in listTypes
+        }
     }
 }
 

@@ -31,8 +31,8 @@ class RoutePointsListFragment : BaseFragment(R.layout.fragment_route_points_list
         routePointsViewModel.detourModel?.run {
             tvPlanStartValue.text = dateStartPlan?.toyyyyMMddHHmmss()
             tvPlanEndValue.text = dateFinishPlan?.toyyyyMMddHHmmss()
-            tvFactStartValue.text = dateStartFact?.toyyyyMMddHHmmss()
-            tvFactEndValue.text = dateFinishFact?.toyyyyMMddHHmmss()
+            tvFactStartValue.text = routePointsViewModel.dateStartFact?.toyyyyMMddHHmmss()
+            tvFactEndValue.text = routePointsViewModel.dateFinishFact?.toyyyyMMddHHmmss()
             tvFactOrderValue.text =
                 if (saveOrderControlPoints == true) strings[R.string.yes] else strings[R.string.no]
         }

@@ -89,7 +89,7 @@ class TechOperationsViewModel(
         }
     }
 
-    fun initDetour(data: RouteDataModelWithDetourId, detourEditable: Boolean) {
+    fun init(data: RouteDataModelWithDetourId, detourEditable: Boolean) {
         _detourIsEditable = detourEditable
         savedRouteDataWrap = data
         val routeData = data.routeData

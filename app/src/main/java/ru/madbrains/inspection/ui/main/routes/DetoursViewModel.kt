@@ -6,7 +6,8 @@ import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.domain.interactor.OfflineInteractor
-import ru.madbrains.domain.model.*
+import ru.madbrains.domain.model.DetourModel
+import ru.madbrains.domain.model.DetourStatus
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 import ru.madbrains.inspection.base.model.DiffItem
@@ -47,15 +48,6 @@ class DetoursViewModel(
             .addTo(disposables)
     }
 
-    private fun getStatusesForFiltration(): List<String> {
-        return preferenceStorage.detourStatuses?.data?.getStatusesByType(
-            arrayOf(
-                DetourStatusType.PAUSED,
-                DetourStatusType.NEW
-            )
-        )?.map { it.id } ?: arrayListOf()
-    }
-
     private fun updateData(_routes: List<DetourModel>, filter: DetourStatus?) {
         val routes = if (filter != null) {
             _routes.filter { it.statusId == filter.id }
@@ -64,7 +56,7 @@ class DetoursViewModel(
             DetourUiModel(
                 id = it.id,
                 name = it.name.orEmpty(),
-                status = preferenceStorage.detourStatuses?.data?.getStatusById(it.statusId),
+                status = preferenceStorage.detourStatuses.getStatusById(it.statusId),
                 dateStartPlan = it.dateStartPlan
             )
         }
