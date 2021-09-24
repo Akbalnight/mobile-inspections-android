@@ -22,7 +22,7 @@ class RemoteInteractor(
         return remoteRepository.getDetoursStatuses().flatMap { statuses ->
             offlineRepository.insertDetourStatuses(statuses)
             remoteRepository.getDetours(
-                statuses = statuses.getStatusesByType(
+                statuses = DetourStatusHolder(statuses).getStatusesByType(
                     arrayOf(
                         DetourStatusType.PAUSED,
                         DetourStatusType.NEW

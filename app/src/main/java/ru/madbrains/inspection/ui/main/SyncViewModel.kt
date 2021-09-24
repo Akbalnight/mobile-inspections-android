@@ -13,7 +13,10 @@ import ru.madbrains.data.prefs.PreferenceStorage
 import ru.madbrains.domain.interactor.OfflineInteractor
 import ru.madbrains.domain.interactor.RemoteInteractor
 import ru.madbrains.domain.interactor.SyncInteractor
-import ru.madbrains.domain.model.*
+import ru.madbrains.domain.model.SyncInfo
+import ru.madbrains.domain.model.WrapEtcSync
+import ru.madbrains.domain.model.WrapFile
+import ru.madbrains.domain.model.WrapPendingDataSync
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
@@ -192,7 +195,7 @@ class SyncViewModel(
                     ChangedItemUiDetour(
                         id = detour.id,
                         name = detour.name.orEmpty(),
-                        status = preferenceStorage.detourStatuses?.data?.getStatusById(detour.statusId),
+                        status = preferenceStorage.detourStatuses.getStatusById(detour.statusId),
                         dateStartPlan = detour.dateStartPlan
                     )
                 }

@@ -39,7 +39,7 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
         setupViewPager()
 
         fabStart.setOnClickListener {
-            routePointsViewModel.startNextRoute()
+            routePointsViewModel.startDetour()
         }
         fabContinue.setOnClickListener {
             routePointsViewModel.startNextRoute()
@@ -52,7 +52,7 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
             progressView.changeVisibility(it)
         })
 
-        routePointsViewModel.routeStatus.observe(viewLifecycleOwner, Observer { status ->
+        routePointsViewModel.routeActionStatus.observe(viewLifecycleOwner, Observer { status ->
             fabStart.isVisible = status == RoutePointsViewModel.RouteStatus.NOT_STARTED
             fabContinue.isVisible = status == RoutePointsViewModel.RouteStatus.IN_PROGRESS
             fabFinish.isVisible = status == RoutePointsViewModel.RouteStatus.FINISHED_NOT_COMPLETED
@@ -83,7 +83,7 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
         requireNotNull(arguments).run {
             val detour = getSerializable(KEY_DETOUR) as? DetourModel
             detour?.let {
-                routePointsViewModel.setNavData(it)
+                routePointsViewModel.init(it)
             }
             clear()
         }

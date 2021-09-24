@@ -28,7 +28,7 @@ interface PreferenceStorage {
     var saveInfoDuration: Int
     var isAdmin: Boolean
     var isCreator: Boolean
-    var detourStatuses: DetourStatusHolder?
+    var detourStatuses: DetourStatusHolder
     var syncInfo: SyncInfo
     var loginHash: String?
     var passwordHash: String?
@@ -56,10 +56,11 @@ class SharedPreferenceStorage(
     override var saveInfoDuration by IntPreference(prefs, "PREF_SAVE_INFO_DURATION", 5)
     override var isAdmin by BooleanPreference(prefs, "PREF_IS_ADMIN", false)
     override var isCreator by BooleanPreference(prefs, "PREF_IS_CREATOR", false)
-    override var detourStatuses by SerializablePreference<DetourStatusHolder>(
+    override var detourStatuses by SerializablePreferenceNotNullable(
         prefs,
-        "PREF_DETOUR_STATUSES",
-        DetourStatusHolder::class.java
+        "PREF_DETOUR_STATUSES_2",
+        DetourStatusHolder::class.java,
+        DetourStatusHolder(listOf())
     )
     override var syncInfo by SerializablePreferenceNotNullable(
         prefs,
