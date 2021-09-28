@@ -99,9 +99,7 @@ class TechOperationsViewModel(
         }
 
         _titleTechOperations.postValue(routeData.techMap?.name)
-
-        val isRfid = routeData.rfidCode != null
-        updateData(rfidBlocked = isRfid)
+        updateData(blocked = true)
     }
 
     fun onTechDataInput(techOperationId: String, dataValue: String) {
@@ -122,7 +120,7 @@ class TechOperationsViewModel(
         }
     }
 
-    private fun updateData(rfidBlocked: Boolean) {
+    private fun updateData(blocked: Boolean) {
         val operations = mutableListOf<DiffItem>().apply {
             operationsModels.map { operation ->
                 add(
@@ -133,23 +131,19 @@ class TechOperationsViewModel(
                         valueInputData = operation.valueInputData.orEmpty(),
                         needInputData = operation.needInputData,
                         position = operation.position,
-                        editable = _detourIsEditable && !rfidBlocked
+                        editable = _detourIsEditable && !blocked
                     )
                 )
             }
         }
         _techOperations.postValue(operations)
 
+        val rfid = savedRouteData?.rfidCode != null
         val status = when {
-            !_detourIsEditable -> {
-                TechUIMode.Disabled
-            }
-            rfidBlocked -> {
-                TechUIMode.RfidBlocked
-            }
-            else -> {
-                TechUIMode.Enabled
-            }
+            !_detourIsEditable -> TechUIMode.Disabled
+            blocked && rfid -> TechUIMode.RfidBlocked
+            blocked && !rfid -> TechUIMode.Blocked
+            else -> TechUIMode.Enabled
         }
         _uiMode.postValue(status)
     }
@@ -159,7 +153,7 @@ class TechOperationsViewModel(
             _rfidProgress.postValue(it)
         }) { scannedCode ->
             if (scannedCode == savedRouteData?.rfidCode) {
-                updateData(rfidBlocked = false)
+                updateData(blocked = false)
             } else {
                 _showDialog.postValue(Event(R.string.fragment_tech_mark_is_different))
             }
@@ -182,10 +176,12 @@ class TechOperationsViewModel(
 
     fun fabClick() {
         when (_uiMode.value) {
+            TechUIMode.Blocked -> {
+                updateData(blocked = false)
+            }
             TechUIMode.RfidBlocked -> checkRfidAndUnblock()
             TechUIMode.Enabled -> checkAvailableFinishTechMap()
-            else -> {
-            }
+            TechUIMode.Disabled -> Unit
         }
     }
 
@@ -206,5 +202,5 @@ class TechOperationsViewModel(
 }
 
 enum class TechUIMode {
-    Disabled, RfidBlocked, Enabled
+    Disabled, Blocked, RfidBlocked, Enabled
 }
