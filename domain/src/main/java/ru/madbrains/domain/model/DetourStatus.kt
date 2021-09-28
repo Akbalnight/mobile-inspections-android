@@ -38,6 +38,10 @@ data class DetourStatusHolder(
         return isInStatus(id, setOf(DetourStatusType.COMPLETED_AHEAD, DetourStatusType.COMPLETED))
     }
 
+    fun isInProgress(id: String?): Boolean {
+        return isInStatus(id, setOf(DetourStatusType.IN_PROGRESS))
+    }
+
     fun getStatusById(id: String?): DetourStatus? {
         return data.find { it.id == id }
     }

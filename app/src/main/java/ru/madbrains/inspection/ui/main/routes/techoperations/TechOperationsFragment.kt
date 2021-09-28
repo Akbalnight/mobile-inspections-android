@@ -45,7 +45,7 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
             val routeDataModel =
                 (getSerializable(KEY_ROUTE_DATA_WITH_DETOUR) as? RouteDataModelWithDetourId)
             routeDataModel?.let { data ->
-                techOperationsViewModel.init(data, routePointsViewModel.isRouteStarted)
+                techOperationsViewModel.init(data, routePointsViewModel.isRouteInProgress)
             }
             clear()
         }
@@ -191,7 +191,7 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
                     R.id.graph_defects, bundleOf(
                         DefectListFragment.KEY_ROUTE_DATA_WITH_DETOUR to data,
                         DefectListFragment.KEY_IS_DEFECT_REGISTRY to false,
-                        DefectListFragment.KEY_IS_EDITABLE to routePointsViewModel.isRouteStarted
+                        DefectListFragment.KEY_IS_EDITABLE to routePointsViewModel.isRouteInProgress
                     )
                 )
             })
