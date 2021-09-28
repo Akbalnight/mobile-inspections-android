@@ -118,6 +118,7 @@ class TechOperationsFragment : BaseFragment(R.layout.fragment_tech_operations) {
         when (mode) {
             TechUIMode.Enabled -> R.drawable.ic_fab_save
             TechUIMode.RfidBlocked -> R.drawable.ic_fab_rfid
+            TechUIMode.Blocked -> R.drawable.ic_fab_continue_round
             else -> null
         }?.let { id ->
             fabTechOperations.setImageResource(id)
