@@ -50,7 +50,6 @@
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
-    <include app:graph="@navigation/graph_defects_detail" />
     <dialog
         android:id="@+id/routePointsFinishDialog"
         android:name="ru.madbrains.inspection.ui.main.routes.points.RoutePointsFinishDialog"
@@ -121,6 +120,8 @@
             android:id="@+id/action_DetoursFragment_to_routePointsFragment"
             app:destination="@id/routePointsFragment" />
     </fragment>
+
+    <include app:graph="@navigation/graph_defects_detail" />
 
     <include app:graph="@navigation/graph_defects" />
 

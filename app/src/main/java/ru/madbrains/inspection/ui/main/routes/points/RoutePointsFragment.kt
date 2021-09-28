@@ -39,7 +39,7 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
         setupViewPager()
 
         fabStart.setOnClickListener {
-            routePointsViewModel.startDetour()
+            routePointsViewModel.startNextRoute()
         }
         fabContinue.setOnClickListener {
             routePointsViewModel.startNextRoute()
@@ -53,7 +53,7 @@ class RoutePointsFragment : BaseFragment(R.layout.fragment_route_points) {
         })
 
         routePointsViewModel.routeActionStatus.observe(viewLifecycleOwner, Observer { status ->
-            fabStart.isVisible = status == RoutePointsViewModel.RouteStatus.NOT_STARTED
+            fabStart.isVisible = status == RoutePointsViewModel.RouteStatus.IS_NEW
             fabContinue.isVisible = status == RoutePointsViewModel.RouteStatus.IN_PROGRESS
             fabFinish.isVisible = status == RoutePointsViewModel.RouteStatus.FINISHED_NOT_COMPLETED
         })

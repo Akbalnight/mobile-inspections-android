@@ -55,13 +55,10 @@ class RoutePointsViewModel(
 
     private val detourStatuses: DetourStatusHolder = preferenceStorage.detourStatuses
     private val isRouteNew get():Boolean = detourStatuses.isNew(detourModel?.statusId)
-    private val isRouteCompleted get():Boolean = detourStatuses.isCompleted(detourModel?.statusId)
-    val isRouteStarted get():Boolean = !isRouteNew && !isRouteCompleted
+    val isRouteInProgress get():Boolean = detourStatuses.isInProgress(detourModel?.statusId)
 
     val dateStartFact get():Date? = if (isRouteNew) null else detourModel?.dateStartFact
     val dateFinishFact get():Date? = if (isRouteNew) null else detourModel?.dateFinishFact
-
-    private val allPointsCompleted get() = routeDataModels.isNotEmpty() && routeDataModels.all { it.completed }
 
     private var timerDisposable: Disposable? = null
 
@@ -100,20 +97,15 @@ class RoutePointsViewModel(
         }
     }
 
-    fun startDetour() {
-        detourModel = detourModel?.copy(
-            dateStartFact = Date(),
-            dateFinishFact = null,
-            statusId = detourStatuses.getStatusByType(DetourStatusType.IN_PROGRESS)?.id
-        )?.saveChangesToDb()
-        setRouteActionStatus()
-        startNextRoute()
-    }
-
     fun startNextRoute() {
         routeDataModels.firstOrNull { !it.completed }?.let {
             navigateToTechOperation(it)
         }
+        detourModel = detourModel?.copy(
+            dateStartFact = if (isRouteNew) Date() else detourModel?.dateStartFact,
+            statusId = detourStatuses.getStatusByType(DetourStatusType.IN_PROGRESS)?.id
+        )?.saveChangesToDb()
+        setRouteActionStatus()
     }
 
     private fun navigateToTechOperation(routeData: RouteDataModel) {
@@ -181,7 +173,7 @@ class RoutePointsViewModel(
     }
 
     fun closeClick() {
-        if (isRouteStarted) {
+        if (isRouteInProgress) {
             _navigateToCloseDialog.postValue(Event(Unit))
         } else {
             navigatePop()
@@ -225,23 +217,26 @@ class RoutePointsViewModel(
     }
 
     private fun setRouteActionStatus() {
-        _routeActionStatus.postValue(
-            when {
-                allPointsCompleted && !isRouteCompleted -> {
-                    RouteStatus.FINISHED_NOT_COMPLETED
-                }
-                allPointsCompleted && isRouteCompleted -> {
-                    RouteStatus.COMPLETED
-                }
-                !isRouteStarted -> {
-                    RouteStatus.NOT_STARTED
-                }
-                else -> {
-                    RouteStatus.IN_PROGRESS
-                }
+        val isRouteCompleted = detourStatuses.isCompleted(detourModel?.statusId)
+        val allPointsCompleted = routeDataModels.all { it.completed }
+
+        val status = when {
+            allPointsCompleted && !isRouteCompleted -> {
+                RouteStatus.FINISHED_NOT_COMPLETED
             }
-        )
-        if (isRouteStarted) {
+            allPointsCompleted && isRouteCompleted -> {
+                RouteStatus.COMPLETED
+            }
+            isRouteNew -> {
+                RouteStatus.IS_NEW
+            }
+            else -> {
+                RouteStatus.IN_PROGRESS
+            }
+        }
+
+        _routeActionStatus.postValue(status)
+        if (isRouteInProgress) {
             startTimer()
         } else {
             val dateFinishFact = dateFinishFact
@@ -264,7 +259,7 @@ class RoutePointsViewModel(
     }
 
     enum class RouteStatus {
-        NOT_STARTED,
+        IS_NEW,
         IN_PROGRESS,
         FINISHED_NOT_COMPLETED,
         COMPLETED
