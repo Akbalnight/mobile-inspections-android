@@ -20,7 +20,7 @@ interface DefectItemDao {
     @Query("SELECT * FROM DefectItemDB ORDER BY dateDetectDefect DESC")
     fun getItems(): Single<List<DefectItemDB>>
 
-    @Query("SELECT * FROM DefectItemDB WHERE equipmentId in (:equipmentIds) AND statusProcessId!=:eliminatedId AND (:detourId = NULL OR detourId =:detourId) ORDER BY dateDetectDefect DESC LIMIT 5")
+    @Query("SELECT * FROM DefectItemDB WHERE equipmentId in (:equipmentIds) AND statusProcessId!=:eliminatedId AND (:detourId IS NULL OR detourId =:detourId) ORDER BY dateDetectDefect DESC LIMIT 5")
     fun getActiveItems(
         detourId: String?,
         equipmentIds: List<String>,
