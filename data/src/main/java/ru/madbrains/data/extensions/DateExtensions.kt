@@ -42,3 +42,8 @@ fun Date.toddMMyyyyHHmm(): String {
     val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
     return dateFormat.format(this)
 }
+
+fun Date.toHHmmddMMyy(): String {
+    val dateFormat = SimpleDateFormat("HH:mm dd.MM.yy", Locale.getDefault())
+    return dateFormat.format(this)
+}

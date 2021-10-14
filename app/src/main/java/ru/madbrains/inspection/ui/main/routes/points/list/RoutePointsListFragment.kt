@@ -6,7 +6,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_route_points_list.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import ru.madbrains.data.extensions.toyyyyMMddHHmmss
+import ru.madbrains.data.extensions.toHHmmddMMyy
 import ru.madbrains.inspection.R
 import ru.madbrains.inspection.base.BaseFragment
 import ru.madbrains.inspection.extensions.strings
@@ -29,10 +29,10 @@ class RoutePointsListFragment : BaseFragment(R.layout.fragment_route_points_list
         super.onActivityCreated(savedInstanceState)
 
         routePointsViewModel.detourModel?.run {
-            tvPlanStartValue.text = dateStartPlan?.toyyyyMMddHHmmss()
-            tvPlanEndValue.text = dateFinishPlan?.toyyyyMMddHHmmss()
-            tvFactStartValue.text = routePointsViewModel.dateStartFact?.toyyyyMMddHHmmss()
-            tvFactEndValue.text = routePointsViewModel.dateFinishFact?.toyyyyMMddHHmmss()
+            tvPlanStartValue.text = dateStartPlan?.toHHmmddMMyy()
+            tvPlanEndValue.text = dateFinishPlan?.toHHmmddMMyy()
+            tvFactStartValue.text = routePointsViewModel.dateStartFact?.toHHmmddMMyy()
+            tvFactEndValue.text = routePointsViewModel.dateFinishFact?.toHHmmddMMyy()
             tvFactOrderValue.text =
                 if (saveOrderControlPoints == true) strings[R.string.yes] else strings[R.string.no]
         }
