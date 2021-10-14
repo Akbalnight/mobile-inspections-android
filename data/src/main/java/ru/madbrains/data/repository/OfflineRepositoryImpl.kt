@@ -89,6 +89,10 @@ class OfflineRepositoryImpl(
         return db.checkpointItemDao().getItems().map { it -> it.map { fromCheckpointItemDB(it) } }
     }
 
+    override fun getCheckpointWithRfidCode(rfidCode: String): Single<List<CheckpointModel>> {
+        return db.checkpointItemDao().getItemWithRfidCode(rfidCode).map { it -> it.map { fromCheckpointItemDB(it) } }
+    }
+
     override fun getDefects(): Single<List<DefectModel>> {
         return db.defectItemDao().getItems().map { it -> it.map { fromDefectItemDB(it) } }
     }

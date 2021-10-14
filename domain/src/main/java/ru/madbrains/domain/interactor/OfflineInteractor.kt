@@ -90,6 +90,10 @@ class OfflineInteractor(
         return offlineRepository.getCheckpoints().subscribeOn(Schedulers.io())
     }
 
+    fun getCheckpointWithRfidCode(rfidCode: String): Single<List<CheckpointModel>> {
+        return offlineRepository.getCheckpointWithRfidCode(rfidCode).subscribeOn(Schedulers.io())
+    }
+
     fun getDefectTypical(): Single<List<DefectTypicalModel>> {
         return offlineRepository.getDefectsTypical().subscribeOn(Schedulers.io())
     }

@@ -59,6 +59,7 @@ interface OfflineRepository {
     fun deleteDefect(id: String): Completable
     fun getChangedDefects(): Single<List<DefectModel>>
     fun getCheckpoints(): Single<List<CheckpointModel>>
+    fun getCheckpointWithRfidCode(rfidCode: String): Single<List<CheckpointModel>>
     fun insertCheckpoint(model: CheckpointModel): Completable
     fun insertCheckpoints(models: List<CheckpointModel>): Completable
     fun getChangedCheckpoints(): Single<List<CheckpointModel>>
