@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.toolbar_with_back.view.*
 import kotlinx.android.synthetic.main.toolbar_with_menu.view.tvTitle
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.madbrains.domain.model.CheckpointModel
 import ru.madbrains.domain.model.DefectModel
 import ru.madbrains.domain.model.DefectStatus
 import ru.madbrains.domain.model.RouteDataModelWithDetourId
@@ -28,6 +29,7 @@ import ru.madbrains.inspection.ui.adapters.MediaAdapter
 import ru.madbrains.inspection.ui.common.camera.CameraViewModel
 import ru.madbrains.inspection.ui.delegates.MediaUiModel
 import ru.madbrains.inspection.ui.main.MainViewModel
+import ru.madbrains.inspection.ui.main.checkpoints.detail.CheckpointDetailFragment
 import ru.madbrains.inspection.ui.main.defects.defectdetail.equipmentselectlist.EquipmentSelectListViewModel
 import ru.madbrains.inspection.ui.main.routes.points.RoutePointsViewModel
 
@@ -60,9 +62,10 @@ class DefectDetailFragment : BaseFragment(R.layout.fragment_defect_detail) {
         super.onActivityCreated(savedInstanceState)
 
         arguments?.let {
-            val data = it.getSerializable(KEY_ROUTE_DATA_WITH_DETOUR) as RouteDataModelWithDetourId
-            defectDetailViewModel.setEquipments(data.routeData.equipments)
-            defectDetailViewModel.setDetourId(data.detourId)
+            (it.getSerializable(KEY_ROUTE_DATA_WITH_DETOUR) as? RouteDataModelWithDetourId)?.let { data ->
+                defectDetailViewModel.setEquipments(data.routeData.equipments)
+                defectDetailViewModel.setDetourId(data.detourId)
+            }
             val currentDefect =
                 it.getSerializable(KEY_DETAIL_DEFECT) as? DefectModel
             defectDetailViewModel.setDefect(currentDefect)
