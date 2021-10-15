@@ -190,14 +190,11 @@ class CheckpointDetailFragment : BaseFragment(R.layout.fragment_checkpoint_detai
     }
 
     private fun showDialogDuplicateRfidCode(checkpointName: String) {
-        val alertDialog: AlertDialog? = activity?.let {
-            val builder = AlertDialog.Builder(it)
-            builder.apply {
-                setMessage(getString(R.string.fragment_dialog_rfid_duplicate, checkpointName))
-                setPositiveButton(strings[R.string.ok]) { _, _ -> }
-            }
-            builder.create()
+        val alertDialog = AlertDialog.Builder(requireActivity()).apply {
+            setMessage(getString(R.string.fragment_dialog_rfid_duplicate, checkpointName))
+            setPositiveButton(strings[R.string.ok]) { _, _ -> }
+            create()
         }
-        alertDialog?.show()
+        alertDialog.show()
     }
 }
