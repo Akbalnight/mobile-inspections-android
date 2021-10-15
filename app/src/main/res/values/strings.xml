@@ -71,6 +71,7 @@
     <string name="fragment_checkpoint_detail_commentary">Комментарий</string>
     <string name="fragment_checkpoint_detail_saved_success">Метка успешно сохранена</string>
     <string name="fragment_checkpoint_title">Контрольные точки</string>
+    <string name="fragment_dialog_rfid_duplicate">Данная метка уже зарегистрирована в системе %s</string>
 
     <!-- SettingsFragment -->
     <string name="fragment_settings_title">Настройки</string>

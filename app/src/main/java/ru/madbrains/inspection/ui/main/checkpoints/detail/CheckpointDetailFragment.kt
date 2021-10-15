@@ -144,6 +144,12 @@ class CheckpointDetailFragment : BaseFragment(R.layout.fragment_checkpoint_detai
                 showDialogConfirmChange()
             })
 
+        checkpointDetailViewModel.showDialogDuplicateRfidCode.observe(
+                viewLifecycleOwner,
+                EventObserver {
+                    showDialogDuplicateRfidCode(it)
+                })
+
         checkpointDetailViewModel.showSnackBar.observe(viewLifecycleOwner, EventObserver {
             mainViewModel.openSnackBar(strings[it])
         })
@@ -181,5 +187,14 @@ class CheckpointDetailFragment : BaseFragment(R.layout.fragment_checkpoint_detai
             builder.create()
         }
         alertDialog?.show()
+    }
+
+    private fun showDialogDuplicateRfidCode(checkpointName: String) {
+        val alertDialog = AlertDialog.Builder(requireActivity()).apply {
+            setMessage(getString(R.string.fragment_dialog_rfid_duplicate, checkpointName))
+            setPositiveButton(strings[R.string.ok]) { _, _ -> }
+            create()
+        }
+        alertDialog.show()
     }
 }

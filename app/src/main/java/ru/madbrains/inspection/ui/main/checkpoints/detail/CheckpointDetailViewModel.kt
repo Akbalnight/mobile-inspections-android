@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
+import ru.madbrains.domain.interactor.OfflineInteractor
 import ru.madbrains.domain.interactor.RfidInteractor
 import ru.madbrains.domain.interactor.SyncInteractor
 import ru.madbrains.domain.model.CheckpointModel
@@ -12,8 +13,9 @@ import ru.madbrains.inspection.base.BaseViewModel
 import ru.madbrains.inspection.base.Event
 
 class CheckpointDetailViewModel(
-    private val syncInteractor: SyncInteractor,
-    private val rfidInteractor: RfidInteractor
+        private val syncInteractor: SyncInteractor,
+        private val rfidInteractor: RfidInteractor,
+        private val offlineInteractor: OfflineInteractor
 ) : BaseViewModel() {
 
     private val _isChanged = MutableLiveData<Boolean>()
@@ -40,6 +42,9 @@ class CheckpointDetailViewModel(
 
     private val _showDialogChangedFields = MutableLiveData<Event<Unit>>()
     val showDialogChangedFields: LiveData<Event<Unit>> = _showDialogChangedFields
+
+    private val _showDialogDuplicateRfidCode = MutableLiveData<Event<String>>()
+    val showDialogDuplicateRfidCode: LiveData<Event<String>> = _showDialogDuplicateRfidCode
 
     private val _popNavigation = MutableLiveData<Event<Unit>>()
     val popNavigation: LiveData<Event<Unit>> = _popNavigation
@@ -71,17 +76,17 @@ class CheckpointDetailViewModel(
         _checkpointRawData?.let { model ->
             _rfidCode?.let { rfid ->
                 syncInteractor.insertCheckpoint(model.copy(rfidCode = rfid, changed = true))
-                    .observeOn(Schedulers.io())
-                    .doOnSubscribe { _rfidProgress.postValue(true) }
-                    .doAfterTerminate { _rfidProgress.postValue(false) }
-                    .subscribe({
-                        _showSnackBar.postValue(Event(R.string.fragment_checkpoint_detail_saved_success))
-                        _popAndRefresh.postValue(Event(Unit))
-                    }, {
-                        it.printStackTrace()
-                        _showError.postValue(Event(it))
-                    })
-                    .addTo(disposables)
+                        .observeOn(Schedulers.io())
+                        .doOnSubscribe { _rfidProgress.postValue(true) }
+                        .doAfterTerminate { _rfidProgress.postValue(false) }
+                        .subscribe({
+                            _showSnackBar.postValue(Event(R.string.fragment_checkpoint_detail_saved_success))
+                            _popAndRefresh.postValue(Event(Unit))
+                        }, {
+                            it.printStackTrace()
+                            _showError.postValue(Event(it))
+                        })
+                        .addTo(disposables)
             }
 
         }
@@ -105,9 +110,21 @@ class CheckpointDetailViewModel(
         rfidInteractor.startScan({
             _rfidProgress.postValue(it)
         }) {
-            _rfidDataReceiver.postValue(Event(it))
-            _rfidCode = it
-            _isChanged.postValue(true)
+            offlineInteractor.getCheckpointWithRfidCode(it)
+                    .observeOn(Schedulers.io())
+                    .subscribe({ listWithRfidScan ->
+                        if (listWithRfidScan.isEmpty()) {
+                            _rfidDataReceiver.postValue(Event(it))
+                            _rfidCode = it
+                            _isChanged.postValue(true)
+                        } else {
+                            _showDialogDuplicateRfidCode.postValue(Event(listWithRfidScan.first().name))
+                        }
+                    }, { throwableListWithRfidCode ->
+                        throwableListWithRfidCode.printStackTrace()
+                        _showError.postValue(Event(throwableListWithRfidCode))
+                    })
+                    .addTo(disposables)
         }
     }
 

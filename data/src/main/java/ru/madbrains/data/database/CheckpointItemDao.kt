@@ -24,4 +24,7 @@ interface CheckpointItemDao {
 
     @Query("SELECT * FROM CheckpointItemDB WHERE changed = 1")
     fun getChangedItems(): Single<List<CheckpointItemDB>>
+
+    @Query("SELECT * FROM CheckpointItemDB WHERE rfidCode = :rfidCode")
+    fun getItemWithRfidCode(rfidCode: String): Single<List<CheckpointItemDB>>
 }
